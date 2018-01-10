@@ -5,6 +5,9 @@ Wordpress2016.overrideThemeStyles = () => ({
   'a.gatsby-resp-image-link': {
     boxShadow: 'none',
   },
+  'body': {
+    fontFamily:"'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif",
+  },
 })
 
 const typography = new Typography(Wordpress2016)
