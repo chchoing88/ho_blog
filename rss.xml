@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 11 Jan 2018 10:51:41 GMT</lastBuildDate><item><title><![CDATA[Hello Docker]]></title><description><![CDATA[Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog//hello-docker/</link><guid isPermaLink="false">https://gatsbyjs.github.io/gatsby-starter-blog//hello-docker/</guid><pubDate>Tue, 09 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker term&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 11 Jan 2018 11:16:49 GMT</lastBuildDate><item><title><![CDATA[Hello Docker]]></title><description><![CDATA[Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog//hello-docker/</link><guid isPermaLink="false">https://gatsbyjs.github.io/gatsby-starter-blog//hello-docker/</guid><pubDate>Tue, 09 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker term&lt;/h2&gt;
 &lt;h3&gt;What is Docker?&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation 화 할수 있고 서로 독립적인 공간을 가질수 있다. 서로에게 영향을 주지 않을수 있다. )&lt;/li&gt;
@@ -38,7 +38,7 @@
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
+    href=&quot;/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -57,10 +57,10 @@
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;처음 Dockerfile 돌렸을때&quot;
         title=&quot;&quot;
-        src=&quot;/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
-        srcset=&quot;/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-999a6.png 148w,
-/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-a24ab.png 295w,
-/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png 461w&quot;
+        src=&quot;/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
+        srcset=&quot;/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-999a6.png 148w,
+/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-a24ab.png 295w,
+/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png 461w&quot;
         sizes=&quot;(max-width: 461px) 100vw, 461px&quot;
       /&gt;
     &lt;/span&gt;
@@ -72,7 +72,7 @@
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
+    href=&quot;/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -91,10 +91,10 @@
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;기존 Dockerfile을 2번째 돌렸을때&quot;
         title=&quot;&quot;
-        src=&quot;/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
-        srcset=&quot;/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-999a6.png 148w,
-/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-a24ab.png 295w,
-/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png 461w&quot;
+        src=&quot;/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
+        srcset=&quot;/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-999a6.png 148w,
+/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-a24ab.png 295w,
+/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png 461w&quot;
         sizes=&quot;(max-width: 461px) 100vw, 461px&quot;
       /&gt;
     &lt;/span&gt;
@@ -106,7 +106,7 @@
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
+    href=&quot;/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -125,10 +125,10 @@
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;기존 Dockerfile 에서 EXPOSE 80 에서 EXPOSE 81로 변경했을 때&quot;
         title=&quot;&quot;
-        src=&quot;/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
-        srcset=&quot;/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-a99df.png 148w,
-/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-caa51.png 295w,
-/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png 455w&quot;
+        src=&quot;/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
+        srcset=&quot;/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-a99df.png 148w,
+/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-caa51.png 295w,
+/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png 455w&quot;
         sizes=&quot;(max-width: 455px) 100vw, 455px&quot;
       /&gt;
     &lt;/span&gt;
@@ -143,7 +143,7 @@
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png&quot;
+    href=&quot;/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -162,11 +162,11 @@
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;error&quot;
         title=&quot;&quot;
-        src=&quot;/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png&quot;
-        srcset=&quot;/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-1a291.png 148w,
-/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-2bc4a.png 295w,
-/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png 590w,
-/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png 630w&quot;
+        src=&quot;/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-1a291.png 148w,
+/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-2bc4a.png 295w,
+/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png 590w,
+/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png 630w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -180,7 +180,7 @@
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png&quot;
+    href=&quot;/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -199,11 +199,11 @@
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Docker Structure&quot;
         title=&quot;&quot;
-        src=&quot;/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png&quot;
-        srcset=&quot;/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-1a291.png 148w,
-/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-2bc4a.png 295w,
-/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png 590w,
-/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png 868w&quot;
+        src=&quot;/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-1a291.png 148w,
+/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-2bc4a.png 295w,
+/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png 590w,
+/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png 868w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
