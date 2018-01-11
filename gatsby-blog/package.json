@@ -22,12 +22,13 @@
     "gatsby-remark-responsive-iframe": "^1.4.16",
     "gatsby-remark-smartypants": "^1.4.10",
     "gatsby-source-filesystem": "^1.5.11",
-    "gatsby-transformer-remark": "^1.7.25",
+    "gatsby-transformer-remark": "^1.7.26",
     "gatsby-transformer-sharp": "^1.6.16",
     "lodash": "^4.17.4",
     "react-responsive-grid": "^0.3.4",
     "typeface-merriweather": "0.0.43",
     "typeface-montserrat": "0.0.43",
+    "typography-plugin-code": "^0.16.11",
     "typography-theme-wordpress-2016": "^0.15.10"
   },
   "devDependencies": {
