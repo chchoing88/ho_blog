@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 11 Jan 2018 10:51:41 GMT</lastBuildDate><item><title><![CDATA[Hello Docker]]></title><description><![CDATA[Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog//hello-docker/</link><guid isPermaLink="false">https://gatsbyjs.github.io/gatsby-starter-blog//hello-docker/</guid><pubDate>Tue, 09 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker term&lt;/h2&gt;
+&lt;h3&gt;What is Docker?&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation 화 할수 있고 서로 독립적인 공간을 가질수 있다. 서로에게 영향을 주지 않을수 있다. )&lt;/li&gt;
+&lt;li&gt;containerization 란 컨테이너를 매체로 한 수송체계, 즉. 컨테이너 규격을 맞춰 놓으면 차 , 배 , 비행기등 더 쉽고 빠르게 대량 수송과 시간을 단축 시킬수 있다. 라는 장점을 지니고 있음.&lt;/li&gt;
+&lt;li&gt;이걸로 유추해볼 때 도커는 다양한 SW들을 컨테이너에 담아 이동하기가 쉽게하고 포터블하게 만들수있는 플랫폼.&lt;/li&gt;
+&lt;li&gt;리눅스의 응용프로그램들을 소프트웨어 컨테이너 안에 배치시키는 일을 자동화 하는 오픈소스&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;What is Container?&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;개발 , 배포 , 운용 등을 위해 표준화된 단위로 구성된 소프트웨어 패키지화 &lt;/li&gt;
+&lt;li&gt;호스트 pc의 커널을 공유하면서 SW가 돌아갈수 있는 모든 구성들이 들어가있다. 대신, 불필요한 것들은 들어있지 않다.&lt;/li&gt;
+&lt;li&gt;해당 도커 이미지를 run 시키면 해당 SW가 돌아가는데 그 상태를 컨테이너 라고 한다.
+일종의 프로세스와 유사한 개념이다.&lt;/li&gt;
+&lt;li&gt;이 해당 컨테이너 내부 환경을 정의하는 파일은 dockerfile 이다.&lt;/li&gt;
+&lt;li&gt;나머지 시스템으로 부터 완전히 독립된 공간을 갖는다. 그래서 밖으로 통신하기 위해선 포트를 맵핑해야 한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;What is Service?&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;서비스는 app의 한 부분이다. 예를 들어 비디오를 공유하는 사이트는 데이타 베이스에 app data를 저장하는 서비스, 비디오 업로드 후 transcoding 하는 서비스 등등..&lt;/li&gt;
+&lt;li&gt;서비스들은 실제로 production의 컨테이너들로 구성된다.&lt;/li&gt;
+&lt;li&gt;하나의 서비스는 하나의 이미지만 실행하지만 그 이미지를 실행하는 방법을 쳬계화 할 수 있습니다. 그 체계화는 docker-compose.yml 파일에서 설정 할 수 있다. &lt;/li&gt;
+&lt;li&gt;docker-compose.yml 파일에서는 어떤 포트를 사용해야하는지, 서비스가 가져가야 할 필요한 용량에 따라 얼마나 많은 복제 컨테이너를 실행시켜야 하는지, 서비스를 위해 얼마나 컴퓨팅 리소스를 할당할지를 설정 할 수 있다.&lt;/li&gt;
+&lt;li&gt;docker-compose.yml 을 이용 하면 이미지를 일일이 다 run 시키지 않아도 된다. &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;What is Image?&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;도커 이미지란 서비스의 필요한 프로그램 , 라이브러리, 소스등을 설치한 뒤에 이를 파일로 만든 것이다. 쉽게 실행파일이라고 생각하면 된다.&lt;/li&gt;
+&lt;li&gt;이미지를 만들기위해 dockerfile에 필요한 명령들을 설정해 놓는다.&lt;/li&gt;
+&lt;li&gt;이미지는 base image 와 parent image 로 나뉜다.&lt;/li&gt;
+&lt;li&gt;base image 는 parent image가 없는 이미지를 말한다.&lt;/li&gt;
+&lt;li&gt;parent image 는 사용하는 이미지의 Dockerfile 내에 FROM 으로 지시되는 이미지이다. 만약 Dockerfile 내에 FROM 이 지시되어있지 않다면 부모 이미지가 없는것이고 이는 곧 base image 가 된다.&lt;/li&gt;
+&lt;li&gt;Dockerfile로 이미지를 만들때는 전에 만들었던 이미지 캐시를 잘 이용해야 한다. 기존 방식은 한줄 한줄 실행하면서 &lt;br&gt;&lt;b&gt;임시 컨테이너 생성 &gt; 명령어 수행 &gt; 이미지 저장 &gt; 임시 컨테이너 삭제 &gt; 새로 만든 이미지 기반 임시 컨테이너 생성 &gt; 명령어 수행 &gt; 이미지로 저장 &gt; 임시 컨테이너 삭제…&lt;/b&gt; 이런식으로 수행…&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;----&gt; {해쉬아이디} : 이미지 저장 &lt;br&gt;
+----&gt; Running in {해쉬아이디} : 명령어를 수행하기 위해 그 전 이미지 기반으로 임시 컨테이너 생성&lt;/p&gt;
+&lt;p&gt;&amp;#x3C; 처음 Dockerfile 돌렸을때 &gt;&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 461px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 108.45986984815619%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAACXBIWXMAAAsSAAALEgHS3X78AAADmElEQVQ4y51VaXPaSBAV2By2wdwgkJCEbiSBOEJMwjr7Zf//X3r73hBXbVWq4tR+mBIj9fR0v6OxJqcZBtshlv+4sH8sMb/ZGAbcrwJswhBRHGM6nSDYRIiTFC/PT1guV1i7LuI0RxyHWNpLTMZjNJtNWHmrgX27gcvXNxwPNdZrD0mSmAA95wyuqgJj7uMkQ55nyLIcge/zkhCO45h9wuS2bcMqBj2cR30mvOJ0OpmgqizNrfW+huv5yNIEq5XDxDucjkfs+T5JYqRpxgLWZn88nuGyaqsoK5RcWV6YW6M4wX63Q304YV/XvGCDINhgvlhgxWrGkzHXxMROpjN0ul0MBkPT2XAwgPX6OsBiYZsXURSjrg+4XL6irPamvZeXHnF7RqvVgmVZny9PVYURFux/NpthNBpju825tqb1lPiEJGe5XBKnDMPhEAW/q72SENT7vSFMxAlz6+HhAd2nJ7ZkIyR+Ouw4rmkv5EXCTYH6LWhaj4+/rzCMEnNAODnOijJIDNBFUXJtze8VL/BIjr75nmcurJhcFWdZap793ss9Yb//il6/jzUPnI4nnM9fcH27YsuEq9UKj8ROXXQ6HXTanc8xXJA9kSE2fT8wlVRkWZKIKerb+w+Ss8Xb9Rtu329otz5p2XHXBHTKttgmDyZpygQ58dohjOgOXibwVfF2W0DxHgm5Q+SSxJF5twkCin8Ca8MDNkXs8qXYjiISw2rlCiVX1ZKQupC0iqIwzlDV+hb8jN0Edw1ba8rGVEgneDwgEjwC7/sbE2wbueTc+0ZaH4xr6cyasXKXK1VESkjMppOpqfKe0P3fCRVnyXIpW9sWlfFvVVVG0NP5AjklIQGL4UajYZaAb3CqPFG7j9Rku91Gl/ZrNJp3UqRyMZoT8LIscP323aj//f1vPndmmkiHwk9VSYdTOkrCj6LEGCEIQjzzgrv1GOARXLWeZxl8sne7/cVZSIJkObb12u/RlnPTVrfbQZ+6HZJdSe4X2cibU04NHUx/MqvBqmFaUirlrsaZY80MDc5MJdegUKvPHBq/JMxIvzAUlsJQQ+HAsSUMY0rI4UXC8I8mzYeXxaAqk9U0LGMyKSFLe8PhyOw77dZ9xH+WMM3uFe7Y0nIxNy6ZcICGcUoMN8Yd+j4mZmrz46AYV+v/Zb9Jz1tztiYm1aoc8OVyQUIPa8judhUKWrCkOzzq8nQ8mOFx/1+hO6g/nZEC9lSGGP8XTiU/Xd8vr64AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;처음 Dockerfile 돌렸을때&quot;
+        title=&quot;&quot;
+        src=&quot;/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
+        srcset=&quot;/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-999a6.png 148w,
+/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-a24ab.png 295w,
+/public/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png 461w&quot;
+        sizes=&quot;(max-width: 461px) 100vw, 461px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;&amp;#x3C; 기존 Dockerfile을 2번째 돌렸을때 &gt;&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 461px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 100.43383947939262%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsSAAALEgHS3X78AAACsklEQVQ4y61VW28SQRhdkEJLud8X2PsF2GVhaaFg8EV/gImtSZ+sFltSq9XYGv35xzPTNDExFtv0YbLLzOz5zvnOmUH59PMSnXkX5isL9msP5ksL6qSDfj9CEEbwez1YlsVnH3EcI5VKQet20W53YHJe13U0Gk0UiwUoigLly/t3iNIJBKaBYTRCk4ue56Feq0HlR2qrBcdxUK5UYNsOXNeD57rQDFOu6bpBYJsEBgRuQPm2+iABh46FaDSG2mxhMBhIwHanC1UloOugWq0R2JWAPd9HV9MloGlaMEyTgH006nUo1zc/KGWCMAhlFSFvPI75HmI6m5GtK5l1KNNxbDRZ0DAMubdC1rV6Q86NxmM8SyagnJ+voWkaWi3BLOBmE4vnS4zINhqNUCqVUMgXkE6nb3u0aVxdfaUMF61mExobnM1mEU/2KMtDxJ4K+YKRKCh6W65UYVGizrmYSlzOtdtt2R5hlnL45ojVM8jlcjAprU9XhQyLjS4UCv/H6s9xerrC9vY2pRUxZi8Dyp7ODiTrrqjITYlEAslkUj43Aq7Xa/ieL+l6fo+xabB3MQZsujBEOFur1eFzzWV8NgIeHx/LvlXKZTKb48VyKRnu7e3TXevhku9MEaFsdzrY2kox4GOaxHjQJMFQrGmaQYY28vk8SsUijbLIvPY34NHh26c1ZbVaIZ/Ly5CKuIjEHyyWGIYhgiBgsa2HAV5cXMjjpDPc4gJQVRV9Oi1Ojzj4ZQb7QYAnJydSspAnzFjM59ifHmBCtrZtP94UmXYOcT0F4VCeVfHbtqzHMXwyUz6enfHDogz0/nSGCS/R4TDiOY7QI3h2dxdlZlRk9W7cC/j9+kbeg5PJ7RUmQMQdJ+YGdFnIj2PxHspi1Wr1fsDLX5//+Rcwny9kT0U7MpkMdnZ2Nkr+Daej+2K+0xoXAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;기존 Dockerfile을 2번째 돌렸을때&quot;
+        title=&quot;&quot;
+        src=&quot;/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
+        srcset=&quot;/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-999a6.png 148w,
+/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-a24ab.png 295w,
+/public/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png 461w&quot;
+        sizes=&quot;(max-width: 461px) 100vw, 461px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;&amp;#x3C; 기존 Dockerfile 에서 EXPOSE 80 에서 EXPOSE 81로 변경했을 때 &gt;&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 455px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 110.76923076923077%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAACXBIWXMAAAsSAAALEgHS3X78AAADNUlEQVQ4y51V21LjVhB0wA6GxWDJkizLuliyJdmW5CvYgc3DpipsNpUCL/sCm+Ih//8TnZ7ZkCKVCpc8uDBHOj3d09Pj2u6PHcylBXvrwP9tAOfShVGZ6HkDuL0e8jxHFIVw3R7iJEanY8E0TeRZhr4f6rMoGqDvedjb20Pt7uPPWH7/HcphgtlsAb/fx2iUokewTqeDNE3h8SwIAp55yMcTDIcjhGHIAkMYbYP3ZkiSBIM4Qe3+00cFnGcp5oslAj/AmJcE0CKblOd9AoZhpICTyVQLRk8AF4sFC/oY8rz28PCAxXKNoiiQ5WN9uSwr/S6XV+s1vJ4LPwjJNtNLlmXx2QRZmqPRqCt7YZjzTu329rNKcF1XAYTNcnWGNYHKqoLjOLBtG0dHR6jVai9/7u7ulJXX9ygv1+rn5xtsNxtKWWK5XLGvHoIoxvAvU6YsLC2R90sqE+NM08CQCmpXV1es/g6t1jESMp0WFR92kPFl27ZeZLS/X//nmQA2m00FLMoZHZtrP6VHcRy/TubTz/X1jmzGbHwPPh1uNBoYk6Xv0zU2Wlh3OHdZPmGRMdrt9vOAjwxPTk7IsMLF+x9pjI+zs3Mdhf/B8FoBut2uyo3CAJsfLjk6JZs/YaFTvKPDBlmahqGtOTg4wOHhoSZmX9LxFPDXT78ooIzNYwoiTnxVzZCOKJeuN5sHOD1ta3JarZaOUL3egEMS/ylZKi9Wa2y2W0ynpTIUY94s+fb2yzdTGO5vptTJdKqAwjoeDN4G+OHDT38zFCDJp8i2nS5z2ta4ZVwQRVHStJLST58H/Pr1d0osNIvyNxrEOvkVYyeS5bvF3g1HGUbcSHEy0tEJwgHfn2pBiWj3sZ83Nzf8x2WUXKxWa2Vydr7Fe47PbFahbZg0YP/1kne7G12Q0kNJijg+IahsFdl5FxeXmhjZdbIbxeVXS5ZtI5JErszklBFck7XsvqKaY07GIt3mKMkdiWjKzS0LpNt1/j02Yoa8OOL8SWrKsnj72Nzf3yMmkMgRlomsKMum47n+TnQsRwvI0hWDSjJtHR8/D5gQLJ/QxXGqgAYjJhdlyeqSIGDAnwDZ3C8thz8BuG81WDkO4l0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;기존 Dockerfile 에서 EXPOSE 80 에서 EXPOSE 81로 변경했을 때&quot;
+        title=&quot;&quot;
+        src=&quot;/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
+        srcset=&quot;/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-a99df.png 148w,
+/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-caa51.png 295w,
+/public/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png 455w&quot;
+        sizes=&quot;(max-width: 455px) 100vw, 455px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;이미지 생성시 FROM에 적어둔 parent image기반으로 변경사항만 따로 저장되는게 장점. vm 처럼 용량을 많이 먹지 않음. &lt;br&gt;
+따라서 parent image 기반으로 새로운 이미지를 만들고 parent image 를 삭제하려고 했을때 에러 뜸.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 11.587301587301587%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsSAAALEgHS3X78AAAAfklEQVQI1x3NvRLCIBAE4DQhAYZYOHECnPKXASfYWPr+D7YC1e5t8d10zzv2+oD9PWG+FpoIL+cRY4C1BH0ckFKCc455ZqMvjLVbjG1ZVyilsG03CCEwGUMIIcI1JKWzYQ5EfQu4rjrS+YBS3vAtcy7QxqDWD86UBtyxjvZnf90IMyP/1DdwAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;error&quot;
+        title=&quot;&quot;
+        src=&quot;/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png&quot;
+        srcset=&quot;/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-1a291.png 148w,
+/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-2bc4a.png 295w,
+/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png 590w,
+/public/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png 630w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h3&gt;What is Stack?&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2&gt;Docker Structure&lt;/h2&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 58.41013824884792%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAA7DAAAOwwHHb6hkAAADHklEQVQozzWSWU9bVxSF/W+q/oCqFXnKQ6V0UpI+dExV9SlSn5pUeUiEgDSdkkJDCIkQg8NwDRGEBExsg7EdjONgxxMGbLiejX2vbfBsJ5GqRl/PNerD0j4652itvdbeupdr++y4kqT3MjSfD/ImYeNtzsum7GTQ/5jR8Ar2VIDsscq/r9rY01XOWVW+cRT5wlbkW1E/sqi8M5/l3YVDdKlInsyBSilXopnYpKVGqRQSBLMylsQ2a8kw9rCXiBzln3YTmyA8Y1E4v17grLXAp6sqHwvCz9ZUca+iW09VsIpPD1YiFEsVsuUGP7qKnH6q0GVUOGPK0b24iWXzBXKxSlCt8yRewSjwJFamP3jE38ESQ+481t0Cuh+cJc4Lle9Hghh8Cvv5CkOhCoOmbaaXXEgrbiSzB8nkwWB8jn5li/6NOGP7ddZFI185SlywF7i4mGDRLSz3Bar0+Cv0inrNV8WdznInFGdo2cmjORPGhTWMSw4BO0uzRqS5pwzadpjey+FL57jkqfClvcgVb5nLW2V0P40t8vnXF/jk7DkuW2V8hRbGdBMp3mI20WJOYOygwbjcZDpSRr9dQEq0WU5W2UorfLdxxCljng/Nimiogu7inWnee/8DTnV1cWk1ysujN2y4QzjujeAcGGDj7jCS9QUjkWMke4oHs3tMraawHDbwZpSOqxvBKr+FTpzq+rYUep/F6HHEuOo9xldsM28PcvOPUW51D9B/Y5i75gCG5GsePsuiN+wy48xhPqzjz+TodWa4PhHmuhShR8TWyfAXodDJwFPGqwrL3gDjhnH0+ttMztxnzBVkRn7Fgkdl1pZhzn+EOVPDL/LucR3SZ4jSNy+fEGoL2rWcF3tU4GeNUGnjTwSQwxPE/cPEQ6OYokH0uy0MliQTUyERQQxrpoQ3W+pY1hr6f7C6P7dr3ArX+FVkcFWE6lPqPE420YshTMVOcD/a6GBSnDVMHDR5lKh3/o5EqhSqDfaKdW7vCEKN/aYg1Wq3UAmIxR2N1vhd3A3s1DpvWujauyb+lyYuzpP7tc6S94erTB3UkORaZzD/AQnsBxGkBy8UAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;Docker Structure&quot;
+        title=&quot;&quot;
+        src=&quot;/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png&quot;
+        srcset=&quot;/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-1a291.png 148w,
+/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-2bc4a.png 295w,
+/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png 590w,
+/public/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png 868w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;출처 : &lt;a href=&quot;http://www.leafcats.com/146&quot;&gt;http://www.leafcats.com/146&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Docker Install&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/engine/installation/&quot;&gt;공식 홈페이지 참조&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Docker use&lt;/h2&gt;
+&lt;p&gt;도커 허브에서 원하는 이미지를 다운 받을 수 있다.
+&lt;a href=&quot;https://hub.docker.com/&quot;&gt;도커 허브&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker --help&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;도커의 명령어를 살펴볼 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker pull nginx:latest
+or
+$ docker run --name merlin-nginx -d -p 8080:80 nginx:latest&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;pull을 하면 해당 이미지만 받는것이다 &lt;br&gt;
+run을 실행하게 되면 local에 nginx:latest 라는 이미지가 없으면 자동으로 hub에서 다운받아서 run 을 시킨다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker images
+$ docker ps
+$ docker ps [-a] [-l] [-n number]&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;images 는 도커 이미지 리스트를 살펴볼 수 있다. &lt;br&gt;
+ps 는 실행중인 컨테이너 리스트를 볼 수 있다. &lt;br&gt;
+-a 옵션을 붙이면 종료된 목록까지 볼 수 있다.&lt;br&gt;
+-l 옵션은 마지막 실행했던 목록 , -n 은 리눅스의 tail 명령어와 동일하다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker commit -a &quot;merlin &lt;merlin@kakaocrop.com&gt;&quot; -m olympic-search-pc naughty_torvalds search.daum.pc:olypic&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;현재 돌아가고 있는 컨테이너를 이미지로 만들 수 있다.&lt;br&gt;
+-a 옵션 : author , -m : 커밋 메세지 , &amp;#x3C;naughty_torvalds&gt; 들어가는 부분 : 지금 동작하고 있는 컨테이너 이름 , &amp;#x3C;search.daum.pc:olypic&gt; 새로운 이미지 네임과 태그&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker rm &lt;컨테이너 이름&gt;
+$ docker rmi &lt;이미지&gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;도커 이미지와 컨테이너 삭제&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker start &lt;컨테이너 이름&gt;
+$ docker stop  &lt;컨테이너 이름&gt;
+$ docker restart &lt;컨테이너 이름&gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;도커 컨테이너 실행 , 중지 , 재부팅&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker attach &lt;실행중인 컨테이너 이름&gt; 
+$ docker exec -it &lt;실행중인 컨테이너 이름&gt; &lt;컨테이너 안에서 실행할 명령&gt;
+$ docker exec -it merlin-nginx /bin/bash&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;attach는 실행중인 도커 컨테이너에 접속한다. 단, ps 쳤을때 command 에 /bin/bash 라고 쳐져있어야 자유롭게 입력할 수 있다. 그렇지 않으면 입력은 할 수 없고 출력만 보인다. &lt;br&gt;
+exec는 컨테이너 안에서 수행할 명령을 날려줍니다. -it 옵션을 주면 실행된 bash 쉘에서 입력 및 출력을 할 수가 있습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker inspect &lt;컨테이너 이름 or 이미지:태그&gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;이미지 또는 컨테이너의 세부정보를 출력합니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker history &lt;이미지:태그&gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;이미지의 히스토리를 조회&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker diff &lt;실행중인 컨테이너 이름&gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;컨테이너가 실행되면서 변경된 파일 목록을 출력합니다. 비교 기준은 컨테이너를 생성한 이미지 내용입니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker cp &lt;컨테이너 이름&gt;:&lt;경로&gt; &lt;호스트 경로&gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;컨테이너에서 파일을 꺼내기.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Docker build&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker [OPTIONS] PATH | URL | -
+$ docker build -t app .&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;-t 옵션은 생성할 이미지 이름을 지정합니다. &lt;/p&gt;
+&lt;h3&gt;Dockerfile&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code&gt;# 어떤 이미지로부터 새로운 이미지를 생성할지를 작성
+# 베이스를 지정
+FROM node:argon
+
+# Dockerfile 을 관리하는 사람의 이름 
+MAINTAINER &lt;merlin.ho&gt; merlin@merlin.com
+# /app directory 생성
+RUN mkdir /app
+
+# /app directory를 WORKDIR로 설정
+WORKDIR /app
+
+# 현재 경로에 있는 package.json을 /app에 복사
+COPY package.json /app
+
+# ADD &lt;src&gt; &lt;dest&gt; src에 파일 대신 url을 입력할수 있고 압축 파일의 경우 압축을 해제하면서 복사
+ADD . /usr/src/app
+
+# 내부적으로 /bin/sh -c 실행 뒤 npm install 을 실행
+RUN npm install
+
+# 현재 Dockerfile 이 있는 경로의 모든 파일을 /app 에 복사함
+COPY . /app
+
+# 가상머신에 오픈할 포트넘버
+EXPOSE 3000
+
+# 도커 컨테이너가 실행 되었을때 실행되는 명령 지정, 빌드할때는 실행되지 않으며 여러개의 CMD가 존재할 경우 가장 마지막 것만 실행 됩니다.
+# 한꺼번에 여러 개의 프로그램을 실행하고 싶은 경우에는 run.sh파일을 작성하여 데몬으로 실행하거나 supervisord나 forego와 같은 여러 개의 프로그램을 실행하는 프로그램을 사용합니다.
+CMD [&quot;npm&quot;, &quot;start&quot;]&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;h3&gt;recommendation Dockerfile&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Containers should be ephemeral&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ephemeral environments are also sometimes called “Dynamic environments”, “Temporary environments”, “on-demand environments” or “short-lived environments”.&lt;/li&gt;
+&lt;li&gt;static environments와 반대되는 개념이다.&lt;/li&gt;
+&lt;li&gt;이것이 의미하는 바는 이 컨테이너를 우리가 stop and destroy 할 수 있고 새롭게 built 할 수 있으며 최소한의 셋팅과 설정으로 원하는 장소에 올려 놓을수 있다 라는것을 뜻함.&lt;/li&gt;
+&lt;li&gt;그래서 항상 production 환경과 같은 환경에서 test를 진행할 수 있다. test도 하나의 이미지를 공유 함으로써 병렬로 진행 할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use a .dockerignore file&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;우리는 docker build 커멘드를 치는 장소를 build context 라고 부른다. &lt;/li&gt;
+&lt;li&gt;디폴트로 현재 디렉토리라고 가정하지만 구체적인 다른 디렉토리를 가리키려면 -f flag를 사용해야한다.&lt;/li&gt;
+&lt;li&gt;현재 디렉토리의 파일과 여러 디렉토리들을 docker deamon 에게 build context로 보내지게 되는데 이 이것은 무심코 이미지 결과로 보내지게 되어 이미지 파일이 커지게 된다.&lt;/li&gt;
+&lt;li&gt;따라서 .gitignore와 비슷하게 .dockerignore 파일을 사용해서 관계없는 파일들을 exclude 시킬수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use multi-stage builds&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker 17.05 버전 이상에서는 multi-stage builds 로 최종 이미지 사이즈를 줄일 수 있다.&lt;/li&gt;
+&lt;li&gt;multi-stage builds 란 Dockerfile 안에서 multiple FROM 구문을 사용하면 각각의 새로운 stage가 빌드 되고 한 stage에서 나온 결과 산출물을 또다른 stage로 카피를 할 수 있다. 따라서 중간 산출물을 위해 Dockerfile을 여러개 만들어서 중간 이미지를 만들고 하는 복잡한 과정을 거치지 않아도 된다.&lt;/li&gt;
+&lt;li&gt;dockerfile을 작성할때 자주 바뀌지 않은 것부터 자주 바뀌는 순으로 작성을 한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Avoid installing unnecessary packages&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;불필요한 패키지는 인스톨을 피해라.&lt;/li&gt;
+&lt;li&gt;예를 들면 데이타베이스 이미지에 text editor 를 추가시킬 필요는 없다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Each container should have only one concern&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;하나의 컨테이너는 오직 하나의 일만하게 시켜라.&lt;/li&gt;
+&lt;li&gt;응용 프로그램을 여러 컨테이너로 분리하면 가로로 확장하고 컨테이너를 다시 사용하는 것이 훨씬 쉬워집니다. &lt;/li&gt;
+&lt;li&gt;컨테이너를 깨끗하고 가능한 모듈화 시킬 수 있는 최고의 판단을 해라.&lt;/li&gt;
+&lt;li&gt;만약 컨테이너 각각이 의존성을 띄고 있다면 Docker network를 사용하면 컨테이너끼리의 커뮤니케이션을 할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Minimize the number of layers&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sort multi-line arguments&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Build cache&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2&gt;10 things to avoid in docker containers&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;1. Don’t store data in containers
+2. Don’t ship your application in two pieces
+3. Don’t create large images
+4. Don’t use a single layer image
+5. Don’t create images from running containers
+6. Don’t use only the “latest” tag
+7. Don’t run more than one process in a single container 
+8. Don’t store credentials in the image. Use environment variables
+9. Don’t run processes as a root user 
+10. Don’t rely on IP addresses &lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;&lt;em&gt;출처 : &lt;a href=&quot;https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/&quot;&gt;https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Docker distribute&lt;/h2&gt;
+&lt;hr&gt;
+&lt;h2&gt;Docker network&lt;/h2&gt;</content:encoded></item></channel></rss>
