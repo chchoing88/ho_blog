@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 11 Jan 2018 11:16:49 GMT</lastBuildDate><item><title><![CDATA[Hello Docker]]></title><description><![CDATA[Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…]]></description><link>https://gatsbyjs.github.io/gatsby-starter-blog//hello-docker/</link><guid isPermaLink="false">https://gatsbyjs.github.io/gatsby-starter-blog//hello-docker/</guid><pubDate>Tue, 09 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker term&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 11 Jan 2018 14:25:26 GMT</lastBuildDate><item><title><![CDATA[Hello Docker]]></title><description><![CDATA[Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…]]></description><link>https://chchoing88.github.io/ho_blog//hello-docker/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-docker/</guid><pubDate>Tue, 09 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker term&lt;/h2&gt;
 &lt;h3&gt;What is Docker?&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation 화 할수 있고 서로 독립적인 공간을 가질수 있다. 서로에게 영향을 주지 않을수 있다. )&lt;/li&gt;
@@ -246,7 +246,9 @@ ps 는 실행중인 컨테이너 리스트를 볼 수 있다. &lt;br&gt;
 -a 옵션 : author , -m : 커밋 메세지 , &amp;#x3C;naughty_torvalds&gt; 들어가는 부분 : 지금 동작하고 있는 컨테이너 이름 , &amp;#x3C;search.daum.pc:olypic&gt; 새로운 이미지 네임과 태그&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker rm &lt;컨테이너 이름&gt;
-$ docker rmi &lt;이미지&gt;&lt;/code&gt;&lt;/pre&gt;
+$ docker rmi &lt;이미지&gt;
+# 한번에 처리.
+$ docker rm $(docker ps -a -q)&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;p&gt;도커 이미지와 컨테이너 삭제&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
@@ -292,7 +294,7 @@ $ docker build -t app .&lt;/code&gt;&lt;/pre&gt;
 FROM node:argon
 
 # Dockerfile 을 관리하는 사람의 이름 
-MAINTAINER &lt;merlin.ho&gt; merlin@merlin.com
+MAINTAINER &lt; merlin.ho &gt; merlin@merlin.com
 # /app directory 생성
 RUN mkdir /app
 
@@ -302,7 +304,8 @@ WORKDIR /app
 # 현재 경로에 있는 package.json을 /app에 복사
 COPY package.json /app
 
-# ADD &lt;src&gt; &lt;dest&gt; src에 파일 대신 url을 입력할수 있고 압축 파일의 경우 압축을 해제하면서 복사
+# src에 파일 대신 url을 입력할수 있고 압축 파일의 경우 압축을 해제하면서 복사
+ADD &lt; src &gt; &lt; dest &gt;
 ADD . /usr/src/app
 
 # 내부적으로 /bin/sh -c 실행 뒤 npm install 을 실행
@@ -388,6 +391,221 @@ CMD [&quot;npm&quot;, &quot;start&quot;]&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;p&gt;&lt;em&gt;출처 : &lt;a href=&quot;https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/&quot;&gt;https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h2&gt;Docker distribute&lt;/h2&gt;
+&lt;h2&gt;Docker manage app data&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;호스트의 지정된 폴더를 컨테이너에 다이렉트로 마운트 &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker run --name merlin_ubuntu -d -v &lt;호스트 폴더경로&gt;:&lt;마운트될 컨테이너 폴더경로&gt; -it ubuntu:14.04&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;volume container 사용&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;# 볼륨 컨테이너를 만든다. busybox 기반 정말 리눅스의 최소 기반만 가지고 있다. 1.14MB
+$ docker run -v /dbdata --name dbdata busybox
+
+# 볼륨 컨테이너를 우분투 컨테이너에 연결
+$ docker run --volumes-from=dbdata -it ubuntu:14.04 /bin/bash&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;use volume&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;보통 standalone 컨테이너에는 -v 또는 —volume 옵션을 사용했고, swarm service 에는 —mount 옵션을 사용해 왔지만
+17.06 이후 버젼부터는 standalone 컨테이너에서 모두 사용이 가능하다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;만약 볼륨드라이버의 구체적인 옵션을 셋팅해야 한다면 —mount 옵션을 사용해라.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;-v 또는 —volume 옵션은 도커 호스트에 파일 또는 디렉토리가 없을 경우 자동으로 생성해주지만 —mount 옵션은 자동으로 생성해주지 않는다 대신 에러를 뿜는다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;-v 또는 —volume 은 세가지 field 를 가질수 있다 첫번째는 호스트 머신의 볼륨 이름이고 랜덤한 볼륨을 생성하고 싶다면 생략해도 된다. 두번째는 컨테이너 안에 생성될 디렉토리 또는 파일 path이다. 세번째는 옵션으로 콤마(:)로 옵션을 나열할 수 있다. 예를 들면 ro(readonly) 옵션등이 있다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;—mount 는 key=value 로 구성을 하고 key 에는 type, src or source , dst or target , volume-opt 등이 있다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;type의 경우에는 bind , volume , tmpfs 가 있으며 이번 주제는 우선 volume 이므로 타입은 volume 으로 한다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker volume create my-vol
+$ docker volume ls
+# Remove a volume:
+$ docker volume rm my-vol&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;#컨테이너 연결 
+# mount 방법
+$ docker run -d \
+  -it \
+  --name devtest \
+  --mount source=myvol2,target=/app \
+  nginx:latest
+
+  $ docker run -d \
+  -it \
+  --name=nginxtest \
+  --mount source=nginx-vol,destination=/usr/share/nginx/html \
+  nginx:latest
+
+# -v 방법 
+ $ docker run -d \
+  -it \
+  --name devtest \
+  -v myvol2:/app \
+  nginx:latest 
+
+
+  $ docker run -d \
+  -it \
+  --name=nginxtest \
+  -v nginx-vol:/usr/share/nginx/html \
+  nginx:latest&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 3.985932004689331%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsSAAALEgHS3X78AAAANklEQVQI12NgYGD4j4xFRcX+S0pIoIjx8Qv8V1fX+K+lrf1fWVkFLq6iovJfXl7hv5ycHFwMAHNCFyf4cwT0AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;img_busybox 용량&quot;
+        title=&quot;&quot;
+        src=&quot;/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-1a291.png 148w,
+/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-2bc4a.png 295w,
+/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png 590w,
+/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png 853w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;마운트 된 경로는 inspect 명령어로 알아 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 22.55358807082945%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsSAAALEgHS3X78AAAAgklEQVQY062POxLDIAwFYfg1UFAaCGCnirn/+V4kJYVTO8XOQ0KzI6mcM6w1UEr9C4XzXCilYq2FPgZ672ityXt867nvlANzTsltK0gpCTFGIYTwER7HE7VWoRA85L3/hYY53aXnnKPrnIistdIT4Ys2fNAW/KG1vneyMQYM22/LiDfiGm0+Cgl6tAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;마운트 경로&quot;
+        title=&quot;&quot;
+        src=&quot;/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-1a291.png 148w,
+/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-2bc4a.png 295w,
+/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png 590w,
+/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-526de.png 885w,
+/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png 1073w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;결론은 어찌되었건 호스트에 데이타를 연동 시킨다. &lt;br&gt;
+volume container 를 사용했을 떄 데이터도 컨테이너로 관리를 할 수 있다. 그럼..컨테이너의 장점을 다 이용할 수 있지 않을까…&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Docker Configuration&lt;/h2&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 79.87261146496814%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsSAAALEgHS3X78AAACQklEQVQ4y52Sy28SURTG+W8E5wF2oXXhxqRbujHR2C60VVc+Kqhg22GAdFfrorEBbcTG1oClRrvQxC20AROoJraVh9IxogkTXRBoTCDweecO88Joqjf5Mnfud+7vnJlzbDCt79vv8PF5gu4bjQYkSUKz2cS/LJu22ZVLeLn7Gutb60hLb9Bqtaja7bYe3Ol0Dg6c3VjAQGQIA9EhnIqP0wqLxSJKpRJkWUalUkGhUKDvfwPrwG63SwMVKfv/XTrw5/4+8tkscpkMvkqfIZXL+Fatovx+G19IdZupFD7s7BwcWJHruJHIUnnjGV3amVl/8mKpggHM78ngp9d0sbcTYCcW4ZxOwik8o9I8jpxxU0n1XVjT/SvLGwYwZwIqwcqlsbFbcHtHwc14wBLxwQjxVmkyC7QnK7BSo0GsP47D3iUwvidwXF+EIzgMu+CGXXSDEWbA3FzGmfN+8ARMoT2wot+BYoRkmofLPwfOswBu8ikNZCdX9coV4OlLF8GERsCER0nCETjEs+TuPVx+nIatXq+jVqshPRvGSd8xsFNHwd85QaoRwXgfEagKo/9QUKF8MIojoQtwCeOqyJ4Xo9YK83s18IGHxFDF+mI4R/7h8IQIZyhKIZywQpIskQRJSzO0hvUBZdUkhusqAVx7AJfnPvms47CHB3EoOAhWDOiXtYbo0ADp8spm39j0shoXiMQYlVN5CnHqa02wAPvHxjyH5s6ZZ80yVn1QJcYCrP5o4O6rtz1tUc31nsa54Vmlei9yn/AL0L6/MBe+oOMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;구성&quot;
+        title=&quot;&quot;
+        src=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-1a291.png 148w,
+/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-2bc4a.png 295w,
+/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png 590w,
+/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png 785w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;&amp;#x3C; 이미지 준비 &gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;nginx&lt;/li&gt;
+&lt;li&gt;express&lt;/li&gt;
+&lt;li&gt;mongodb&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## 이미지 다운 받기 nginx 랑 mongodb
+$ docker pull nginx:latest &amp;&amp; docker pull mongo:latest
+## express 의 기반이 될 node image 받기
+$ docker pull node:alpine&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code&gt;## express source data image
+FROM busybox
+MAINTAINER &lt;merlin&gt; merlin@merlin.com
+VOLUME /app/
+CMD /bin/sh&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code&gt;## express 이미지 만들기
+FROM node:alpine
+MAINTAINER &lt;merlin&gt; merlin@merlin.com
+
+RUN mkdir /app
+WORKDIR /app
+
+EXPOSE 3000
+CMD [&quot;npm&quot;, &quot;start&quot;]&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
 &lt;hr&gt;
 &lt;h2&gt;Docker network&lt;/h2&gt;</content:encoded></item></channel></rss>
