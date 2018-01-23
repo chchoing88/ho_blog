@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Tue, 23 Jan 2018 05:14:46 GMT</lastBuildDate><item><title><![CDATA[Docker Depolyment]]></title><description><![CDATA[Docker Depolyment blue-green 배포를 해보자. 개념 로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v…]]></description><link>https://chchoing88.github.io/ho_blog//docker-depolyment/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//docker-depolyment/</guid><pubDate>Sat, 20 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;hr&gt;
-&lt;h2&gt;Docker Depolyment&lt;/h2&gt;
-&lt;h3&gt;blue-green 배포를 해보자.&lt;/h3&gt;
-&lt;h4&gt;개념&lt;/h4&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Tue, 23 Jan 2018 05:26:24 GMT</lastBuildDate><item><title><![CDATA[Docker Depolyment]]></title><description><![CDATA[Docker Depolyment blue-green 배포 개념 로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v…]]></description><link>https://chchoing88.github.io/ho_blog//docker-depolyment/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//docker-depolyment/</guid><pubDate>Sat, 20 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker Depolyment&lt;/h2&gt;
+&lt;h3&gt;blue-green 배포 개념&lt;/h3&gt;
 &lt;p&gt;로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v2 버젼인 그린(가칭)을 무중단 방식으로 업데이트를 진행하고 싶다. &lt;br&gt;
 그럴때 그린을 로드발란서에 등록을 시킨다. &lt;br&gt;
 그러면 블루와 그린을 로드발란싱을 할텐데 그린이 완전히 정상작동을 하였을때 v1 버젼인 블루를 죽이는 방식이다.&lt;/p&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png&quot;
+    href=&quot;/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -27,11 +25,11 @@
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;구성&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png&quot;
-        srcset=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-1a291.png 148w,
-/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-2bc4a.png 295w,
-/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png 590w,
-/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png 785w&quot;
+        src=&quot;/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png&quot;
+        srcset=&quot;/static/img_config-a3375ddee96da32a30b26f500d9d4a69-1a291.png 148w,
+/static/img_config-a3375ddee96da32a30b26f500d9d4a69-2bc4a.png 295w,
+/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png 590w,
+/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png 785w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -39,13 +37,13 @@
   
   &lt;/a&gt;
     &lt;/p&gt;
-&lt;h4&gt;환경&lt;/h4&gt;
+&lt;h3&gt;Environment&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;노트북 : 맥북&lt;/li&gt;
 &lt;li&gt;도커 호스트 : virtual box ubuntu&lt;/li&gt;
 &lt;li&gt;도커 컨테이너 : node express server , nginx-proxy&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4&gt;요약&lt;/h4&gt;
+&lt;h3&gt;Summary&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;맥북 - virtual box 공유 폴더 구성&lt;/li&gt;
 &lt;li&gt;폴더 구성 &lt;/li&gt;
@@ -55,6 +53,7 @@
 &lt;li&gt;check.sh 현재 돌아가는 도커 확인하고 새로운 도커 띄우고 현재 돌아가는 도커 죽이는 쉘 스크립트 작성&lt;/li&gt;
 &lt;li&gt;테스트&lt;/li&gt;
 &lt;/ol&gt;
+&lt;h3&gt;Execute&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## nginx-proxy 이미지 다운 받기 
 $ docker pull jwilder/nginx-proxy &lt;/code&gt;&lt;/pre&gt;
@@ -142,11 +141,23 @@ volumes:
     driver_opts:
       mountpoint: /home/merlin/blog_project/front # full path&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;p&gt;** 브라우저에서 접근할시 VIRTUAL_HOST 에 설정했던 이름으로 접근할 것 &lt;br&gt;&lt;/p&gt;
-&lt;p&gt;nginx 설정에 server&lt;em&gt;name이 VIRTUAL\&lt;/em&gt;HOST 에 설정했던 값이 박혀있기에 nginx는 해당 이름으로 접근할때 반응하게 된다. &lt;br&gt;&lt;/p&gt;
-&lt;p&gt;해서 /etc/hosts 설정은 필수&lt;/p&gt;
+&lt;p&gt;** 브라우저에서 접근할시 VIRTUAL&lt;em&gt;HOST 에 설정했던 이름으로 접근할 것 &lt;br&gt;
+nginx 설정에 server&lt;/em&gt;name이 VIRTUAL_HOST 에 설정했던 값이 박혀있기에 nginx는 해당 이름으로 접근할때 반응하게 된다. &lt;br&gt;
+해서 /etc/hosts 설정은 필수&lt;/p&gt;
+&lt;p&gt;— 작성중 —&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;#check.sh
+
+#!/bin/sh
+
+EXIST_BLUE=$(docker ps | grep app_blue)
+
+if [ -z &quot;$EXIST_BLUE&quot;]; then
+    echo &quot;run app_green!!&quot;
+else
+    echo &quot;run app_blue!!&quot;
+fi
+
 
 $ docker-compose up -d app_blue&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
