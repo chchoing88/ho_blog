@@ -164,7 +164,9 @@ $ docker cp <컨테이너 이름>:<경로> <호스트 경로>
 $ docker [OPTIONS] PATH | URL | -
 $ docker build -t app .
 ```
--t 옵션은 생성할 이미지 이름을 지정합니다. 
+-t 옵션은 생성할 이미지 이름을 지정합니다.  <br>
+-f 옵션은 파일명을 custom 하게 지었을때 사용하거나 Dockerfile 경로가 루트에 없을때 이용. <br>
+PATH 는 도커 이미지 빌드 할때 전송되는 context를 가리킨다. <br>
 
 ### Dockerfile
 ```Dockerfile
@@ -426,51 +428,7 @@ volumes:
 
 networks: 
 
-
-
-
 ```
-
-
-
----
-## Docker Configuration
-
-![구성](./img_config.png)
-
-< 이미지 준비 >
-1) nginx
-2) express
-3) mongodb
-
-```sh
-## 이미지 다운 받기 nginx 랑 mongodb
-$ docker pull nginx:latest && docker pull mongo:latest
-## express 의 기반이 될 node image 받기
-$ docker pull node:alpine
-```
-
-```dockerfile
-## mongodb data를 저장할 image
-FROM busybox
-MAINTAINER <merlin> merlin@merlin.com
-VOLUME /app/
-CMD /bin/sh
-```
-
-```dockerfile
-## express 이미지 만들기
-FROM node:alpine
-MAINTAINER <merlin> merlin@merlin.com
-
-RUN mkdir /app
-WORKDIR /app
-COPY package.json /app
-RUN  npm install
-
-EXPOSE 3000
-```
-
 
 ---
 ## Docker network
@@ -486,6 +444,24 @@ EXPOSE 3000
 - 컨테이너 내부의 eth0 인터페이스는 내부로 격리되어있어서 이 내부와 host를 이어줄 vethxxxx 형태의 인터페이스가 하나 더 존재한다. 이 인터페이스가 host와 컨테이너 사이를 연결해준다. 
 - 컨테이너 내부의 아이피를 확인하려면 ifconfig eth0 라고 치면 되는데 ifconfig 가 잘 안먹는다. 그럴땐 도커 inspect로 확인하자.
 
+### network 확인
+
+```sh
+$ ip addr show 
+or
+$ ifconfig
+
+```
+
+```sh
+$ docker attach nonenetcontainer
+# 접속후 
+$ cat /etc/hosts
+$ ip -4 addr
+
+```
+
+attach 했던걸 detach 하기 위해선 CTRL-p CTRL-q 를 입력하면 된다.
 
 ### network 방식
 
