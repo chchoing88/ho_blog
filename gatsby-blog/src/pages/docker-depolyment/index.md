@@ -3,13 +3,10 @@ title: Docker Depolyment
 date: "2018-01-20T10:00:03.284Z"
 ---
 
----
+
 ## Docker Depolyment
 
-
-### blue-green 배포를 해보자.
-
-#### 개념
+### blue-green 배포 개념
 로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v2 버젼인 그린(가칭)을 무중단 방식으로 업데이트를 진행하고 싶다. <br>
 그럴때 그린을 로드발란서에 등록을 시킨다. <br>
 그러면 블루와 그린을 로드발란싱을 할텐데 그린이 완전히 정상작동을 하였을때 v1 버젼인 블루를 죽이는 방식이다.
@@ -17,12 +14,12 @@ date: "2018-01-20T10:00:03.284Z"
 
 ![구성](./img_config.png)
 
-#### 환경
+### Environment
 - 노트북 : 맥북
 - 도커 호스트 : virtual box ubuntu
 - 도커 컨테이너 : node express server , nginx-proxy
 
-#### 요약
+### Summary
 1. 맥북 - virtual box 공유 폴더 구성
 2. 폴더 구성 
 3. ubuntu 에서 nginx-proxy 이미지 다운
@@ -31,13 +28,13 @@ date: "2018-01-20T10:00:03.284Z"
 6. check.sh 현재 돌아가는 도커 확인하고 새로운 도커 띄우고 현재 돌아가는 도커 죽이는 쉘 스크립트 작성
 7. 테스트
 
-
-
+### Execute
 
 ```sh
 ## nginx-proxy 이미지 다운 받기 
 $ docker pull jwilder/nginx-proxy 
 ```
+
 - 해당 이미지는 도커 젠을 기반으로 만들어진 nginx-proxy로 로드발란싱의 기능이 있는 nginx applicaion에 도커 젠 기능을 추가 해서 넣은 이미지
 
 - 해당 이미지를 사용하게 되면 도커 젠이 도커 데몬을 바라보고 있다가 컨테이너의 런 , 스탑 등의 이벤트를 감지, 해당 컨테이너 정보를 수집 해서 추가 작업을 할 수 있게 끔 도와준다. 여기서 추가작업은 nginx reverse proxy config 작업을 자동으로 수행할 수 있게 도와준다.
@@ -121,14 +118,25 @@ volumes:
 ```
 
 ** 브라우저에서 접근할시 VIRTUAL_HOST 에 설정했던 이름으로 접근할 것 <br>
-
 nginx 설정에 server_name이 VIRTUAL\_HOST 에 설정했던 값이 박혀있기에 nginx는 해당 이름으로 접근할때 반응하게 된다. <br>
-
 해서 /etc/hosts 설정은 필수
 
 
+-- 작성중 --
+
 ```sh
 #check.sh
+
+#!/bin/sh
+
+EXIST_BLUE=$(docker ps | grep app_blue)
+
+if [ -z "$EXIST_BLUE"]; then
+    echo "run app_green!!"
+else
+    echo "run app_blue!!"
+fi
+
 
 $ docker-compose up -d app_blue
 
