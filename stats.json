@@ -5,8 +5,8 @@
       "component---src-pages-index-js-ab4a4b17d62aaa99181a.js.map"
     ],
     "path---hello-docker": [
-      "path---hello-docker-cc88a16f1dd9b8e00833.js",
-      "path---hello-docker-cc88a16f1dd9b8e00833.js.map"
+      "path---hello-docker-343df5ff75246dffe02a.js",
+      "path---hello-docker-343df5ff75246dffe02a.js.map"
     ],
     "path---": [
       "path----557518bd178906f8d58a.js",
@@ -24,9 +24,13 @@
       "component---src-layouts-index-js-8942bbec5cb4b3661487.js",
       "component---src-layouts-index-js-8942bbec5cb4b3661487.js.map"
     ],
+    "path---docker-depolyment": [
+      "path---docker-depolyment-2a465c95ad91c37a3648.js",
+      "path---docker-depolyment-2a465c95ad91c37a3648.js.map"
+    ],
     "path---index": [
-      "path---index-bbbc5c37d25ce308fdc4.js",
-      "path---index-bbbc5c37d25ce308fdc4.js.map"
+      "path---index-8d1703e457c07ad5b26e.js",
+      "path---index-8d1703e457c07ad5b26e.js.map"
     ],
     "commons": [
       "commons-89d60b5b924ef4c6771c.js",
@@ -39,9 +43,9 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-8cc73acb68dd12ad02e7.js",
+      "app-6d43265f5621910e53e2.js",
       "build-js-styles.css",
-      "app-8cc73acb68dd12ad02e7.js.map",
+      "app-6d43265f5621910e53e2.js.map",
       "build-js-styles.css.map"
     ]
   }

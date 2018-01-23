@@ -1,4 +1,158 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Sat, 13 Jan 2018 05:15:37 GMT</lastBuildDate><item><title><![CDATA[Hello Docker]]></title><description><![CDATA[Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…]]></description><link>https://chchoing88.github.io/ho_blog//hello-docker/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-docker/</guid><pubDate>Tue, 09 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker term&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Tue, 23 Jan 2018 05:11:59 GMT</lastBuildDate><item><title><![CDATA[Docker Depolyment]]></title><description><![CDATA[Docker Depolyment blue-green 배포를 해보자. 개념 로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v…]]></description><link>https://chchoing88.github.io/ho_blog//docker-depolyment/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//docker-depolyment/</guid><pubDate>Sat, 20 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;hr&gt;
+&lt;h2&gt;Docker Depolyment&lt;/h2&gt;
+&lt;h3&gt;blue-green 배포를 해보자.&lt;/h3&gt;
+&lt;h4&gt;개념&lt;/h4&gt;
+&lt;p&gt;로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v2 버젼인 그린(가칭)을 무중단 방식으로 업데이트를 진행하고 싶다. &lt;br&gt;
+그럴때 그린을 로드발란서에 등록을 시킨다. &lt;br&gt;
+그러면 블루와 그린을 로드발란싱을 할텐데 그린이 완전히 정상작동을 하였을때 v1 버젼인 블루를 죽이는 방식이다.&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 79.87261146496814%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsSAAALEgHS3X78AAACQklEQVQ4y52Sy28SURTG+W8E5wF2oXXhxqRbujHR2C60VVc+Kqhg22GAdFfrorEBbcTG1oClRrvQxC20AROoJraVh9IxogkTXRBoTCDweecO88Joqjf5Mnfud+7vnJlzbDCt79vv8PF5gu4bjQYkSUKz2cS/LJu22ZVLeLn7Gutb60hLb9Bqtaja7bYe3Ol0Dg6c3VjAQGQIA9EhnIqP0wqLxSJKpRJkWUalUkGhUKDvfwPrwG63SwMVKfv/XTrw5/4+8tkscpkMvkqfIZXL+Fatovx+G19IdZupFD7s7BwcWJHruJHIUnnjGV3amVl/8mKpggHM78ngp9d0sbcTYCcW4ZxOwik8o9I8jpxxU0n1XVjT/SvLGwYwZwIqwcqlsbFbcHtHwc14wBLxwQjxVmkyC7QnK7BSo0GsP47D3iUwvidwXF+EIzgMu+CGXXSDEWbA3FzGmfN+8ARMoT2wot+BYoRkmofLPwfOswBu8ikNZCdX9coV4OlLF8GERsCER0nCETjEs+TuPVx+nIatXq+jVqshPRvGSd8xsFNHwd85QaoRwXgfEagKo/9QUKF8MIojoQtwCeOqyJ4Xo9YK83s18IGHxFDF+mI4R/7h8IQIZyhKIZywQpIskQRJSzO0hvUBZdUkhusqAVx7AJfnPvms47CHB3EoOAhWDOiXtYbo0ADp8spm39j0shoXiMQYlVN5CnHqa02wAPvHxjyH5s6ZZ80yVn1QJcYCrP5o4O6rtz1tUc31nsa54Vmlei9yn/AL0L6/MBe+oOMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;구성&quot;
+        title=&quot;&quot;
+        src=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-1a291.png 148w,
+/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-2bc4a.png 295w,
+/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png 590w,
+/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png 785w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h4&gt;환경&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;노트북 : 맥북&lt;/li&gt;
+&lt;li&gt;도커 호스트 : virtual box ubuntu&lt;/li&gt;
+&lt;li&gt;도커 컨테이너 : node express server , nginx-proxy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;요약&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;맥북 - virtual box 공유 폴더 구성&lt;/li&gt;
+&lt;li&gt;폴더 구성 &lt;/li&gt;
+&lt;li&gt;ubuntu 에서 nginx-proxy 이미지 다운&lt;/li&gt;
+&lt;li&gt;ubuntu 에서 node 이미지를 기반으로 express Dockerfile_express 작성 및 빌드&lt;/li&gt;
+&lt;li&gt;docker-compose.yml 작성&lt;/li&gt;
+&lt;li&gt;check.sh 현재 돌아가는 도커 확인하고 새로운 도커 띄우고 현재 돌아가는 도커 죽이는 쉘 스크립트 작성&lt;/li&gt;
+&lt;li&gt;테스트&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## nginx-proxy 이미지 다운 받기 
+$ docker pull jwilder/nginx-proxy &lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;해당 이미지는 도커 젠을 기반으로 만들어진 nginx-proxy로 로드발란싱의 기능이 있는 nginx applicaion에 도커 젠 기능을 추가 해서 넣은 이미지&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;해당 이미지를 사용하게 되면 도커 젠이 도커 데몬을 바라보고 있다가 컨테이너의 런 , 스탑 등의 이벤트를 감지, 해당 컨테이너 정보를 수집 해서 추가 작업을 할 수 있게 끔 도와준다. 여기서 추가작업은 nginx reverse proxy config 작업을 자동으로 수행할 수 있게 도와준다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;여기서 호스트의 docker.sock을 nginx-proxy 내부로 들고가야 하는데 이유는 호스트와 통신을 해야하기 때문이다. 호스트 서버에서 발생되는 도커 데몬의 이벤트를 바라보고 있다가 정보를 잘 받을수 있도록 통신을 해야한다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;여기서 nginx-proxy에 등록될 app 들은 VIRTUAL_HOST라는 환경변수를 등록 해야한다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;nginx 의 가상 호스트 정보는 &lt;a href=&quot;https://opentutorials.org/module/384/4529&quot;&gt;https://opentutorials.org/module/384/4529&lt;/a&gt; 여길 참조&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code&gt;## express 를 위한 도커파일
+FROM node:alpine
+MAINTAINER  merlin@merlin.com
+
+RUN mkdir -p /app
+WORKDIR /app
+COPY package*.json ./
+RUN  npm install
+
+EXPOSE 3000&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker build -t blog_express:v1 -f ./dockerfile/Dockerfile_express: .&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-yml&quot;&gt;&lt;code&gt;#docker-compose.yml
+
+version: &apos;3&apos;
+
+services:
+  app_blue:
+    image: blog_express:v1
+    depends_on:
+      - nginx-proxy
+    working_dir: /app/
+    ports:
+      - 8888:3000
+    environment:
+      - VIRTUAL_HOST=nodeapp.local
+    volumes:
+      - front-volume:/app/front
+      - server-volume:/app/server
+    command: npm start
+  
+  app_green:
+    image: blog_express:v1
+    depends_on:
+      - nginx-proxy
+    environment:
+      - VIRTUAL_HOST=localhost.app
+    volumes:
+      - front-volume:/app/front
+      - server-volume:/app/server
+      
+    command: npm start
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 8080:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    
+
+volumes:
+  server-volume:
+    driver: local-persist 
+    driver_opts:
+      mountpoint: /home/merlin/blog_project/server # full path 
+  
+  front-volume:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /home/merlin/blog_project/front # full path&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;** 브라우저에서 접근할시 VIRTUAL_HOST 에 설정했던 이름으로 접근할 것 &lt;br&gt;&lt;/p&gt;
+&lt;p&gt;nginx 설정에 server&lt;em&gt;name이 VIRTUAL\&lt;/em&gt;HOST 에 설정했던 값이 박혀있기에 nginx는 해당 이름으로 접근할때 반응하게 된다. &lt;br&gt;&lt;/p&gt;
+&lt;p&gt;해서 /etc/hosts 설정은 필수&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;#check.sh
+
+$ docker-compose up -d app_blue&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;# test&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[Hello Docker]]></title><description><![CDATA[Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…]]></description><link>https://chchoing88.github.io/ho_blog//hello-docker/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-docker/</guid><pubDate>Tue, 09 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker term&lt;/h2&gt;
 &lt;h3&gt;What is Docker?&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation 화 할수 있고 서로 독립적인 공간을 가질수 있다. 서로에게 영향을 주지 않을수 있다. )&lt;/li&gt;
@@ -289,7 +443,9 @@ exec는 컨테이너 안에서 수행할 명령을 날려줍니다. -it 옵션�
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker [OPTIONS] PATH | URL | -
 $ docker build -t app .&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;p&gt;-t 옵션은 생성할 이미지 이름을 지정합니다. &lt;/p&gt;
+&lt;p&gt;-t 옵션은 생성할 이미지 이름을 지정합니다.  &lt;br&gt;
+-f 옵션은 파일명을 custom 하게 지었을때 사용하거나 Dockerfile 경로가 루트에 없을때 이용. &lt;br&gt;
+PATH 는 도커 이미지 빌드 할때 전송되는 context를 가리킨다. &lt;br&gt;&lt;/p&gt;
 &lt;h3&gt;Dockerfile&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code&gt;# 어떤 이미지로부터 새로운 이미지를 생성할지를 작성
@@ -642,73 +798,6 @@ volumes:
 networks: &lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;hr&gt;
-&lt;h2&gt;Docker Configuration&lt;/h2&gt;
-&lt;p&gt;
-  &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-  
-  &lt;span
-    class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block; ; max-width: 590px; margin-left: auto; margin-right: auto;&quot;
-  &gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 79.87261146496814%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsSAAALEgHS3X78AAACQklEQVQ4y52Sy28SURTG+W8E5wF2oXXhxqRbujHR2C60VVc+Kqhg22GAdFfrorEBbcTG1oClRrvQxC20AROoJraVh9IxogkTXRBoTCDweecO88Joqjf5Mnfud+7vnJlzbDCt79vv8PF5gu4bjQYkSUKz2cS/LJu22ZVLeLn7Gutb60hLb9Bqtaja7bYe3Ol0Dg6c3VjAQGQIA9EhnIqP0wqLxSJKpRJkWUalUkGhUKDvfwPrwG63SwMVKfv/XTrw5/4+8tkscpkMvkqfIZXL+Fatovx+G19IdZupFD7s7BwcWJHruJHIUnnjGV3amVl/8mKpggHM78ngp9d0sbcTYCcW4ZxOwik8o9I8jpxxU0n1XVjT/SvLGwYwZwIqwcqlsbFbcHtHwc14wBLxwQjxVmkyC7QnK7BSo0GsP47D3iUwvidwXF+EIzgMu+CGXXSDEWbA3FzGmfN+8ARMoT2wot+BYoRkmofLPwfOswBu8ikNZCdX9coV4OlLF8GERsCER0nCETjEs+TuPVx+nIatXq+jVqshPRvGSd8xsFNHwd85QaoRwXgfEagKo/9QUKF8MIojoQtwCeOqyJ4Xo9YK83s18IGHxFDF+mI4R/7h8IQIZyhKIZywQpIskQRJSzO0hvUBZdUkhusqAVx7AJfnPvms47CHB3EoOAhWDOiXtYbo0ADp8spm39j0shoXiMQYlVN5CnHqa02wAPvHxjyH5s6ZZ80yVn1QJcYCrP5o4O6rtz1tUc31nsa54Vmlei9yn/AL0L6/MBe+oOMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
-    &gt;
-      &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
-        alt=&quot;구성&quot;
-        title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png&quot;
-        srcset=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-1a291.png 148w,
-/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-2bc4a.png 295w,
-/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png 590w,
-/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png 785w&quot;
-        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
-      /&gt;
-    &lt;/span&gt;
-  &lt;/span&gt;
-  
-  &lt;/a&gt;
-    &lt;/p&gt;
-&lt;p&gt;&amp;#x3C; 이미지 준비 &gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;nginx&lt;/li&gt;
-&lt;li&gt;express&lt;/li&gt;
-&lt;li&gt;mongodb&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## 이미지 다운 받기 nginx 랑 mongodb
-$ docker pull nginx:latest &amp;&amp; docker pull mongo:latest
-## express 의 기반이 될 node image 받기
-$ docker pull node:alpine&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code&gt;## mongodb data를 저장할 image
-FROM busybox
-MAINTAINER &lt;merlin&gt; merlin@merlin.com
-VOLUME /app/
-CMD /bin/sh&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code&gt;## express 이미지 만들기
-FROM node:alpine
-MAINTAINER &lt;merlin&gt; merlin@merlin.com
-
-RUN mkdir /app
-WORKDIR /app
-COPY package.json /app
-RUN  npm install
-
-EXPOSE 3000&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;hr&gt;
 &lt;h2&gt;Docker network&lt;/h2&gt;
 &lt;p&gt;출처 : &lt;a href=&quot;http://bluese05.tistory.com/15&quot;&gt;http://bluese05.tistory.com/15&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;network 구성&lt;/h3&gt;
@@ -720,6 +809,19 @@ EXPOSE 3000&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;컨테이너 내부의 eth0 인터페이스는 내부로 격리되어있어서 이 내부와 host를 이어줄 vethxxxx 형태의 인터페이스가 하나 더 존재한다. 이 인터페이스가 host와 컨테이너 사이를 연결해준다. &lt;/li&gt;
 &lt;li&gt;컨테이너 내부의 아이피를 확인하려면 ifconfig eth0 라고 치면 되는데 ifconfig 가 잘 안먹는다. 그럴땐 도커 inspect로 확인하자.&lt;/li&gt;
 &lt;/ul&gt;
+&lt;h3&gt;network 확인&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ ip addr show 
+or
+$ ifconfig&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker attach nonenetcontainer
+# 접속후 
+$ cat /etc/hosts
+$ ip -4 addr&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;attach 했던걸 detach 하기 위해선 CTRL-p CTRL-q 를 입력하면 된다.&lt;/p&gt;
 &lt;h3&gt;network 방식&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;# 네트워크 방식 확인하기 ( 드라이버 ) bridge , host , none ( 네임 기준 )
