@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Tue, 23 Jan 2018 05:39:36 GMT</lastBuildDate><item><title><![CDATA[Docker Depolyment]]></title><description><![CDATA[Docker Depolyment blue-green 배포 개념 로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v…]]></description><link>https://chchoing88.github.io/ho_blog//docker-depolyment/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//docker-depolyment/</guid><pubDate>Sat, 20 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker Depolyment&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Mon, 29 Jan 2018 06:12:24 GMT</lastBuildDate><item><title><![CDATA[Docker Depolyment]]></title><description><![CDATA[Docker Depolyment blue-green 배포 개념 로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v…]]></description><link>https://chchoing88.github.io/ho_blog//docker-depolyment/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//docker-depolyment/</guid><pubDate>Sat, 20 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker Depolyment&lt;/h2&gt;
 &lt;h3&gt;blue-green 배포 개념&lt;/h3&gt;
 &lt;p&gt;로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v2 버젼인 그린(가칭)을 무중단 방식으로 업데이트를 진행하고 싶다. &lt;br&gt;
 그럴때 그린을 로드발란서에 등록을 시킨다. &lt;br&gt;
@@ -6,7 +6,7 @@
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png&quot;
+    href=&quot;/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -18,18 +18,20 @@
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 79.87261146496814%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsSAAALEgHS3X78AAACQklEQVQ4y52Sy28SURTG+W8E5wF2oXXhxqRbujHR2C60VVc+Kqhg22GAdFfrorEBbcTG1oClRrvQxC20AROoJraVh9IxogkTXRBoTCDweecO88Joqjf5Mnfud+7vnJlzbDCt79vv8PF5gu4bjQYkSUKz2cS/LJu22ZVLeLn7Gutb60hLb9Bqtaja7bYe3Ol0Dg6c3VjAQGQIA9EhnIqP0wqLxSJKpRJkWUalUkGhUKDvfwPrwG63SwMVKfv/XTrw5/4+8tkscpkMvkqfIZXL+Fatovx+G19IdZupFD7s7BwcWJHruJHIUnnjGV3amVl/8mKpggHM78ngp9d0sbcTYCcW4ZxOwik8o9I8jpxxU0n1XVjT/SvLGwYwZwIqwcqlsbFbcHtHwc14wBLxwQjxVmkyC7QnK7BSo0GsP47D3iUwvidwXF+EIzgMu+CGXXSDEWbA3FzGmfN+8ARMoT2wot+BYoRkmofLPwfOswBu8ikNZCdX9coV4OlLF8GERsCER0nCETjEs+TuPVx+nIatXq+jVqshPRvGSd8xsFNHwd85QaoRwXgfEagKo/9QUKF8MIojoQtwCeOqyJ4Xo9YK83s18IGHxFDF+mI4R/7h8IQIZyhKIZywQpIskQRJSzO0hvUBZdUkhusqAVx7AJfnPvms47CHB3EoOAhWDOiXtYbo0ADp8spm39j0shoXiMQYlVN5CnHqa02wAPvHxjyH5s6ZZ80yVn1QJcYCrP5o4O6rtz1tUc31nsa54Vmlei9yn/AL0L6/MBe+oOMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 56.241032998565274%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAABYlAAAWJQFJUiTwAAABh0lEQVQoz5VSTUsCURT1r0Sr+gVthRbt6gfYKqK1lIuy6AsJwpSiQAja9EG2ScsaN1JBGWKitSgq1EZlGJtpxlT8mA9PvgcK0Sh24fAe95173rvnPlOxWIQRcrkcOI5DJpNBNpsFz/N0JSD5TnWmWq2GTqhWq4b7bjDhH7HjTcAy68O4PYB39suQ0xbUVAWNRuMPQVEUiKKIz3we1jU/+sx29A8vI/qUhCzLkCSJnpMO2oK3QQbnbhuYXRcq5TJ0Xac+kYIZJwP7VoheZnNfYWB0G4NjHjy+8sYvJEQhfgAtfYpy1INYPAGWZWE2m+FwOPAQfwYvlqhgpaagUKpSaM1LDQVFrYLIpgXK4giEySHcCxqdltfrRTgcpq20rLh7YbB/vYHDGzeEb66zh6RAliWoqkr39Xod+aZnxBuSa8EX2cPS8QRWTqbwkX+DIAgoFAqUR9ZfQ+klmNgRnH4rXGfT4CS2+5R7CV3XoGoqhdGPoIJzgSS6YeEyhfVQGqvBFOYvunMJfgBnaiJGKN99VAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;구성&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png&quot;
-        srcset=&quot;/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-1a291.png 148w,
-/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-2bc4a.png 295w,
-/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-fb8a0.png 590w,
-/ho_blog/static/img_config-a3375ddee96da32a30b26f500d9d4a69-6f6cd.png 785w&quot;
+        src=&quot;/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-1a291.png 148w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-2bc4a.png 295w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png 590w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-526de.png 885w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fa2eb.png 1180w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png 1394w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -54,11 +56,28 @@
 &lt;li&gt;테스트&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3&gt;Execute&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;버츄어 박스에 공유 폴더 설정
+참고 : &lt;a href=&quot;http://theniceguy.tistory.com/13&quot;&gt;http://theniceguy.tistory.com/13&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## 우분투에 공유폴더 마운트 
+$ sudo mount --types vboxsf blog_project blog_project&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;로컬 blog&lt;em&gt;project 폴더를 버츄어박스의 blog\&lt;/em&gt;proect 폴더랑 연결&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;버츄어 박스 내의 blog_proect 폴더안에는 도커에서 필요한 소스파일 및 설정파일들이 담겨져 있음.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;로드밸런싱을 위한 nginx-proxy 이미지 다운 받기 &lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## nginx-proxy 이미지 다운 받기 
 $ docker pull jwilder/nginx-proxy &lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;ul&gt;
+&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;해당 이미지는 도커 젠을 기반으로 만들어진 nginx-proxy로 로드발란싱의 기능이 있는 nginx applicaion에 도커 젠 기능을 추가 해서 넣은 이미지&lt;/p&gt;
 &lt;/li&gt;
@@ -75,21 +94,30 @@ $ docker pull jwilder/nginx-proxy &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;nginx 의 가상 호스트 정보는 &lt;a href=&quot;https://opentutorials.org/module/384/4529&quot;&gt;https://opentutorials.org/module/384/4529&lt;/a&gt; 여길 참조&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;express 도커서버를 위한 도커파일 작성&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code&gt;## express 를 위한 도커파일
 FROM node:alpine
-MAINTAINER  merlin@merlin.com
-
-RUN mkdir -p /app
+MAINTAINER  merlin@merlin.com&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;RUN mkdir -p /app
 WORKDIR /app
 COPY package*.json ./
-RUN  npm install
-
-EXPOSE 3000&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
+RUN  npm install&lt;/p&gt;
+&lt;p&gt;EXPOSE 3000&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker build -t blog_express:v1 -f ./dockerfile/Dockerfile_express: .&lt;/code&gt;&lt;/pre&gt;
+      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;4. 도커파일을 express 이미지로 빌드.
+```sh
+
+$ docker build -t blog_express:v1 -f ./dockerfile/Dockerfile_express: .&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
+&lt;ol start=&quot;5&quot;&gt;
+&lt;li&gt;모아둔 이미지들을 실행 &lt;/li&gt;
+&lt;/ol&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-yml&quot;&gt;&lt;code&gt;#docker-compose.yml
 
@@ -144,26 +172,75 @@ volumes:
 &lt;p&gt;** 브라우저에서 접근할시 VIRTUAL&lt;em&gt;HOST 에 설정했던 이름으로 접근할 것 &lt;br&gt;
 nginx 설정에 server&lt;/em&gt;name이 VIRTUAL_HOST 에 설정했던 값이 박혀있기에 nginx는 해당 이름으로 접근할때 반응하게 된다. &lt;br&gt;
 해서 /etc/hosts 설정은 필수&lt;/p&gt;
-&lt;p&gt;— 작성중 —&lt;/p&gt;
+&lt;ol start=&quot;6&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;블루-그린 배포를 위한 쉘 스크립트 작성&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;#check.sh
-
-#!/bin/sh
-
-EXIST_BLUE=$(docker ps | grep app_blue)
-
-if [ -z &quot;$EXIST_BLUE&quot;]; then
-    echo &quot;run app_green!!&quot;
-else
-    echo &quot;run app_blue!!&quot;
-fi
-
-
-$ docker-compose up -d app_blue&lt;/code&gt;&lt;/pre&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;#check.sh&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;!/bin/sh&lt;/h1&gt;
+&lt;h1&gt;!/bin/sh&lt;/h1&gt;
+&lt;p&gt;EXIST&lt;em&gt;BLUE=$(docker ps | grep app&lt;/em&gt;blue)&lt;/p&gt;
+&lt;p&gt;if [ -z “$EXIST_BLUE”]; then
+docker-compose up -d app&lt;em&gt;blue
+docker-compose stop app&lt;/em&gt;green
+echo “run app&lt;em&gt;blue!!”
+else
+docker-compose up -d app&lt;/em&gt;green
+docker-compose stop app&lt;em&gt;blue
+echo “run app&lt;/em&gt;green!!”
+fi&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;# test&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[Hello Docker]]></title><description><![CDATA[Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…]]></description><link>https://chchoing88.github.io/ho_blog//hello-docker/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-docker/</guid><pubDate>Tue, 09 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker term&lt;/h2&gt;
+      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- check.sh 를 작성해서 app_blue가 실행했을 경우에는 app\_green이 실행 후 app\_blue 를 중지.
+- app_green 이 실행했을 경우에는 app\_blue를 실행 후 app\_green 를 중지.
+
+7. test
+
+```sh
+# 처음에는 app_blue를 띄운다.
+$ docker-compose up -d app_blue
+
+# 그 다음부턴 무중단으로 .check.sh 를 실행
+$ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block; ; max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 41.46730462519936%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABVElEQVQoz41S2W6CUBDla9wQlH3fLiDoRaqofWjf+v//cHpnbGwTk7YPk5CZuWfOgjZb2UiqDqno4YYFFkYAy8tQNhL17sgl2gGOnyMpdtjtTyjEHkL1g1ggq3r4UQl9E2CxdqHNTRfuZYQxSZiyg52fEMsPbPIr7FCo5QpOUPCj9TbkR7+VtjI9yPHGlw/HC9p+RC8nZkUswrRGlAuYfvAnGAMuDVcBnNF0I4aXG+KsgR9XCBPBFqxMH3YS/QvsIdmajnDeJuh9g6V/gF2/wypf4SUtM9y6CSw3RZQ2TwB0lOYPwJlus8mVCsG070wsL2XJZDQxpN7GidEdzjz7Cbh1EgbUv/a0ue5wUgRIxUuKzTBeUdaSgahnWhFqZQul76mA4qxFoGyhb2LpBPk3IPlHFSl5dxklh7QfJmZFQXkqbQpPqkOilTwjv3NFhn4fw7qr+wTZagsxklb6FgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;테스트 결과 화면&quot;
+        title=&quot;&quot;
+        src=&quot;/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-1a291.png 148w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-2bc4a.png 295w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png 590w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-526de.png 885w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fa2eb.png 1180w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png 1254w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Hello Docker]]></title><description><![CDATA[Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…]]></description><link>https://chchoing88.github.io/ho_blog//hello-docker/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-docker/</guid><pubDate>Tue, 09 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker term&lt;/h2&gt;
 &lt;h3&gt;What is Docker?&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation 화 할수 있고 서로 독립적인 공간을 가질수 있다. 서로에게 영향을 주지 않을수 있다. )&lt;/li&gt;
