@@ -16,6 +16,10 @@
       "path---hello-react-1cf37e5bdce62655d19a.js",
       "path---hello-react-1cf37e5bdce62655d19a.js.map"
     ],
+    "path---hello-monad": [
+      "path---hello-monad-792bd352c24ccd988e14.js",
+      "path---hello-monad-792bd352c24ccd988e14.js.map"
+    ],
     "component---node-modules-gatsby-plugin-offline-app-shell-js": [
       "component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js",
       "component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js.map"
@@ -33,8 +37,8 @@
       "path---docker-depolyment-35f96e44e29bacc2aca4.js.map"
     ],
     "path---index": [
-      "path---index-a8bb4ef56c1ac67624f9.js",
-      "path---index-a8bb4ef56c1ac67624f9.js.map"
+      "path---index-3693f6cdd58336e16c9e.js",
+      "path---index-3693f6cdd58336e16c9e.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-e3f48914713f849bb8b6.js",
@@ -51,9 +55,9 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-8873b22bf9f7248e430c.js",
+      "app-61be53c81e0326ac3548.js",
       "build-js-styles.css",
-      "app-8873b22bf9f7248e430c.js.map",
+      "app-61be53c81e0326ac3548.js.map",
       "build-js-styles.css.map"
     ]
   }
