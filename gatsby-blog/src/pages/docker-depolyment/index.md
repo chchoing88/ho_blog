@@ -12,12 +12,30 @@ date: "2018-01-20T10:00:03.284Z"
 그러면 블루와 그린을 로드발란싱을 할텐데 그린이 완전히 정상작동을 하였을때 v1 버젼인 블루를 죽이는 방식이다.
 
 
-![구성](./img_config.png)
+![구성](./img_greenBlue.png)
 
 ### Environment
 - 노트북 : 맥북
 - 도커 호스트 : virtual box ubuntu
 - 도커 컨테이너 : node express server , nginx-proxy
+
+### local 폴더 구조
+
+```
+├── config                               
+├── db
+├── dockerfile
+│   ├── Dockerfile_express
+├── front
+├── server
+│   ├── server.js
+├── .dockerignore
+├── check.sh
+├── docker-compose.yml
+├── package.json
+  
+```
+
 
 ### Summary
 1. 맥북 - virtual box 공유 폴더 구성
@@ -30,10 +48,24 @@ date: "2018-01-20T10:00:03.284Z"
 
 ### Execute
 
+1. 버츄어 박스에 공유 폴더 설정
+참고 : [http://theniceguy.tistory.com/13](http://theniceguy.tistory.com/13)
+
+```sh
+## 우분투에 공유폴더 마운트 
+$ sudo mount --types vboxsf blog_project blog_project
+```
+- 로컬 blog_project 폴더를 버츄어박스의 blog\_proect 폴더랑 연결
+- 버츄어 박스 내의 blog_proect 폴더안에는 도커에서 필요한 소스파일 및 설정파일들이 담겨져 있음.
+
+
+2. 로드밸런싱을 위한 nginx-proxy 이미지 다운 받기 
+
 ```sh
 ## nginx-proxy 이미지 다운 받기 
 $ docker pull jwilder/nginx-proxy 
 ```
+
 
 - 해당 이미지는 도커 젠을 기반으로 만들어진 nginx-proxy로 로드발란싱의 기능이 있는 nginx applicaion에 도커 젠 기능을 추가 해서 넣은 이미지
 
@@ -45,6 +77,8 @@ $ docker pull jwilder/nginx-proxy
 
 - nginx 의 가상 호스트 정보는 [https://opentutorials.org/module/384/4529](https://opentutorials.org/module/384/4529) 여길 참조
 
+
+3. express 도커서버를 위한 도커파일 작성
 
 ```dockerfile
 ## express 를 위한 도커파일
@@ -59,11 +93,19 @@ RUN  npm install
 EXPOSE 3000
 
 ```
+
+
+
+4. 도커파일을 express 이미지로 빌드.
+
 ```sh
 
 $ docker build -t blog_express:v1 -f ./dockerfile/Dockerfile_express: .
 
 ```
+
+5. 모아둔 이미지들을 실행 
+
 ```yml
 #docker-compose.yml
 
@@ -122,7 +164,7 @@ nginx 설정에 server_name이 VIRTUAL\_HOST 에 설정했던 값이 박혀있�
 해서 /etc/hosts 설정은 필수
 
 
--- 작성중 --
+6. 블루-그린 배포를 위한 쉘 스크립트 작성
 
 ```sh
 #check.sh
@@ -132,18 +174,30 @@ nginx 설정에 server_name이 VIRTUAL\_HOST 에 설정했던 값이 박혀있�
 EXIST_BLUE=$(docker ps | grep app_blue)
 
 if [ -z "$EXIST_BLUE"]; then
-    echo "run app_green!!"
-else
+    docker-compose up -d app_blue
+    docker-compose stop app_green
     echo "run app_blue!!"
+else
+    docker-compose up -d app_green
+    docker-compose stop app_blue
+    echo "run app_green!!"
 fi
-
-
-$ docker-compose up -d app_blue
-
 ```
+
+- check.sh 를 작성해서 app_blue가 실행했을 경우에는 app\_green이 실행 후 app\_blue 를 중지.
+- app_green 이 실행했을 경우에는 app\_blue를 실행 후 app\_green 를 중지.
+
+
+7. test
 
 ```sh
-# test
+# 처음에는 app_blue를 띄운다.
+$ docker-compose up -d app_blue
 
+# 그 다음부턴 무중단으로 .check.sh 를 실행
+$ sudo sh check.sh
 
 ```
+
+
+![테스트 결과 화면](./img_developTest.png)
