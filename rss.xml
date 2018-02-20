@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Tue, 20 Feb 2018 06:30:40 GMT</lastBuildDate><item><title><![CDATA[hello monad???]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-monad/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-monad/</guid><pubDate>Mon, 12 Feb 2018 10:00:03 GMT</pubDate><content:encoded>&lt;p&gt;함수형 프로그래밍을 보다보니 나오게 되는 모나드 패턴(?)
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Tue, 20 Feb 2018 06:34:16 GMT</lastBuildDate><item><title><![CDATA[hello monad???]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-monad/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-monad/</guid><pubDate>Mon, 12 Feb 2018 10:00:03 GMT</pubDate><content:encoded>&lt;p&gt;함수형 프로그래밍을 보다보니 나오게 되는 모나드 패턴(?)
 찾아보니 너무 어렵다. 특정하게 정의를 내려가기 보단 코드를 조금씩 발전시켜 나가면서 느낌을 익혀보자는 취지로 작성한다.&lt;/p&gt;
 &lt;h3&gt;즉시 실행함수로 값 두개를 더해보자.&lt;/h3&gt;
 &lt;p&gt;아래 코드를 보자.
@@ -1133,7 +1133,7 @@ EXPOSE 3000&lt;/code&gt;&lt;/pre&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker build -t blog_express:v1 -f ./dockerfile/Dockerfile_express .&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;ol start=&quot;5&quot;&gt;
-&lt;li&gt;모아둔 이미지들을 실행 &lt;/li&gt;
+&lt;li&gt;모아둔 이미지들을 실행할 수 있도록 docker compose 작성&lt;/li&gt;
 &lt;/ol&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-yml&quot;&gt;&lt;code&gt;#docker-compose.yml
@@ -1179,10 +1179,6 @@ services:
       - 8080:80
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;p&gt;compose 실행&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker-compose up app_blue&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;p&gt;** 브라우저에서 접근할시 VIRTUAL&lt;em&gt;HOST 에 설정했던 이름으로 접근할 것 &lt;br&gt;
 nginx 설정에 server&lt;/em&gt;name이 VIRTUAL_HOST 에 설정했던 값이 박혀있기에 nginx는 해당 이름으로 접근할때 반응하게 된다. &lt;br&gt;
