@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Tue, 20 Feb 2018 06:18:48 GMT</lastBuildDate><item><title><![CDATA[hello monad???]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-monad/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-monad/</guid><pubDate>Mon, 12 Feb 2018 10:00:03 GMT</pubDate><content:encoded>&lt;p&gt;함수형 프로그래밍을 보다보니 나오게 되는 모나드 패턴(?)
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Tue, 20 Feb 2018 06:30:40 GMT</lastBuildDate><item><title><![CDATA[hello monad???]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-monad/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-monad/</guid><pubDate>Mon, 12 Feb 2018 10:00:03 GMT</pubDate><content:encoded>&lt;p&gt;함수형 프로그래밍을 보다보니 나오게 되는 모나드 패턴(?)
 찾아보니 너무 어렵다. 특정하게 정의를 내려가기 보단 코드를 조금씩 발전시켜 나가면서 느낌을 익혀보자는 취지로 작성한다.&lt;/p&gt;
 &lt;h3&gt;즉시 실행함수로 값 두개를 더해보자.&lt;/h3&gt;
 &lt;p&gt;아래 코드를 보자.
@@ -1073,7 +1073,7 @@ babel-eslint : eslint 의 parser를 babel-eslint로 사용. 이것은 Babel code
 &lt;li&gt;check.sh 현재 돌아가는 도커 확인하고 새로운 도커 띄우고 현재 돌아가는 도커 죽이는 쉘 스크립트 작성&lt;/li&gt;
 &lt;li&gt;테스트&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;만약 mac 에서 테스트를 한다면 2번부터 보시면 됩니다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;만약 mac 에서 테스트를 한다면 2번부터 보시면 됩니다.&lt;/strong&gt;&lt;/p&gt;
 &lt;h3&gt;Execute&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;버츄어 박스에 공유 폴더 설정
