@@ -337,6 +337,8 @@ volume container 를 사용했을 떄 데이터도 컨테이너로 관리를 할
 docker compose install 
 [docker compose install](https://docs.docker.com/compose/install/#install-compose)
 
+공식문서 [https://docs.docker.com/compose/compose-file/](https://docs.docker.com/compose/compose-file/)
+
 version 3 
 
 ```yml
@@ -430,6 +432,8 @@ networks:
 
 ```
 
+
+
 ---
 ## Docker network
 
@@ -504,6 +508,7 @@ $ docker run --new={네트워크 타입}
 - link 방식은 하나의 호스트 사이에서 실행되는 컨테이너 사이에서만 연결이 가능하다.
 - 다수의 host가 존재했을때, 다른 host의 컨테이너에는 접근할 수가 없다.
 - 이 경우 docker swarm 같은 orchestration 툴을 사용하거나 dynamic DNS를 구축해야한다.
+- links 옵
 
 ** dynamic DNS 란?
     - 간단하게 ip 가 바뀌면 그걸 알아채서 외부 DNS 서버에 알려준다. 그러면 ip가 동적으로 바뀌는 환경에서도 사용자는 바뀐 ip를 알 필요 없이 domain name 만 알면 동일하게 접속 할 수 있다.
