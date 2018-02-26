@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Mon, 26 Feb 2018 03:18:27 GMT</lastBuildDate><item><title><![CDATA[hello monad???]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-monad/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-monad/</guid><pubDate>Mon, 12 Feb 2018 10:00:03 GMT</pubDate><content:encoded>&lt;p&gt;함수형 프로그래밍을 보다보니 나오게 되는 모나드 패턴(?)
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Mon, 26 Feb 2018 03:23:22 GMT</lastBuildDate><item><title><![CDATA[hello monad???]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-monad/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-monad/</guid><pubDate>Mon, 12 Feb 2018 10:00:03 GMT</pubDate><content:encoded>&lt;p&gt;함수형 프로그래밍을 보다보니 나오게 되는 모나드 패턴(?)
 찾아보니 너무 어렵다. 특정하게 정의를 내려가기 보단 코드를 조금씩 발전시켜 나가면서 느낌을 익혀보자는 취지로 작성한다.&lt;/p&gt;
 &lt;h3&gt;즉시 실행함수로 값 두개를 더해보자.&lt;/h3&gt;
 &lt;p&gt;아래 코드를 보자.
@@ -1997,7 +1997,9 @@ $ docker run --new={네트워크 타입}&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;link 방식은 하나의 호스트 사이에서 실행되는 컨테이너 사이에서만 연결이 가능하다.&lt;/li&gt;
 &lt;li&gt;다수의 host가 존재했을때, 다른 host의 컨테이너에는 접근할 수가 없다.&lt;/li&gt;
 &lt;li&gt;이 경우 docker swarm 같은 orchestration 툴을 사용하거나 dynamic DNS를 구축해야한다.&lt;/li&gt;
-&lt;li&gt;links 옵&lt;/li&gt;
 &lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Warning: &gt;The —link flag is a legacy feature of Docker. It may eventually be removed. Unless you absolutely need to continue using it, we recommend that you use user-defined networks to facilitate communication between two containers instead of using —link. One feature that user-defined networks do not support that you can do with —link is sharing environmental variables between containers. However, you can use other mechanisms such as volumes to share environment variables between containers in a more controlled way.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;** dynamic DNS 란?
 - 간단하게 ip 가 바뀌면 그걸 알아채서 외부 DNS 서버에 알려준다. 그러면 ip가 동적으로 바뀌는 환경에서도 사용자는 바뀐 ip를 알 필요 없이 domain name 만 알면 동일하게 접속 할 수 있다.&lt;/p&gt;</content:encoded></item></channel></rss>
