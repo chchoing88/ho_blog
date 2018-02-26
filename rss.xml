@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Wed, 21 Feb 2018 02:19:03 GMT</lastBuildDate><item><title><![CDATA[hello monad???]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-monad/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-monad/</guid><pubDate>Mon, 12 Feb 2018 10:00:03 GMT</pubDate><content:encoded>&lt;p&gt;함수형 프로그래밍을 보다보니 나오게 되는 모나드 패턴(?)
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Mon, 26 Feb 2018 03:18:27 GMT</lastBuildDate><item><title><![CDATA[hello monad???]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-monad/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-monad/</guid><pubDate>Mon, 12 Feb 2018 10:00:03 GMT</pubDate><content:encoded>&lt;p&gt;함수형 프로그래밍을 보다보니 나오게 되는 모나드 패턴(?)
 찾아보니 너무 어렵다. 특정하게 정의를 내려가기 보단 코드를 조금씩 발전시켜 나가면서 느낌을 익혀보자는 취지로 작성한다.&lt;/p&gt;
 &lt;h3&gt;즉시 실행함수로 값 두개를 더해보자.&lt;/h3&gt;
 &lt;p&gt;아래 코드를 보자.
@@ -1001,11 +1001,13 @@ babel-eslint : eslint 의 parser를 babel-eslint로 사용. 이것은 Babel code
 &lt;li&gt;Rxjs , redux-observable&lt;/li&gt;
 &lt;li&gt;flow&lt;/li&gt;
 &lt;li&gt;esLint &amp;#x26; airbnb&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Docker Depolyment]]></title><description><![CDATA[Docker Depolyment blue-green 배포 개념 로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v…]]></description><link>https://chchoing88.github.io/ho_blog//docker-depolyment/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//docker-depolyment/</guid><pubDate>Sat, 20 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Docker Depolyment&lt;/h2&gt;
-&lt;h3&gt;blue-green 배포 개념&lt;/h3&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Docker Depolyment]]></title><description><![CDATA[Docker Depolyment blue-green 배포 개념 로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v…]]></description><link>https://chchoing88.github.io/ho_blog//docker-depolyment/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//docker-depolyment/</guid><pubDate>Sat, 20 Jan 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;Docker Depolyment&lt;/h1&gt;
+&lt;hr&gt;
+&lt;h2&gt;blue-green 배포 개념&lt;/h2&gt;
 &lt;p&gt;로드발란서를 앞단에 하나를 두고 v1 버젼인 블루(가칭) 라는 앱을 띄운다. 그러다가 나는 v2 버젼인 그린(가칭)을 무중단 방식으로 업데이트를 진행하고 싶다. &lt;br&gt;
 그럴때 그린을 로드발란서에 등록을 시킨다. &lt;br&gt;
 그러면 블루와 그린을 로드발란싱을 할텐데 그린이 완전히 정상작동을 하였을때 v1 버젼인 블루를 죽이는 방식이다.&lt;/p&gt;
+&lt;h2&gt;why needs?&lt;/h2&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
@@ -1042,28 +1044,29 @@ babel-eslint : eslint 의 parser를 babel-eslint로 사용. 이것은 Babel code
   
   &lt;/a&gt;
     &lt;/p&gt;
-&lt;h3&gt;Environment&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2&gt;BackEnd Environment&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;노트북 : 맥북&lt;/li&gt;
 &lt;li&gt;도커 호스트 : virtual box ubuntu or mac&lt;/li&gt;
-&lt;li&gt;도커 컨테이너 : node express server , nginx-proxy&lt;/li&gt;
+&lt;li&gt;도커 컨테이너 : node express server , nginx-proxy , mongodb&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3&gt;local 폴더 구조&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2&gt;폴더 구조&lt;/h2&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;├── config                               
-├── db
-├── dockerfile
-│   ├── Dockerfile_express
-├── front
-├── server
+      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;├── dockerfile
+│   ├── Dockerfile_express      ## express 용 서버 이미지 소스파일
+├── template                    ## 템플릿 소스
+├── server                      ## 서버소스
 │   ├── server.js
 ├── .dockerignore
-├── check.sh
-├── docker-compose.yml
-├── package.json
+├── check.sh                    ## 배포용 sh
+├── docker-compose.yml          ## docker 컨테이너들의 환경설정을 모아둔곳 한번에 서버들을 손쉽게 실행시킬 수 있다.
+├── package.json                ## app server 컨테이너 안에 들어가 관련 패키지 설치
   &lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;h3&gt;Summary&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2&gt;Summary&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;맥북 - virtual box 공유 폴더 구성&lt;/li&gt;
 &lt;li&gt;폴더 구성 &lt;/li&gt;
@@ -1075,7 +1078,8 @@ babel-eslint : eslint 의 parser를 babel-eslint로 사용. 이것은 Babel code
 &lt;li&gt;테스트&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;&lt;strong&gt;만약 mac 에서 테스트를 한다면 2번부터 보시면 됩니다.&lt;/strong&gt;&lt;/p&gt;
-&lt;h3&gt;Execute&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2&gt;procedure&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;버츄어 박스에 공유 폴더 설정
 참고 : &lt;a href=&quot;http://theniceguy.tistory.com/13&quot;&gt;http://theniceguy.tistory.com/13&lt;/a&gt;&lt;/li&gt;
@@ -1096,6 +1100,9 @@ $ sudo mount --types vboxsf blog_project blog_project&lt;/code&gt;&lt;/pre&gt;
 $ docker pull jwilder/nginx-proxy &lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;사실 여기서 받지 않아도  docker-compose.yml 파일에 설정이 되어있어서 docker-compose up 하면 자동으로 pull을 받게 된다.&lt;/p&gt;
+&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;해당 이미지는 도커 젠을 기반으로 만들어진 nginx-proxy로 로드발란싱의 기능이 있는 nginx applicaion에 도커 젠 기능을 추가 해서 넣은 이미지&lt;/p&gt;
 &lt;/li&gt;
@@ -1146,13 +1153,18 @@ services:
     image: blog_express:v1
     depends_on:
       - nginx-proxy
-    working_dir: /app
+      - mongo-db
+    working_dir: /app/
+    ports:
+      - 8888:3000
+    networks: 
+      - dbconnection
     environment:
       - VIRTUAL_HOST=nodeapp.local
     volumes:
       - type: bind
-        source: ./front
-        target: /app/front
+        source: ./template
+        target: /app/template
       - type: bind
         source: ./server
         target: /app/server
@@ -1162,13 +1174,16 @@ services:
     image: blog_express:v1
     depends_on:
       - nginx-proxy
-    working_dir: /app
+      - mongo-db
+    working_dir: /app/
+    networks: 
+      - dbconnection
     environment:
       - VIRTUAL_HOST=nodeapp.local
     volumes:
       - type: bind
-        source: ./front
-        target: /app/front
+        source: ./template
+        target: /app/template
       - type: bind
         source: ./server
         target: /app/server 
@@ -1178,11 +1193,29 @@ services:
     image: jwilder/nginx-proxy
     ports:
       - 8080:80
+    networks: 
+      - dbconnection
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro&lt;/code&gt;&lt;/pre&gt;
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  
+  mongo-db:
+    image: mongo
+    ports:
+      - 9999:27017
+    volumes:
+      - db-data:/data/db
+    networks: 
+      - dbconnection
+    command: mongod --dbpath &quot;/data/db&quot; 
+    
+volumes:
+  db-data:
+
+networks: 
+  dbconnection:&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;p&gt;** 브라우저에서 접근할시 VIRTUAL&lt;em&gt;HOST 에 설정했던 이름으로 접근할 것 &lt;br&gt;
-nginx 설정에 server&lt;/em&gt;name이 VIRTUAL_HOST 에 설정했던 값이 박혀있기에 nginx는 해당 이름으로 접근할때 반응하게 된다. &lt;br&gt;
+&lt;p&gt;** 브라우저에서 접근할시 VIRTUAL_HOST 에 설정했던 이름으로 접근할 것 &lt;br&gt;
+nginx 설정에 server_name이 VIRTUAL_HOST 에 설정했던 값이 박혀있기에 nginx는 해당 이름으로 접근할때 반응하게 된다. &lt;br&gt;
 해서 /etc/hosts 설정은 필수&lt;/p&gt;
 &lt;ol start=&quot;6&quot;&gt;
 &lt;li&gt;/etc/hosts 파일 수정&lt;/li&gt;
@@ -1657,18 +1690,12 @@ CMD [&quot;npm&quot;, &quot;start&quot;]&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;p&gt;&lt;em&gt;출처 : &lt;a href=&quot;https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/&quot;&gt;https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h2&gt;Docker manage app data&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;호스트의 지정된 폴더를 컨테이너에 다이렉트로 마운트 &lt;/p&gt;
+&lt;h2&gt;Docker app data 관리법&lt;/h2&gt;
+&lt;h3&gt;호스트의 지정된 폴더를 컨테이너에 다이렉트로 마운트&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker run --name merlin_ubuntu -d -v &lt;호스트 폴더경로&gt;:&lt;마운트될 컨테이너 폴더경로&gt; -it ubuntu:14.04&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;volume container 사용&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3&gt;volume container 사용&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;# 볼륨 컨테이너를 만든다. busybox 기반 정말 리눅스의 최소 기반만 가지고 있다. 1.14MB
 $ docker run -v /dbdata --name dbdata busybox
@@ -1679,39 +1706,27 @@ $ docker run --volumes-from=dbdata -it ubuntu:14.04 /bin/bash
 # 빽업도 진행할 수 있다.
 $ docker run —volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;ol start=&quot;3&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;use volume&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;보통 standalone 컨테이너에는 -v 또는 —volume 옵션을 사용했고, swarm service 에는 —mount 옵션을 사용해 왔지만
-17.06 이후 버젼부터는 standalone 컨테이너에서 모두 사용이 가능하다.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;만약 볼륨드라이버의 구체적인 옵션을 셋팅해야 한다면 —mount 옵션을 사용해라.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;-v 또는 —volume 옵션은 도커 호스트에 파일 또는 디렉토리가 없을 경우 자동으로 생성해주지만 —mount 옵션은 자동으로 생성해주지 않는다 대신 에러를 뿜는다.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;-v 또는 —volume 은 세가지 field 를 가질수 있다 첫번째는 호스트 머신의 볼륨 이름이고 랜덤한 볼륨을 생성하고 싶다면 생략해도 된다. 두번째는 컨테이너 안에 생성될 디렉토리 또는 파일 path이다. 세번째는 옵션으로 콤마(:)로 옵션을 나열할 수 있다. 예를 들면 ro(readonly) 옵션등이 있다.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;—mount 는 key=value 로 구성을 하고 key 에는 type, src or source , dst or target , volume-opt 등이 있다.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;type의 경우에는 bind , volume , tmpfs 가 있으며 이번 주제는 우선 volume 이므로 타입은 volume 으로 한다.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3&gt;volume 으로 사용&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;보통 standalone 컨테이너에는 -v 또는 —volume 옵션을 사용했고, swarm service 에는 —mount 옵션을 사용해 왔지만 17.06 이후 버젼부터는 standalone 컨테이너에서 모두 사용이 가능하다.&lt;/li&gt;
+&lt;li&gt;만약 볼륨드라이버의 구체적인 옵션을 셋팅해야 한다면 —mount 옵션을 사용해라.&lt;/li&gt;
+&lt;li&gt;-v 또는 —volume 옵션은 도커 호스트에 파일 또는 디렉토리가 없을 경우 자동으로 생성해주지만 —mount 옵션은 자동으로 생성해주지 않는다 대신 에러를 뿜는다.&lt;/li&gt;
+&lt;li&gt;-v 또는 —volume 은 세가지 field 를 가질수 있다 첫번째는 호스트 머신의 볼륨 이름이고 랜덤한 볼륨을 생성하고 싶다면 생략해도 된다. 두번째는 컨테이너 안에 생성될 디렉토리 또는 파일 path이다. 세번째는 옵션으로 콤마(:)로 옵션을 나열할 수 있다. 예를 들면 ro(readonly) 옵션등이 있다.&lt;/li&gt;
+&lt;li&gt;—mount 는 key=value 로 구성을 하고 key 에는 type, src or source , dst or target , volume-opt 등이 있다.&lt;/li&gt;
+&lt;li&gt;type의 경우에는 bind , volume , tmpfs 가 있다. 올바른 타입으로 선택하자.&lt;/li&gt;
+&lt;li&gt;Voloumn 타입, volumn은 도커에 의해 관리되는 host쪽에 있는 파일시스템으로 저장이 된다. 여기서 volumn은 ”~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty” 해당 경로에 있는 리눅스 안에 “/var/lib/docker/volumes/” 쪽에 저장이 된다. 도커가 아닌 프로세스가 이 파일은 수정하지 못하고 volumnes는 도커 안에서 데이터를 유지하기 최고의 방법이다. &lt;/li&gt;
+&lt;li&gt;bind 타입, 이 bind 타입은 host 어디에나 저장이 될 수 있다. 여기서 중요한 시스템 파일이나 디렉토리들에 사용이 될수있고 언제든지 도커가 아닌 프로세스나 도커 컨테이너에서 수정될수 있다.&lt;/li&gt;
+&lt;li&gt;tmpfs 타입, 이 타입은 hosts의 메모리에 저장이 된다. 그리고 host 파일시스템에 쓸수가 없다. 휘발성이 강하다.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker volume create my-vol
 $ docker volume ls
-# Remove a volume:
+## Remove a volume:
 $ docker volume rm my-vol&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;#컨테이너 연결 
-# mount 방법
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## 컨테이너 연결 
+## mount 방법
 $ docker run -d \
   -it \
   --name devtest \
@@ -1814,6 +1829,7 @@ volume container 를 사용했을 떄 데이터도 컨테이너로 관리를 할
 &lt;h2&gt;Docker compose&lt;/h2&gt;
 &lt;p&gt;docker compose install
 &lt;a href=&quot;https://docs.docker.com/compose/install/#install-compose&quot;&gt;docker compose install&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;공식문서 &lt;a href=&quot;https://docs.docker.com/compose/compose-file/&quot;&gt;https://docs.docker.com/compose/compose-file/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;version 3 &lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-yml&quot;&gt;&lt;code&gt;# compose 버젼 3을 이용하겠다. 대소문자 주의
@@ -1981,6 +1997,7 @@ $ docker run --new={네트워크 타입}&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;link 방식은 하나의 호스트 사이에서 실행되는 컨테이너 사이에서만 연결이 가능하다.&lt;/li&gt;
 &lt;li&gt;다수의 host가 존재했을때, 다른 host의 컨테이너에는 접근할 수가 없다.&lt;/li&gt;
 &lt;li&gt;이 경우 docker swarm 같은 orchestration 툴을 사용하거나 dynamic DNS를 구축해야한다.&lt;/li&gt;
+&lt;li&gt;links 옵&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;** dynamic DNS 란?
 - 간단하게 ip 가 바뀌면 그걸 알아채서 외부 DNS 서버에 알려준다. 그러면 ip가 동적으로 바뀌는 환경에서도 사용자는 바뀐 ip를 알 필요 없이 domain name 만 알면 동일하게 접속 할 수 있다.&lt;/p&gt;</content:encoded></item></channel></rss>
