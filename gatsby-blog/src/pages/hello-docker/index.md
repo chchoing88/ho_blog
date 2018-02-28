@@ -252,14 +252,14 @@ CMD ["npm", "start"]
 *출처 : [https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/](https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/)*
 
 ---
-## Docker manage app data
+## Docker app data 관리법
 
-1. 호스트의 지정된 폴더를 컨테이너에 다이렉트로 마운트 
+### 호스트의 지정된 폴더를 컨테이너에 다이렉트로 마운트 
 ```sh
 $ docker run --name merlin_ubuntu -d -v <호스트 폴더경로>:<마운트될 컨테이너 폴더경로> -it ubuntu:14.04
 ```
 
-2. volume container 사용
+### volume container 사용
 
 ```sh
 # 볼륨 컨테이너를 만든다. busybox 기반 정말 리눅스의 최소 기반만 가지고 있다. 1.14MB
@@ -272,27 +272,32 @@ $ docker run --volumes-from=dbdata -it ubuntu:14.04 /bin/bash
 $ docker run —volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
 ```
 
-3. use volume
+### volume 으로 사용
 
-- 보통 standalone 컨테이너에는 -v 또는 --volume 옵션을 사용했고, swarm service 에는 --mount 옵션을 사용해 왔지만
-17.06 이후 버젼부터는 standalone 컨테이너에서 모두 사용이 가능하다.
+
+- 보통 standalone 컨테이너에는 -v 또는 --volume 옵션을 사용했고, swarm service 에는 --mount 옵션을 사용해 왔지만 17.06 이후 버젼부터는 standalone 컨테이너에서 모두 사용이 가능하다.
 - 만약 볼륨드라이버의 구체적인 옵션을 셋팅해야 한다면 --mount 옵션을 사용해라.
 - -v 또는 --volume 옵션은 도커 호스트에 파일 또는 디렉토리가 없을 경우 자동으로 생성해주지만 --mount 옵션은 자동으로 생성해주지 않는다 대신 에러를 뿜는다.
 - -v 또는 --volume 은 세가지 field 를 가질수 있다 첫번째는 호스트 머신의 볼륨 이름이고 랜덤한 볼륨을 생성하고 싶다면 생략해도 된다. 두번째는 컨테이너 안에 생성될 디렉토리 또는 파일 path이다. 세번째는 옵션으로 콤마(:)로 옵션을 나열할 수 있다. 예를 들면 ro(readonly) 옵션등이 있다.
 - --mount 는 key=value 로 구성을 하고 key 에는 type, src or source , dst or target , volume-opt 등이 있다.
-- type의 경우에는 bind , volume , tmpfs 가 있으며 이번 주제는 우선 volume 이므로 타입은 volume 으로 한다.
+- type의 경우에는 bind , volume , tmpfs 가 있다. 올바른 타입으로 선택하자.
+- Voloumn 타입, volumn은 도커에 의해 관리되는 host쪽에 있는 파일시스템으로 저장이 된다. 여기서 volumn은 "~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty" 해당 경로에 있는 리눅스 안에 "/var/lib/docker/volumes/" 쪽에 저장이 된다. 도커가 아닌 프로세스가 이 파일은 수정하지 못하고 volumnes는 도커 안에서 데이터를 유지하기 최고의 방법이다. 
+- bind 타입, 이 bind 타입은 host 어디에나 저장이 될 수 있다. 여기서 중요한 시스템 파일이나 디렉토리들에 사용이 될수있고 언제든지 도커가 아닌 프로세스나 도커 컨테이너에서 수정될수 있다.
+- tmpfs 타입, 이 타입은 hosts의 메모리에 저장이 된다. 그리고 host 파일시스템에 쓸수가 없다. 휘발성이 강하다.
+
+
 
 
 ```sh
 $ docker volume create my-vol
 $ docker volume ls
-# Remove a volume:
+## Remove a volume:
 $ docker volume rm my-vol
 ```
 
 ```sh
-#컨테이너 연결 
-# mount 방법
+## 컨테이너 연결 
+## mount 방법
 $ docker run -d \
   -it \
   --name devtest \
@@ -508,15 +513,8 @@ $ docker run --new={네트워크 타입}
 - link 방식은 하나의 호스트 사이에서 실행되는 컨테이너 사이에서만 연결이 가능하다.
 - 다수의 host가 존재했을때, 다른 host의 컨테이너에는 접근할 수가 없다.
 - 이 경우 docker swarm 같은 orchestration 툴을 사용하거나 dynamic DNS를 구축해야한다.
-- links 옵
+
+> Warning: >The --link flag is a legacy feature of Docker. It may eventually be removed. Unless you absolutely need to continue using it, we recommend that you use user-defined networks to facilitate communication between two containers instead of using --link. One feature that user-defined networks do not support that you can do with --link is sharing environmental variables between containers. However, you can use other mechanisms such as volumes to share environment variables between containers in a more controlled way.
 
 ** dynamic DNS 란?
     - 간단하게 ip 가 바뀌면 그걸 알아채서 외부 DNS 서버에 알려준다. 그러면 ip가 동적으로 바뀌는 환경에서도 사용자는 바뀐 ip를 알 필요 없이 domain name 만 알면 동일하게 접속 할 수 있다.
-
-
-
-
-
-
-
-
