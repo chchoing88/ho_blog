@@ -71,6 +71,7 @@ module.exports = {
 웹팩에는 resolver라는 라이브러리가 있는데 이것은 모듈의 위치를 잡아주는데 도움을 준다. 모듈들은 require 문이나 import문으로 다른 모듈들을 불러올수 있다
 
 ```javascript
+// 모듈들 내부에서 
 import foo from 'path/to/module'
 // or
 require('path/to/module')
