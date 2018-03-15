@@ -90,5 +90,15 @@ http.createServer((request, response) => {
     request.on('data',(data) => {
         console.log('POST Data:', data);
     })
+
+    //or 쿠키 추출
+    const cookie1 = request.headers.cookie; // return 값은 문자열이다.
+    const cookie2 = request.headers.cookie.split(';').map((cookieItem) => {
+        let arrCookieItem = cookieItem.split('=');
+        return {
+            key: arrCookieItem[0],
+            value: arrCookieItem[1]
+        }
+    }); // return 은 객체
 })
 ```
