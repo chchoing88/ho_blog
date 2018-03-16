@@ -37,12 +37,16 @@
       "path---docker-depolyment-ac8cf9ea302435b186f6.js.map"
     ],
     "path---index": [
-      "path---index-3da57f6b34f77dc0de05.js",
-      "path---index-3da57f6b34f77dc0de05.js.map"
+      "path---index-60a241ae7903b13bf76c.js",
+      "path---index-60a241ae7903b13bf76c.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-0e285b607382ee417f2f.js",
       "path---hello-webpack-0e285b607382ee417f2f.js.map"
+    ],
+    "path---hello-web-server": [
+      "path---hello-web-server-a1be1797b118f0879d28.js",
+      "path---hello-web-server-a1be1797b118f0879d28.js.map"
     ],
     "commons": [
       "commons-89d60b5b924ef4c6771c.js",
@@ -59,9 +63,9 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-473e17239b8b721b9ded.js",
+      "app-822f4f67c1cdf6430051.js",
       "build-js-styles.css",
-      "app-473e17239b8b721b9ded.js.map",
+      "app-822f4f67c1cdf6430051.js.map",
       "build-js-styles.css.map"
     ]
   }

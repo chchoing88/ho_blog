@@ -1,4 +1,99 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 15 Mar 2018 07:47:24 GMT</lastBuildDate><item><title><![CDATA[webpack config]]></title><description><![CDATA[Intro 기존에 돌아가는 서버를 바라보는 dev proxy server를 띄워 부분적으로 react component를 개발하는 환경을 만들어보자. 그러기 위해서 사용하는 개발서버 webpack dev config…]]></description><link>https://chchoing88.github.io/ho_blog//webpack-config/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//webpack-config/</guid><pubDate>Wed, 14 Mar 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Intro&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Fri, 16 Mar 2018 06:26:41 GMT</lastBuildDate><item><title><![CDATA[hello-webServer]]></title><description><![CDATA[web Server web server 는 요청 과 응답의 연속이다. web browser에 web page주소를 입력(요청) 하면 입력한 주소에 맞는 웹 페이지(응답) 을 제공한다.  요청은 요청하는 url , 요청하는 방식 (ex. get,post…]]></description><link>https://chchoing88.github.io/ho_blog//hello-webServer/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-webServer/</guid><pubDate>Thu, 15 Mar 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;web Server&lt;/h2&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;web server 는 요청 과 응답의 연속이다.&lt;/li&gt;
+&lt;li&gt;web browser에 web page주소를 입력(요청) 하면 입력한 주소에 맞는 웹 페이지(응답) 을 제공한다. &lt;/li&gt;
+&lt;li&gt;요청은 요청하는 url , 요청하는 방식 (ex. get,post..) , 요청하는 agent , 요청자가 받을 수 있는 형식이나 charter-set , encoding , language  등등을 함께 실어서 보낸다.&lt;/li&gt;
+&lt;li&gt;응답은 응답에 상태 ( ex. 200 , 404 error) , 응답하는 data를 전달한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;여기서 nodeJs는 이 웹서버와 관련된 모든 기능들을 http 모듈에 담았다.&lt;/p&gt;
+&lt;p&gt;따라서 우리는 앞으로 http 모듈에 대해서 다룰것이고&lt;/p&gt;
+&lt;p&gt;이 모듈을 조금 더 편리하고 다양한 기능을 다룰 수 있게끔 만든 express 모듈을 알아볼 것이다.
+express 모듈은 http 모듈에 여러 기능을 추가해 쉽게 사용할 수 있게 만든 모듈이다.&lt;/p&gt;
+&lt;h3&gt;http 모듈&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;http 모듈은 createServer()로 server라는 객체를 생성한다.&lt;/li&gt;
+&lt;li&gt;listen(port[, callback])은 서버를 실행한다.&lt;/li&gt;
+&lt;li&gt;stop([callback])은 서버를 종료한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;server 객체&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;server 객체는 EventEmitter 객체를 기반으로 만들어졌으므로 이벤트를 연결 시킬수 있다.&lt;/li&gt;
+&lt;li&gt;server.on({eventName},{eventHandler})&lt;/li&gt;
+&lt;li&gt;예를 들면 내부적으로 connection이 발생하면 server.emit(‘connection’); 이라고 발생을 시키면 외부에서 우린 on 메서드로 그 이벤트를 감지해서 해당 후속 작업을 이어 나갈 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;server&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;connection&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;code&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Connection ON&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;“request” 라는 이벤트도 존재하는데 이 이벤트는 예외적으로 on 메서드를 사용해서 지정할 필요가 없고 createServer시 매개변수로 콜백(request 가 발생 했을시 이벤트 핸들러 ) 함수를 넘겨 놓으면 이벤트 핸들러(이벤트 리스너) 처럼 사용 할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;http&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;createServer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;request&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; response&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// 응답헤더&lt;/span&gt;
+    response&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;writeHead&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token string&quot;&gt;&apos;Content-Type&apos;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;text/html&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;token string&quot;&gt;&apos;Set-Cookie&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;breakfase = toast&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;Expire &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &apos; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; date&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toUTCString&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;token string&quot;&gt;&apos;dinner = chicken&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// 응답본문&lt;/span&gt;
+    response&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;&amp;lt;h1&gt;블라블라~&amp;lt;/h1&gt;&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;h3&gt;response 객체&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;클라이언트에 웹 페이지를 제공하려면 응답 메세지가 필요하다.&lt;/li&gt;
+&lt;li&gt;request 이벤트가 발생되면 핸들러(리스너)의 두번째 매개변수로 전달되는 response 객체를 사용해서 사용자에게 응답을 전달한다.&lt;/li&gt;
+&lt;li&gt;응답 메시지의 ‘Content-Type’ 는 전달할 데이터 속성을 뜻한다.&lt;/li&gt;
+&lt;li&gt;response 객체를 사용하면 클라이언트에 쿠키를 할당할 수 있다. 응답헤더에 ‘Set-Cookie’ 라는 키 값으로 셋팅 해준다.&lt;/li&gt;
+&lt;li&gt;쿠키를 출력할 때에는 request.headers.cookie 라는 값으로 참조 한다. &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;request 객체&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;server의 request 이벤트가 발생했을 때 이벤트 리스너의 첫 번째 매개변수에는 request 객체가 들어갑니다.&lt;/li&gt;
+&lt;li&gt;method , url , headers, trailers, httpVersion 등, 속성들이 존재한다.&lt;/li&gt;
+&lt;li&gt;이런 속성들을 사용하면 요청한 페이지를 적절하게 제공하는 것은 물론 요청 방식에 따라 페이지를 구분할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;http&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;createServer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;request&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; response&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// 그냥 요청자의 pathname을 구한다고 보면 된다.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; pathname &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; url&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;arse&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;url&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;pathname&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; 
+
+    &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;pathname &lt;span class=&quot;token operator&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;/&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token comment&quot;&gt;//or&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;method &lt;span class=&quot;token operator&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;GET&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token comment&quot;&gt;//or ( GET 요청 방식에서의 매개변수 추출 )&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// http://localhost/?name=hoho&amp;amp;region=suwon&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; query &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; url&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;url&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; ture&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;query&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    response&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;JSON&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;query&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;token comment&quot;&gt;// {&quot;name&quot;:&quot;hoho&quot;,&quot;region&quot;:&quot;suwon&quot;}&lt;/span&gt;
+
+    &lt;span class=&quot;token comment&quot;&gt;//or ( POST 요청 방식에서의 매개변수 추출 )&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;// request 이벤트가 발생한 후 request 객체의 data의 이벤트로 데이터가 전달 된다.&lt;/span&gt;
+    request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;data&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;POST Data:&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;token comment&quot;&gt;//or 쿠키 추출&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; cookie1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;headers&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;cookie&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// return 값은 문자열이다.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; cookie2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; request&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;headers&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;cookie&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;;&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;cookieItem&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; arrCookieItem &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; cookieItem&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;=&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            key&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; arrCookieItem&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+            value&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; arrCookieItem&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// return 은 객체&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[webpack config]]></title><description><![CDATA[Intro 기존에 돌아가는 서버를 바라보는 dev proxy server를 띄워 부분적으로 react component를 개발하는 환경을 만들어보자. 그러기 위해서 사용하는 개발서버 webpack dev config…]]></description><link>https://chchoing88.github.io/ho_blog//webpack-config/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//webpack-config/</guid><pubDate>Wed, 14 Mar 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;Intro&lt;/h2&gt;
 &lt;hr&gt;
 &lt;ul&gt;
 &lt;li&gt;기존에 돌아가는 서버를 바라보는 dev proxy server를 띄워 부분적으로 react component를 개발하는 환경을 만들어보자.&lt;/li&gt;
