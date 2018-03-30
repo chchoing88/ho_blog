@@ -761,6 +761,58 @@ let newValue = (value: number);
 (newValue: number); // Works!
 ```
 
+- 다음 아래와 같이 value 를 any로 캐스팅 하면, 너는 원하는 어떤것이든 타입을 캐스팅할수 있다. 다만 이건 굉장이 안전하지 않다. 
+
+```javascript
+let newValue = ((value: any): string);
+```
+
+- 하지만 타입을 지정하기 어렵고 불가능할때에는 result에 따라서 타입이 정해지길 바랄수 있다. 예를 들어보자
+
+```javascript
+// 얕은 복사
+function cloneObject(obj) {
+  const clone = {};
+
+  Object.kets(obj).forEach(key => {
+    clone[key] = obj[key];
+  })
+
+  // return clone;
+  // 이렇게 사용될 수 있다.
+  return ((clone: any): typeof obj);
+}
+
+
+```
+
+- 만약 우리가 cloneObject 메소드를 실행하기전에 들어오는 인자의 타입을 먼저 정한다면 아래처럼 작성할 것이다.
+
+```javascript
+function cloneObject(obj: { [key: string]: mixed}){}
+```
+
+- 하지만 위 코드는 문제가 있다. 우리의 **typeof obj** annotation 또한 새로운 annotation을 갖기에 전체 목적을 파괴시킨다.
+
+- 그래서 우리는 function 안에 사용할 타입에 대해서 assertion 해야한다.
+
+```javascript
+function cloneObject(obj) {
+  (obj: { [key: string]: mixed});
+  //...
+
+  return ((clone: any): typeof obj);
+}
+```
+
+- 실질적인 해결 방법은 아래와 같다.
+
+```javascript
+function cloneObject<T: { [key: string]: mixed }> (obj: T): $Shape<T> {
+  //...
+}
+```
+
 20. Utility Types
 
 - flow 는 flow 자체내에 utility types 들을 제공한다.
