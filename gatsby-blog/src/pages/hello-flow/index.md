@@ -313,3 +313,456 @@ class MyClass<A, B, C> {
 var val: MyClass<number, boolean, string> = new MyClass(1, true, 'three');
 
 ```
+
+12. Type aliases
+
+- 복잡한 타입들을 다양한 장소에서 사용하고 싶을때 flow는 type alias를 사용한다.
+
+```javascript
+type MyObject = {
+  foo: number,
+  var: boolean,
+  baz: string
+}
+```
+
+- generics 를 활용해서 정의할 수도 있다.
+
+```javascript
+type MyObject<A, B, C> = {
+  foo: A,
+  bar: B,
+  baz: C,
+};
+
+var val: MyObject<number, boolean, string> = {
+  foo: 1,
+  bar: true,
+  baz: 'three',
+};
+```
+
+13. Opaque Type Aliases
+
+- Opaque type aliases는 이 타입이 정의된 파일 외부에 있는 다른 파일들에서 접근을 허용하지 않는다. 
+- 이 타입은 선언된 곳 어디서든 사용될수 있는 type aliases와 동일하게 작동한다.
+
+```javascript
+opaque type ID = string;
+
+function identity(x: ID): ID {
+  return x;
+}
+export type {ID};
+```
+
+- 또한 optionally하게 제약조건 subtyping을 추가할 수 있다.
+
+```javascript
+// Opaque type alias syntax
+opaque type Alias = Type;
+opaque type Alias: SuperType = Type;
+
+opaque type ID: string = string;
+
+```
+
+- import 한 opaque type은 외부에서 사용할 수 없다. 마치 nomial type 처럼 행동한다.
+- c++ , java , swift는 nomial type 시스템을 사용한다.
+- nominal type system 이란 타입의 구조가 같더라도 이름이 다르면 에러를 뿜는다.
+
+```javascript
+// exports.js
+export opaque type NumberAlias = number;
+
+// imports.js
+import type {NumberAlias} from './exports';
+
+(0: NumberAlias) // Error: 0 is not a NumberAlias!
+
+function convert(x: NumberAlias): number {
+  return x; // Error: x is not a number!
+}
+
+```
+- opaque type alias 에 subtyping constraint를 추가할때 우리는 super type으로 사용된 opaque type을 선언된 파일 밖에서 사용할 수 있다.
+
+```javascript
+//exports.js
+export opaque type ID: string = string;
+
+//import.js
+import type {ID} from './exports.js';
+
+function formatID(x: ID): string {
+  return "ID: " + x; // works
+}
+
+function toID(x: string): ID {
+  return x;
+}
+```
+
+- subtyping constraint를 함께 쓰는 opaque type alias 를 만들때 타입설정은 반드시 super type positiona에 설정된 타입을 지니고 있어야 한다. 
+
+```javascript
+opaque type Bad: string = number; // Error: number is not a subtype of string
+opaque type Good: {x: string} = {x: string, y: number};
+
+```
+
+14. Interface Types
+
+- classes flow type 의 경우에는 nominal typed 이다. 다시말해서 같은 속성과 같은 메서드가 있어도 서로 이름이 다른 classes type은 한곳에서 다른곳으로 사용이 불가하다.
+- 대신에. interface 로 기대 되는 class structure 를 선언할 수 있다.
+
+```javascript
+interface Serializable {
+  serialize(): string;
+}
+
+class Foo {
+  serialize() { return '[Foo]'; }
+}
+
+class Bar {
+  serialize() { return '[Bar]'; }
+}
+
+const foo: Serializable = new Foo(); // Works!
+const bar: Serializable = new Bar(); // Works!
+```
+
+- implements 구문을 사용해서 flow 에게 이 인터페이스에 매칭되는 클래스를 원한다는 것을 말해줄수가 있다. 이것은 다른 사람이 클래스를 쉽게 변하게 만들지 못하도록 보호할 수 있다.
+- 멀티로 2개 이상도 설정가능
+
+```javascript
+// @flow
+interface Serializable {
+  serialize(): string;
+}
+
+class Foo implements Serializable {
+  serialize() { return '[Foo]'; } // Works!
+}
+
+class Bar implements Serializable {
+  // $ExpectError
+  serialize() { return 42; } // Error!
+}
+```
+
+- 인터페이스 syntax는 아래와 같다.
+
+```javascript
+interface MyInterface {
+  method(value: string): number;
+  property: string;
+  property?: string;
+
+  [key: string]: number;
+}
+```
+
+- 인터페이스도 다른 타입과 같이 generics를 사용할수 있고 프로퍼티에 read-only 와 write-only를 설정할 수있다.
+
+  ```javascript
+  interface MyInterface<A, B, C> {
+    foo: A;
+    bar: B;
+    baz: C;
+  }
+
+  interface MyInterface {
+    +covariant: number // read-only
+    -contravariant: number; // write-only
+  }
+
+  interface Invariant { property: number }
+  interface Contravariant { -writeOnly: number }
+
+  function method1( value: Invariant) {
+    value.property; // works
+    value.property = 3.14 // works
+  }
+  funtion method2 ( value: contravariant) {
+    value.property; // error
+    value.writeOnly = 3.14 // works!!
+  }
+  ```
+
+  - write-only 를 사용하면 덜 구체적인 타입도 pass를 진행한다.
+
+  ```javascript
+  interface Contravariant { -writeOnly: number }
+  var numberOrString = Math.random() > 0.5? 42 : 'forty-two';
+
+  var value2: Contravariant = { writeOnly: numberOrString };
+  ```
+
+  15. Generic Types
+
+  - generic은 추상적으로 타입을 지정할수 있는 방법이다.
+  - generic은 function , function types , classes , type aliases , interface에 사용될 수 있다.
+
+  - function 사용
+
+  ```javascript
+  function identity<T>(value: T): T {
+    return value;
+  }
+
+  <T>(param: T) => T
+  ```
+  - classes 사용
+
+  ```javascript
+  class Item<T> {
+    //...
+  }
+
+  class Item<T> {
+    prop: T;
+
+    constructor(param: T) {
+      this.prop = param;
+    }
+
+    method(): T {
+      return this.prop
+    }
+  }
+  ```
+  - many generics as you need
+
+  ```javascript
+  function identity<One, Two, Three>(one: One, two: Two, three: Three) {
+  // ...
+  }
+  ```
+
+  - generic 타입은 말 그대로 "unknown" type이다. 하지만 함수 안에서 구체적인 타입을 사용하게 된다면 에러를 뿜는다.
+
+  ```javascript
+  function logFoo<T>(obj: T): T {
+    console.log(obj.foo); // error
+    return obj
+  }
+  // 정확한 타입을 쓰기 위해 분기를 쳐야 한다.
+  function logFoo<T>(obj: T): T {
+  if (obj && obj.foo) {
+    console.log(obj.foo); // Works.
+  }
+    return obj;
+  }
+
+  // 또는 타입을 지정한다.
+  function logFoo<T: {foo: string}>(obj: T): T {
+    console.log(obj.foo);
+    return obj;
+  }
+  ```
+- flow경우 하나의 타입을 다른곳으로 전달할 때 original type을 잃어버린다. 그래서 구체적인 타입을 덜 구체적인 타입으로 전달할때 flow 는 "forget" 된다. 그것은 한때 구체적이였던 것이다.
+
+```javascript
+function identity<T>(val: T): T{
+  retur val
+}
+
+let foo: 'foo' = 'foo'; // works
+// identity 호출할때 구체적인 string이 전잘 됬지만 호출 이후에 original type을 잃어버림.. 그래서 작동할 수 있다.
+let bar: 'bar' = identity('bar'); // works
+```
+
+- generic은 함수의 arguments 처럼 타입을 지정할 수 있다. 
+
+```javascript
+type Item<T> = {
+  prop: T,
+}
+
+let item: Item<string> {
+  prop: "value"
+}
+```
+
+- classes 버젼
+
+```javascript
+class Item<T> {
+  prop: T;
+  constructor(param: T) {
+    this.prop = param;
+  }
+}
+
+let item: Item<number> = new Item(42); 
+let item: Item = new Item(42); // error;
+```
+
+- type aliases 버젼
+
+```javascript
+type Item<T> = {
+  prop: T,
+}
+
+let item1: Item<number> = {prop: 42}
+let item2: Item = {prop: 42}  // error
+```
+
+
+- interface 버젼
+
+```javascript
+interface HasProp<T> {
+  prop: T,
+}
+
+class Item {
+  prop: string
+}
+(Item.prototype: HasProp<string>); // works
+(Item.prototype: HasProp) // error
+```
+
+- default 값도 설정할 수있다.
+
+```javascript
+type Item<T: number = 1> = {
+  prop: T,
+};
+
+let foo: Item<> = { prop: 1 };
+let bar: Item<2> = { prop: 2 };
+```
+16. Union types
+
+- 여러가지 타입을 받고 싶다면 Union types를 쓸수 있다.
+- syntax는 아래와 같다.
+
+```javascript
+Type1 | Type2 | ... | TypeN
+```
+
+- 여러 타입을 (union types)을 사용한다면 우리는 그들 타입중 하나만을 다뤄야 한다. 
+```javascript
+function toStringPrimitives(value: number | boolean | string): string { // Error!
+  if (typeof value === 'number') {
+    return String(value);
+  } else if (typeof value === 'boolean') {
+    return String(value);
+  }
+}
+```
+- 여러타입중 한가지 타입만 다루고 싶다면 다음과 같이 합니다.
+
+```javascript
+function toStringPrimitives(value: number | boolean | string) {
+  if (typeof value === 'number') {
+    return value.toLocaleString([], { maximumSignificantDigits: 3 }); // Works!
+  }
+  // ...
+}
+```
+
+- 만약 우리가 두가지의 object types들을 union type으로 생성한다면 flow 는 두 object type 에 들어있는 success property 를 base로 사용하여 알아낼수 있다.
+
+```javascript
+type Success = {success: true, value: boolean}
+type Fail = {success: false, error: string}
+
+type Response = Success | Fail;
+
+function handleResponse(response: Response) {
+  if( response.success ){
+    var value: boolean = response.value // work
+  } else {
+    var error: boolean = response.error // work
+  }
+}
+```
+
+- union type을 위처럼 분리해서 사용하려면 정확한 타입과 함께 사용해야 한다. disjoint unions type은 각 object에서 한가지 프로퍼티를 구별로 사용한다. 따라서 구별 할 수 있는 프로퍼티가 없다면 에러를 뿜게 된다.
+이것은 flow가 object type을 더 확장 가능한 값으로 보기 때문이다.
+
+- 정 사용해야 겠다면 아래처럼
+
+```javascript
+type Success = {| success: true, value: boolean |};
+type Failed  = {| error: true, message: string |};
+
+type Response = Success | Failed;
+
+function handleResponse(response: Response) {
+  if (response.success) {
+    var value: boolean = response.value;
+  } else {
+    var message: string = response.message;
+  }
+}
+```
+
+17. Intersection Types
+
+- & 로 연결된 타입들 이것들은 모두를 만족해야 한다.
+
+```javascript
+type A = { a: number };
+type B = { b: boolean };
+type C = { c: string };
+
+function method(value: A & B & C) {
+  // ...
+}
+
+// $ExpectError
+method({ a: 1 }); // Error!
+// $ExpectError
+method({ a: 1, b: true }); // Error!
+method({ a: 1, b: true, c: 'three' }); // Works!
+```
+
+18. Typeof Types
+
+- 자바스크립트의 typeof 연산자에서 리턴되는 값으로 타입을 정의한다.
+
+```javascript
+let num1 = 42;
+let num2: typeof num1 = 3.14;     // Works!
+// $ExpectError
+let num3: typeof num1 = 'world';  // Error!
+```
+
+19. Type Casting Expressions
+
+- 함수나 변수를 선언하지 않고 타입을 지정하고 싶을 때가 있을 것입니다. 이때 flow는 inline type cast expression 을 사용할 수 있습니다.
+
+```javascript
+(value: Type)
+
+let val = (value: Type)
+let obj = { prop: (value: Type)}
+let arr = ([(value: Type),(value: Type)]: Array<Type>)
+```
+- 선언 뿐만 아니라 할당도 할 수 있다.
+
+```javascript
+let value = 42;
+
+(value: 42);     // Works!
+(value: number); // Works!
+
+// 42 할당 및 type number
+let newValue = (value: number); 
+
+// $ExpectError
+(newValue: 42);     // Error!
+(newValue: number); // Works!
+```
+
+20. Utility Types
+
+- flow 는 flow 자체내에 utility types 들을 제공한다.
+
+홈페이지 참고 : [https://flow.org/en/docs/types/utilities/](https://flow.org/en/docs/types/utilities/)
