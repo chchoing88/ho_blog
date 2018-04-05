@@ -233,8 +233,24 @@ date: "2018-03-29T10:00:03.284Z"
 
     ```javascript
     var foo: {| foo: string |} = { foo: "Hello", bar: "World!" }; // Error!
+    
+    ```
+
+    - flow는 기본 object type에서 추가 속성들을 안전하게 생각한다. 이것을 "width subtyping" 이라 한다.
+
+    ```javascript
+    function method(obj: { foo: string }) {
+      // ...
+    }
+
+    method({
+      foo: "test", // Works!
+      bar: 42      // Works!
+    });
 
     ```
+
+     
 
 8. array types
 
