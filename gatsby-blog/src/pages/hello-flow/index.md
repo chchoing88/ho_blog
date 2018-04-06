@@ -3,12 +3,12 @@ title: hello-flow
 date: "2018-03-29T10:00:03.284Z"
 ---
 
-## Intro
+# Intro
   - flow 는 자바스크립트의 스태틱한 타입들을 체크해주는 도구이다.
   - flow 는 코드가 변경되는 동안 빠른 피드백을 줍니다.
   - flow 는 타입을 추론할 수 있습니다. 
 
-## install
+# install
 
   1. 바벨을 이용해서 flow 유형을 변환시켜줘야 한다.
 
@@ -54,7 +54,7 @@ date: "2018-03-29T10:00:03.284Z"
   - flow error type 체크
 
 
-## Type들 
+# Type들 
 
 1. primitive types
 
