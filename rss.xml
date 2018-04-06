@@ -1,286 +1,288 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Fri, 06 Apr 2018 02:31:27 GMT</lastBuildDate><item><title><![CDATA[Javascript-Basic1]]></title><description><![CDATA[패턴 연습을 위한 기본 다지기 일급 객체인 함수를 잘 다루자 덕 타이핑 함수 오버로딩 스코프는 중첩 함수로 다스린다. 단일 책임 원칙 개방/폐쇄 원칙 리스코프 치환 원칙 인터페이스 분리 원칙 의존성 연전 원칙 DRY 원칙]]></description><link>https://chchoing88.github.io/ho_blog//javascript-basic1/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//javascript-basic1/</guid><pubDate>Thu, 05 Apr 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;패턴 연습을 위한 기본 다지기&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Fri, 06 Apr 2018 02:39:54 GMT</lastBuildDate><item><title><![CDATA[Javascript-Basic1]]></title><description><![CDATA[패턴 연습을 위한 기본 다지기 일급 객체인 함수를 잘 다루자 함수를 인자로 받거나 함수를 리턴한다. 이것은 즉, 함수가 high order function 임을 인지한다. 위의 getX 와 getY를 그냥 getX() / getY…]]></description><link>https://chchoing88.github.io/ho_blog//javascript-basic1/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//javascript-basic1/</guid><pubDate>Thu, 05 Apr 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;패턴 연습을 위한 기본 다지기&lt;/h1&gt;
 &lt;h2&gt;일급 객체인 함수를 잘 다루자&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;함수를 인자로 받거나 함수를 리턴한다. 이것은 즉, 함수가 high order function 임을 인지한다.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 함수를 인자로 받거나 함수를 리턴한다. 이것은 즉, 함수가 high order function 임을 인지한다.
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt; &lt;span class=&quot;token comment&quot;&gt;// d3.js example&lt;/span&gt;
 
-```javascript
-// d3.js example
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; svg &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ svg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
 
-var svg = {};
-svg.line = function(){
+     &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;getX&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;getY&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;interpolate&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
-    var getX = function(){};
-    var getY = function(){};
-    var interpolate = function(){};
+     &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         &lt;span class=&quot;token comment&quot;&gt;//...&lt;/span&gt;
+         &lt;span class=&quot;token comment&quot;&gt;// private 함수.&lt;/span&gt;
+         &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;segment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+         &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; d &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; data
+         &lt;span class=&quot;token comment&quot;&gt;// getX 와 getY 로 필요한 데이터를 추출해서 사용.&lt;/span&gt;
+         &lt;span class=&quot;token comment&quot;&gt;// call 로 함수를 호출 하는 까닭은~?&lt;/span&gt;
+         getX&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;d&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+         getY&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;d&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
-    function line(data){
-        //...
-        // private 함수.
-        function segment(){}
-        var d = data
-        // getX 와 getY 로 필요한 데이터를 추출해서 사용.
-        // call 로 함수를 호출 하는 까닭은~?
-        getX.call(this,d,i);
-        getY.call(this,d,i);
+         &lt;span class=&quot;token comment&quot;&gt;// 추출 후 segment() 함수 사용.&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-        // 추출 후 segment() 함수 사용.
-    }
+     line&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;fn&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; 
+         &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;argument&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;length&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; getX&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+         getX &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; fn&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; 
+         &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; line&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+     line&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;fn&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; 
+         &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;argument&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;length&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; getY&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+         getY &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; fn&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; 
+         &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; line&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-    line.x = function(fn){ 
-        if(!argument.length) return getX;
-        getX = fn; 
-        return line;
-    }
-    line.y = function(fn){ 
-        if(!argument.length) return getY;
-        getY = fn; 
-        return line;
-    }
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; line&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 함수를 리턴한다. &lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-    return line; // 함수를 리턴한다. 
-}
+ &lt;span class=&quot;token comment&quot;&gt;// usage&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; lineGenerator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; svg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; path &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lineGenerator&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
-// usage
-var lineGenerator = svg.line();
-var path = lineGenerator(data);
+ &lt;span class=&quot;token comment&quot;&gt;// 데이터가 달라질때 데이터 추출을 위한 함수 변경이 필요하다.&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; lineGenerator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; svg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;d&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;d&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
 
-// 데이터가 달라질때 데이터 추출을 위한 함수 변경이 필요하다.
-var lineGenerator = svg.line()
-    .x(function(d){})
-    .y(function(d){})
+ &lt;span class=&quot;token comment&quot;&gt;// 내가 만든 객체에서 값을 얻게끔 라인 생성기를 확장.&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; merlin &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     getValue&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+     lineGenerator&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; svg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;d&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+         &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;d&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-// 내가 만든 객체에서 값을 얻게끔 라인 생성기를 확장.
-var merlin = {
-    getValue: function(){},
-    lineGenerator: svg.line()
-        .x(function(d){return 10 - this.getValue()})
-        .y(function(d){return 10 + this.getValue()})
-}
-
-var path = merlin.lineGenerator();
-
-
-```
-
-- 위의 getX 와 getY를 그냥 getX() / getY() 처럼 호출 했다면 위 코드는 getValue는 정의되어있지 않은 method라고 에러가 날것이다.
-하지만 getX.call(this) / getY.call(this) 여기서 이 this 는 함수를 호출한 객체를 참조한다.&lt;/code&gt;&lt;/pre&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; path &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; merlin&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lineGenerator&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;위의 getX 와 getY를 그냥 getX() / getY() 처럼 호출 했다면 위 코드는 getValue는 정의되어있지 않은 method라고 에러가 날것이다.
+하지만 getX.call(this) / getY.call(this) 여기서 이 this 는 함수를 호출한 객체를 참조한다.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2&gt;덕 타이핑&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;오리처럼 생겨서 오리처럼 걷고 오리처럼 꽥꽥 소리를 낸다면 그건 오리다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;그게 오리인지 검사하지 말고, 당신이 오리의 무슨 행동이 필요한지에 따라서 오리처럼 우는지, 오리처럼 걷는지 등등 적절한 행동을 오리처럼 하는지 검사하세요&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;즉, 사람이라도 오리처럼 울고 오리처럼 뒤뚱거리면 그건 사람이 아니라 오리이다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;덕 타이핑이란 형태를 판별하는 대신, 원하는 동작을 수행할수 있는지에 대한 여부만 가지고 검사를 한다. 이때문에 오류들이 잠재할 수 있는 소지들을 안고있다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 오리처럼 생겨서 오리처럼 걷고 오리처럼 꽥꽥 소리를 낸다면 그건 오리다.
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt; &lt;span class=&quot;token comment&quot;&gt;// 오리라면 먹이를 주자. 이런 주제가 있다고 하면&lt;/span&gt;
+ &lt;span class=&quot;token comment&quot;&gt;// 오리&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Duck&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         duckSound&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-&gt; 그게 오리인지 검사하지 말고, 당신이 오리의 무슨 행동이 필요한지에 따라서 오리처럼 우는지, 오리처럼 걷는지 등등 적절한 행동을 오리처럼 하는지 검사하세요~
+ &lt;span class=&quot;token comment&quot;&gt;// 어떤새.&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Bird&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         duckSound&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-- 즉, 사람이라도 오리처럼 울고 오리처럼 뒤뚱거리면 그건 사람이 아니라 오리이다.
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Merlin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         feed&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;obj&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+             &lt;span class=&quot;token comment&quot;&gt;// if( obj instanceof Duck ) // 이것은 Duck로 객체를 생성했을 시.&lt;/span&gt;
+             &lt;span class=&quot;token comment&quot;&gt;// if(&apos;duckSound&apos; in obj)&lt;/span&gt;
+             &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;obj&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;hasOwnProperty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;duckSound&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 이부분 오리인지 아닌지 확인하는 부분&lt;/span&gt;
+                 &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+             &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+             &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+         &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; bird1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Bird&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; bird2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Duck&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; merlin &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Merlin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ 
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; result1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; merlin&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;feed&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;bird1&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// true&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; result2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; merlin&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;feed&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;bird2&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// true&lt;/span&gt;
 
-- 덕 타이핑이란 형태를 판별하는 대신, 원하는 동작을 수행할수 있는지에 대한 여부만 가지고 검사를 한다. 이때문에 오류들이 잠재할 수 있는 소지들을 안고있다.
-
-```javascript
-// 오리라면 먹이를 주자. 이런 주제가 있다고 하면
-// 오리
-function Duck(){
-    return {
-        duckSound: function(){}
-    }
-}
-
-// 어떤새.
-function Bird(){
-    return {
-        duckSound: function(){}
-    }
-}
-
-function Merlin(){
-    return {
-        feed: function(obj){
-            // if( obj instanceof Duck ) // 이것은 Duck로 객체를 생성했을 시.
-            // if(&apos;duckSound&apos; in obj)
-            if(obj.hasOwnProperty(&apos;duckSound&apos;)){ // 이부분 오리인지 아닌지 확인하는 부분
-                return true;
-            }
-            return false;
-        }
-    }
-}
-var bird1 = new Bird();
-var bird2 = new Duck();
-var merlin = new Merlin();
-
-var result1 = merlin.feed(bird1); // true
-var result2 = merlin.feed(bird2); // true
-
-// 판별 방법
-if( something instanceof Merlin)
-// or
-if( &apos;x&apos; in something)
-// or
-if( something.hasOwnProperty(&apos;x&apos;))
-
-```&lt;/code&gt;&lt;/pre&gt;
+ &lt;span class=&quot;token comment&quot;&gt;// 판별 방법&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt; something &lt;span class=&quot;token keyword&quot;&gt;instanceof&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Merlin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;token comment&quot;&gt;// or&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;x&apos;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt; something&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;token comment&quot;&gt;// or&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt; something&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;hasOwnProperty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;x&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;h2&gt;함수 오버로딩&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;자바스크립트에서 함수 오버로딩을 사용할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 자바스크립트에서 함수 오버로딩을 사용할 수 있다.
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt; &lt;span class=&quot;token comment&quot;&gt;// ex 1) 인자 갯수에 따른 다른 처리 방법&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;arguments&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;length&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         &lt;span class=&quot;token comment&quot;&gt;// 인자가 하나도 없을 시 처리하는 로직&lt;/span&gt;
+         &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-```javascript
-// ex 1) 인자 갯수에 따른 다른 처리 방법
-function a() {
-    if(!arguments.length) {
-        // 인자가 하나도 없을 시 처리하는 로직
-        return ;
-    }
+     &lt;span class=&quot;token comment&quot;&gt;// 그외.. &lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-    // 그외.. 
-}
+ &lt;span class=&quot;token comment&quot;&gt;// ex 2) 콜백함수&lt;/span&gt;
 
-// ex 2) 콜백함수
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;fn&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; i &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; d &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; data&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 
-function a(data,fn) {
-    var i = 0;
-    var d = data;
-
-    while(i &lt; 10){
-        fn(data,i);
-        i++;
-    }
-}
-// a에 넘기는 콜백함수는 기본 인자를 2개 받기에 사용자가 선택적으로 사용해도 된다.
-a({}, function(data,index){
-    // data 만 써두 되고..
-    // 주는 index를 같이 써두 되고..
-    // 사용자에게 선택의 폭을 넓혀준다.
-})
-
-```&lt;/code&gt;&lt;/pre&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;i &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         &lt;span class=&quot;token function&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+         i&lt;span class=&quot;token operator&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;token comment&quot;&gt;// a에 넘기는 콜백함수는 기본 인자를 2개 받기에 사용자가 선택적으로 사용해도 된다.&lt;/span&gt;
+ &lt;span class=&quot;token function&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;index&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token comment&quot;&gt;// data 만 써두 되고..&lt;/span&gt;
+     &lt;span class=&quot;token comment&quot;&gt;// 주는 index를 같이 써두 되고..&lt;/span&gt;
+     &lt;span class=&quot;token comment&quot;&gt;// 사용자에게 선택의 폭을 넓혀준다.&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;h2&gt;스코프는 중첩 함수로 다스린다.&lt;/h2&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 함수를 중첩하여 코드를 계층화할 수 있다. 
-- 프로그램에서 변수/함수의 스코프를 최소화할 수 있다.
-- 스코프를 최소화?
-
-&gt; 즉, 자바스크립트 스코프는 함수 선언시에 결정되기 때문에 함수를 중첩화 해서 실행시키면 그 안에서만의 스코프가 생겨난다. 다른 스코프에 영향이 가지 않기에 범위를 최소화 시킨다고 한다.&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;함수를 중첩하여 코드를 계층화할 수 있다. &lt;/li&gt;
+&lt;li&gt;프로그램에서 변수/함수의 스코프를 최소화할 수 있다.&lt;/li&gt;
+&lt;li&gt;스코프를 최소화?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;즉, 자바스크립트 스코프는 함수 선언시에 결정되기 때문에 함수를 중첩화 해서 실행시키면 그 안에서만의 스코프가 생겨난다. 다른 스코프에 영향이 가지 않기에 범위를 최소화 시킨다고 한다.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2&gt;단일 책임 원칙&lt;/h2&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 모든 클래스 및 함수는 반드시 한가지 변경 사유가 있어야 한다.
-- 유일한 관심사만 확인하고, 어떻게 이행할지는 외부에서 제공하게끔 하면 도움이 된다.&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;모든 클래스 및 함수는 반드시 한가지 변경 사유가 있어야 한다.&lt;/li&gt;
+&lt;li&gt;유일한 관심사만 확인하고, 어떻게 이행할지는 외부에서 제공하게끔 하면 도움이 된다.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2&gt;개방/폐쇄 원칙&lt;/h2&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 실행 코드를 변경하지말고 어떻게든 재사용하고 확장하라는 뜻.
-- 변경되지 않을 것과 변경 가능성이 있는 것을 내다보는 힘을 길러야 한다.&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;실행 코드를 변경하지말고 어떻게든 재사용하고 확장하라는 뜻.&lt;/li&gt;
+&lt;li&gt;변경되지 않을 것과 변경 가능성이 있는 것을 내다보는 힘을 길러야 한다.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2&gt;리스코프 치환 원칙&lt;/h2&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 한 객체를 다른 객체에서 파생하더라도 그 기본 로직이 변경되어서는 안된다.
-- &lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;한 객체를 다른 객체에서 파생하더라도 그 기본 로직이 변경되어서는 안된다.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2&gt;인터페이스 분리 원칙&lt;/h2&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 함수가 기대하는 인자가 무엇인지 명확히 하고 그 기대치를 최소화 해야한다. 
-- 특정 타입의 인자를 바라기보다는 이 타입에서 실제로 필요한 프로퍼티가 더러 있을 거라 기대하는 것이다.&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;함수가 기대하는 인자가 무엇인지 명확히 하고 그 기대치를 최소화 해야한다. &lt;/li&gt;
+&lt;li&gt;특정 타입의 인자를 바라기보다는 이 타입에서 실제로 필요한 프로퍼티가 더러 있을 거라 기대하는 것이다.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2&gt;의존성 연전 원칙&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;인터페이스 기반 언어에서는 대개 의존성 주입이라는 연관된 개념으로 표현한다.&lt;/li&gt;
+&lt;li&gt;상위 수준 모듈은 하위 수준 모듈에 의존해서는 안 되며 이 둘은 추상화에 의존해야 한다.&lt;/li&gt;
+&lt;li&gt;클래스 A 가 클래스 B 를 필요로 할때 A 에서 B 를 생성하는게 아닌 A 생성자 안에 B를 서술하는 인터페이스를 만들어 놓고 A 가 생성이 되면 구체화한 B를 넘겨받는다.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 인터페이스 기반 언어에서는 대개 의존성 주입이라는 연관된 개념으로 표현한다.
-- 상위 수준 모듈은 하위 수준 모듈에 의존해서는 안 되며 이 둘은 추상화에 의존해야 한다.
-- 클래스 A 가 클래스 B 를 필요로 할때 A 에서 B 를 생성하는게 아닌 A 생성자 안에 B를 서술하는 인터페이스를 만들어 놓고 A 가 생성이 되면 구체화한 B를 넘겨받는다.
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt; &lt;span class=&quot;token comment&quot;&gt;// bad!!&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; b &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// b 에 의존.&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         &lt;span class=&quot;token comment&quot;&gt;//..&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-```javascript
-// bad!!
-function A(){
-    var b = new B(); // b 에 의존.
-    return {
-        //..
-    }
-}
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; name &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;merlin&quot;&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         id &lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; name
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-function B(){
-    var name = &quot;merlin&quot;
-    return {
-        id : name
-    }
-}
+ &lt;span class=&quot;token comment&quot;&gt;// good!!&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; b &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; id&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;none&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 인터페이스&lt;/span&gt;
 
-// good!!
-function A(){
-    var b = { id: &quot;none&quot; } // 인터페이스
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         setB&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;obj&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+             b &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; obj&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+         &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-    return {
-        setB: function (obj){
-            b = obj;
-        }
-    }
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ 
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; a &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ a&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setB&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ 
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;위 처럼 해야 B의 파생형 버전을 제공할수 있는 이점이 있고 B를 고쳐야 할 경우 하위 버전 호환성을 유지하려면 어떤 로직을 계속 갖고 있어야 하는지 일목요연하게 서술한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt; &lt;span class=&quot;token comment&quot;&gt;// 어떠한 데이터로 라인을 그린다.&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;baseFn&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; data&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-}
+ svg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;svg_line&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;baseFn&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-var a = new A();
-a.setB(new B());
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;svg_line&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;projection&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+         
+         &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;segment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+             &lt;span class=&quot;token comment&quot;&gt;// 이 함수를 호출해서 여러가지 일을 한다...&lt;/span&gt;
+             &lt;span class=&quot;token function&quot;&gt;projection&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+         &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+     &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; line&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-```
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; lineGenerator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; svg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; path &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lineGenerator&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 이렇게 하면 데이터 그대로 라인을 그린다.&lt;/span&gt;
 
-- 위 처럼 해야 B의 파생형 버전을 제공할수 있는 이점이 있고 B를 고쳐야 할 경우 하위 버전 호환성을 유지하려면 어떤 로직을 계속 갖고 있어야 하는지 일목요연하게 서술한다.
+ &lt;span class=&quot;token comment&quot;&gt;// 허나 난 이 데이터를 기반으로 다른 모양으로 그리겠다.&lt;/span&gt;
+ &lt;span class=&quot;token comment&quot;&gt;// 데이터를 어떻게 조작할지만 생각한다. 즉, baseFn 만 바꿔주면된다.&lt;/span&gt;
 
-```javascript
-// 어떠한 데이터로 라인을 그린다.
-function baseFn(data){
-    return data;
-}
-
-svg.line = function(){
-    return svg_line(baseFn);
-}
-
-function svg_line(projection){
-    function line(data){
-        
-        function segment(){
-            // 이 함수를 호출해서 여러가지 일을 한다...
-            projection(data);
-        }
-    }
-    return line;
-}
-
-var lineGenerator = svg.line();
-var path = lineGenerator(data); // 이렇게 하면 데이터 그대로 라인을 그린다.
-
-// 허나 난 이 데이터를 기반으로 다른 모양으로 그리겠다.
-// 데이터를 어떻게 조작할지만 생각한다. 즉, baseFn 만 바꿔주면된다.
-
-function additionFn(data){
-    return data*0.3;
-}
-svg.line.addition = function(){
-    return svg_line(additionFn); // 의존성 주입.
-}
-var lineGenerator = svg.line.addition();
-var path = lineGenerator(data);
-```&lt;/code&gt;&lt;/pre&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;additionFn&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; data&lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0.3&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ svg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;line&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;addition&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;svg_line&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;additionFn&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 의존성 주입.&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; lineGenerator &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; svg&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;line&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;addition&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; path &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lineGenerator&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;h2&gt;DRY 원칙&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;반복하지 마라!!&lt;/li&gt;
+&lt;li&gt;재사용할 수 있어야 한다. &lt;/li&gt;
+&lt;/ul&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-none&quot;&gt;&lt;code&gt;- 반복하지 마라!!
-- 재사용할 수 있어야 한다. 
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt; &lt;span class=&quot;token comment&quot;&gt;// bad&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;++&lt;/span&gt;i &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; n&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     points&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;getX&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+                  &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;getY&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
-
-```javascript
-// bad
-while( ++i &lt; n) {
-    points.push([+getX.call(this, data[i],i),
-                 +getY.call(this, data[i],i)])
-}
-
-// good
-var d;
-while(++i &lt; n) {
-    d = data[i]
-    points.push([+getX.call(this, d,i),
-                 +getY.call(this, d,i)])
-}
-```&lt;/code&gt;&lt;/pre&gt;
+ &lt;span class=&quot;token comment&quot;&gt;// good&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; d&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+ &lt;span class=&quot;token keyword&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;++&lt;/span&gt;i &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; n&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+     d &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; data&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+     points&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;getX&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; d&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+                  &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;getY&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; d&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;</content:encoded></item><item><title><![CDATA[hello-flow]]></title><description><![CDATA[Intro flow 는 자바스크립트의 스태틱한 타입들을 체크해주는 도구이다. flow 는 코드가 변경되는 동안 빠른 피드백을 줍니다. flow 는 타입을 추론할 수 있습니다.  install 바벨을 이용해서 flow…]]></description><link>https://chchoing88.github.io/ho_blog//hello-flow/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-flow/</guid><pubDate>Thu, 29 Mar 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;Intro&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;flow 는 자바스크립트의 스태틱한 타입들을 체크해주는 도구이다.&lt;/li&gt;
