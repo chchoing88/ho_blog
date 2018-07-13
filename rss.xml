@@ -1,4 +1,181 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Sat, 28 Apr 2018 07:24:23 GMT</lastBuildDate><item><title><![CDATA[hello OOP]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-oop/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-oop/</guid><pubDate>Wed, 25 Apr 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;객체지향 이란?&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Fri, 13 Jul 2018 09:56:02 GMT</lastBuildDate><item><title><![CDATA[experience monorepo]]></title><description><![CDATA[intro 공통모듈을 한 repo 에서 관리 하는 시도를 해보자. 여러 npm 패키지를 하나의 github repo 에서 관리하자. 즉, monorepo 를 구축해서 공통모듈을 관리하는 환경을 만들자. monorepo 의 이점 lint 나 build…]]></description><link>https://chchoing88.github.io/ho_blog//experience-monorepo/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//experience-monorepo/</guid><pubDate>Fri, 13 Jul 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;intro&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;공통모듈을 한 repo 에서 관리 하는 시도를 해보자.&lt;/li&gt;
+&lt;li&gt;여러 npm 패키지를 하나의 github repo 에서 관리하자.&lt;/li&gt;
+&lt;li&gt;즉, monorepo 를 구축해서 공통모듈을 관리하는 환경을 만들자.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;monorepo 의 이점&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;lint 나 build, test, release 프로세스를 한가지로 가져갈수 있다.&lt;/li&gt;
+&lt;li&gt;개발 환경을 따로 구축할 수고를 덜어준다.&lt;/li&gt;
+&lt;li&gt;devDependency 를 한곳에서 관리 할 수 있다.&lt;/li&gt;
+&lt;li&gt;여러 이슈를 중앙에서 관리할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;monorepo 의 단점&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;한 repo 가 커질 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;monorepo 를 사용하고 있는 곳&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;babel&lt;/li&gt;
+&lt;li&gt;react&lt;/li&gt;
+&lt;li&gt;etc..&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;monorepo 를 사용할 수 있는 수단.&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;lerna &lt;a href=&quot;https://lernajs.io/&quot;&gt;https://lernajs.io/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;yarn workspace &lt;a href=&quot;https://yarnpkg.com/lang/en/docs/workspaces/&quot;&gt;https://yarnpkg.com/lang/en/docs/workspaces/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;git sub-modules&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;lerna&lt;/h2&gt;
+&lt;p&gt;각각의 독립적인 버젼을 가지고 있는 큰 코드베이스 분리는 코드 공유에 큰 이점을 가진다.
+하지만 많이 얽혀져있는 repositories 는 추적하기도 어렵고 지저분합니다. 그리고 테스팅도 복잡해집니다.&lt;/p&gt;
+&lt;p&gt;이 문제를 해결하기 위해 몇몇 프로젝트는 multi-package repositories 를 설계하고(monorepos 라고 불리움) Babel, React, Angular, Ember, Meteor, Jest 프로젝트들이 싱글 repository 안에 그들의 모든 패키지들을 관리합니다.&lt;/p&gt;
+&lt;p&gt;lerna 툴은 git 및 npm 을 사용하여 multi-package repositories 를 관리하는 작업을 최적화 하는 도구이다.&lt;/p&gt;
+&lt;p&gt;Lerna 는 또한 개발 및 빌드 환경에서 패키지의 수많은 복사본에 대한 시간과 공간을 줄여줍니다.&lt;/p&gt;
+&lt;h3&gt;lerna 명령어 사용법&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;lerna 초기화 및 independent 모드로 실행&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ lerna init -i&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;각 패키지 안에 들어있는 모듈의 npm install 을 실행&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ lerna bootstrap&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;각 패키지들이 마지막 릴리즈 이후에 변화가 있었는지 체크&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ lerna updated&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;각 패키지 안에 있는 npm script 를 한번에 run 시켜줌.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ lerna run [script]&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;모듈간의 의존성 추가&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## modulea 의 package.json에 dependency에 moduleb 추가
+$ lerna add modulea --scope=moduleb
+
+## modulea 의 package.json에 devDependency에 moduleb 추가
+$ lerna add modulea --scope=moduleb --dev
+
+## 모든 모듈 package.json에 devDependency에 moduleb 추가
+$ lerna add modulea&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;배포 ( git 및 npm )&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## git 뿐만 아니라 npmjs 에도 배포 ( npm publish )
+$ lerna publish
+
+## npm 생략 ( 대신 git 에도 올라가지 않음 )
+$ lerna publish --skip-npm
+
+## 이렇게 publish 하면 package.json 의 버전이 업데이트가 되고
+## 그에 관련된 의존성있던 모듈들의 package.json의 devDependency 나 dependency의 해당 모듈의 버젼도 업데이트 시켜준다.&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;자세한건 lerna 공식 홈페이지 참조.
+&lt;a href=&quot;https://lernajs.io/&quot;&gt;https://lernajs.io/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;lerna json 셋팅&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;version: 현재 repository 버젼&lt;/li&gt;
+&lt;li&gt;packages: packages 경로, 배열과 glob 사용.&lt;/li&gt;
+&lt;li&gt;command.publish.ignoreChanges: &lt;code&gt;lerna changed/puslish&lt;/code&gt; 할때 포함시키지 않을 파일&lt;/li&gt;
+&lt;li&gt;command.bootstrap.ignore: &lt;code&gt;lerna bootstrap&lt;/code&gt; 명령어 사용할시 bootstrap 안할 리스트 , 배열과 glob 사용&lt;/li&gt;
+&lt;li&gt;command.bootstrap.scope: &lt;code&gt;lerna bootstrap&lt;/code&gt; 명령어 사용할시 packages 들의 영역을 지정한다. 배열과 glob 사용.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;lerna 장점&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;공통의 devDependencies 를 가질수 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;대부분의 devDependencies 를 root repo 에서 당겨 받을수 있다.&lt;/li&gt;
+&lt;li&gt;모든 패키지들은 같은 버젼의 dependency 로 사용할 수 있다.&lt;/li&gt;
+&lt;li&gt;스토리지를 적게 들수있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;yarn Workspaces&lt;/h2&gt;
+&lt;p&gt;Yarn Workspaces 는 단일 루트 package.json 파일의 하위 폴더에있는 여러 package.json 파일의 종속성을 모두 한 번에 설치할 수있는 기능입니다.&lt;/p&gt;
+&lt;p&gt;또한 워크스페이스들 간의 중복된 package 를 막아주므로써 가볍고, Yarn 은 서로 의존하는 Workspace 간에 심볼릭 링크를 만들 수 있으며 모든 디렉토리의 일관성과 정확성을 보장합니다.&lt;/p&gt;
+&lt;p&gt;Yarn Workspaces 는 lerna 툴 처럼 사용할 수 있는 low-level 의 primitives 이다.
+lerna 가 제공하는 high-level 의 특징들을 제공하진 않지만, 코어로직의 실행과 linking steps 로 더 향상된 퍼포먼스를 제공할 수 있다.&lt;/p&gt;
+&lt;h3&gt;yarn Workspaces setting&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;root 에 있는 package.json 에 아래와 같이 셋팅한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;private&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;workspaces&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;workspace-a&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;workspace-b&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;각 워크스페이스의 package.json 은 아래와 같이 셋팅한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token comment&quot;&gt;// workspace-a/package.json:&lt;/span&gt;
+
+&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;workspace-a&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;version&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+
+  &lt;span class=&quot;token string&quot;&gt;&quot;dependencies&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;cross-env&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;5.0.5&quot;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token comment&quot;&gt;// workspace-b/package.json:&lt;/span&gt;
+
+&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;workspace-b&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;version&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+
+  &lt;span class=&quot;token string&quot;&gt;&quot;dependencies&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;cross-env&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;5.0.5&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;workspace-a&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;마지막으로 &lt;code&gt;yarn install&lt;/code&gt;을 진행하면 아래와 같은 계층을 얻을수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;/package.json
+/yarn.lock
+
+/node_modules
+/node_modules/cross-env
+/node_modules/workspace-a -&gt; /workspace-a
+
+/workspace-a/package.json
+/workspace-b/package.json&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;위 처럼 적용이 될때 workspace-b 에있는 파일에서 workspace-a 를 요구하면 현재 Github 에 게시 된 코드가 아니라 프로젝트 내부에있는 정확한 코드가 사용되며 cross-env 패키지가 올바르게 중복 제거되어 프로젝트의 루트에 놓입니다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;결론&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;lerna 와 yarn workspace 를 사용하면 중복되는 dependency 에 관해서 관리를 할 수 있다.&lt;/li&gt;
+&lt;li&gt;lerna 를 이용하면 yarn workspace 에서 할수 없는 다양한 기능들을 사용할 수 있다. ( testing, 배포 , 버젼관리 , 패키지별 scripting 명령)&lt;/li&gt;
+&lt;li&gt;같은 환경속에서 여러가지 dependency 를 가지고 여러 패키지들을 다룬다면 monorepo 를 사용할만 할것 같다.&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[hello OOP]]></title><description><![CDATA[…]]></description><link>https://chchoing88.github.io/ho_blog//hello-oop/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-oop/</guid><pubDate>Wed, 25 Apr 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;객체지향 이란?&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;시스템을 상호작용하는 자율적인 객체들의 공동체로 바라보고 객체를 이용해 시스템을 분할하는 방법&lt;/li&gt;
 &lt;li&gt;자율적인 객체란 상태와 행위를 함께 지니며 스스로 자기 자신을 책임지는 객체&lt;/li&gt;
@@ -400,7 +577,229 @@
 &lt;li&gt;클래스를 봤을 때 클래스를 명세 관점과 구현 관점으로 나눠볼수 있어야 한다는 것이다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Javascript-Basic1]]></title><description><![CDATA[패턴 연습을 위한 기본 다지기 일급 객체인 함수를 잘 다루자 함수를 인자로 받거나 함수를 리턴한다. 이것은 즉, 함수가 high order function 임을 인지한다. 위의 getX 와 getY를 그냥 getX() / getY…]]></description><link>https://chchoing88.github.io/ho_blog//javascript-basic1/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//javascript-basic1/</guid><pubDate>Thu, 05 Apr 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;패턴 연습을 위한 기본 다지기&lt;/h1&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[lazy evaluation]]></title><description><![CDATA[게으른 평가 call-by-need 라고도 불리는 이 전략 방법은 ( 반대는 call-by-name ) 값이 실제로 필요할때 평가를 하는것이다. 또한 반복적인 평가를 피하기 위해서 한번 평가해둔 자료는 기억해 둔다.(memoization…]]></description><link>https://chchoing88.github.io/ho_blog//lazy-evaluation/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//lazy-evaluation/</guid><pubDate>Thu, 05 Apr 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;게으른 평가&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;call-by-need 라고도 불리는 이 전략 방법은 ( 반대는 call-by-name ) 값이 실제로 필요할때 평가를 하는것이다. 또한 반복적인 평가를 피하기 위해서 한번 평가해둔 자료는 기억해 둔다.(memoization)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;왜?&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;아래와 같은 코드를 생각해 보자. &lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; someValue &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;expensiveFunction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;//.. someValue를 사용하지 않는 다른 연산 코드들 및 유저 인터페이스를 포함하고 있는 수많은 코드들..&lt;/span&gt;
+
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;someValue&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;someValue는 코드의 맨 마지막 console.log 찍을때 필요하다.&lt;/li&gt;
+&lt;li&gt;처음에 expensiveFunction을 호출할때 브라우저는 그 시간동안 아무것도 안한다. 그 이후에 있을 사용자 경험을 높이기 위한 코드를 지연시키고 따라서 사용자 경험을 방해했을 것이다. 이것은 문제다.&lt;/li&gt;
+&lt;li&gt;물론 아래와 같이 바꿀수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token comment&quot;&gt;//.. someValue를 사용하지 않는 다른 연산 코드들 및 유저 인터페이스를 포함하고 있는 수많은 코드들..&lt;/span&gt;
+
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;expensiveFunction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;아름답지 않을 뿐더러 큰 프로젝트일수록 언제 쓰일지도 모르고 필요할때마다 매번 호출하게 되니 비용이 많이 든다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;이렇게 하고 싶다.&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;만약 평가를 정말 필요할때 하면 어떨까? &lt;/li&gt;
+&lt;li&gt;자바스크립트에서 lazy 라는 키워드가 있다면..&lt;/li&gt;
+&lt;li&gt;someValue에는 실제 평가를 진행하는 코드가 있을테고 해당 값을 호출하면 그때 실제로 작동하는 코드이다.&lt;/li&gt;
+&lt;li&gt;아래와 같이 쓸수 있을 것이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;lazy &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; someValue &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;expensiveFunction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;//... 수많은 코드들..&lt;/span&gt;
+
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;soameValue&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;soameValue&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;다만, 여기서 2번 반복해서 썼다고 해서 평가를 2번하는건 비효율 적이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;만들어 보자.&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;실제 자바스크립트 안에는 lazy 라는 키워드가 없기 때문에 lazy 라는 함수를 만들어 보자.&lt;/p&gt;
+&lt;h2&gt;memoization 패턴을 이용한 반복호출을 피하자.&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;lazy&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;evaluated&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; arguments&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;lazy 함수는 getter 라는 함수를 인자로 받아서 getter를 호출시켜주는 새로운 함수를 반환한다.&lt;/li&gt;
+&lt;li&gt;클로저를 사용, evaluated 와 _res 변수는 반복 호출을 피하기 위한 자유변수들이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;사용해보자.&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; lazyVal &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+counter &lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;result&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;counter&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 0&lt;/span&gt;
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lazyVal&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// result&lt;/span&gt;
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;counter&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 1&lt;/span&gt;
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lazyVal&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// result&lt;/span&gt;
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;counter&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;token comment&quot;&gt;// 1&lt;/span&gt;
+console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lazyVal&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// result&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;여러번 호출하더라도 한번만 호출이 된다는걸 알수 있다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;이제 실질적으로 사용하면 되는가????&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;실제 lazyValue들 끼리 연산작업이 필요할 경우엔 어떻게 해야할까???&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; actualVal1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazyVal1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; actualVal2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazyVal2&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+  console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;actualVal1 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; actualVal1&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;음..달라진게 없는거 같다. &lt;/li&gt;
+&lt;li&gt;우리는 평가를 실제로 필요한 지점에서 사용하고 싶은데 그럼 어떻게 해야할까.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; newVal &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; actualVal1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazyVal1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; actualVal2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazyVal2&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; actualVal1 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; actualVal2&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;다시 lazy로 감싸야한다.&lt;/li&gt;
+&lt;li&gt;음.. 아름답지가 않다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;업그레이드 하자&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;우리가 원하는 시점으로 평가를 할수있도록 뒤로 늦추긴 했지만 매번 lazy로 감싸야 하는 번거로움이 있었다.&lt;/li&gt;
+&lt;li&gt;체이닝으로 엮어서 표현하면 어떨까???&lt;/li&gt;
+&lt;li&gt;다시 lazy 함수를 업그레이드 해보자.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;이런 모양이면 좋겠다.&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; lazyVal &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;/* 첫 평가 실행후 리턴 된 값으로 다시 lazy를 리턴 */&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; lazyOp &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; lazyVal&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;v1 &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; v1 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;h3&gt;lazy를 수정하자.&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;lazy&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;evaluated&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; arguments&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;token comment&quot;&gt;/* 체이닝을 위한 then 함수 생성 */&lt;/span&gt;      
+  res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; modifier &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;modifier&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;리턴된 inner함수 (res) 에게 프로퍼티로 then 함수를 추가.&lt;/li&gt;
+&lt;li&gt;then에서 인자로는 첫번째 평가 이후에 리턴된 값으로 다시 lazy를 수행할수 있는 next 함수를 받는다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;map 함수를 만들어 보자.&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;then 함수는 임의로 우리가 lazy 함수를 리턴해줬었어야 했다.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;이번엔 그것마저 자동으로 해주는 map 함수를 만들어보자.&lt;/p&gt;
+&lt;h4&gt;이런 모양이어야 한다.&lt;/h4&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;/* 첫 평가 실행후 리턴 된 값으로 다시 lazy를 리턴 */&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; lazyOp &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;v1 &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; 
+v1 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;v2 &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; 
+v2 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;h4&gt;다시 lazy 함수를 수정하자.&lt;/h4&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;lazy&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;evaluated&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; arguments&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;/* 체이닝을 위한 then 함수 생성 */&lt;/span&gt;      
+res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; modifier &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;modifier&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;/* map 함수 */&lt;/span&gt;
+res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; mapper &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mapper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;정리&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;자바스크립트에서의 게으른 평가는 결국 호출하고 싶은 코드들을 함수로 한번 더 감싸 실제 필요할때 평가한다.&lt;/li&gt;
+&lt;li&gt;lazy 체이닝의 경우 연속된 함수 참조에 의해서 이뤄진다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;참고&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.codementor.io/agustinchiappeberrini/lazy-evaluation-and-javascript-a5m7g8gs3&quot;&gt;https://www.codementor.io/agustinchiappeberrini/lazy-evaluation-and-javascript-a5m7g8gs3&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Javascript-Basic1]]></title><description><![CDATA[패턴 연습을 위한 기본 다지기 일급 객체인 함수를 잘 다루자 함수를 인자로 받거나 함수를 리턴한다. 이것은 즉, 함수가 high order function 임을 인지한다. 위의 getX 와 getY를 그냥 getX() / getY…]]></description><link>https://chchoing88.github.io/ho_blog//javascript-basic1/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//javascript-basic1/</guid><pubDate>Thu, 05 Apr 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;패턴 연습을 위한 기본 다지기&lt;/h1&gt;
 &lt;h2&gt;일급 객체인 함수를 잘 다루자&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;함수를 인자로 받거나 함수를 리턴한다. 이것은 즉, 함수가 high order function 임을 인지한다.&lt;/li&gt;
@@ -685,229 +1084,7 @@
                   &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;getY&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; d&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;i&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[lazy evaluation]]></title><description><![CDATA[게으른 평가 call-by-need 라고도 불리는 이 전략 방법은 ( 반대는 call-by-name ) 값이 실제로 필요할때 평가를 하는것이다. 또한 반복적인 평가를 피하기 위해서 한번 평가해둔 자료는 기억해 둔다.(memoization…]]></description><link>https://chchoing88.github.io/ho_blog//lazy-evaluation/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//lazy-evaluation/</guid><pubDate>Thu, 05 Apr 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;게으른 평가&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;call-by-need 라고도 불리는 이 전략 방법은 ( 반대는 call-by-name ) 값이 실제로 필요할때 평가를 하는것이다. 또한 반복적인 평가를 피하기 위해서 한번 평가해둔 자료는 기억해 둔다.(memoization)&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1&gt;왜?&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;아래와 같은 코드를 생각해 보자. &lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; someValue &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;expensiveFunction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token comment&quot;&gt;//.. someValue를 사용하지 않는 다른 연산 코드들 및 유저 인터페이스를 포함하고 있는 수많은 코드들..&lt;/span&gt;
-
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;someValue&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;someValue는 코드의 맨 마지막 console.log 찍을때 필요하다.&lt;/li&gt;
-&lt;li&gt;처음에 expensiveFunction을 호출할때 브라우저는 그 시간동안 아무것도 안한다. 그 이후에 있을 사용자 경험을 높이기 위한 코드를 지연시키고 따라서 사용자 경험을 방해했을 것이다. 이것은 문제다.&lt;/li&gt;
-&lt;li&gt;물론 아래와 같이 바꿀수 있다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token comment&quot;&gt;//.. someValue를 사용하지 않는 다른 연산 코드들 및 유저 인터페이스를 포함하고 있는 수많은 코드들..&lt;/span&gt;
-
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;expensiveFunction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;아름답지 않을 뿐더러 큰 프로젝트일수록 언제 쓰일지도 모르고 필요할때마다 매번 호출하게 되니 비용이 많이 든다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1&gt;이렇게 하고 싶다.&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;만약 평가를 정말 필요할때 하면 어떨까? &lt;/li&gt;
-&lt;li&gt;자바스크립트에서 lazy 라는 키워드가 있다면..&lt;/li&gt;
-&lt;li&gt;someValue에는 실제 평가를 진행하는 코드가 있을테고 해당 값을 호출하면 그때 실제로 작동하는 코드이다.&lt;/li&gt;
-&lt;li&gt;아래와 같이 쓸수 있을 것이다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;lazy &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; someValue &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;expensiveFunction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;token comment&quot;&gt;//... 수많은 코드들..&lt;/span&gt;
-
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;soameValue&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;soameValue&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;다만, 여기서 2번 반복해서 썼다고 해서 평가를 2번하는건 비효율 적이다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1&gt;만들어 보자.&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;실제 자바스크립트 안에는 lazy 라는 키워드가 없기 때문에 lazy 라는 함수를 만들어 보자.&lt;/p&gt;
-&lt;h2&gt;memoization 패턴을 이용한 반복호출을 피하자.&lt;/h2&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;lazy&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;evaluated&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; arguments&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;lazy 함수는 getter 라는 함수를 인자로 받아서 getter를 호출시켜주는 새로운 함수를 반환한다.&lt;/li&gt;
-&lt;li&gt;클로저를 사용, evaluated 와 _res 변수는 반복 호출을 피하기 위한 자유변수들이다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;사용해보자.&lt;/h2&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; lazyVal &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-counter &lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;result&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;counter&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 0&lt;/span&gt;
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lazyVal&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// result&lt;/span&gt;
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;counter&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 1&lt;/span&gt;
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lazyVal&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// result&lt;/span&gt;
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;counter&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;token comment&quot;&gt;// 1&lt;/span&gt;
-console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;lazyVal&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// result&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;여러번 호출하더라도 한번만 호출이 된다는걸 알수 있다.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;이제 실질적으로 사용하면 되는가????&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;실제 lazyValue들 끼리 연산작업이 필요할 경우엔 어떻게 해야할까???&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; actualVal1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazyVal1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; actualVal2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazyVal2&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-  console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;actualVal1 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; actualVal1&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;음..달라진게 없는거 같다. &lt;/li&gt;
-&lt;li&gt;우리는 평가를 실제로 필요한 지점에서 사용하고 싶은데 그럼 어떻게 해야할까.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; newVal &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; actualVal1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazyVal1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; actualVal2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazyVal2&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; actualVal1 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; actualVal2&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;다시 lazy로 감싸야한다.&lt;/li&gt;
-&lt;li&gt;음.. 아름답지가 않다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;업그레이드 하자&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;우리가 원하는 시점으로 평가를 할수있도록 뒤로 늦추긴 했지만 매번 lazy로 감싸야 하는 번거로움이 있었다.&lt;/li&gt;
-&lt;li&gt;체이닝으로 엮어서 표현하면 어떨까???&lt;/li&gt;
-&lt;li&gt;다시 lazy 함수를 업그레이드 해보자.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;이런 모양이면 좋겠다.&lt;/h3&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; lazyVal &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;token comment&quot;&gt;/* 첫 평가 실행후 리턴 된 값으로 다시 lazy를 리턴 */&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; lazyOp &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; lazyVal&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;v1 &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; v1 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;h3&gt;lazy를 수정하자.&lt;/h3&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;lazy&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;evaluated&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; arguments&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-    evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;token comment&quot;&gt;/* 체이닝을 위한 then 함수 생성 */&lt;/span&gt;      
-  res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; modifier &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;modifier&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;리턴된 inner함수 (res) 에게 프로퍼티로 then 함수를 추가.&lt;/li&gt;
-&lt;li&gt;then에서 인자로는 첫번째 평가 이후에 리턴된 값으로 다시 lazy를 수행할수 있는 next 함수를 받는다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;map 함수를 만들어 보자.&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;then 함수는 임의로 우리가 lazy 함수를 리턴해줬었어야 했다.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;이번엔 그것마저 자동으로 해주는 map 함수를 만들어보자.&lt;/p&gt;
-&lt;h4&gt;이런 모양이어야 한다.&lt;/h4&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;token comment&quot;&gt;/* 첫 평가 실행후 리턴 된 값으로 다시 lazy를 리턴 */&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; lazyOp &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;v1 &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; 
-v1 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;v2 &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; 
-v2 &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;h4&gt;다시 lazy 함수를 수정하자.&lt;/h4&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-javascript&quot;&gt;&lt;code&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;lazy&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;evaluated&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; _res &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; getter&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; arguments&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  evaluated &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; _res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;token comment&quot;&gt;/* 체이닝을 위한 then 함수 생성 */&lt;/span&gt;      
-res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; modifier &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;modifier&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token comment&quot;&gt;/* map 함수 */&lt;/span&gt;
-res&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function-variable function&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; mapper &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mapper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; res&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1&gt;정리&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;자바스크립트에서의 게으른 평가는 결국 호출하고 싶은 코드들을 함수로 한번 더 감싸 실제 필요할때 평가한다.&lt;/li&gt;
-&lt;li&gt;lazy 체이닝의 경우 연속된 함수 참조에 의해서 이뤄진다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1&gt;참고&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.codementor.io/agustinchiappeberrini/lazy-evaluation-and-javascript-a5m7g8gs3&quot;&gt;https://www.codementor.io/agustinchiappeberrini/lazy-evaluation-and-javascript-a5m7g8gs3&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[hello-flow]]></title><description><![CDATA[Intro flow 는 자바스크립트의 스태틱한 타입들을 체크해주는 도구이다. flow 는 코드가 변경되는 동안 빠른 피드백을 줍니다. flow 는 타입을 추론할 수 있습니다.  install 바벨을 이용해서 flow…]]></description><link>https://chchoing88.github.io/ho_blog//hello-flow/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-flow/</guid><pubDate>Thu, 29 Mar 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;Intro&lt;/h1&gt;
+      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[hello-flow]]></title><description><![CDATA[Intro flow 는 자바스크립트의 스태틱한 타입들을 체크해주는 도구이다. flow 는 코드가 변경되는 동안 빠른 피드백을 줍니다. flow 는 타입을 추론할 수 있습니다.  install 바벨을 이용해서 flow…]]></description><link>https://chchoing88.github.io/ho_blog//hello-flow/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//hello-flow/</guid><pubDate>Thu, 29 Mar 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h1&gt;Intro&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;flow 는 자바스크립트의 스태틱한 타입들을 체크해주는 도구이다.&lt;/li&gt;
 &lt;li&gt;flow 는 코드가 변경되는 동안 빠른 피드백을 줍니다.&lt;/li&gt;
@@ -3259,7 +3436,7 @@ babel-eslint : eslint 의 parser를 babel-eslint로 사용. 이것은 Babel code
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png&quot;
+    href=&quot;/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3278,13 +3455,13 @@ babel-eslint : eslint 의 parser를 babel-eslint로 사용. 이것은 Babel code
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;구성&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png&quot;
-        srcset=&quot;/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-1a291.png 148w,
-/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-2bc4a.png 295w,
-/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png 590w,
-/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-526de.png 885w,
-/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fa2eb.png 1180w,
-/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png 1394w&quot;
+        src=&quot;/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png&quot;
+        srcset=&quot;/static/img_greenBlue-fb095609940c67b4165035ab4468af02-1a291.png 148w,
+/static/img_greenBlue-fb095609940c67b4165035ab4468af02-2bc4a.png 295w,
+/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png 590w,
+/static/img_greenBlue-fb095609940c67b4165035ab4468af02-526de.png 885w,
+/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fa2eb.png 1180w,
+/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png 1394w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3508,7 +3685,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png&quot;
+    href=&quot;/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3527,13 +3704,13 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;테스트 결과 화면&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png&quot;
-        srcset=&quot;/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-1a291.png 148w,
-/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-2bc4a.png 295w,
-/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png 590w,
-/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-526de.png 885w,
-/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fa2eb.png 1180w,
-/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png 1254w&quot;
+        src=&quot;/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png&quot;
+        srcset=&quot;/static/img_developTest-52861d8be6168118711b8bb27f0629b8-1a291.png 148w,
+/static/img_developTest-52861d8be6168118711b8bb27f0629b8-2bc4a.png 295w,
+/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png 590w,
+/static/img_developTest-52861d8be6168118711b8bb27f0629b8-526de.png 885w,
+/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fa2eb.png 1180w,
+/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png 1254w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3580,7 +3757,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
+    href=&quot;/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3599,10 +3776,10 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;처음 Dockerfile 돌렸을때&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
-        srcset=&quot;/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-999a6.png 148w,
-/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-a24ab.png 295w,
-/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png 461w&quot;
+        src=&quot;/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
+        srcset=&quot;/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-999a6.png 148w,
+/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-a24ab.png 295w,
+/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png 461w&quot;
         sizes=&quot;(max-width: 461px) 100vw, 461px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3614,7 +3791,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
+    href=&quot;/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3633,10 +3810,10 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;기존 Dockerfile을 2번째 돌렸을때&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
-        srcset=&quot;/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-999a6.png 148w,
-/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-a24ab.png 295w,
-/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png 461w&quot;
+        src=&quot;/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
+        srcset=&quot;/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-999a6.png 148w,
+/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-a24ab.png 295w,
+/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png 461w&quot;
         sizes=&quot;(max-width: 461px) 100vw, 461px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3648,7 +3825,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
+    href=&quot;/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3667,10 +3844,10 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;기존 Dockerfile 에서 EXPOSE 80 에서 EXPOSE 81로 변경했을 때&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
-        srcset=&quot;/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-a99df.png 148w,
-/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-caa51.png 295w,
-/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png 455w&quot;
+        src=&quot;/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
+        srcset=&quot;/static/img_build_after-8a6555902ada49113c4af2e4c616e516-a99df.png 148w,
+/static/img_build_after-8a6555902ada49113c4af2e4c616e516-caa51.png 295w,
+/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png 455w&quot;
         sizes=&quot;(max-width: 455px) 100vw, 455px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3685,7 +3862,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png&quot;
+    href=&quot;/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3704,11 +3881,11 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;error&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png&quot;
-        srcset=&quot;/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-1a291.png 148w,
-/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-2bc4a.png 295w,
-/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png 590w,
-/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png 630w&quot;
+        src=&quot;/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png&quot;
+        srcset=&quot;/static/img_parent_error-62aa45154c39e50055992029e5ace308-1a291.png 148w,
+/static/img_parent_error-62aa45154c39e50055992029e5ace308-2bc4a.png 295w,
+/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png 590w,
+/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png 630w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3722,7 +3899,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png&quot;
+    href=&quot;/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3741,11 +3918,11 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Docker Structure&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png&quot;
-        srcset=&quot;/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-1a291.png 148w,
-/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-2bc4a.png 295w,
-/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png 590w,
-/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png 868w&quot;
+        src=&quot;/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png&quot;
+        srcset=&quot;/static/img_structure-d38f16b7e2191f33734175d73efd4938-1a291.png 148w,
+/static/img_structure-d38f16b7e2191f33734175d73efd4938-2bc4a.png 295w,
+/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png 590w,
+/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png 868w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -4004,7 +4181,7 @@ $ docker run -d \
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png&quot;
+    href=&quot;/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -4023,11 +4200,11 @@ $ docker run -d \
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;img_busybox 용량&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png&quot;
-        srcset=&quot;/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-1a291.png 148w,
-/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-2bc4a.png 295w,
-/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png 590w,
-/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png 853w&quot;
+        src=&quot;/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png&quot;
+        srcset=&quot;/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-1a291.png 148w,
+/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-2bc4a.png 295w,
+/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png 590w,
+/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png 853w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -4039,7 +4216,7 @@ $ docker run -d \
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png&quot;
+    href=&quot;/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -4058,12 +4235,12 @@ $ docker run -d \
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;마운트 경로&quot;
         title=&quot;&quot;
-        src=&quot;/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png&quot;
-        srcset=&quot;/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-1a291.png 148w,
-/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-2bc4a.png 295w,
-/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png 590w,
-/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-526de.png 885w,
-/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png 1073w&quot;
+        src=&quot;/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png&quot;
+        srcset=&quot;/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-1a291.png 148w,
+/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-2bc4a.png 295w,
+/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png 590w,
+/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-526de.png 885w,
+/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png 1073w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
