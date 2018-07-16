@@ -135,6 +135,9 @@ lerna 가 제공하는 high-level 의 특징들을 제공하진 않지만, 코�
 
 * 각 워크스페이스의 package.json 은 아래와 같이 셋팅한다.
 
+아래 보면 줄일 수 third-party dependecies 들이 보인다.
+Workspaces 를 활성화 시키면 yarn 은 dependency 구조를 좀더 최적화 시켜준다.
+
 ```javascript
 // workspace-a/package.json:
 
@@ -164,6 +167,11 @@ lerna 가 제공하는 high-level 의 특징들을 제공하진 않지만, 코�
 
 * 마지막으로 `yarn install`을 진행하면 아래와 같은 계층을 얻을수 있다.
 
+`yarn install`시 패키지들의 있는 모듈들을 root 디렉토리쪽으로 hoisted 시켜준다.
+대신 버젼이 다른 dependency 에 한해서는 hoisted 시켜주지 않는다.
+
+이것은 lerna 의 bootstrapping 의 `--hoint` flag 효과와 같다.
+
 ```sh
 /package.json
 /yarn.lock
@@ -178,8 +186,21 @@ lerna 가 제공하는 high-level 의 특징들을 제공하진 않지만, 코�
 
 * 위 처럼 적용이 될때 workspace-b 에있는 파일에서 workspace-a 를 요구하면 현재 Github 에 게시 된 코드가 아니라 프로젝트 내부에있는 정확한 코드가 사용되며 cross-env 패키지가 올바르게 중복 제거되어 프로젝트의 루트에 놓입니다.
 
+* lerna 2.0.0 에선 lerna 커맨드 이용시 `--use-workspace` flag 를 사용하면 프로젝트의 bootstrap 을 Yarn 을 사용하게 된다. 이렇게 되면 `packages.json/workspaces` 필드에 `lerna.json/packages` 대신에 packages 라는 필드를 찾는다.
+
+lerna.json 파일로 설정하는 방법은 아래와 같다.
+
+```javascript
+{
+  ...
+  "npmClient": "yarn",
+  "useWorkspaces": true
+}
+```
+
 ## 결론
 
 * lerna 와 yarn workspace 를 사용하면 중복되는 dependency 에 관해서 관리를 할 수 있다.
+* yarn workspace 와 lerna 는 쉽게 통합될수 있다.
 * lerna 를 이용하면 yarn workspace 에서 할수 없는 다양한 기능들을 사용할 수 있다. ( testing, 배포 , 버젼관리 , 패키지별 scripting 명령)
 * 같은 환경속에서 여러가지 dependency 를 가지고 여러 패키지들을 다룬다면 monorepo 를 사용할만 할것 같다.
