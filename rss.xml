@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Mon, 16 Jul 2018 05:05:34 GMT</lastBuildDate><item><title><![CDATA[experience monorepo]]></title><description><![CDATA[intro 공통모듈을 한 repo 에서 관리 하는 시도를 해보자. 여러 npm 패키지를 하나의 github repo 에서 관리하자. 즉, monorepo 를 구축해서 공통모듈을 관리하는 환경을 만들자. monorepo 의 이점 lint 나 build…]]></description><link>https://chchoing88.github.io/ho_blog//experience-monorepo/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//experience-monorepo/</guid><pubDate>Fri, 13 Jul 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;intro&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 19 Jul 2018 07:58:36 GMT</lastBuildDate><item><title><![CDATA[experience monorepo]]></title><description><![CDATA[intro 공통모듈을 한 repo 에서 관리 하는 시도를 해보자. 여러 npm 패키지를 하나의 github repo 에서 관리하자. 즉, monorepo 를 구축해서 공통모듈을 관리하는 환경을 만들자. monorepo 의 이점 lint 나 build…]]></description><link>https://chchoing88.github.io/ho_blog//experience-monorepo/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//experience-monorepo/</guid><pubDate>Fri, 13 Jul 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;intro&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;공통모듈을 한 repo 에서 관리 하는 시도를 해보자.&lt;/li&gt;
 &lt;li&gt;여러 npm 패키지를 하나의 github repo 에서 관리하자.&lt;/li&gt;
@@ -62,10 +62,10 @@
 &lt;li&gt;모듈간의 의존성 추가&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## modulea 의 package.json에 dependency에 moduleb 추가
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## moduleb 의 package.json에 dependency에 modulea 추가
 $ lerna add modulea --scope=moduleb
 
-## modulea 의 package.json에 devDependency에 moduleb 추가
+## moduleb 의 package.json에 devDependency에 modulea 추가
 $ lerna add modulea --scope=moduleb --dev
 
 ## 모든 모듈 package.json에 devDependency에 moduleb 추가
