@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 19 Jul 2018 10:13:21 GMT</lastBuildDate><item><title><![CDATA[experience monorepo]]></title><description><![CDATA[intro 공통모듈을 한 repo 에서 관리 하는 시도를 해보자. 여러 npm 패키지를 하나의 github repo 에서 관리하자. 즉, monorepo 를 구축해서 공통모듈을 관리하는 환경을 만들자. monorepo 의 이점 lint 나 build…]]></description><link>https://chchoing88.github.io/ho_blog//experience-monorepo/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//experience-monorepo/</guid><pubDate>Fri, 13 Jul 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;intro&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 19 Jul 2018 10:23:58 GMT</lastBuildDate><item><title><![CDATA[experience monorepo]]></title><description><![CDATA[intro 공통모듈을 한 repo 에서 관리 하는 시도를 해보자. 여러 npm 패키지를 하나의 github repo 에서 관리하자. 즉, monorepo 를 구축해서 공통모듈을 관리하는 환경을 만들자. monorepo 의 이점 lint 나 build…]]></description><link>https://chchoing88.github.io/ho_blog//experience-monorepo/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//experience-monorepo/</guid><pubDate>Fri, 13 Jul 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;intro&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;공통모듈을 한 repo 에서 관리 하는 시도를 해보자.&lt;/li&gt;
 &lt;li&gt;여러 npm 패키지를 하나의 github repo 에서 관리하자.&lt;/li&gt;
@@ -3742,34 +3742,34 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;ul&gt;
 &lt;li&gt;소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation 화 할수 있고 서로 독립적인 공간을 가질수 있다. 서로에게 영향을 주지 않을수 있다. )&lt;/li&gt;
 &lt;li&gt;containerization 란 컨테이너를 매체로 한 수송체계, 즉. 컨테이너 규격을 맞춰 놓으면 차 , 배 , 비행기등 더 쉽고 빠르게 대량 수송과 시간을 단축 시킬수 있다. 라는 장점을 지니고 있음.&lt;/li&gt;
-&lt;li&gt;이걸로 유추해볼 때 도커는 다양한 SW들을 컨테이너에 담아 이동하기가 쉽게하고 포터블하게 만들수있는 플랫폼.&lt;/li&gt;
+&lt;li&gt;이걸로 유추해볼 때 도커는 다양한 SW 들을 컨테이너에 담아 이동하기가 쉽게하고 포터블하게 만들수있는 플랫폼.&lt;/li&gt;
 &lt;li&gt;리눅스의 응용프로그램들을 소프트웨어 컨테이너 안에 배치시키는 일을 자동화 하는 오픈소스&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3&gt;What is Container?&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;개발 , 배포 , 운용 등을 위해 표준화된 단위로 구성된 소프트웨어 패키지화 &lt;/li&gt;
-&lt;li&gt;호스트 pc의 커널을 공유하면서 SW가 돌아갈수 있는 모든 구성들이 들어가있다. 대신, 불필요한 것들은 들어있지 않다.&lt;/li&gt;
-&lt;li&gt;해당 도커 이미지를 run 시키면 해당 SW가 돌아가는데 그 상태를 컨테이너 라고 한다.
+&lt;li&gt;개발 , 배포 , 운용 등을 위해 표준화된 단위로 구성된 소프트웨어 패키지화&lt;/li&gt;
+&lt;li&gt;호스트 pc 의 커널을 공유하면서 SW 가 돌아갈수 있는 모든 구성들이 들어가있다. 대신, 불필요한 것들은 들어있지 않다.&lt;/li&gt;
+&lt;li&gt;해당 도커 이미지를 run 시키면 해당 SW 가 돌아가는데 그 상태를 컨테이너 라고 한다.
 일종의 프로세스와 유사한 개념이다.&lt;/li&gt;
 &lt;li&gt;이 해당 컨테이너 내부 환경을 정의하는 파일은 dockerfile 이다.&lt;/li&gt;
 &lt;li&gt;나머지 시스템으로 부터 완전히 독립된 공간을 갖는다. 그래서 밖으로 통신하기 위해선 포트를 맵핑해야 한다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3&gt;What is Service?&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;서비스는 app의 한 부분이다. 예를 들어 비디오를 공유하는 사이트는 데이타 베이스에 app data를 저장하는 서비스, 비디오 업로드 후 transcoding 하는 서비스 등등..&lt;/li&gt;
-&lt;li&gt;서비스들은 실제로 production의 컨테이너들로 구성된다.&lt;/li&gt;
-&lt;li&gt;하나의 서비스는 하나의 이미지만 실행하지만 그 이미지를 실행하는 방법을 쳬계화 할 수 있습니다. 그 체계화는 docker-compose.yml 파일에서 설정 할 수 있다. &lt;/li&gt;
+&lt;li&gt;서비스는 app 의 한 부분이다. 예를 들어 비디오를 공유하는 사이트는 데이타 베이스에 app data 를 저장하는 서비스, 비디오 업로드 후 transcoding 하는 서비스 등등..&lt;/li&gt;
+&lt;li&gt;서비스들은 실제로 production 의 컨테이너들로 구성된다.&lt;/li&gt;
+&lt;li&gt;하나의 서비스는 하나의 이미지만 실행하지만 그 이미지를 실행하는 방법을 쳬계화 할 수 있습니다. 그 체계화는 docker-compose.yml 파일에서 설정 할 수 있다.&lt;/li&gt;
 &lt;li&gt;docker-compose.yml 파일에서는 어떤 포트를 사용해야하는지, 서비스가 가져가야 할 필요한 용량에 따라 얼마나 많은 복제 컨테이너를 실행시켜야 하는지, 서비스를 위해 얼마나 컴퓨팅 리소스를 할당할지를 설정 할 수 있다.&lt;/li&gt;
-&lt;li&gt;docker-compose.yml 을 이용 하면 이미지를 일일이 다 run 시키지 않아도 된다. &lt;/li&gt;
+&lt;li&gt;docker-compose.yml 을 이용 하면 이미지를 일일이 다 run 시키지 않아도 된다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3&gt;What is Image?&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;도커 이미지란 서비스의 필요한 프로그램 , 라이브러리, 소스등을 설치한 뒤에 이를 파일로 만든 것이다. 쉽게 실행파일이라고 생각하면 된다.&lt;/li&gt;
-&lt;li&gt;이미지를 만들기위해 dockerfile에 필요한 명령들을 설정해 놓는다.&lt;/li&gt;
+&lt;li&gt;이미지를 만들기위해 dockerfile 에 필요한 명령들을 설정해 놓는다.&lt;/li&gt;
 &lt;li&gt;이미지는 base image 와 parent image 로 나뉜다.&lt;/li&gt;
-&lt;li&gt;base image 는 parent image가 없는 이미지를 말한다.&lt;/li&gt;
+&lt;li&gt;base image 는 parent image 가 없는 이미지를 말한다.&lt;/li&gt;
 &lt;li&gt;parent image 는 사용하는 이미지의 Dockerfile 내에 FROM 으로 지시되는 이미지이다. 만약 Dockerfile 내에 FROM 이 지시되어있지 않다면 부모 이미지가 없는것이고 이는 곧 base image 가 된다.&lt;/li&gt;
-&lt;li&gt;Dockerfile로 이미지를 만들때는 전에 만들었던 이미지 캐시를 잘 이용해야 한다. 기존 방식은 한줄 한줄 실행하면서 &lt;br&gt;&lt;b&gt;임시 컨테이너 생성 &gt; 명령어 수행 &gt; 이미지 저장 &gt; 임시 컨테이너 삭제 &gt; 새로 만든 이미지 기반 임시 컨테이너 생성 &gt; 명령어 수행 &gt; 이미지로 저장 &gt; 임시 컨테이너 삭제…&lt;/b&gt; 이런식으로 수행…&lt;/li&gt;
+&lt;li&gt;Dockerfile 로 이미지를 만들때는 전에 만들었던 이미지 캐시를 잘 이용해야 한다. 기존 방식은 한줄 한줄 실행하면서 &lt;br&gt;&lt;b&gt;임시 컨테이너 생성 &gt; 명령어 수행 &gt; 이미지 저장 &gt; 임시 컨테이너 삭제 &gt; 새로 만든 이미지 기반 임시 컨테이너 생성 &gt; 명령어 수행 &gt; 이미지로 저장 &gt; 임시 컨테이너 삭제…&lt;/b&gt; 이런식으로 수행…&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;----&gt; {해쉬아이디} : 이미지 저장 &lt;br&gt;
 ----&gt; Running in {해쉬아이디} : 명령어를 수행하기 위해 그 전 이미지 기반으로 임시 컨테이너 생성&lt;/p&gt;
@@ -3807,7 +3807,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
   
   &lt;/a&gt;
     &lt;/p&gt;
-&lt;p&gt;&amp;#x3C; 기존 Dockerfile을 2번째 돌렸을때 &gt;&lt;/p&gt;
+&lt;p&gt;&amp;#x3C; 기존 Dockerfile 을 2 번째 돌렸을때 &gt;&lt;/p&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
@@ -3841,7 +3841,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
   
   &lt;/a&gt;
     &lt;/p&gt;
-&lt;p&gt;&amp;#x3C; 기존 Dockerfile 에서 EXPOSE 80 에서 EXPOSE 81로 변경했을 때 &gt;&lt;/p&gt;
+&lt;p&gt;&amp;#x3C; 기존 Dockerfile 에서 EXPOSE 80 에서 EXPOSE 81 로 변경했을 때 &gt;&lt;/p&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
@@ -3876,7 +3876,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
   &lt;/a&gt;
     &lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;이미지 생성시 FROM에 적어둔 parent image기반으로 변경사항만 따로 저장되는게 장점. vm 처럼 용량을 많이 먹지 않음. &lt;br&gt;
+&lt;li&gt;이미지 생성시 FROM 에 적어둔 parent image 기반으로 변경사항만 따로 저장되는게 장점. vm 처럼 용량을 많이 먹지 않음. &lt;br&gt;
 따라서 parent image 기반으로 새로운 이미지를 만들고 parent image 를 삭제하려고 했을때 에러 뜸.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;
@@ -3966,12 +3966,12 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker pull nginx:latest
 or
 $ docker run -d -it \
---name merlin-nginx \ 
+--name merlin-nginx \
 -p 8080:80 \
 nginx:latest&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;p&gt;pull을 하면 해당 이미지만 받는것이다 &lt;br&gt;
-run을 실행하게 되면 local에 nginx:latest 라는 이미지가 없으면 자동으로 hub에서 다운받아서 run 을 시킨다.&lt;/p&gt;
+&lt;p&gt;pull 을 하면 해당 이미지만 받는것이다 &lt;br&gt;
+run 을 실행하게 되면 local 에 nginx:latest 라는 이미지가 없으면 자동으로 hub 에서 다운받아서 run 을 시킨다.&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker images
 $ docker ps
@@ -4000,12 +4000,12 @@ $ docker restart &lt;컨테이너 이름&gt;&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;p&gt;도커 컨테이너 실행 , 중지 , 재부팅&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker attach &lt;실행중인 컨테이너 이름&gt; 
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker attach &lt;실행중인 컨테이너 이름&gt;
 $ docker exec -it &lt;실행중인 컨테이너 이름&gt; &lt;컨테이너 안에서 실행할 명령&gt;
 $ docker exec -it merlin-nginx /bin/bash&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;p&gt;attach는 실행중인 도커 컨테이너에 접속한다. 단, ps 쳤을때 command 에 /bin/bash 라고 쳐져있어야 자유롭게 입력할 수 있다. 그렇지 않으면 입력은 할 수 없고 출력만 보인다. &lt;br&gt;
-exec는 컨테이너 안에서 수행할 명령을 날려줍니다. -it 옵션을 주면 실행된 bash 쉘에서 입력 및 출력을 할 수가 있습니다.&lt;/p&gt;
+&lt;p&gt;attach 는 실행중인 도커 컨테이너에 접속한다. 단, ps 쳤을때 command 에 /bin/bash 라고 쳐져있어야 자유롭게 입력할 수 있다. 그렇지 않으면 입력은 할 수 없고 출력만 보인다. &lt;br&gt;
+exec 는 컨테이너 안에서 수행할 명령을 날려줍니다. -it 옵션을 주면 실행된 bash 쉘에서 입력 및 출력을 할 수가 있습니다.&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker inspect &lt;컨테이너 이름 or 이미지:태그&gt;&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
@@ -4028,16 +4028,16 @@ exec는 컨테이너 안에서 수행할 명령을 날려줍니다. -it 옵션�
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker [OPTIONS] PATH | URL | -
 $ docker build -t app .&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;p&gt;-t 옵션은 생성할 이미지 이름을 지정합니다.  &lt;br&gt;
+&lt;p&gt;-t 옵션은 생성할 이미지 이름을 지정합니다. &lt;br&gt;
 -f 옵션은 파일명을 custom 하게 지었을때 사용하거나 Dockerfile 경로가 루트에 없을때 이용. &lt;br&gt;
-PATH 는 도커 이미지 빌드 할때 전송되는 context를 가리킨다. &lt;br&gt;&lt;/p&gt;
+PATH 는 도커 이미지 빌드 할때 전송되는 context 를 가리킨다. &lt;br&gt;&lt;/p&gt;
 &lt;h3&gt;Dockerfile&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code&gt;# 어떤 이미지로부터 새로운 이미지를 생성할지를 작성
 # 베이스를 지정
 FROM node:argon
 
-# Dockerfile 을 관리하는 사람의 이름 
+# Dockerfile 을 관리하는 사람의 이름
 MAINTAINER &lt; merlin.ho &gt; merlin@merlin.com
 # /app directory 생성
 RUN mkdir /app
@@ -4071,26 +4071,26 @@ CMD [&quot;npm&quot;, &quot;start&quot;]&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Containers should be ephemeral&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Ephemeral environments are also sometimes called “Dynamic environments”, “Temporary environments”, “on-demand environments” or “short-lived environments”.&lt;/li&gt;
-&lt;li&gt;static environments와 반대되는 개념이다.&lt;/li&gt;
+&lt;li&gt;static environments 와 반대되는 개념이다.&lt;/li&gt;
 &lt;li&gt;이것이 의미하는 바는 이 컨테이너를 우리가 stop and destroy 할 수 있고 새롭게 built 할 수 있으며 최소한의 셋팅과 설정으로 원하는 장소에 올려 놓을수 있다 라는것을 뜻함.&lt;/li&gt;
-&lt;li&gt;그래서 항상 production 환경과 같은 환경에서 test를 진행할 수 있다. test도 하나의 이미지를 공유 함으로써 병렬로 진행 할 수 있다.&lt;/li&gt;
+&lt;li&gt;그래서 항상 production 환경과 같은 환경에서 test 를 진행할 수 있다. test 도 하나의 이미지를 공유 함으로써 병렬로 진행 할 수 있다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Use a .dockerignore file&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;우리는 docker build 커멘드를 치는 장소를 build context 라고 부른다. &lt;/li&gt;
-&lt;li&gt;디폴트로 현재 디렉토리라고 가정하지만 구체적인 다른 디렉토리를 가리키려면 -f flag를 사용해야한다.&lt;/li&gt;
-&lt;li&gt;현재 디렉토리의 파일과 여러 디렉토리들을 docker deamon 에게 build context로 보내지게 되는데 이 이것은 무심코 이미지 결과로 보내지게 되어 이미지 파일이 커지게 된다.&lt;/li&gt;
-&lt;li&gt;따라서 .gitignore와 비슷하게 .dockerignore 파일을 사용해서 관계없는 파일들을 exclude 시킬수 있다.&lt;/li&gt;
+&lt;li&gt;우리는 docker build 커멘드를 치는 장소를 build context 라고 부른다.&lt;/li&gt;
+&lt;li&gt;디폴트로 현재 디렉토리라고 가정하지만 구체적인 다른 디렉토리를 가리키려면 -f flag 를 사용해야한다.&lt;/li&gt;
+&lt;li&gt;현재 디렉토리의 파일과 여러 디렉토리들을 docker deamon 에게 build context 로 보내지게 되는데 이 이것은 무심코 이미지 결과로 보내지게 되어 이미지 파일이 커지게 된다.&lt;/li&gt;
+&lt;li&gt;따라서 .gitignore 와 비슷하게 .dockerignore 파일을 사용해서 관계없는 파일들을 exclude 시킬수 있다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Use multi-stage builds&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Docker 17.05 버전 이상에서는 multi-stage builds 로 최종 이미지 사이즈를 줄일 수 있다.&lt;/li&gt;
-&lt;li&gt;multi-stage builds 란 Dockerfile 안에서 multiple FROM 구문을 사용하면 각각의 새로운 stage가 빌드 되고 한 stage에서 나온 결과 산출물을 또다른 stage로 카피를 할 수 있다. 따라서 중간 산출물을 위해 Dockerfile을 여러개 만들어서 중간 이미지를 만들고 하는 복잡한 과정을 거치지 않아도 된다.&lt;/li&gt;
-&lt;li&gt;dockerfile을 작성할때 자주 바뀌지 않은 것부터 자주 바뀌는 순으로 작성을 한다.&lt;/li&gt;
+&lt;li&gt;multi-stage builds 란 Dockerfile 안에서 multiple FROM 구문을 사용하면 각각의 새로운 stage 가 빌드 되고 한 stage 에서 나온 결과 산출물을 또다른 stage 로 카피를 할 수 있다. 따라서 중간 산출물을 위해 Dockerfile 을 여러개 만들어서 중간 이미지를 만들고 하는 복잡한 과정을 거치지 않아도 된다.&lt;/li&gt;
+&lt;li&gt;dockerfile 을 작성할때 자주 바뀌지 않은 것부터 자주 바뀌는 순으로 작성을 한다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;
@@ -4104,9 +4104,9 @@ CMD [&quot;npm&quot;, &quot;start&quot;]&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Each container should have only one concern&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;하나의 컨테이너는 오직 하나의 일만하게 시켜라.&lt;/li&gt;
-&lt;li&gt;응용 프로그램을 여러 컨테이너로 분리하면 가로로 확장하고 컨테이너를 다시 사용하는 것이 훨씬 쉬워집니다. &lt;/li&gt;
+&lt;li&gt;응용 프로그램을 여러 컨테이너로 분리하면 가로로 확장하고 컨테이너를 다시 사용하는 것이 훨씬 쉬워집니다.&lt;/li&gt;
 &lt;li&gt;컨테이너를 깨끗하고 가능한 모듈화 시킬 수 있는 최고의 판단을 해라.&lt;/li&gt;
-&lt;li&gt;만약 컨테이너 각각이 의존성을 띄고 있다면 Docker network를 사용하면 컨테이너끼리의 커뮤니케이션을 할 수 있다.&lt;/li&gt;
+&lt;li&gt;만약 컨테이너 각각이 의존성을 띄고 있다면 Docker network 를 사용하면 컨테이너끼리의 커뮤니케이션을 할 수 있다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;
@@ -4128,10 +4128,10 @@ CMD [&quot;npm&quot;, &quot;start&quot;]&lt;/code&gt;&lt;/pre&gt;
 4. Don’t use a single layer image
 5. Don’t create images from running containers
 6. Don’t use only the “latest” tag
-7. Don’t run more than one process in a single container 
+7. Don’t run more than one process in a single container
 8. Don’t store credentials in the image. Use environment variables
-9. Don’t run processes as a root user 
-10. Don’t rely on IP addresses &lt;/code&gt;&lt;/pre&gt;
+9. Don’t run processes as a root user
+10. Don’t rely on IP addresses&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;p&gt;&lt;em&gt;출처 : &lt;a href=&quot;https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/&quot;&gt;https://developers.redhat.com/blog/2016/02/24/10-things-to-avoid-in-docker-containers/&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
 &lt;hr&gt;
@@ -4156,12 +4156,12 @@ $ docker run —volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/bac
 &lt;li&gt;보통 standalone 컨테이너에는 -v 또는 —volume 옵션을 사용했고, swarm service 에는 —mount 옵션을 사용해 왔지만 17.06 이후 버젼부터는 standalone 컨테이너에서 모두 사용이 가능하다.&lt;/li&gt;
 &lt;li&gt;만약 볼륨드라이버의 구체적인 옵션을 셋팅해야 한다면 —mount 옵션을 사용해라.&lt;/li&gt;
 &lt;li&gt;-v 또는 —volume 옵션은 도커 호스트에 파일 또는 디렉토리가 없을 경우 자동으로 생성해주지만 —mount 옵션은 자동으로 생성해주지 않는다 대신 에러를 뿜는다.&lt;/li&gt;
-&lt;li&gt;-v 또는 —volume 은 세가지 field 를 가질수 있다 첫번째는 호스트 머신의 볼륨 이름이고 랜덤한 볼륨을 생성하고 싶다면 생략해도 된다. 두번째는 컨테이너 안에 생성될 디렉토리 또는 파일 path이다. 세번째는 옵션으로 콤마(:)로 옵션을 나열할 수 있다. 예를 들면 ro(readonly) 옵션등이 있다.&lt;/li&gt;
+&lt;li&gt;-v 또는 —volume 은 세가지 field 를 가질수 있다 첫번째는 호스트 머신의 볼륨 이름이고 랜덤한 볼륨을 생성하고 싶다면 생략해도 된다. 두번째는 컨테이너 안에 생성될 디렉토리 또는 파일 path 이다. 세번째는 옵션으로 콤마(:)로 옵션을 나열할 수 있다. 예를 들면 ro(readonly) 옵션등이 있다.&lt;/li&gt;
 &lt;li&gt;—mount 는 key=value 로 구성을 하고 key 에는 type, src or source , dst or target , volume-opt 등이 있다.&lt;/li&gt;
-&lt;li&gt;type의 경우에는 bind , volume , tmpfs 가 있다. 올바른 타입으로 선택하자.&lt;/li&gt;
-&lt;li&gt;Voloumn 타입, volumn은 도커에 의해 관리되는 host쪽에 있는 파일시스템으로 저장이 된다. 여기서 volumn은 ”~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty” 해당 경로에 있는 리눅스 안에 “/var/lib/docker/volumes/” 쪽에 저장이 된다. 도커가 아닌 프로세스가 이 파일은 수정하지 못하고 volumnes는 도커 안에서 데이터를 유지하기 최고의 방법이다. &lt;/li&gt;
+&lt;li&gt;type 의 경우에는 bind , volume , tmpfs 가 있다. 올바른 타입으로 선택하자.&lt;/li&gt;
+&lt;li&gt;Voloumn 타입, volumn 은 도커에 의해 관리되는 host 쪽에 있는 파일시스템으로 저장이 된다. 여기서 volumn 은 ”~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty” 해당 경로에 있는 리눅스 안에 “/var/lib/docker/volumes/” 쪽에 저장이 된다. 도커가 아닌 프로세스가 이 파일은 수정하지 못하고 volumnes 는 도커 안에서 데이터를 유지하기 최고의 방법이다.&lt;/li&gt;
 &lt;li&gt;bind 타입, 이 bind 타입은 host 어디에나 저장이 될 수 있다. 여기서 중요한 시스템 파일이나 디렉토리들에 사용이 될수있고 언제든지 도커가 아닌 프로세스나 도커 컨테이너에서 수정될수 있다.&lt;/li&gt;
-&lt;li&gt;tmpfs 타입, 이 타입은 hosts의 메모리에 저장이 된다. 그리고 host 파일시스템에 쓸수가 없다. 휘발성이 강하다.&lt;/li&gt;
+&lt;li&gt;tmpfs 타입, 이 타입은 hosts 의 메모리에 저장이 된다. 그리고 host 파일시스템에 쓸수가 없다. 휘발성이 강하다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker volume create my-vol
@@ -4170,7 +4170,7 @@ $ docker volume ls
 $ docker volume rm my-vol&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## 컨테이너 연결 
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;## 컨테이너 연결
 ## mount 방법
 $ docker run -d \
   -it \
@@ -4184,12 +4184,12 @@ $ docker run -d \
   --mount source=nginx-vol,destination=/usr/share/nginx/html \
   nginx:latest
 
-# -v 방법 
+# -v 방법
  $ docker run -d \
   -it \
   --name devtest \
   -v myvol2:/app \
-  nginx:latest 
+  nginx:latest
 
 
   $ docker run -d \
@@ -4272,18 +4272,26 @@ $ docker run -d \
 volume container 를 사용했을 떄 데이터도 컨테이너로 관리를 할 수 있다. 그럼..컨테이너의 장점을 다 이용할 수 있지 않을까…&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2&gt;Docker compose&lt;/h2&gt;
+&lt;p&gt;여러 컨테이너의 Docker application 을 running 하고 defining 하기 위한 툴이 Compose 이다. Compose 를 사용하기 위해서 YAML 파일에 config 를 app service 별로 설정하면 되고 한 커맨드 라인으로 서비스를 만들고 시작할수 있다. 해당 서비스는 YAML 파일에 적혀있는 그대로를 실행시킨다.&lt;/p&gt;
 &lt;p&gt;docker compose install
 &lt;a href=&quot;https://docs.docker.com/compose/install/#install-compose&quot;&gt;docker compose install&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;공식문서 &lt;a href=&quot;https://docs.docker.com/compose/compose-file/&quot;&gt;https://docs.docker.com/compose/compose-file/&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;version 3 &lt;/p&gt;
+&lt;h3&gt;Docker compose 를 사용하는 방법&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Define your app’s environment with a &lt;code&gt;Dockerfile&lt;/code&gt; so it can be reproduced anywhere.&lt;/li&gt;
+&lt;li&gt;Define the services that make up your app in &lt;code&gt;docker-compose.yml&lt;/code&gt; so they can be run together in an isolated environment.&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;docker-compose up&lt;/code&gt; and Compose starts and runs your entire app.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;Docker compose config&lt;/h3&gt;
+&lt;p&gt;version 3&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-yml&quot;&gt;&lt;code&gt;# compose 버젼 3을 이용하겠다. 대소문자 주의
 version: &apos;3&apos;
 
-services: 
+services:
     webapp:
-        build: ./dir # 구체적인 빌드 컨텍스트의 경로를 지정할 수 있다. 도커 파일을 포함하는 디렉토리나 깃 레파지토리 url, 
-        build: # 또는 구체적인 옵션들을 설정할 수 있다. 
+        build: ./dir # 구체적인 빌드 컨텍스트의 경로를 지정할 수 있다. 도커 파일을 포함하는 디렉토리나 깃 레파지토리 url,
+        build: # 또는 구체적인 옵션들을 설정할 수 있다.
             context: ./dir
             dockerfile: Dockerfile-alternate
             args: # 빌드 프로세스 진행중에 사용할 환경 변수들을 지정할 수 있다.
@@ -4297,8 +4305,8 @@ services:
         depends_on: # 서비스들 간에 의존성을 표현, 이것은 db, redis 이후에 webapp 이 실행하게 된다.(compose up시)
             - db
             - redis
-        tmpfs: /run # 컨테이너에 임시 파일 시스템을 마운트 , 리스트로 작성해도 된다. 
-        entrypoint: /code/entrypoint.sh # 도커 파일의 엔트리 포인트를 오버라이딩 , 리스트로 작성해도 된다. 
+        tmpfs: /run # 컨테이너에 임시 파일 시스템을 마운트 , 리스트로 작성해도 된다.
+        entrypoint: /code/entrypoint.sh # 도커 파일의 엔트리 포인트를 오버라이딩 , 리스트로 작성해도 된다.
         env_file:  # 환경변수들을 파일로 받는다. 이 환경 변수 파일들은 각각 라인마다 VAR=VAL 포멧으로 작성한다. #은 주석
             - ./common.env
             - ./apps/web.env
@@ -4307,23 +4315,23 @@ services:
             RACK_ENV: development
             SHOW: &apos;true&apos;
             SESSION_SECRET:
-        expose: # 포트 노출 
+        expose: # 포트 노출
             - &quot;3000&quot;
             - &quot;8000&quot;
-        external_links: # 링크 컨테이너 docker-compose.yml 외부에 있는 컨테이너 , CONTAINER:ALIAS 
+        external_links: # 링크 컨테이너 docker-compose.yml 외부에 있는 컨테이너 , CONTAINER:ALIAS
             - redis_1
             - project_db_1:mysql
             - project_db_1:postgresql
-        extra_hosts: # /etc/hosts 에 추가 
+        extra_hosts: # /etc/hosts 에 추가
             - &quot;somehost:162.242.195.82&quot;
             - &quot;otherhost:50.31.209.229&quot;
         image: redis # 특별한 이미지로 부터 런 , 이미지가 없으면 pull 한다.
-        healthcheck: # 이 서비스를 위해 건강한지 체크 , 이미지로 부터 어떤 디폴트 헬스체크를 disable 하려면 disable: true 추가 
+        healthcheck: # 이 서비스를 위해 건강한지 체크 , 이미지로 부터 어떤 디폴트 헬스체크를 disable 하려면 disable: true 추가
             test: [&quot;CMD&quot;, &quot;curl&quot;, &quot;-f&quot;, &quot;http://localhost&quot;]
             interval: 1m30s
             timeout: 10s
             retries: 3
-        labels: # 라벨 추가. 
+        labels: # 라벨 추가.
             com.example.description: &quot;Accounting webapp&quot;
             com.example.department: &quot;Finance&quot;
             com.example.label-with-empty-value: &quot;&quot;
@@ -4335,18 +4343,18 @@ services:
             driver: syslog # json-file , syslog , none
             options:
                 syslog-address: &quot;tcp://192.168.0.42:123&quot;,
-                max-size: &quot;200k&quot; # json-file 의 경우 로그 저장을 제한할 수 있다. 오래된 파일은 지워진다. 
+                max-size: &quot;200k&quot; # json-file 의 경우 로그 저장을 제한할 수 있다. 오래된 파일은 지워진다.
                 max-file: &quot;10&quot;
-        network_mode: bridge # 네트워크 모드 설정 , host , none , service:[service name] , container:[container name/id] //// host 모드는 links랑 같이 사용할 수 없다. 
+        network_mode: bridge # 네트워크 모드 설정 , host , none , service:[service name] , container:[container name/id] //// host 모드는 links랑 같이 사용할 수 없다.
         networks: # top level 에서 지정한 네트워크 설정 , 알리아스를 사용할 수 도 있다. 이 알리아스 네임으로 서비스를 연결 할 수 있다.
             - some-network
             - other-network
-            new: 
+            new:
                 aliases:
                     - database
         ports: # HOST:CONTAINER
             - &quot;8000:8000&quot;
-        volumes: # 호스트 경로 또는 생성된 볼륨을 마운트 시킨다. 
+        volumes: # 호스트 경로 또는 생성된 볼륨을 마운트 시킨다.
             - type: volume
             source: mydata
             target: /data
@@ -4355,7 +4363,7 @@ services:
             - type: bind
             source: ./static
             target: /opt/app/static
-        
+
 
 volumes:
   mydata:
@@ -4363,29 +4371,93 @@ volumes:
     name : actual-name-of-volume # 이름을 지정할 수도 있다.
   dbdata:
 
-networks: &lt;/code&gt;&lt;/pre&gt;
+networks:&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;직접 했던 예제&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-yml&quot;&gt;&lt;code&gt;version: &apos;3.2&apos;
+
+services:
+  app_blue:
+    image: blog_express:v1
+    depends_on:
+      - nginx-proxy
+      - mongo-db
+    working_dir: /app/
+    networks:
+      - dbconnection
+    environment:
+      - VIRTUAL_HOST=nodeapp.local
+    volumes:
+      - type: bind
+        source: ./server
+        target: /app/server
+    command: npm start
+
+  app_green:
+    image: blog_express:v1
+    depends_on:
+      - nginx-proxy
+      - mongo-db
+    working_dir: /app/
+    networks:
+      - dbconnection
+    environment:
+      - VIRTUAL_HOST=nodeapp.local
+    volumes:
+      - type: bind
+        source: ./server
+        target: /app/server
+    command: npm start
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 8081:80
+    networks:
+      - dbconnection
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  mongo-db:
+    image: mongo
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - db-data:/data/db
+    networks:
+      - dbconnection
+    command: mongod --dbpath &quot;/data/db&quot;
+
+volumes:
+  db-data:
+
+networks:
+  dbconnection:&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;hr&gt;
 &lt;h2&gt;Docker network&lt;/h2&gt;
 &lt;p&gt;출처 : &lt;a href=&quot;http://bluese05.tistory.com/15&quot;&gt;http://bluese05.tistory.com/15&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;network 구성&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;도커를 설치 하면 docker host 쪽에 보면 &lt;strong&gt;docker0&lt;/strong&gt; 이라는 virtual ethernet bridge를 확인할 수 있다. ( $ ifconfig 로 확인가능, 난 172.17.0.1 로 셋팅되어 있다.)&lt;/li&gt;
-&lt;li&gt;docker0는 container가 통신하기 위한 가상 linux bridge 이다. bridge는 기본적으로 L2 통신 기반이다.&lt;/li&gt;
-&lt;li&gt;컨테이너가 하나씩 생성되면 이 bridge에 하나씩 바인딩 된다. ( $ brctl show docker0 )&lt;/li&gt;
-&lt;li&gt;이렇게 연결된 컨테이너와 host는 케이블로 연결한 두대의 pc라고 보면 된다.&lt;/li&gt;
-&lt;li&gt;컨테이너 내부의 eth0 인터페이스는 내부로 격리되어있어서 이 내부와 host를 이어줄 vethxxxx 형태의 인터페이스가 하나 더 존재한다. 이 인터페이스가 host와 컨테이너 사이를 연결해준다. &lt;/li&gt;
-&lt;li&gt;컨테이너 내부의 아이피를 확인하려면 ifconfig eth0 라고 치면 되는데 ifconfig 가 잘 안먹는다. 그럴땐 도커 inspect로 확인하자.&lt;/li&gt;
+&lt;li&gt;도커를 설치 하면 docker host 쪽에 보면 &lt;strong&gt;docker0&lt;/strong&gt; 이라는 virtual ethernet bridge 를 확인할 수 있다. ( $ ifconfig 로 확인가능, 난 172.17.0.1 로 셋팅되어 있다.)&lt;/li&gt;
+&lt;li&gt;docker0 는 container 가 통신하기 위한 가상 linux bridge 이다. bridge 는 기본적으로 L2 통신 기반이다.&lt;/li&gt;
+&lt;li&gt;컨테이너가 하나씩 생성되면 이 bridge 에 하나씩 바인딩 된다. ( $ brctl show docker0 )&lt;/li&gt;
+&lt;li&gt;이렇게 연결된 컨테이너와 host 는 케이블로 연결한 두대의 pc 라고 보면 된다.&lt;/li&gt;
+&lt;li&gt;컨테이너 내부의 eth0 인터페이스는 내부로 격리되어있어서 이 내부와 host 를 이어줄 vethxxxx 형태의 인터페이스가 하나 더 존재한다. 이 인터페이스가 host 와 컨테이너 사이를 연결해준다.&lt;/li&gt;
+&lt;li&gt;컨테이너 내부의 아이피를 확인하려면 ifconfig eth0 라고 치면 되는데 ifconfig 가 잘 안먹는다. 그럴땐 도커 inspect 로 확인하자.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3&gt;network 확인&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ ip addr show 
+      &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ ip addr show
 or
 $ ifconfig&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-sh&quot;&gt;&lt;code&gt;$ docker attach nonenetcontainer
-# 접속후 
+# 접속후
 $ cat /etc/hosts
 $ ip -4 addr&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
@@ -4409,17 +4481,17 @@ $ docker run --new={네트워크 타입}&lt;/code&gt;&lt;/pre&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;host &lt;/p&gt;
+&lt;p&gt;host&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;이 방식은 컨테이너가 독립적인 네트워크 영역을 갖지 않고 host와 네트워크를 함께 사용한다.&lt;/li&gt;
-&lt;li&gt;따라서 해당 컨테이너는 host의 네트워크 정보와 동일시 하게 가져가게 된다.&lt;/li&gt;
-&lt;li&gt;따라서 docker0 에 바인딩 되지 않는다. &lt;/li&gt;
+&lt;li&gt;이 방식은 컨테이너가 독립적인 네트워크 영역을 갖지 않고 host 와 네트워크를 함께 사용한다.&lt;/li&gt;
+&lt;li&gt;따라서 해당 컨테이너는 host 의 네트워크 정보와 동일시 하게 가져가게 된다.&lt;/li&gt;
+&lt;li&gt;따라서 docker0 에 바인딩 되지 않는다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;container &lt;/p&gt;
+&lt;p&gt;container&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;다른 컨테이너의 네트워크 환경을 가져온다. 즉, ip와 mac 주소를 동일시 하게 구성한다.&lt;/li&gt;
+&lt;li&gt;다른 컨테이너의 네트워크 환경을 가져온다. 즉, ip 와 mac 주소를 동일시 하게 구성한다.&lt;/li&gt;
 &lt;li&gt;docker run —name web03 —net=container:{컨테이너 id} -d nginx:alpine&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
@@ -4432,19 +4504,18 @@ $ docker run --new={네트워크 타입}&lt;/code&gt;&lt;/pre&gt;
 &lt;/ol&gt;
 &lt;h3&gt;container 외부 통신&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;각 컨테이너는 격리된 환경에서 각각의 mac 주소와 ip 주소를 부여 받는다. &lt;/li&gt;
-&lt;li&gt;각 컨테이너들은 host와 통신하기 위해 bridge 방식으로 바인딩 되어있는데 각 부여받은 ip로 자유롭게 통신 가능.&lt;/li&gt;
-&lt;li&gt;예를 들면 web 서비스를 하는 container 는 80번 포트에서 리스닝을 하고있다. 이 포트는 외부와 통신이 되어야 하는데 이때 포트를 외부로 지정한다. -p 8080:80 으로 옵션을 주게 되면 docker host의 8080 포트로 요청이 들어오면 컨테이너의 80 포트로 해당 요청을 forwarding 하겠다는 의미이다.&lt;/li&gt;
+&lt;li&gt;각 컨테이너는 격리된 환경에서 각각의 mac 주소와 ip 주소를 부여 받는다.&lt;/li&gt;
+&lt;li&gt;각 컨테이너들은 host 와 통신하기 위해 bridge 방식으로 바인딩 되어있는데 각 부여받은 ip 로 자유롭게 통신 가능.&lt;/li&gt;
+&lt;li&gt;예를 들면 web 서비스를 하는 container 는 80 번 포트에서 리스닝을 하고있다. 이 포트는 외부와 통신이 되어야 하는데 이때 포트를 외부로 지정한다. -p 8080:80 으로 옵션을 주게 되면 docker host 의 8080 포트로 요청이 들어오면 컨테이너의 80 포트로 해당 요청을 forwarding 하겠다는 의미이다.&lt;/li&gt;
 &lt;li&gt;docker ps -a or netstat -nlp | grep 8080 로 확인&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3&gt;link 방식의 한계&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;link 방식은 하나의 호스트 사이에서 실행되는 컨테이너 사이에서만 연결이 가능하다.&lt;/li&gt;
-&lt;li&gt;다수의 host가 존재했을때, 다른 host의 컨테이너에는 접근할 수가 없다.&lt;/li&gt;
-&lt;li&gt;이 경우 docker swarm 같은 orchestration 툴을 사용하거나 dynamic DNS를 구축해야한다.&lt;/li&gt;
+&lt;li&gt;다수의 host 가 존재했을때, 다른 host 의 컨테이너에는 접근할 수가 없다.&lt;/li&gt;
+&lt;li&gt;이 경우 docker swarm 같은 orchestration 툴을 사용하거나 dynamic DNS 를 구축해야한다.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Warning: &gt;The —link flag is a legacy feature of Docker. It may eventually be removed. Unless you absolutely need to continue using it, we recommend that you use user-defined networks to facilitate communication between two containers instead of using —link. One feature that user-defined networks do not support that you can do with —link is sharing environmental variables between containers. However, you can use other mechanisms such as volumes to share environment variables between containers in a more controlled way.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;** dynamic DNS 란?
-- 간단하게 ip 가 바뀌면 그걸 알아채서 외부 DNS 서버에 알려준다. 그러면 ip가 동적으로 바뀌는 환경에서도 사용자는 바뀐 ip를 알 필요 없이 domain name 만 알면 동일하게 접속 할 수 있다.&lt;/p&gt;</content:encoded></item></channel></rss>
+&lt;p&gt;** dynamic DNS 란? - 간단하게 ip 가 바뀌면 그걸 알아채서 외부 DNS 서버에 알려준다. 그러면 ip 가 동적으로 바뀌는 환경에서도 사용자는 바뀐 ip 를 알 필요 없이 domain name 만 알면 동일하게 접속 할 수 있다.&lt;/p&gt;</content:encoded></item></channel></rss>
