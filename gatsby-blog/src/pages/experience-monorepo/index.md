@@ -72,10 +72,10 @@ $ lerna run [script]
 * 모듈간의 의존성 추가
 
 ```sh
-## modulea 의 package.json에 dependency에 moduleb 추가
+## moduleb 의 package.json에 dependency에 modulea 추가
 $ lerna add modulea --scope=moduleb
 
-## modulea 의 package.json에 devDependency에 moduleb 추가
+## moduleb 의 package.json에 devDependency에 modulea 추가
 $ lerna add modulea --scope=moduleb --dev
 
 ## 모든 모듈 package.json에 devDependency에 moduleb 추가
