@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 19 Jul 2018 07:58:36 GMT</lastBuildDate><item><title><![CDATA[experience monorepo]]></title><description><![CDATA[intro 공통모듈을 한 repo 에서 관리 하는 시도를 해보자. 여러 npm 패키지를 하나의 github repo 에서 관리하자. 즉, monorepo 를 구축해서 공통모듈을 관리하는 환경을 만들자. monorepo 의 이점 lint 나 build…]]></description><link>https://chchoing88.github.io/ho_blog//experience-monorepo/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//experience-monorepo/</guid><pubDate>Fri, 13 Jul 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;intro&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Merlin Tec Blog]]></title><description><![CDATA[A starter blog FT tec.]]></description><link>https://chchoing88.github.io/ho_blog/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 19 Jul 2018 10:13:21 GMT</lastBuildDate><item><title><![CDATA[experience monorepo]]></title><description><![CDATA[intro 공통모듈을 한 repo 에서 관리 하는 시도를 해보자. 여러 npm 패키지를 하나의 github repo 에서 관리하자. 즉, monorepo 를 구축해서 공통모듈을 관리하는 환경을 만들자. monorepo 의 이점 lint 나 build…]]></description><link>https://chchoing88.github.io/ho_blog//experience-monorepo/</link><guid isPermaLink="false">https://chchoing88.github.io/ho_blog//experience-monorepo/</guid><pubDate>Fri, 13 Jul 2018 10:00:03 GMT</pubDate><content:encoded>&lt;h2&gt;intro&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;공통모듈을 한 repo 에서 관리 하는 시도를 해보자.&lt;/li&gt;
 &lt;li&gt;여러 npm 패키지를 하나의 github repo 에서 관리하자.&lt;/li&gt;
@@ -3456,7 +3456,7 @@ babel-eslint : eslint 의 parser를 babel-eslint로 사용. 이것은 Babel code
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png&quot;
+    href=&quot;/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3475,13 +3475,13 @@ babel-eslint : eslint 의 parser를 babel-eslint로 사용. 이것은 Babel code
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;구성&quot;
         title=&quot;&quot;
-        src=&quot;/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png&quot;
-        srcset=&quot;/static/img_greenBlue-fb095609940c67b4165035ab4468af02-1a291.png 148w,
-/static/img_greenBlue-fb095609940c67b4165035ab4468af02-2bc4a.png 295w,
-/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png 590w,
-/static/img_greenBlue-fb095609940c67b4165035ab4468af02-526de.png 885w,
-/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fa2eb.png 1180w,
-/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png 1394w&quot;
+        src=&quot;/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-1a291.png 148w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-2bc4a.png 295w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fb8a0.png 590w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-526de.png 885w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-fa2eb.png 1180w,
+/ho_blog/static/img_greenBlue-fb095609940c67b4165035ab4468af02-8e53b.png 1394w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3705,7 +3705,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png&quot;
+    href=&quot;/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3724,13 +3724,13 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;테스트 결과 화면&quot;
         title=&quot;&quot;
-        src=&quot;/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png&quot;
-        srcset=&quot;/static/img_developTest-52861d8be6168118711b8bb27f0629b8-1a291.png 148w,
-/static/img_developTest-52861d8be6168118711b8bb27f0629b8-2bc4a.png 295w,
-/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png 590w,
-/static/img_developTest-52861d8be6168118711b8bb27f0629b8-526de.png 885w,
-/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fa2eb.png 1180w,
-/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png 1254w&quot;
+        src=&quot;/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-1a291.png 148w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-2bc4a.png 295w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fb8a0.png 590w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-526de.png 885w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-fa2eb.png 1180w,
+/ho_blog/static/img_developTest-52861d8be6168118711b8bb27f0629b8-915e1.png 1254w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3777,7 +3777,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
+    href=&quot;/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3796,10 +3796,10 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;처음 Dockerfile 돌렸을때&quot;
         title=&quot;&quot;
-        src=&quot;/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
-        srcset=&quot;/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-999a6.png 148w,
-/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-a24ab.png 295w,
-/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png 461w&quot;
+        src=&quot;/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png&quot;
+        srcset=&quot;/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-999a6.png 148w,
+/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-a24ab.png 295w,
+/ho_blog/static/img_build_init-746f6243da40bcdfd0dea81cd38cb1fe-3aa92.png 461w&quot;
         sizes=&quot;(max-width: 461px) 100vw, 461px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3811,7 +3811,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
+    href=&quot;/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3830,10 +3830,10 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;기존 Dockerfile을 2번째 돌렸을때&quot;
         title=&quot;&quot;
-        src=&quot;/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
-        srcset=&quot;/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-999a6.png 148w,
-/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-a24ab.png 295w,
-/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png 461w&quot;
+        src=&quot;/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png&quot;
+        srcset=&quot;/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-999a6.png 148w,
+/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-a24ab.png 295w,
+/ho_blog/static/img_build_before-7f2e4d4e319728eb8656bacb2419016f-3aa92.png 461w&quot;
         sizes=&quot;(max-width: 461px) 100vw, 461px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3845,7 +3845,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
+    href=&quot;/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3864,10 +3864,10 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;기존 Dockerfile 에서 EXPOSE 80 에서 EXPOSE 81로 변경했을 때&quot;
         title=&quot;&quot;
-        src=&quot;/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
-        srcset=&quot;/static/img_build_after-8a6555902ada49113c4af2e4c616e516-a99df.png 148w,
-/static/img_build_after-8a6555902ada49113c4af2e4c616e516-caa51.png 295w,
-/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png 455w&quot;
+        src=&quot;/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png&quot;
+        srcset=&quot;/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-a99df.png 148w,
+/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-caa51.png 295w,
+/ho_blog/static/img_build_after-8a6555902ada49113c4af2e4c616e516-ab65c.png 455w&quot;
         sizes=&quot;(max-width: 455px) 100vw, 455px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3882,7 +3882,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png&quot;
+    href=&quot;/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3901,11 +3901,11 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;error&quot;
         title=&quot;&quot;
-        src=&quot;/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png&quot;
-        srcset=&quot;/static/img_parent_error-62aa45154c39e50055992029e5ace308-1a291.png 148w,
-/static/img_parent_error-62aa45154c39e50055992029e5ace308-2bc4a.png 295w,
-/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png 590w,
-/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png 630w&quot;
+        src=&quot;/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-1a291.png 148w,
+/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-2bc4a.png 295w,
+/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-fb8a0.png 590w,
+/ho_blog/static/img_parent_error-62aa45154c39e50055992029e5ace308-efba4.png 630w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -3919,7 +3919,7 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png&quot;
+    href=&quot;/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -3938,11 +3938,11 @@ $ sudo sh check.sh&lt;/code&gt;&lt;/pre&gt;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Docker Structure&quot;
         title=&quot;&quot;
-        src=&quot;/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png&quot;
-        srcset=&quot;/static/img_structure-d38f16b7e2191f33734175d73efd4938-1a291.png 148w,
-/static/img_structure-d38f16b7e2191f33734175d73efd4938-2bc4a.png 295w,
-/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png 590w,
-/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png 868w&quot;
+        src=&quot;/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-1a291.png 148w,
+/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-2bc4a.png 295w,
+/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-fb8a0.png 590w,
+/ho_blog/static/img_structure-d38f16b7e2191f33734175d73efd4938-07c6b.png 868w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -4201,7 +4201,7 @@ $ docker run -d \
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png&quot;
+    href=&quot;/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -4220,11 +4220,11 @@ $ docker run -d \
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;img_busybox 용량&quot;
         title=&quot;&quot;
-        src=&quot;/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png&quot;
-        srcset=&quot;/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-1a291.png 148w,
-/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-2bc4a.png 295w,
-/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png 590w,
-/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png 853w&quot;
+        src=&quot;/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-1a291.png 148w,
+/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-2bc4a.png 295w,
+/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-fb8a0.png 590w,
+/ho_blog/static/img_busybox-4a20af0d205541a77e55e0cf58b015dc-a6c62.png 853w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -4236,7 +4236,7 @@ $ docker run -d \
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png&quot;
+    href=&quot;/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -4255,12 +4255,12 @@ $ docker run -d \
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;마운트 경로&quot;
         title=&quot;&quot;
-        src=&quot;/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png&quot;
-        srcset=&quot;/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-1a291.png 148w,
-/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-2bc4a.png 295w,
-/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png 590w,
-/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-526de.png 885w,
-/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png 1073w&quot;
+        src=&quot;/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png&quot;
+        srcset=&quot;/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-1a291.png 148w,
+/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-2bc4a.png 295w,
+/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-fb8a0.png 590w,
+/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-526de.png 885w,
+/ho_blog/static/img_mount-832c2b5fee3133b85cfa73b7f72f28a6-7208f.png 1073w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
