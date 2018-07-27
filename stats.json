@@ -1,8 +1,8 @@
 {
   "assetsByChunkName": {
     "path---make-promise": [
-      "path---make-promise-005d22c645392e11747d.js",
-      "path---make-promise-005d22c645392e11747d.js.map"
+      "path---make-promise-ab82cbe298e9dc05a9ac.js",
+      "path---make-promise-ab82cbe298e9dc05a9ac.js.map"
     ],
     "component---src-pages-index-js": [
       "component---src-pages-index-js-4941001003d8a496df29.js",
@@ -61,8 +61,8 @@
       "path---docker-depolyment-ac8cf9ea302435b186f6.js.map"
     ],
     "path---index": [
-      "path---index-cbf30eb9470cc815d6ad.js",
-      "path---index-cbf30eb9470cc815d6ad.js.map"
+      "path---index-10660169ea4589850ff9.js",
+      "path---index-10660169ea4589850ff9.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-0e285b607382ee417f2f.js",
@@ -87,9 +87,9 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-1ed8f0aebc82e8d68242.js",
+      "app-7938336a2ebbaaa75513.js",
       "build-js-styles.css",
-      "app-1ed8f0aebc82e8d68242.js.map",
+      "app-7938336a2ebbaaa75513.js.map",
       "build-js-styles.css.map"
     ],
     "path---lazy-evaluation": [
