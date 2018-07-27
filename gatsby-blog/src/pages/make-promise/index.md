@@ -443,7 +443,7 @@ new Promise(function(resolve, reject) {
 * 위 코드는 아주 최소화된 Promise를 따라 구현해본것이다.
 * then이라는 체이닝을 제외하고 대략적인 구현 방식은 약속하고 싶은 코드를 먼저 실행을 하고 비동기 안에 resolve 함수가 들어가있다면 done 함수와 state를 통해서 그 즉시 resolve 함수를 등록해 둔다. 비동기가 끝난 뒤 resolve를 실행 하게 되면 등록 되었던 함수가 동작하게 된다.
 * 체이닝의 경우 처음 동기화 부분이 다 진행된 뒤에 ( 비동기는 나중에 실행될 부분이므로 ) then 함수가 진행이 된다. then 함수는 기본적으로 Promise를 리턴하므로 체이닝으로 then 함수를 또 불러올수 있고 Promise 인자인 함수를 바로 호출하게 된다. 
-여기서 done 함수를 이용해서 비동기 완료후 불러올 handler를 등록을 해둔다. 그 이후로도 마지막 then까지 실행이 되며 그전 then에서 등록해둔 resolve 함수를 등록해둔다. 
+여기서 done 함수를 이용해서 비동기 완료 후 불러올 handler를 등록을 해둔다. 그 이후로도 마지막 then까지 실행이 되며 그전 then에서 등록해둔 resolve 함수를 등록해둔다. 
 이후 비동기 값이 귀결값이 정해지면 done에서 등록해두었던 handler 함수가 실행 될것이고 hendler 안에는 then에서 등록해두었던 onFulfilled 함수를 실행한다. 여기서 나온 리턴값을 가지고 다시 resolve를 시켜주게 되면 계속적으로 등록해두었던 함수를 호출하게 된다.  
 * Promise의 인자 함수에 비동기 코드가 아닌 일반 코드가 들어갔을 경우 (ex. resolve(1)만 들어가있을 경우 ) 여기서 동기적인 resolve(1) 호출은 Promise의 상태값과 귀결값(1) 만 셋팅해주고 나머지 done이나 then에서 호출되었을때 상태가 귀결되었으므로 인자로 받았던 함수를 아까 셋팅해둔 귀결값을 넣고 호출해주게 된다. 
 * resolve에서 getThen 과 doResolve 함수는 result 값이 Promise 객체일 경우 처리해주는 함수들이다. 
