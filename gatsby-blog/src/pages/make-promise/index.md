@@ -91,6 +91,7 @@ function Promise(fn) {
 위에서 본 헬퍼함수는 두종류가 존재한다. `getThen` , `doResolve` 함수이다.
 `getThen` 의 경우에는 Promise 객체의 특징은 then 함수가 있는지 없는지 파악하여 있으면 then 함수를 리턴 없으면 null 을 리턴한다. 또한 잘못된 Promise를 막아줌.
 `doResolve` 의 함수의 경우에는 fulfill 과 reject 를 한번만 호출할수 있도록 도와준다.
+또한 fn 을 한번 호출한 뒤에는 내부적으로는 아무것도 할것이 없다. 다시 resolve나 reject를 사용자에서 호출을 해줘야 다음 절차를 이행해 간다. 
 
 실제 Promise에서도 resolve 함수를 여러번 호출했을 경우를 막아준다. ( 맨 처음에 호출한 resolve 로 귀결시킨다. )
 
@@ -360,7 +361,7 @@ function Promise(fn) {
         function(result) {
           if (typeof onFulfilled === 'function') {
             try {
-              resolve(onFulfilled(result)) // 리턴되는 값을 다시 새로운 resolve에 넘겨주어야 체이닝 가능.
+              resolve(onFulfilled(result)) // 리턴되는 값을 다시 새로운 resolve에 넘겨주어야 그 다음 then에게 전달. 
             } catch (e) {
               reject(e)
             }
@@ -407,9 +408,12 @@ then 함수의 경우에는 연속된 then 호출을 할수있도록 체이닝�
 기본적으로 then에서 리턴된 값은 즉시 다음 핸들러로 전달이 된다. 만약 리턴된 값이 promise라면 그 값이 귀결될때까지 다음 then 호출을 기다린다. promise의 결과값이 주어졌을 경우에 다음 next를 호출하게 된다. 
 
 ```javascript
-new Promise(function(resolve, reject) {
+new Promise(function(resolve, reject) { 
 
-  setTimeout(() => resolve(1), 1000);
+  setTimeout(() => resolve(1), 1000); 
+  // 여기서 resolve는 내부적인 resolve 함수를 호출, 
+  // 그 이후에 fulfilled 과 value 1 셋팅 그 이후에 등록해뒀던 핸들러 함수 실행 ( 아래 then으로 등록해둔 함수 )
+  // 사실 then 함수는 바로 등록하기 보다는 해당 함수를 실행할수 있는 함수를 등록함. 
 
 }).then(function(result) {
 
@@ -441,6 +445,9 @@ new Promise(function(resolve, reject) {
 * 체이닝의 경우 처음 동기화 부분이 다 진행된 뒤에 ( 비동기는 나중에 실행될 부분이므로 ) then 함수가 진행이 된다. then 함수는 기본적으로 Promise를 리턴하므로 체이닝으로 then 함수를 또 불러올수 있고 Promise 인자인 함수를 바로 호출하게 된다. 
 여기서 done 함수를 이용해서 비동기 완료후 불러올 handler를 등록을 해둔다. 그 이후로도 마지막 then까지 실행이 되며 그전 then에서 등록해둔 resolve 함수를 등록해둔다. 
 이후 비동기 값이 귀결값이 정해지면 done에서 등록해두었던 handler 함수가 실행 될것이고 hendler 안에는 then에서 등록해두었던 onFulfilled 함수를 실행한다. 여기서 나온 리턴값을 가지고 다시 resolve를 시켜주게 되면 계속적으로 등록해두었던 함수를 호출하게 된다.  
+* Promise의 인자 함수에 비동기 코드가 아닌 일반 코드가 들어갔을 경우 (ex. resolve(1)만 들어가있을 경우 ) 여기서 동기적인 resolve(1) 호출은 Promise의 상태값과 귀결값(1) 만 셋팅해주고 나머지 done이나 then에서 호출되었을때 상태가 귀결되었으므로 인자로 받았던 함수를 아까 셋팅해둔 귀결값을 넣고 호출해주게 된다. 
+* resolve에서 getThen 과 doResolve 함수는 result 값이 Promise 객체일 경우 처리해주는 함수들이다. 
+* 여기서 중요한건 함수의 연속된 함수 참조를 이루고 있다는 것이다. 
 
 ## 출처
 
