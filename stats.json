@@ -1,5 +1,9 @@
 {
   "assetsByChunkName": {
+    "path---make-promise": [
+      "path---make-promise-005d22c645392e11747d.js",
+      "path---make-promise-005d22c645392e11747d.js.map"
+    ],
     "component---src-pages-index-js": [
       "component---src-pages-index-js-4941001003d8a496df29.js",
       "component---src-pages-index-js-4941001003d8a496df29.js.map"
@@ -57,8 +61,8 @@
       "path---docker-depolyment-ac8cf9ea302435b186f6.js.map"
     ],
     "path---index": [
-      "path---index-3f3ee538fb08a328ea97.js",
-      "path---index-3f3ee538fb08a328ea97.js.map"
+      "path---index-cbf30eb9470cc815d6ad.js",
+      "path---index-cbf30eb9470cc815d6ad.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-0e285b607382ee417f2f.js",
@@ -83,14 +87,14 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-3168194611f21e97f181.js",
+      "app-1ed8f0aebc82e8d68242.js",
       "build-js-styles.css",
-      "app-3168194611f21e97f181.js.map",
+      "app-1ed8f0aebc82e8d68242.js.map",
       "build-js-styles.css.map"
     ],
     "path---lazy-evaluation": [
-      "path---lazy-evaluation-d9240bdefcb439d5fddd.js",
-      "path---lazy-evaluation-d9240bdefcb439d5fddd.js.map"
+      "path---lazy-evaluation-7f4a9ce96e75ffb2fcae.js",
+      "path---lazy-evaluation-7f4a9ce96e75ffb2fcae.js.map"
     ]
   }
 }
