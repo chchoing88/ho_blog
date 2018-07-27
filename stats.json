@@ -1,8 +1,8 @@
 {
   "assetsByChunkName": {
     "path---make-promise": [
-      "path---make-promise-ab82cbe298e9dc05a9ac.js",
-      "path---make-promise-ab82cbe298e9dc05a9ac.js.map"
+      "path---make-promise-228df5b7f3bad25bc3d0.js",
+      "path---make-promise-228df5b7f3bad25bc3d0.js.map"
     ],
     "component---src-pages-index-js": [
       "component---src-pages-index-js-4941001003d8a496df29.js",
@@ -87,9 +87,9 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-7938336a2ebbaaa75513.js",
+      "app-a6e7df269581655cf665.js",
       "build-js-styles.css",
-      "app-7938336a2ebbaaa75513.js.map",
+      "app-a6e7df269581655cf665.js.map",
       "build-js-styles.css.map"
     ],
     "path---lazy-evaluation": [
