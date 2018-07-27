@@ -35,7 +35,13 @@ function Promise(fn) {
 promise 개념을 보다보면 resolve, fulfill, reject 라는 용어를 볼 수가 있다.
 resolve 라는 개념은 어떠한 결과값으로 귀결되었다인데 이는 성공했을수도 있고 실패했을수도 있다는 뜻이다. 즉, 어떤 결과든 결론을 지었다라고 생각하면 된다.
 fulfill 은 귀결된 결과값이 성공했다는 뜻이고 반대로 reject 는 실패했다는 뜻이다.
-이런 기능들을 하는 기능들을 만들어 보자.
+
+Promise 인자로는 함수 하나를 받는데 그 함수의 인자로 resolve, reject를 받겠끔 되어있다.
+fn 이라는 함수를 호출할때 resolve와 reject 구실을 할 수있는 함수를 만들어 넣어줘야 한다. 
+
+여기서 참고로 resolve 함수는 Promise 객체를 받을수도 있어야 한다. 
+
+이런 기능들을 하는 함수들을 만들어 보자.
 
 ```javascript
 const PENDIGN = 0
@@ -57,8 +63,9 @@ function Promise(fn) {
     value = error // 실패한 에러를 value 값으로 넣어줌.
   }
 
-  // 이 resolve 는 fulfill 또는 reject로 보낼수 있어야 한다.
-  // 여기서 value가 올수있는 값은 일반 plain 값이 올수 있고 다시 Promise가 올수있으므로 그 처리를 해두어야 한다.
+  
+  // 여기서 result가 올수있는 값은 일반 plain 값이 올수 있고 다른 Promise가 올수있으므로 그 처리를 해두어야 한다.
+  // 프로미스는 오직 fulfilled/rejected 중 오직 딱 한번만 귀결이 될수 있다. 
   function resolve(result) {
     try {
       let then = getThen(result) // 여기 then 함수가 있으면 Promise로 왔다고 간주. (getThen 은 헬퍼함수)
@@ -82,10 +89,10 @@ function Promise(fn) {
 ## 헬퍼함수 작성하기
 
 위에서 본 헬퍼함수는 두종류가 존재한다. `getThen` , `doResolve` 함수이다.
-`getThen` 의 경우에는 Promise 객체의 특징은 then 함수가 있는지 없는지 파악하여 있으면 then 함수를 리턴 없으면 null 을 리턴한다.
-`doResolve` 의 함수의 경우에는 fulfill 과 reject 를 한번만 호출할수 있도록 도와주고 잠재적인 fn(resolver)의 잘못된 행동을 막아준다.
+`getThen` 의 경우에는 Promise 객체의 특징은 then 함수가 있는지 없는지 파악하여 있으면 then 함수를 리턴 없으면 null 을 리턴한다. 또한 잘못된 Promise를 막아줌.
+`doResolve` 의 함수의 경우에는 fulfill 과 reject 를 한번만 호출할수 있도록 도와준다.
 
-resolver 에서 resolve 함수를 여러번 호출했을 경우를 막아준다. ( 맨 처음에 호출한 resolve 로 귀결시킨다. )
+실제 Promise에서도 resolve 함수를 여러번 호출했을 경우를 막아준다. ( 맨 처음에 호출한 resolve 로 귀결시킨다. )
 
 ```javascript
 new Promise(function(resolve, reject) {
@@ -116,7 +123,7 @@ function getThen(result) {
 }
 
 function doResolve(fn, onFulfilled, onRejected) {
-  let done = false
+  let done = false // 중복 호출 방지
   try {
     fn(
       function(value) {
@@ -389,6 +396,51 @@ function Promise(fn) {
 ```
 
 ## then 함수 파헤치기
+
+앞서 done 함수의 경우 연속된 체이닝을 갖지 못하는 단점을 지니고 있었다. 
+then 함수의 경우에는 연속된 then 호출을 할수있도록 체이닝을 지니고 있으면서 then에 등록된 함수에서 return 값이 자동으로 그 다음 호출되는 then 핸들러의 인자값으로 전달 될수 있도록 모양새를 갖추고있다. 
+
+
+위에서 then은 연속된 then 호출을 위해 promise로 감싸서 리턴을 하고있다. 
+
+
+기본적으로 then에서 리턴된 값은 즉시 다음 핸들러로 전달이 된다. 만약 리턴된 값이 promise라면 그 값이 귀결될때까지 다음 then 호출을 기다린다. promise의 결과값이 주어졌을 경우에 다음 next를 호출하게 된다. 
+
+```javascript
+new Promise(function(resolve, reject) {
+
+  setTimeout(() => resolve(1), 1000);
+
+}).then(function(result) {
+
+  alert(result); // 1
+
+  return new Promise((resolve, reject) => { // (*)
+    setTimeout(() => resolve(result * 2), 1000);
+  });
+
+}).then(function(result) { // (**)
+
+  alert(result); // 2
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve(result * 2), 1000);
+  });
+
+}).then(function(result) {
+
+  alert(result); // 4
+
+});
+```
+
+## 결론
+
+* 위 코드는 아주 최소화된 Promise를 따라 구현해본것이다.
+* then이라는 체이닝을 제외하고 대략적인 구현 방식은 약속하고 싶은 코드를 먼저 실행을 하고 비동기 안에 resolve 함수가 들어가있다면 done 함수와 state를 통해서 그 즉시 resolve 함수를 등록해 둔다. 비동기가 끝난 뒤 resolve를 실행 하게 되면 등록 되었던 함수가 동작하게 된다.
+* 체이닝의 경우 처음 동기화 부분이 다 진행된 뒤에 ( 비동기는 나중에 실행될 부분이므로 ) then 함수가 진행이 된다. then 함수는 기본적으로 Promise를 리턴하므로 체이닝으로 then 함수를 또 불러올수 있고 Promise 인자인 함수를 바로 호출하게 된다. 
+여기서 done 함수를 이용해서 비동기 완료후 불러올 handler를 등록을 해둔다. 그 이후로도 마지막 then까지 실행이 되며 그전 then에서 등록해둔 resolve 함수를 등록해둔다. 
+이후 비동기 값이 귀결값이 정해지면 done에서 등록해두었던 handler 함수가 실행 될것이고 hendler 안에는 then에서 등록해두었던 onFulfilled 함수를 실행한다. 여기서 나온 리턴값을 가지고 다시 resolve를 시켜주게 되면 계속적으로 등록해두었던 함수를 호출하게 된다.  
 
 ## 출처
 

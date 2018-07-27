@@ -160,6 +160,9 @@ console.log(soameValue);
 
     * 리턴된 inner함수 (res) 에게 프로퍼티로 then 함수를 추가.
     * then에서 인자로는 첫번째 평가 이후에 리턴된 값으로 다시 lazy를 수행할수 있는 next 함수를 받는다.
+    * 여기서 modifier 인자는 v1 => lazy() 함수가 되겠다. 
+    * res()는 lazyVal 함수가 될것이고 여기서 res() 호출된 결과는 즉, v1으로 들어갈 것이다.
+    * 받은 v1을 다시 lazy로 감싸서 lazyOp로 return 한다. 
 
     ### map 함수를 만들어 보자.
 
