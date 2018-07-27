@@ -353,7 +353,7 @@ function Promise(fn) {
         function(result) {
           if (typeof onFulfilled === 'function') {
             try {
-              resolve(onFulfilled(result))
+              resolve(onFulfilled(result)) // 리턴되는 값을 다시 새로운 resolve에 넘겨주어야 체이닝 가능.
             } catch (e) {
               reject(e)
             }
@@ -387,6 +387,8 @@ function Promise(fn) {
   }
 }
 ```
+
+## then 함수 파헤치기
 
 ## 출처
 
