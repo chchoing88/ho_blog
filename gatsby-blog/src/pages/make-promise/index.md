@@ -244,6 +244,7 @@ function Promise(fn) {
 
   // 이 resolve 는 fulfill 또는 reject로 보낼수 있어야 한다.
   // 여기서 value가 올수있는 값은 일반 plain 값이 올수 있고 다시 Promise가 올수있으므로 그 처리를 해두어야 한다.
+  // Promise가 올 경우에는 then 함수에서 return 값으로 Promise를 넘길때이다.
   function resolve(result) {
     try {
       let then = getThen(result) // 여기 then 함수가 있으면 Promise로 왔다고 간주. (getThen 은 헬퍼함수)
@@ -438,15 +439,129 @@ new Promise(function(resolve, reject) {
 });
 ```
 
+## Promise 함수 전체 이해
+
+* then이라는 체이닝을 제외하고 대략적인 구현 방식은 약속하고 싶은 코드를 먼저 실행을 하고 done 함수를 통해서 약속해둔 함수가 끝나면 실행될 함수를 등록한다. 비동기가 끝난 뒤 resolve를 실행 하게 되면 등록 되었던 함수가 동작하게 된다.즉, resolve 라는 함수는 해당 Promise 객체가 모든 수행을 다 했다는걸 알리기 위한 함수이고 내부적으로 등록해뒀던 handlers 들을 forEach 하면서 실행하게 된다. 
+
+* 체이닝의 경우 처음 동기화 부분이 다 진행된 뒤에 ( 비동기는 나중에 실행될 부분이므로 ) then 함수가 진행이 된다. then 함수는 기본적으로 Promise를 리턴하므로 체이닝으로 then 함수를 또 불러올수 있고 Promise 인자인 함수를 바로 호출하게 된다.
+여기서 done 함수를 이용해서 비동기 완료 후 불러올 handler를 등록을 해둔다. 그 이후로도 마지막 then까지 실행이 되며 그전 then에서 등록해둔 resolve 함수를 등록해둔다. 
+이후 비동기 값이 귀결값이 정해지면 done에서 등록해두었던 handler 함수가 실행 될것이고 hendler 안에는 then에서 등록해두었던 onFulfilled 함수를 실행한다. 여기서 나온 리턴값을 가지고 다시 resolve를 시켜주게 되면 계속적으로 등록해두었던 함수를 호출하게 된다.  
+
+즉, then함수는 새로운 약속을 잡는데 then에 등록된 함수가 실행될 경우 다시 또 알려주겠다는 약속인 셈이다. then 내부적으로 resolve나 reject를 실행함으로써 then 내부에 있는 promise가 귀결되었다는걸 알린다. 그럼 이 약속에 또 다른 then으로 등록해두었던 함수들을 실행시킨다.
+
+* Promise의 인자 함수에 비동기 코드가 아닌 일반 코드가 들어갔을 경우 (ex. resolve(1)만 들어가있을 경우 ) 여기서 동기적인 resolve(1) 호출은 Promise의 상태값과 귀결값(1) 만 셋팅해주고 나머지 done이나 then에서 호출되었을때 상태가 귀결되었으므로 인자로 받았던 함수를 아까 셋팅해둔 귀결값을 넣고 호출해주게 된다. 
+
+* then에서 리턴 된 값이 Promise 값이라면 본인의 promise를 resolve하지 않고 리턴된 Promise에 then 함수를 실행 시켜서 리턴된 Promise가 resolve 되면 본인의 promise에서 resolve를 then에 등록시켜서 리턴 된 Promise가 resolve 되고 난 이후에 본인의 resolve가 실행 되도록 시켜준다. 
+
+* resolve 함수에서 getThen 과 doResolve 함수는 result 값이 Promise 객체일 경우 처리해주는 함수들이다. 
+
+
+
+## then에서 Promise를 리턴했을 경우를 알아보자.
+
+```javascript
+new Promise(function(resolve, reject) { 
+
+  setTimeout(() => resolve(1), 1000);
+
+}).then(function(result) {
+
+  alert(result); // 1
+
+  return new Promise((resolve, reject) => { // (*)
+    setTimeout(() => resolve(result * 2), 1000);
+  });
+
+}).then(function(result) { // (**)
+  alert(result); // 2
+})
+```
+
+* 처음 Promise의 인자로 넣은 함수를 호출한뒤 then함수들이(동기) 차례로 호출이 되면서 Promise가 resolve 되었을때 호출될 콜백 함수들을 등록시킨다. 
+
+* 1초 뒤에 resolve(1) 이 호출되면 Promise 내부적으로 status와 value값을 업데이트 하고 그 다음 then에서 등록해두었던 콜백을 실행한다. 
+then으로 등록 시킬경우 아래 해당 함수가 handler.onFulfilled 로 등록이 된다. 
+
+```javascript
+// then 함수안에 self.done함수에서 fulfilled 될때 실행할 함수를 등록
+function (result) {
+      if (typeof onFulfilled === 'function') {
+        try {
+          return resolve(onFulfilled(result)); // 여기 onFulfilled는 then에서 등록했던 함수.
+        } catch (ex) {
+          return reject(ex);
+        }
+      } else {
+        return resolve(result);
+      }
+    }
+```
+
+* resolve(1) 이 실행 되면서 등록되었던 위 함수가 실행이 되고 onFulfilled(result)이 실행되면서 then에서 등록했던 함수가 실행이 된다. 그러면서 alert(1)이 실행이 되고, return new Promise() 가 실행이 되는데 여기서는 Promise의 인자 함수를 실행하고 {PENDING, null} 이런식으로 리턴한다. 
+
+
+* 여기서 resolve는 
+```javascript
+function (value) {
+      if (done) return
+      done = true
+      onFulfilled(value)
+    }
+```
+위와 같고 onFulfilled(value)를 실행하면서 value에는 promise 객체가 들어간다.
+여기서 onFulfilled(value)를 실행시키면 아래 함수가 호출되게 되고,
+
+```javascript
+function resolve(result) {
+    try {
+      var then = getThen(result);
+      if (then) {
+        doResolve(then.bind(result), resolve, reject)
+        return
+      }
+      fulfill(result);
+    } catch (e) {
+      reject(e);
+    }
+  }
+```
+
+위 함수에서 fulfill(result)를 호출하지 않고 다시 doResolve() 를 실행하게 된다. 여기서 첫 인자로는 해당 귀결되었던 Promise 객체의 then 함수를 호출한다. 여기서 then을 호출하는 이유!! then을 호출해서 리턴된 {Pending, null} 이 객체가 resolve 되면 then으로 등록했던 콜백으로 미뤄뒀던 resolve를 시키려고 했기 때문이다. 
+
+바로 자신이 fulfill 된 사실을 미뤄두고 then함수를 실행시켜서 자신의 resolve 함수를 다시 등록해둔다.
+
+* 여기서 2초 뒤에 resolve(result * 2) 이게 호출이 된다면 해당 Promise(리턴한 promise)가 resolve 되고 아까 해당 Promise then을 호출해서 등록해뒀던 함수가 실행된다. 여기서 등록 되었던 함수는 아래와 같다. result에는 resolve(result * 2) 인 인자가 들어간다.
+
+```javascript
+function (result) {
+      if (typeof onFulfilled === 'function') {
+        try {
+          return resolve(onFulfilled(result));
+        } catch (ex) {
+          return reject(ex);
+        }
+      } else {
+        return resolve(result);
+      }
+    }
+```
+위 함수에서 onFulfilled는 아래 함수이고 아래 함수에서 onFulfilled 함수는 기존 promise를 지연해왔던 resolve 함수가 되겠다.
+
+```javascript
+function (value) {
+      if (done) return
+      done = true
+      onFulfilled(value)
+    }
+```
+
+그럼 결국엔 2로 귀결 된 값이 호출이 되고 처음에 지연시켜놨던 resolve가 다시 실행되고 이번엔 값이기 때문에 fulfill(result); 가 실행되서 
+fulfill 함수에 등록되었던 등록된 handlers 가 마저 실행된다.
+
+
 ## 결론
 
 * 위 코드는 아주 최소화된 Promise를 따라 구현해본것이다.
-* then이라는 체이닝을 제외하고 대략적인 구현 방식은 약속하고 싶은 코드를 먼저 실행을 하고 비동기 안에 resolve 함수가 들어가있다면 done 함수와 state를 통해서 그 즉시 resolve 함수를 등록해 둔다. 비동기가 끝난 뒤 resolve를 실행 하게 되면 등록 되었던 함수가 동작하게 된다.
-* 체이닝의 경우 처음 동기화 부분이 다 진행된 뒤에 ( 비동기는 나중에 실행될 부분이므로 ) then 함수가 진행이 된다. then 함수는 기본적으로 Promise를 리턴하므로 체이닝으로 then 함수를 또 불러올수 있고 Promise 인자인 함수를 바로 호출하게 된다. 
-여기서 done 함수를 이용해서 비동기 완료 후 불러올 handler를 등록을 해둔다. 그 이후로도 마지막 then까지 실행이 되며 그전 then에서 등록해둔 resolve 함수를 등록해둔다. 
-이후 비동기 값이 귀결값이 정해지면 done에서 등록해두었던 handler 함수가 실행 될것이고 hendler 안에는 then에서 등록해두었던 onFulfilled 함수를 실행한다. 여기서 나온 리턴값을 가지고 다시 resolve를 시켜주게 되면 계속적으로 등록해두었던 함수를 호출하게 된다.  
-* Promise의 인자 함수에 비동기 코드가 아닌 일반 코드가 들어갔을 경우 (ex. resolve(1)만 들어가있을 경우 ) 여기서 동기적인 resolve(1) 호출은 Promise의 상태값과 귀결값(1) 만 셋팅해주고 나머지 done이나 then에서 호출되었을때 상태가 귀결되었으므로 인자로 받았던 함수를 아까 셋팅해둔 귀결값을 넣고 호출해주게 된다. 
-* resolve에서 getThen 과 doResolve 함수는 result 값이 Promise 객체일 경우 처리해주는 함수들이다. 
 * 여기서 중요한건 함수의 연속된 함수 참조를 이루고 있다는 것이다. 
 
 ## 출처
