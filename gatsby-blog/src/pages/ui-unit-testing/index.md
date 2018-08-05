@@ -10,6 +10,7 @@ date: "2018-08-04T10:00:03.284Z"
 # jasmine 이란?
 
 - 행위 주도 개발 (Behavior-Driven Development, BDD) 방식으로 자바스크립트 단위 테스트를 작성하기 위한 라이브러리
+- 단위 테스트(unit test)란 코드의 기능 단위(funtionality unit)를 테스트 하는 것을 말한다.
 - BDD는 단위 테스트로 확인할 기능 또는 작동 로직을 일상 언어로 서술할 수 있는데 개발자는 자신이 작성 중인 코드가 '어떻게' 가 아닌 '무엇'을 해야하는지 테스트 코드에 표현할수 있다. 
 - [공식홈페이지](http://jasmine.github.io)
 
@@ -28,6 +29,17 @@ decribe("무엇을 테스트할지 서술한다.",function(){
 // dscribe({문자열}, {함수})
 it("무엇을 테스트할지 서술한다.",function(){
     // 적어도 한개의 기대식을 가진 함수 
+})
+```
+
+- 예) 
+```javascript
+describe('어떤 버튼은', ()=> {
+  describe('클릭했을 때', ()=> {
+    it('경고창을 띄운다', ()=> {
+
+    })
+  })
 })
 ```
 
@@ -130,22 +142,184 @@ expect(saver.saveReservation).toHaveBeenCalled();
 </html>
 ```
 
-## 코드 분석
+## 테스트 코드 및 모듈 작성(1)
 
-- 실제 코드를 작성하기 이전에 test코드를 작성하자. 
-- 이벤트 발생시 카운트가 증가해서 저장하는 부분과 DOM업데이트 함수로 나눈다.
+
+- 기존에 인라인으로 들어간 스크립트를 모듈로 빼두자. 그러면 재사용성이 좋아진다.
+- 이벤트 발생시 카운트가 증가해서 저장하는 부분과 DOM업데이트 함수로 나눈다. 그럼 비지니스 로직만 테스트할 수 있음.
 - 우선 DOM과 엮이지 않은 코드를 작성해서 테스트를 진행한다. 
+
+```javascript
+function clickCountDisplay(){
+    let count = 0;
+    return {
+        // 현재 count 구하기
+        getClickCount: function(){
+            return count;
+        },
+        // count를 Dom에 render
+        updateCountDisplay: function(){
+
+        },
+        // count 증가 및 update Dom
+        incrementCountAndUpdateDisplay: function(){
+            count++;
+            this.updateCountDisplay();
+        }
+    }
+}
+```
 
 ```javascript
 // test코드
 
 decribe("clickCountDisplay", function(){
     "use strict"
+
+    beforeEach(function(){
+        let display = clickCountDisplay();
+    })
+
     it("0으로 초기화",function(){
-        
+        expect(display.getClickCount()).toEqual(0)
     });
+
+     describe("incrementCountAndUpdateDisplay()", function() {
+         it("count 증가 시킨다.",function(){
+            let initCount = display.getClickCount();
+            display.incrementCountAndUpdateDisplay();
+            expect(display.getClickCouny()).toEqual(initCount+1);
+         });
+
+         it("updateCountDisplay 함수를 실행시킨다.",function(){
+            spyOn(display,"updateCountDisplay");
+            display.incrementCountAndUpdateDisplay();
+            expect(display.updateCountDisplay).toHaveBeenCalled();
+         })
+     })
 })
 ```
 
 
+## 테스트 코드 및 모듈 작성(2)
 
+- DOM이 바뀌는지 테스트를 진행한다. 
+- updateCountDisplay 함수를 어떻게 테스트할지 생각해보자.
+- updateCountDisplay 이 함수가 조작할수 있는 DOM 요소를 제공해야한다. 
+- DOM 요소를 주입하고 나서 함수를 실행했을때 그 값이 잘 렌더링 되는지 확인한다.
+
+```javascript
+function clickCountDisplay(opts){
+    if(!opts) throw new Error("opts를 주입해야합니다.");
+    let count = 0;
+    return {
+        // 현재 count 구하기
+        getClickCount: function(){
+            return count;
+        },
+        // count를 Dom에 render
+        updateCountDisplay: function(){
+            opts.updateElement.innerHTML(count);
+        },
+        // count 증가 및 update Dom
+        incrementCountAndUpdateDisplay: function(){
+            count++;
+            this.updateCountDisplay();
+        }
+    }
+}
+```
+
+
+```javascript
+// test코드
+
+decribe("clickCountDisplay", function(){
+    "use strict"
+    let display,
+        displayElement;
+    beforeEach(function(){
+        displayElement = document.createElement("span");
+        document.body.appendChild(displayElement);
+
+        clickElement = document.createElement("button");
+        document.body.appendChild(clickElement);
+
+        let options = {
+            updateElement: displayElement,
+            triggerElement: clickElement
+        }
+        // Element를 주입.
+        display = clickCountDisplay(options);
+    })
+
+    afterEach(function(){
+        displayElement.remove();
+        clickElement.remove();
+    })
+
+     describe("incrementCountAndUpdateDisplay()", function() {
+         it("updateDisplay",function(){
+             display.incrementCountAndUpdateDisplay();
+             expect(displayElement.innerText).teEqual(display.getClickCount());
+         })
+     });
+
+     describe("updateCountDisplay()", function() {
+        it("횟수를 한번도 늘린 적 없으면 0이 표시된다", function() {
+            expect(displayElement.innerText).teEqual("");
+            display.updateCountDisplay();
+            expect(displayElement.innerText).teEqual("0");
+        });
+    });
+})
+```
+
+## 테스트 코드 및 모듈 작성(3)
+
+- 이벤트 트리거가 잘 해당 함수를 호출하는지 확인한다.
+
+```javascript
+// 테스트 코드
+// .. 나머진 생략
+it("클릭이벤트가 발생하면 incrementCountAndUpdateDisplay를 호출한다.",function(){
+    spyOn(display, "incrementCountAndUpdateDisplay")
+    clickElement.dispatchEvent(new Event('click')); // 클릭 발생시
+    expect(display.incrementCountAndUpdateDisplay).toHaveBeenCalled();
+})
+```
+
+```javascript
+function clickCountDisplay(opts){
+    if(!opts) throw new Error("opts를 주입해야합니다.");
+    let count = 0;
+    const module = {
+        // 현재 count 구하기
+        getClickCount: function(){
+            return count;
+        },
+        // count를 Dom에 render
+        updateCountDisplay: function(){
+            opts.updateElement.innerHTML(count);
+        },
+        // count 증가 및 update Dom
+        incrementCountAndUpdateDisplay: function(){
+            count++;
+            this.updateCountDisplay();
+        }
+    }
+
+    opts.triggerElement.addEventListener('click', function(){
+        module.incrementCountAndUpdateDisplay();
+    })
+
+    return module
+}
+```
+
+# 결론
+
+- UI 단위테스트는 다음을 확인하는 정도로 확인해야한다.
+    - 요소를 클릭하면 알맞은 처리기가 확실히 실행되는가?
+    - 사용자가 보면 안될 UI 요소가 있는가?
+    - <select>가 원하는 데이터로 채워지는가.
