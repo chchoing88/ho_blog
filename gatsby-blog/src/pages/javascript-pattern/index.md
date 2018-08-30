@@ -10,6 +10,8 @@ date: "2018-08-05T10:00:03.284Z"
 # 패턴
 
 ## callback pattern
+- 콜백은 나중에 실행할 부차 함수에 인자로 넣는 함수다. 
+- 여기서 콜백이 실행될 '나중'시점이 부차 함수의 실행 완료 이전이면 동기, 반대로 실행 완료 이후면 비동기라고 본다.
 
 ### 시나리오 
 
@@ -80,9 +82,6 @@ addAttendeesToCollection([attendee1, attendee2])
 attendees.iterate(function doCheckIn(attend) { // 익명의 콜백함수 -> 디버깅 용이함을 위해 이름을 지정한다. 
   attend.checkIn();
 })
-
-
-
 
 ```
 
