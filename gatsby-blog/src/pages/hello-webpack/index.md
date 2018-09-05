@@ -217,77 +217,167 @@ export {wtf};
 
 webpack은 어떤 모양으로 번들링을 만들까???
 
+전체 프레임은 아래와 같다.
+
+```javascript
+(function(){
+  // The module cache
+  // installedModules가 있는 이유는 여러 파일에서 한 파일을 import 할시 계속 등록하는게 아니라 캐쉬처리해서 
+  // 속도에 이점을 두기 위함이다.
+  var installedModules = {};
+
+  //... 생략
+
+  // Load entry module and return exports
+  // 0번째 실행 인자로 넘어오는 배열의 0 번째 인덱스 함수를 실행한다.
+  return __webpack_require__(__webpack_require__.s = 0);
+})(
+  // 배열 ( 각 인덱스에 각 파일의 코드들이 들어가있음.)
+)
+```
+
 
 1. 각각의 모듈을 배열에 담아 인자로 넘긴다.
 
 참고로 아래 문법은 바벨로 돌렸을때 나오는 문법이다.
 웹팩 2 부턴 바벨 없이도 import / export를 지원한다.
 
+아래 코드는 (function(modules){A})(B) 이런 전체 구조에서 B에 들어가는 배열이다.
+modules에는 B의 배열이 들어간다.
+
 ```javascript
+// modules가 되는 배열
+[
+    // 0 번째 ( 시작점 )
+    (function(module, exports, __webpack_require__) {
+        // 해당 모듈을 installedModules에 등록 후
+        // 이 배열의 인덱스 1번째 코드를 실행한다. 
+        module.exports = __webpack_require__(1);
 
-    [
-        // 0 번째 ( 시작점 )
-        (function(module, exports, __webpack_require__) {
-            module.exports = __webpack_require__(1);
+    }),
+    
+    // 1 번째 
+    (function(module, exports, __webpack_require__) {
 
-        }),
+        "use strict";
         
-        // 1 번째 
-        (function(module, exports, __webpack_require__) {
+        // import b from './b';
+        // 위 문장은 babel이 아래와 같이 변형한다.
+        // var _b = require('./b');
+        // var _b2 = _interopRequireDefault(_b);
+        // function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-            "use strict";
-           
-           // 아래 문장은 기본적으로 import 문을 바벨이 해석했을때 나올 수 있는 문장이다.
-           // import b from './b';
-           // 0번째 꺼 등록후 실행 하면 installModules에 export 정보를 업데이트 그후 인스톨된 모듈안에 exports를 리턴.. 이것은 곧 b.js 안에 있는 export 된 아이를 가져오는 것.
-            var _b = __webpack_require__(2);
-            var _b2 = _interopRequireDefault(_b);
-            var _c = __webpack_require__(3);
+        // export 하면 babel은 아래와 같은 object에 __esModule 프로퍼티를 생성한다.
+        // Object.defineProperty(exports, "__esModule", {
+        //    value: true
+        // });
 
-            // 바벨이 해석한 객체인가..그렇지 않다면 default 프로퍼티 값으로 설정하자. 아래에서 default로 실행하기 때문...
-            function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-            console.log('a');
+        // 0번째 꺼 등록후 해당 코드를 실행 하면 이 모듈도 cache 용 installModules 객체에 등록이 되고
+        // 그후 인스톨된 모듈안에 exports를 리턴.. 이것은 곧 b.js 안에 있는 export 된 아이를 가져오는 것.
 
-            (0, _b2.default)();
+        // import b from './b' 문은 
+        // var _b2 = _interopRequireDefault(_b); 구문을 실행시키지만
 
-            (0, _c.c)();
+        // import {c,wtf} from './c'; 문은
+        // _interopRequireDefault 이 함수를 실행하지 않는다.
 
-            console.log(_c.wtf);
-            
-        }),
-        // 2번째
-        (function(module, exports, __webpack_require__) {
-            
-            // 아래 문장은 바벨이 기본적으로 export default function(){ console.log('b')} 문장을 만났을때 해석하는 문장..
-            "use strict";
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
+        // 여기서 _b는 새로운 객체가 튀어나온다.
+        // { default: function(){console.log('b')} }
 
-            // 이 부분은 installedModules 의 exports 에 설정되고 exports는 리턴 된다.
-            exports.default = function () {
-            console.log('b');
-            };
+        // 왜 _b만 _interopRequireDefault 함수를 태우는가???
+        // import b from './b' 를 사용한다는 것은 export의 default 프로퍼티 값만 b로 받아온다는 의미가 된다.
+        // b 파일이 만약 Common JS 모듈을 사용했다면 module.exports = function a() {}; 이렇게 exports 시켰을것이다.
+        // Common JS 모듈은 최종적으로 리턴하는 것은 module.exports 다. ( 함수든 , 객체든 )
+        // 이때 var _b = require('./b'); 이렇게 만으로 불러온다면 _b는 exports 함수가 될것인데 
+        // 그럴땐 _interopRequireDefault를 태워서 { default: exports(함수) } 로 변환해서 실행시켜준다.
 
-         }),
-        // 3번째
-         (function(module, exports, __webpack_require__) {
+        // 즉, ES6 와 Common JS 모듈의 간극(default 유무)을 맞춰주기 위해 _interopRequireDefault 가 존재한다.
 
-            "use strict";
+        var _b = __webpack_require__(2); // var _b = require('./b');
+        var _b2 = _interopRequireDefault(_b);
+        var _c = __webpack_require__(3);
 
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.c = c;
-            function c() {
-                console.log('c');
-            }
-            var wtf = 'wtf';
-            exports.wtf = wtf;
+         
+        function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-        })
-    ]
+        console.log('a');
+
+        (0, _b2.default)();
+
+        (0, _c.c)();
+
+        console.log(_c.wtf);
+        
+    }),
+    // 2번째
+    (function(module, exports, __webpack_require__) {
+        
+        // 아래 문장은 바벨이 기본적으로 export default function(){ console.log('b')} 문장을 만났을때 해석하는 문장..
+        // exports에 default 프로퍼티를 만든다.
+        "use strict";
+        Object.defineProperty(exports, "__esModule", {
+            value: true
+        });
+
+        // 이 부분은 installedModules 의 exports 에 설정되고 exports는 리턴 된다.
+        exports.default = function () {
+        console.log('b');
+        };
+
+      }),
+    // 3번째
+      (function(module, exports, __webpack_require__) {
+
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", {
+            value: true
+        });
+        exports.c = c;
+        function c() {
+            console.log('c');
+        }
+        var wtf = 'wtf';
+        exports.wtf = wtf;
+
+    })
+]
+
+```
+
+```javascript
+// Common JS file : a.js
+// 참고로 a.js는 바벨이 변환을 안한다.
+module.exports = {};
+
+module.exports.aaa = function(){}
+module.exports.bbb = function(){}
+
+// 라고 있었을때.. ES6에선
+
+import {aaa, bbb} from 'a.js' 
+
+// 라고 해야한다. 그래야 바벨이 아래처럼 변환.
+var _a = require('a.js');
+_a.aaa()
+_a.bbb() 
+
+// 만약 아래처럼 호출한다면 babel은 
+import a from 'a.js'; // exports 의 default 값을 a에 넣겠다 라는 의미.
+
+a.aaa()
+
+// 이렇게 변환.
+
+var _a = require('a.js'); // _a는 exports 다. 
+var _a2 = _interopRequireDefault(_a);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 를 실행시켜서 
+// return { default: _a } 로 변환
+
+_a2.default.aaa();
 
 ```
 
@@ -365,7 +455,7 @@ const wtf = 'wtf';
 ])
 ```
 
-3. 웹팩이 만든 함수안에는 웹팩용 \_\_webpack\_require\_\_ 함수를 만든다. 이 함수는 모듈 아이디를 받는다.
+3. 웹팩이 만든 함수안에는 웹팩용 \_\_webpack\_require\_\_ 함수를 만든다. 이 함수는 모듈 아이디를 받는다. 해당 함수는 모듈 아이디를 받아서 등록된 모듈을 실행시킨다.
 
 ```javascript
 function __webpack_require__(moduleId){
@@ -459,4 +549,132 @@ __webpack_require__.p = "";
 // Load entry module and return exports
 // 실행 , 2 번째 모듈이 가지고 있는 module의 exports를 리턴
 return __webpack_require__(__webpack_require__.s = 2);
+```
+
+
+## 전체 코드
+
+```javascript
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(1);
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__b__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__c__ = __webpack_require__(3);
+/**
+ * Created by merlin.ho on 2017. 5. 31..
+ */
+
+
+
+
+
+console.log('a');
+
+Object(__WEBPACK_IMPORTED_MODULE_0__b__["a" /* default */])();
+
+Object(__WEBPACK_IMPORTED_MODULE_1__c__["a" /* c */])();
+
+console.log(__WEBPACK_IMPORTED_MODULE_1__c__["b" /* wtf */]);
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * Created by merlin.ho on 2017. 5. 31..
+ */
+/* harmony default export */ __webpack_exports__["a"] = (function(){console.log('b');});
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = c;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return wtf; });
+function c(){
+    console.log('c');
+}
+const wtf = 'wtf';
+
+
+
+/***/ })
+/******/ ]); 
 ```
