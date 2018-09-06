@@ -1,0 +1,347 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><link rel="preload" href="/ho_blog/component---src-layouts-index-js-c5ed4ae659fec230b6fe.js" as="script"/><link rel="preload" href="/ho_blog/component---src-templates-blog-post-js-703881325802bef28f73.js" as="script"/><link rel="preload" href="/ho_blog/path---ui-unit-testing-f59fe7ff0ff7fba74f88.js" as="script"/><link rel="preload" href="/ho_blog/app-a623c5d9bb54f56df629.js" as="script"/><link rel="preload" href="/ho_blog/commons-89d60b5b924ef4c6771c.js" as="script"/><script id="webpack-manifest">/*<![CDATA[*/window.webpackManifest={"231608221292675":"app-a623c5d9bb54f56df629.js","99219681209289":"component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js","107818501498521":"component---src-templates-blog-post-js-703881325802bef28f73.js","35783957827783":"component---src-pages-index-js-4941001003d8a496df29.js","60335399758886":"path----557518bd178906f8d58a.js","210333531512890":"path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js","105843449635648":"path---experience-monorepo-752e9a39fbf40ea36a3b.js","140444808481594":"path---docker-depolyment-ac8cf9ea302435b186f6.js","67177735626913":"path---hello-express-caf15ecb83e6270e44b2.js","67469829867878":"path---hello-monad-9cfdf5f52764882e610d.js","163121481561693":"path---hello-web-server-fb433eededf12ff9a0e0.js","71473981912016":"path---javascript-pattern-5e8e3677e7d8234bd431.js","275591574691347":"path---lazy-evaluation-7f4a9ce96e75ffb2fcae.js","60702703624353":"path---hello-react-c8a3792b979b6ec761c0.js","51191554927023":"path---javascript-basic-1-30e30672291a757092a8.js","142221992286439":"path---ui-unit-testing-f59fe7ff0ff7fba74f88.js","177359372373161":"path---webpack-config-c55e3d5150079f37dba8.js","55049869895717":"path---hello-docker-e324df247c9ebc6a6749.js","90837107504198":"path---hello-oop-72228e1a73d9941ca0f5.js","59645336058927":"path---hello-flow-10e885d6d1ac45335c2b.js","160582500480188":"path---hello-webpack-7c4d5bb61caed8094db7.js","23603272521549":"path---make-promise-43ba2866cb78a54c3d6b.js","142629428675168":"path---index-23ef1ebc8118f8ae235c.js","114276838955818":"component---src-layouts-index-js-c5ed4ae659fec230b6fe.js"}/*]]>*/</script><style id="glamor-styles"></style><script id="glamor-ids">
+        // <![CDATA[
+        window._glamor = []
+        // ]]>
+        </script><link rel="alternate" type="application/rss+xml" href="/rss.xml"/><title data-react-helmet="true">UI unit testing | Merlin Tec Blog</title><style id="typography.js">html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block}audio:not([controls]){display:none;height:0}progress{vertical-align:baseline}[hidden],template{display:none}a{background-color:transparent;-webkit-text-decoration-skip:objects}a:active,a:hover{outline-width:0}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit;font-weight:bolder}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}svg:not(:root){overflow:hidden}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}button,input,optgroup,select,textarea{font:inherit;margin:0}optgroup{font-weight:700}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-input-placeholder{color:inherit;opacity:.54}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}html{font:100%/1.75em 'Merriweather','Georgia',serif;box-sizing:border-box;overflow-y:scroll;}*{box-sizing:inherit;}*:before{box-sizing:inherit;}*:after{box-sizing:inherit;}body{color:hsla(0,0%,0%,0.9);font-family:'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;font-weight:400;word-wrap:break-word;font-kerning:normal;-moz-font-feature-settings:"kern", "liga", "clig", "calt";-ms-font-feature-settings:"kern", "liga", "clig", "calt";-webkit-font-feature-settings:"kern", "liga", "clig", "calt";font-feature-settings:"kern", "liga", "clig", "calt";}img{max-width:100%;margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}h1{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:Montserrat,sans-serif;font-weight:900;text-rendering:optimizeLegibility;font-size:2.5rem;line-height:1.1;}h2{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:1.73286rem;line-height:1.1;}h3{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:1.4427rem;line-height:1.1;}h4{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:1rem;line-height:1.1;letter-spacing:0.140625em;text-transform:uppercase;}h5{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:0.83255rem;line-height:1.1;}h6{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;color:inherit;font-family:'Merriweather','Georgia',serif;font-weight:900;text-rendering:optimizeLegibility;font-size:0.75966rem;line-height:1.1;font-style:italic;}hgroup{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}ul{margin-left:1.75rem;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;list-style-position:outside;list-style-image:none;list-style:disc;}ol{margin-left:1.75rem;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;list-style-position:outside;list-style-image:none;}dl{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}dd{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}p{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}figure{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}pre{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;font-size:0.85rem;line-height:1.75rem;}table{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;font-size:1rem;line-height:1.75rem;border-collapse:collapse;width:100%;}fieldset{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}blockquote{margin-left:-1.75rem;margin-right:1.75rem;margin-top:0;padding-bottom:0;padding-left:1.42188rem;padding-right:0;padding-top:0;margin-bottom:1.75rem;font-size:1.20112rem;line-height:1.75rem;color:hsla(0,0%,0%,0.59);font-style:italic;border-left:0.32813rem solid hsla(0,0%,0%,0.9);}form{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}noscript{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}iframe{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}hr{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:calc(1.75rem - 1px);background:hsla(0,0%,0%,0.2);border:none;height:1px;}address{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.75rem;}b{font-weight:700;}strong{font-weight:700;}dt{font-weight:700;}th{font-weight:700;}li{margin-bottom:calc(1.75rem / 2);}ol li{padding-left:0;}ul li{padding-left:0;}li > ol{margin-left:1.75rem;margin-bottom:calc(1.75rem / 2);margin-top:calc(1.75rem / 2);}li > ul{margin-left:1.75rem;margin-bottom:calc(1.75rem / 2);margin-top:calc(1.75rem / 2);}blockquote *:last-child{margin-bottom:0;}li *:last-child{margin-bottom:0;}p *:last-child{margin-bottom:0;}li > p{margin-bottom:calc(1.75rem / 2);}code{font-size:0.85rem;line-height:1.75rem;}kbd{font-size:0.85rem;line-height:1.75rem;}samp{font-size:0.85rem;line-height:1.75rem;}abbr{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;}acronym{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;}abbr[title]{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;text-decoration:none;}thead{text-align:left;}td,th{text-align:left;border-bottom:1px solid hsla(0,0%,0%,0.12);font-feature-settings:"tnum";-moz-font-feature-settings:"tnum";-ms-font-feature-settings:"tnum";-webkit-font-feature-settings:"tnum";padding-left:1.16667rem;padding-right:1.16667rem;padding-top:0.875rem;padding-bottom:calc(0.875rem - 1px);}th:first-child,td:first-child{padding-left:0;}th:last-child,td:last-child{padding-right:0;}blockquote > :last-child{margin-bottom:0;}blockquote cite{font-size:1rem;line-height:1.75rem;color:hsla(0,0%,0%,0.9);font-weight:400;}blockquote cite:before{content:"— ";}ul,ol{margin-left:0;}@media only screen and (max-width:480px){ul,ol{margin-left:1.75rem;}blockquote{margin-left:-1.3125rem;margin-right:0;padding-left:0.98438rem;}}h1,h2,h3,h4,h5,h6{margin-top:3.5rem;}a{box-shadow:0 1px 0 0 currentColor;color:#007acc;text-decoration:none;}a:hover,a:active{box-shadow:none;}mark,ins{background:#007acc;color:white;padding:0.10938rem 0.21875rem;text-decoration:none;}a.gatsby-resp-image-link{box-shadow:none;}</style><link href="//fonts.googleapis.com/css?family=Montserrat:700|Merriweather:400,400i,700,700i,900,900i" rel="stylesheet" type="text/css"/><script>/*<![CDATA[*/!function(e,t,r){function n(){for(;d[0]&&"loaded"==d[0][f];)c=d.shift(),c[o]=!i.parentNode.insertBefore(c,i)}for(var s,a,c,d=[],i=e.scripts[0],o="onreadystatechange",f="readyState";s=r.shift();)a=e.createElement(t),"async"in i?(a.async=!1,e.head.appendChild(a)):i[f]?(d.push(a),a[o]=n):e.write("<"+t+' src="'+s+'" defer></'+t+">"),a.src=s}(document,"script",["/ho_blog/commons-89d60b5b924ef4c6771c.js","/ho_blog/app-a623c5d9bb54f56df629.js","/ho_blog/path---ui-unit-testing-f59fe7ff0ff7fba74f88.js","/ho_blog/component---src-templates-blog-post-js-703881325802bef28f73.js","/ho_blog/component---src-layouts-index-js-c5ed4ae659fec230b6fe.js"])/*]]>*/</script><style id="gatsby-inlined-css">code[class*=language-],pre[class*=language-]{color:#657b83;font-family:Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-ms-hyphens:none;hyphens:none}code[class*=language-]::-moz-selection,code[class*=language-] ::-moz-selection,pre[class*=language-]::-moz-selection,pre[class*=language-] ::-moz-selection{background:#073642}code[class*=language-]::selection,code[class*=language-] ::selection,pre[class*=language-]::selection,pre[class*=language-] ::selection{background:#073642}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto;border-radius:.3em}:not(pre)>code[class*=language-],pre[class*=language-]{background-color:#fdf6e3}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#93a1a1}.token.punctuation{color:#586e75}.namespace{opacity:.7}.token.boolean,.token.constant,.token.deleted,.token.number,.token.property,.token.symbol,.token.tag{color:#268bd2}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string,.token.url{color:#2aa198}.token.entity{color:#657b83;background:#eee8d5}.token.atrule,.token.attr-value,.token.keyword{color:#859900}.token.function{color:#b58900}.token.important,.token.regex,.token.variable{color:#cb4b16}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:100;src:local("Montserrat Thin "),local("Montserrat-Thin"),url(/ho_blog/static/montserrat-latin-100.50d27986.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-100.5e334eff.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:100;src:local("Montserrat Thin italic"),local("Montserrat-Thinitalic"),url(/ho_blog/static/montserrat-latin-100italic.8c070533.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-100italic.03e19243.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:200;src:local("Montserrat Extra Light "),local("Montserrat-Extra Light"),url(/ho_blog/static/montserrat-latin-200.4343d3d9.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-200.f2022ecd.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:200;src:local("Montserrat Extra Light italic"),local("Montserrat-Extra Lightitalic"),url(/ho_blog/static/montserrat-latin-200italic.116c4c4b.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-200italic.89614a60.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:300;src:local("Montserrat Light "),local("Montserrat-Light"),url(/ho_blog/static/montserrat-latin-300.d2ad295b.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-300.3a371ee0.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:300;src:local("Montserrat Light italic"),local("Montserrat-Lightitalic"),url(/ho_blog/static/montserrat-latin-300italic.f6b6bf24.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-300italic.16521668.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:400;src:local("Montserrat Regular "),local("Montserrat-Regular"),url(/ho_blog/static/montserrat-latin-400.240a8444.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-400.b20cc131.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:400;src:local("Montserrat Regular italic"),local("Montserrat-Regularitalic"),url(/ho_blog/static/montserrat-latin-400italic.86172bb8.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-400italic.9405e787.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:500;src:local("Montserrat Medium "),local("Montserrat-Medium"),url(/ho_blog/static/montserrat-latin-500.fb8d6b71.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-500.50825d47.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:500;src:local("Montserrat Medium italic"),local("Montserrat-Mediumitalic"),url(/ho_blog/static/montserrat-latin-500italic.c0a555a4.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-500italic.635de59c.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:600;src:local("Montserrat SemiBold "),local("Montserrat-SemiBold"),url(/ho_blog/static/montserrat-latin-600.d5615136.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-600.f300da4f.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:600;src:local("Montserrat SemiBold italic"),local("Montserrat-SemiBolditalic"),url(/ho_blog/static/montserrat-latin-600italic.10f29d13.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-600italic.2bc37d86.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:700;src:local("Montserrat Bold "),local("Montserrat-Bold"),url(/ho_blog/static/montserrat-latin-700.7d77e1f0.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-700.81826529.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:700;src:local("Montserrat Bold italic"),local("Montserrat-Bolditalic"),url(/ho_blog/static/montserrat-latin-700italic.1dd2b53f.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-700italic.c162d257.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold "),local("Montserrat-ExtraBold"),url(/ho_blog/static/montserrat-latin-800.d4e7bf86.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-800.895aadbf.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold italic"),local("Montserrat-ExtraBolditalic"),url(/ho_blog/static/montserrat-latin-800italic.fc0cbe44.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-800italic.b3362875.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:900;src:local("Montserrat Black "),local("Montserrat-Black"),url(/ho_blog/static/montserrat-latin-900.c8bdd772.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-900.1b99ef78.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:900;src:local("Montserrat Black italic"),local("Montserrat-Blackitalic"),url(/ho_blog/static/montserrat-latin-900italic.cb72c1f9.woff2) format("woff2"),url(/ho_blog/static/montserrat-latin-900italic.b78bb9f8.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:300;src:local("Merriweather Light "),local("Merriweather-Light"),url(/ho_blog/static/merriweather-latin-300.f015f1e9.woff2) format("woff2"),url(/ho_blog/static/merriweather-latin-300.92dfe81b.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:300;src:local("Merriweather Light italic"),local("Merriweather-Lightitalic"),url(/ho_blog/static/merriweather-latin-300italic.7fd86b32.woff2) format("woff2"),url(/ho_blog/static/merriweather-latin-300italic.878b76f5.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:400;src:local("Merriweather Regular "),local("Merriweather-Regular"),url(/ho_blog/static/merriweather-latin-400.12dbf4c0.woff2) format("woff2"),url(/ho_blog/static/merriweather-latin-400.1fffad22.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:400;src:local("Merriweather Regular italic"),local("Merriweather-Regularitalic"),url(/ho_blog/static/merriweather-latin-400italic.1e0d3e81.woff2) format("woff2"),url(/ho_blog/static/merriweather-latin-400italic.de18d4c4.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:700;src:local("Merriweather Bold "),local("Merriweather-Bold"),url(/ho_blog/static/merriweather-latin-700.dc8fec81.woff2) format("woff2"),url(/ho_blog/static/merriweather-latin-700.d7d2ed8e.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:700;src:local("Merriweather Bold italic"),local("Merriweather-Bolditalic"),url(/ho_blog/static/merriweather-latin-700italic.b7b7e5da.woff2) format("woff2"),url(/ho_blog/static/merriweather-latin-700italic.6210a5fc.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:900;src:local("Merriweather Black "),local("Merriweather-Black"),url(/ho_blog/static/merriweather-latin-900.43f870d5.woff2) format("woff2"),url(/ho_blog/static/merriweather-latin-900.8f3806df.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:900;src:local("Merriweather Black italic"),local("Merriweather-Blackitalic"),url(/ho_blog/static/merriweather-latin-900italic.168c1ab2.woff2) format("woff2"),url(/ho_blog/static/merriweather-latin-900italic.ae7778f0.woff) format("woff")}</style></head><body><div id="___gatsby"><div style="max-width:42rem;margin-left:auto;margin-right:auto;padding:2.625rem 1.3125rem;" data-reactroot="" data-reactid="1" data-react-checksum="1180223089"><h3 style="font-family:Montserrat, sans-serif;margin-top:0;margin-bottom:-1.75rem;" data-reactid="2"><a style="box-shadow:none;text-decoration:none;color:inherit;" href="/ho_blog/" data-reactid="3">Merlin Tec Blog</a></h3><div data-reactid="4"><!-- react-empty: 5 --><h1 data-reactid="6">UI unit testing</h1><p style="font-size:0.83255rem;line-height:1.75rem;display:block;margin-bottom:1.75rem;margin-top:-1.75rem;" data-reactid="7">August 04, 2018</p><div data-reactid="8"><h1>Intro</h1>
+<ul>
+<li>비지니스 코드가 아닌 ui의 이벤트를 활용한 코드를 자스민으로 testing을 진행해보자.</li>
+</ul>
+<h1>jasmine 이란?</h1>
+<ul>
+<li>행위 주도 개발 (Behavior-Driven Development, BDD) 방식으로 자바스크립트 단위 테스트를 작성하기 위한 라이브러리</li>
+<li>단위 테스트(unit test)란 코드의 기능 단위(funtionality unit)를 테스트 하는 것을 말한다.</li>
+<li>BDD는 단위 테스트로 확인할 기능 또는 작동 로직을 일상 언어로 서술할 수 있는데 개발자는 자신이 작성 중인 코드가 ‘어떻게’ 가 아닌 ‘무엇’을 해야하는지 테스트 코드에 표현할수 있다. </li>
+<li><a href="http://jasmine.github.io">공식홈페이지</a></li>
+</ul>
+<h2>테스트 꾸러미와 스펙</h2>
+<ul>
+<li>
+<p>테스트 꾸러미는 describe로 정의할수있다. </p>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token comment">// dscribe({문자열}, {함수})</span>
+<span class="token function">decribe</span><span class="token punctuation">(</span><span class="token string">"무엇을 테스트할지 서술한다."</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"테스트 꾸러미의 구현부"</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+      </div>
+</li>
+<li>
+<p>스펙(즉, 개별테스트 )은 it으로 정의된다.</p>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token comment">// dscribe({문자열}, {함수})</span>
+<span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"무엇을 테스트할지 서술한다."</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+<span class="token comment">// 적어도 한개의 기대식을 가진 함수 </span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+      </div>
+</li>
+<li>
+<p>예) </p>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'어떤 버튼은'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=></span> <span class="token punctuation">{</span>
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'클릭했을 때'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=></span> <span class="token punctuation">{</span>
+<span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'경고창을 띄운다'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=></span> <span class="token punctuation">{</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+      </div>
+</li>
+<li>
+<p>테스트 꾸러미 구현부에 전역함수 beforeEach/afterEach 를 쓰면 각 꾸러미 테스트가 실행되기 이전에 beforeEach 함수를, 그 이후에는 afterEach 함수를 호출한다. 전체 테스트가 공유할 설정과 정리를 코드를 두 함수에 담아두면 코드 중복을 피할 수 있어 좋다. </p>
+</li>
+</ul>
+<h2>기대식과 매처</h2>
+<ul>
+<li>expect 함수는 테스트 대상 코드가 낸 실제값을 인자로 받아 기댓값과 견주어본다. </li>
+<li>실제값과 기댓값을 비교하는 일은 매처 함수의 몫이다. 매처는 비교 결과 성공하면 true를 실패하면 false를 반환한다. 하나 이상의 기대식이 포함된 스펙(it함수) 에서 매처가 하나라도 실패하면 모조리 실패한 거로 간주한다. </li>
+<li>여러 매처 중에 toBe 매처는 같은 객체여야 한다는 의미이다. </li>
+<li>용도에 맞는 매처가 없으면 자스민이 지원하는 커스텀 매처를 만들어 쓴다.</li>
+</ul>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token function">expect</span><span class="token punctuation">(</span><span class="token punctuation">{</span>실제값이 리턴된다<span class="token punctuation">.</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token punctuation">{</span>기댓값<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+      </div>
+<ul>
+<li>커스텀 매처 만드는 법</li>
+</ul>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token comment">// 기본 형식이다.</span>
+<span class="token keyword">const</span> customMacher <span class="token operator">=</span> <span class="token punctuation">{</span>
+    merlin<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">{</span>
+            compare<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>actual<span class="token punctuation">,</span> expected<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+                <span class="token comment">// 여기서 result는 pass와 message 프로퍼티를 포함해야 한다. </span>
+                <span class="token comment">// pass에는 boolean 값이 들어가야 하고 true / false</span>
+                <span class="token comment">// message에는 pass가 true 됬을때 값일때 메시지나 false 됬을때 메시지를 적어준다.</span>
+                <span class="token keyword">return</span> result
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">"테스트"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token comment">// 인자로 커스텀 macher 객체를 넣어준다. 이 객체는 매처의 이름을 키 값으로 값는 메서드를 갖는다. </span>
+        jasmine<span class="token punctuation">.</span><span class="token function">addMatchers</span><span class="token punctuation">(</span>customMacher<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+      </div>
+<h2>스파이</h2>
+<ul>
+<li>자스민 스파이는 테스트 더블 역할을 하는 자바스크립트 함수다.</li>
+<li>
+<p>테스트 더블이란</p>
+<ul>
+<li>더미 : 인자 리스트를 채우기 위해 사용되며 전달은 하지만 실제로 사용되지 않는다.</li>
+<li>틀 : 더미를 조금 더 구현하여 아직 개발되지 않은 클래스나 메서드가 실제 작동하는 것처럼 보이게 만든 객체로 리턴값은 하드코딩한다.</li>
+<li>스파이 : 틀과 비슷하지만 내부적으로 기록을 남긴다. 특정 객체가 사용되었는지, 특정인자로 호출되었는지 등의 상황을 감시한다.</li>
+<li>모이체 : 틀에서 조금 더 발전하여 실제로 간단한 구현된 코드를 갖고는 있지만 운영환경에선 사용할수는 객체다.</li>
+<li>모형 : 더미, 틀 , 스파이를 혼합한 형태와 비슷하나 행위를 검증하는 용도로 쓰인다. </li>
+</ul>
+</li>
+<li>jasmine.createSpy 함수의 경우 빈 껍데기 스파이이다. </li>
+</ul>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token comment">// 예제.</span>
+callbackSpy <span class="token operator">=</span> jasmine<span class="token punctuation">.</span><span class="token function">createSpy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>callbackSpy<span class="token punctuation">.</span>calls<span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">expect</span><span class="token punctuation">(</span>array<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+      </div>
+<ul>
+<li>spyOn 함수를 쓰면 특정 함수를 들여다 볼수 있다. 첫번째 인자는 객체 인스턴스, 두번째 인자는 감시할 함수명이다.</li>
+<li>spyOn 함수는 기존 구현부를 대체하는 함수이다. </li>
+</ul>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token comment">// 예제</span>
+<span class="token function">spyOn</span><span class="token punctuation">(</span>saver<span class="token punctuation">,</span><span class="token string">'saveReservation'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">spyOn</span><span class="token punctuation">(</span>api<span class="token punctuation">,</span> <span class="token string">'getRestaurnatsNearConference'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>and<span class="token punctuation">.</span><span class="token function">returnValue</span><span class="token punctuation">(</span>returnedFromService<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>saver<span class="token punctuation">.</span>saveReservation<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveBeenCalled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+      </div>
+<h1>Ui test</h1>
+<h2>좋지 못한 html 코드</h2>
+<ul>
+<li>클릭하면 span 돔에 카운트가 늘어나는 코드이다. </li>
+<li>html과 javascript가 혼재해 있어서 지저분할분 아니라 javascript 코드를 복붙으로 밖에 재활용이 안된다. </li>
+</ul>
+<div class="gatsby-highlight">
+      <pre class="language-html"><code><span class="token doctype">&lt;!DOCTYPE html></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript">
+      <span class="token keyword">var</span> clickCount <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+          <span class="token function-variable function">displayCount</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">var</span> countElement <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"countDisplay"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            countElement<span class="token punctuation">.</span>innerText <span class="token operator">=</span> clickCount<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>button<span class="token punctuation">"</span></span> <span class="token attr-name">onclick</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>clickCount++; displayCount();<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+      Increment
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>countDisplay<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span>
+</code></pre>
+      </div>
+<h2>테스트 코드 및 모듈 작성(1)</h2>
+<ul>
+<li>기존에 인라인으로 들어간 스크립트를 모듈로 빼두자. 그러면 재사용성이 좋아진다.</li>
+<li>이벤트 발생시 카운트가 증가해서 저장하는 부분과 DOM업데이트 함수로 나눈다. 그럼 비지니스 로직만 테스트할 수 있음.</li>
+<li>우선 DOM과 엮이지 않은 코드를 작성해서 테스트를 진행한다. </li>
+</ul>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token keyword">function</span> <span class="token function">clickCountDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">let</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 현재 count 구하기</span>
+        getClickCount<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> count<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token comment">// count를 Dom에 render</span>
+        updateCountDisplay<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token comment">// count 증가 및 update Dom</span>
+        incrementCountAndUpdateDisplay<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            count<span class="token operator">++</span><span class="token punctuation">;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">updateCountDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+      </div>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token comment">// test코드</span>
+
+<span class="token function">decribe</span><span class="token punctuation">(</span><span class="token string">"clickCountDisplay"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token string">"use strict"</span>
+
+    <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">let</span> display <span class="token operator">=</span> <span class="token function">clickCountDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"0으로 초기화"</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token function">expect</span><span class="token punctuation">(</span>display<span class="token punctuation">.</span><span class="token function">getClickCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+     <span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">"incrementCountAndUpdateDisplay()"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+         <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"count 증가 시킨다."</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">let</span> initCount <span class="token operator">=</span> display<span class="token punctuation">.</span><span class="token function">getClickCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            display<span class="token punctuation">.</span><span class="token function">incrementCountAndUpdateDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">expect</span><span class="token punctuation">(</span>display<span class="token punctuation">.</span><span class="token function">getClickCouny</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span>initCount<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+         <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"updateCountDisplay 함수를 실행시킨다."</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token function">spyOn</span><span class="token punctuation">(</span>display<span class="token punctuation">,</span><span class="token string">"updateCountDisplay"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            display<span class="token punctuation">.</span><span class="token function">incrementCountAndUpdateDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">expect</span><span class="token punctuation">(</span>display<span class="token punctuation">.</span>updateCountDisplay<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveBeenCalled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token punctuation">}</span><span class="token punctuation">)</span>
+     <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+      </div>
+<h2>테스트 코드 및 모듈 작성(2)</h2>
+<ul>
+<li>DOM이 바뀌는지 테스트를 진행한다. </li>
+<li>updateCountDisplay 함수를 어떻게 테스트할지 생각해보자.</li>
+<li>updateCountDisplay 이 함수가 조작할수 있는 DOM 요소를 제공해야한다. </li>
+<li>DOM 요소를 주입하고 나서 함수를 실행했을때 그 값이 잘 렌더링 되는지 확인한다.</li>
+</ul>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token keyword">function</span> <span class="token function">clickCountDisplay</span><span class="token punctuation">(</span>opts<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>opts<span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"opts를 주입해야합니다."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 현재 count 구하기</span>
+        getClickCount<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> count<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token comment">// count를 Dom에 render</span>
+        updateCountDisplay<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            opts<span class="token punctuation">.</span>updateElement<span class="token punctuation">.</span><span class="token function">innerHTML</span><span class="token punctuation">(</span>count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token comment">// count 증가 및 update Dom</span>
+        incrementCountAndUpdateDisplay<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            count<span class="token operator">++</span><span class="token punctuation">;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">updateCountDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+      </div>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token comment">// test코드</span>
+
+<span class="token function">decribe</span><span class="token punctuation">(</span><span class="token string">"clickCountDisplay"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token string">"use strict"</span>
+    <span class="token keyword">let</span> display<span class="token punctuation">,</span>
+        displayElement<span class="token punctuation">;</span>
+    <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        displayElement <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"span"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>displayElement<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        clickElement <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"button"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>clickElement<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">{</span>
+            updateElement<span class="token punctuation">:</span> displayElement<span class="token punctuation">,</span>
+            triggerElement<span class="token punctuation">:</span> clickElement
+        <span class="token punctuation">}</span>
+        <span class="token comment">// Element를 주입.</span>
+        display <span class="token operator">=</span> <span class="token function">clickCountDisplay</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token function">afterEach</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        displayElement<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        clickElement<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+     <span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">"incrementCountAndUpdateDisplay()"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+         <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"updateDisplay"</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+             display<span class="token punctuation">.</span><span class="token function">incrementCountAndUpdateDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+             <span class="token function">expect</span><span class="token punctuation">(</span>displayElement<span class="token punctuation">.</span>innerText<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">teEqual</span><span class="token punctuation">(</span>display<span class="token punctuation">.</span><span class="token function">getClickCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token punctuation">}</span><span class="token punctuation">)</span>
+     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+     <span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">"updateCountDisplay()"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"횟수를 한번도 늘린 적 없으면 0이 표시된다"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">expect</span><span class="token punctuation">(</span>displayElement<span class="token punctuation">.</span>innerText<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">teEqual</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            display<span class="token punctuation">.</span><span class="token function">updateCountDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">expect</span><span class="token punctuation">(</span>displayElement<span class="token punctuation">.</span>innerText<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">teEqual</span><span class="token punctuation">(</span><span class="token string">"0"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+      </div>
+<h2>테스트 코드 및 모듈 작성(3)</h2>
+<ul>
+<li>이벤트 트리거가 잘 해당 함수를 호출하는지 확인한다.</li>
+</ul>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token comment">// 테스트 코드</span>
+<span class="token comment">// .. 나머진 생략</span>
+<span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"클릭이벤트가 발생하면 incrementCountAndUpdateDisplay를 호출한다."</span><span class="token punctuation">,</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token function">spyOn</span><span class="token punctuation">(</span>display<span class="token punctuation">,</span> <span class="token string">"incrementCountAndUpdateDisplay"</span><span class="token punctuation">)</span>
+    clickElement<span class="token punctuation">.</span><span class="token function">dispatchEvent</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Event</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 클릭 발생시</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>display<span class="token punctuation">.</span>incrementCountAndUpdateDisplay<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveBeenCalled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+      </div>
+<div class="gatsby-highlight">
+      <pre class="language-javascript"><code><span class="token keyword">function</span> <span class="token function">clickCountDisplay</span><span class="token punctuation">(</span>opts<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>opts<span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"opts를 주입해야합니다."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> module <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 현재 count 구하기</span>
+        getClickCount<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> count<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token comment">// count를 Dom에 render</span>
+        updateCountDisplay<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            opts<span class="token punctuation">.</span>updateElement<span class="token punctuation">.</span><span class="token function">innerHTML</span><span class="token punctuation">(</span>count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token comment">// count 증가 및 update Dom</span>
+        incrementCountAndUpdateDisplay<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            count<span class="token operator">++</span><span class="token punctuation">;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">updateCountDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    opts<span class="token punctuation">.</span>triggerElement<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        module<span class="token punctuation">.</span><span class="token function">incrementCountAndUpdateDisplay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">return</span> module
+<span class="token punctuation">}</span>
+</code></pre>
+      </div>
+<h1>결론</h1>
+<ul>
+<li>
+<p>UI 단위테스트는 다음을 확인하는 정도로 확인해야한다.</p>
+<ul>
+<li>요소를 클릭하면 알맞은 처리기가 확실히 실행되는가?</li>
+<li>사용자가 보면 안될 UI 요소가 있는가?</li>
+<li><select>가 원하는 데이터로 채워지는가.</li>
+</ul>
+</li>
+</ul></div><hr style="margin-bottom:1.75rem;" data-reactid="9"/><div style="display:flex;margin-bottom:4.375rem;" data-reactid="10"><img src="/ho_blog/static/img_profile.1f79e005.jpeg" alt="Merlin.ho" style="margin-right:0.875rem;margin-bottom:0;width:3.5rem;height:3.5rem;" data-reactid="11"/><p data-reactid="12"><!-- react-text: 13 -->Written by <!-- /react-text --><strong data-reactid="14">Merlin.ho</strong><!-- react-text: 15 --> who lives and works in Pangyo building useful things.<!-- /react-text --><!-- react-text: 16 --> <!-- /react-text --></p></div></div><span style="display:block;clear:both;" data-reactid="17"> </span></div></div><script>
+  
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'undefined', 'auto');
+  </script></body></html>

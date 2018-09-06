@@ -9,8 +9,8 @@
       "component---src-pages-index-js-4941001003d8a496df29.js.map"
     ],
     "path---javascript-basic-1": [
-      "path---javascript-basic-1-bc7e585b3cc23994a6da.js",
-      "path---javascript-basic-1-bc7e585b3cc23994a6da.js.map"
+      "path---javascript-basic-1-30e30672291a757092a8.js",
+      "path---javascript-basic-1-30e30672291a757092a8.js.map"
     ],
     "path---hello-docker": [
       "path---hello-docker-e324df247c9ebc6a6749.js",
@@ -36,6 +36,10 @@
       "path---hello-monad-9cfdf5f52764882e610d.js",
       "path---hello-monad-9cfdf5f52764882e610d.js.map"
     ],
+    "path---javascript-pattern": [
+      "path---javascript-pattern-5e8e3677e7d8234bd431.js",
+      "path---javascript-pattern-5e8e3677e7d8234bd431.js.map"
+    ],
     "path---hello-oop": [
       "path---hello-oop-72228e1a73d9941ca0f5.js",
       "path---hello-oop-72228e1a73d9941ca0f5.js.map"
@@ -60,13 +64,17 @@
       "path---docker-depolyment-ac8cf9ea302435b186f6.js",
       "path---docker-depolyment-ac8cf9ea302435b186f6.js.map"
     ],
+    "path---ui-unit-testing": [
+      "path---ui-unit-testing-f59fe7ff0ff7fba74f88.js",
+      "path---ui-unit-testing-f59fe7ff0ff7fba74f88.js.map"
+    ],
     "path---index": [
-      "path---index-10660169ea4589850ff9.js",
-      "path---index-10660169ea4589850ff9.js.map"
+      "path---index-23ef1ebc8118f8ae235c.js",
+      "path---index-23ef1ebc8118f8ae235c.js.map"
     ],
     "path---hello-webpack": [
-      "path---hello-webpack-0e285b607382ee417f2f.js",
-      "path---hello-webpack-0e285b607382ee417f2f.js.map"
+      "path---hello-webpack-7c4d5bb61caed8094db7.js",
+      "path---hello-webpack-7c4d5bb61caed8094db7.js.map"
     ],
     "path---hello-web-server": [
       "path---hello-web-server-fb433eededf12ff9a0e0.js",
@@ -87,9 +95,9 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-2d9eb53dc1d73d0eb149.js",
+      "app-a623c5d9bb54f56df629.js",
       "build-js-styles.css",
-      "app-2d9eb53dc1d73d0eb149.js.map",
+      "app-a623c5d9bb54f56df629.js.map",
       "build-js-styles.css.map"
     ],
     "path---lazy-evaluation": [
