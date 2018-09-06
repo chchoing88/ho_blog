@@ -3,6 +3,12 @@ title: Hello webpack
 date: "2018-02-01T10:00:03.284Z"
 ---
 
+# intro
+
+- 웹팩을 알아보고 웹팩 번들링엔 어떤 특징이 있는지 알아보자.
+
+## webpack config
+
 ```javascript
 /**
  * merlin webpack test init
@@ -56,7 +62,7 @@ module.exports = {
 };
 ```
 
-## 기본 개념
+## webpack concept
 
 ### Modules
 
@@ -237,7 +243,7 @@ webpack은 어떤 모양으로 번들링을 만들까???
 ```
 
 
-1. 각각의 모듈을 배열에 담아 인자로 넘긴다.
+#### 1. 각각의 모듈을 배열에 담아 인자로 넘긴다.
 
 참고로 아래 문법은 바벨로 돌렸을때 나오는 문법이다.
 웹팩 2 부턴 바벨 없이도 import / export를 지원한다.
@@ -443,7 +449,7 @@ const wtf = 'wtf';
 ```
 
 
-2. 배열에 담긴 모듈들을 modules로 웹팩이 만든 함수에 넘긴다.
+#### 2. 배열에 담긴 모듈들을 modules로 웹팩이 만든 함수에 넘긴다.
 
 ```javascript
 (
@@ -456,7 +462,9 @@ const wtf = 'wtf';
 ])
 ```
 
-3. 웹팩이 만든 함수안에는 웹팩용 \_\_webpack\_require\_\_ 함수를 만든다. 이 함수는 모듈 아이디를 받는다. 해당 함수는 모듈 아이디를 받아서 등록된 모듈을 실행시킨다.
+#### 3. 웹팩이 만든 함수안에는 웹팩용 \_\_webpack\_require\_\_ 함수를 만든다. 
+
+이 함수는 모듈 아이디를 받는다. 해당 함수는 모듈 아이디를 받아서 등록된 모듈을 실행시킨다.
 
 ```javascript
 function __webpack_require__(moduleId){
@@ -464,7 +472,7 @@ function __webpack_require__(moduleId){
 }
 ```
 
-4. 기존에 캐싱되어있던 모듈이 있다면 그 모듈의 exports 를 return 시킨다.
+#### 4. 기존에 캐싱되어있던 모듈이 있다면 그 모듈의 exports 를 return 시킨다.
 
 ```javascript
 if(installedModules[moduleId]) {
@@ -472,7 +480,7 @@ if(installedModules[moduleId]) {
 }
 ```
 
-5. 캐싱된 모듈이 없다면 새로운 모듈을 만들고 cache 안에 집어 넣는다.
+#### 5. 캐싱된 모듈이 없다면 새로운 모듈을 만들고 cache 안에 집어 넣는다.
 
 ```javascript
 var module = installedModules[moduleId] = {
@@ -482,21 +490,21 @@ var module = installedModules[moduleId] = {
 };
 ```
 
-6. 만들어진 모듈을 실행 시킨다. call 사용
+#### 6. 만들어진 모듈을 실행 시킨다. call 사용
 
 ```javascript
 modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 ```
 
-7. 호출이 다 이뤄졌다면 l 플래그를 true로 설정
+#### 7. 호출이 다 이뤄졌다면 l 플래그를 true로 설정
 
 ```javascript
 // Flag the module as loaded
 module.l = true;
 ```
 
-8. 마지막으로 해당 모듈의 exports를 리턴시킨다.
+#### 8. 마지막으로 해당 모듈의 exports를 리턴시킨다.
 
 ```javascript
 // Return the exports of the module

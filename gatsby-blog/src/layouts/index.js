@@ -3,7 +3,7 @@ import Link from 'gatsby-link'
 import { Container } from 'react-responsive-grid'
 
 import { rhythm, scale } from '../utils/typography'
-import "prismjs/themes/prism-solarizedlight.css"
+import "prismjs/themes/prism.css"
 
 class Template extends React.Component {
   render() {
@@ -42,7 +42,7 @@ class Template extends React.Component {
           style={{
             fontFamily: 'Montserrat, sans-serif',
             marginTop: 0,
-            marginBottom: rhythm(-1),
+
           }}
         >
           <Link
@@ -61,7 +61,7 @@ class Template extends React.Component {
     return (
       <Container
         style={{
-          maxWidth: rhythm(24),
+          maxWidth: rhythm(34),
           padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
         }}
       >

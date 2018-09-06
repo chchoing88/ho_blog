@@ -3,24 +3,40 @@ title: javascript pattern
 date: "2018-08-05T10:00:03.284Z"
 ---
 
-# 목표 
+## Goal
 
-# 목차 
+- 다양한 자바스크립트 패턴을 익히고 어느 상황에서 사용되는지 파악한다.
 
-# 패턴
+## Contents 
+- [callback pattern](#callback)
+- [promise pattern](#promise)
+- [partial pattern](#partial)
+- [memoization pattern](#memoization)
+- [singleton pattern](#singleton)
+- [factory pattern](#factory)
+- [sandbox pattern](#sandbox)
+- [decoration pattern](#decoration)
+- [strategy pattern](#strategy)
+- [proxy pattern](#proxy)
+- [chaning pattern](#chaning)
 
-## callback pattern
+
+
+
+## Pattern
+
+### <span id="callback">callback pattern</span>
 - 콜백은 나중에 실행할 부차 함수에 인자로 넣는 함수다. 
 - 여기서 콜백이 실행될 '나중'시점이 부차 함수의 실행 완료 이전이면 동기, 반대로 실행 완료 이후면 비동기라고 본다.
 
-### 시나리오 
+#### 시나리오 
 
 - 컨퍼런스에 attend(참가자) 등록을 하는 시스템이 있다.
 - 한명 또는 여러명을 한번에 참가 등록을 할수 있다.
 - attend(참가자)는 또는 참가자들은 참가자 등록이 되었는지 안되었는지 확인할 수 있다.
 - attend(참가자)는 또는 참가자들은 이름을 알 수 있다. 
 
-### code
+#### code
 
 ```javascript
 var C = {};
@@ -85,35 +101,35 @@ attendees.iterate(function doCheckIn(attend) { // 익명의 콜백함수 -> 디�
 
 ```
 
-### 주의사항
+#### 주의사항
 - 콜백을 사용할때는 디버깅에 용이하기 위해 이름을 붙여주자.
 - 콜백 헬이 발생할때는 편 코딩으로 해결할수 있다.
 - 콜백 함수 안의 this를 주의하자.
 
-### 정리
+#### 정리
 - 한가지 일을 여러번 수행해야 할때 함수하나를 인자로 보내(콜백 패턴) 여러번 호출을 진행할수 있다.
 - A작업이 끝난뒤에 B작업이 수행되어지길 바랄때 콜백 패턴을 이용할 수 있다.
 
-## promise pattern
+### <span id="callback">promise pattern</span>
 - 비동기 액션을 초기화하고 성공과 실패 케이스를 각각 처리할 콜백을 준다.
 - 이벤트 기반의 비동기 프로그래밍보다 훨씬 더 이해하기 쉽고 우아하며 탄탄한 코드를 작성할 수 있다.
 
-## partial pattern
+### <span id="callback">partial pattern</span>
 
-## memoization pattern
+### <span id="callback">memoization pattern</span>
 
-## singleton pattern
+### <span id="callback">singleton pattern</span>
 
-## factory pattern
+### <span id="callback">factory pattern</span>
 
-## sandbox pattern
+### <span id="callback">sandbox pattern</span>
 
-## decoration pattern
+### <span id="callback">decoration pattern</span>
 - 단일 책임 원칙을 준수하면서 믿음성이 강화된 코드를 효과적으로 작성할 수 있다.
 
-## strategy pattern
+### <span id="callback">strategy pattern</span>
 
-## proxy pattern
+### <span id="callback">proxy pattern</span>
 
-## chaning pattern 
+### <span id="callback">chaning pattern</span>
 
