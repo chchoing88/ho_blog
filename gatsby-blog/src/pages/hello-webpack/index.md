@@ -346,6 +346,8 @@ modules에는 B의 배열이 들어간다.
 
 ```
 
+아래 코드는 **_interopRequireDefault** 이 함수에 대한 필요성을 설명한 코드이다.
+
 ```javascript
 // Common JS file : a.js
 // 참고로 a.js는 바벨이 변환을 안한다.
@@ -365,7 +367,6 @@ _a.bbb()
 
 // 만약 아래처럼 호출한다면 babel은 
 import a from 'a.js'; // exports 의 default 값을 a에 넣겠다 라는 의미.
-
 a.aaa()
 
 // 이렇게 변환.
@@ -373,7 +374,7 @@ a.aaa()
 var _a = require('a.js'); // _a는 exports 다. 
 var _a2 = _interopRequireDefault(_a);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+// a.js 파일에서 default로 export 하지 않았을 경우 혹시 모르는 상황을 대비.
 // 를 실행시켜서 
 // return { default: _a } 로 변환
 
