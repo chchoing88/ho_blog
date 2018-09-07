@@ -31,9 +31,9 @@ module.exports = {
             },
           },
           {
-            resolve: `gatsby-remark-prismjs`,
+            resolve: `gatsby-remark-highlights`,
             options: {
-              classPrefix: 'language-',
+
             },
           },
           'gatsby-remark-copy-linked-files',
