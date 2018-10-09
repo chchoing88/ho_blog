@@ -4,12 +4,12 @@ date: "2018-04-05T10:00:03.284Z"
 ---
 
 # 게으른 평가
-  
-* call-by-need 라고도 불리는 이 전략 방법은 ( 반대는 call-by-name ) 값이 실제로 필요할때 평가를 하는것이다. 또한 반복적인 평가를 피하기 위해서 한번 평가해둔 자료는 기억해 둔다.(memoization)
-    
 
-  
-# 왜?
+* call-by-need 라고도 불리는 이 전략 방법은 ( 반대는 call-by-name ) 값이 실제로 필요할때 평가를 하는것이다. 또한 반복적인 평가를 피하기 위해서 한번 평가해둔 자료는 기억해 둔다.(memoization)
+
+
+
+## 왜?
 
 * 아래와 같은 코드를 생각해 보자. 
 
@@ -32,7 +32,7 @@ console.log(expensiveFunction());
 
 * 아름답지 않을 뿐더러 큰 프로젝트일수록 언제 쓰일지도 모르고 필요할때마다 매번 호출하게 되니 비용이 많이 든다.
 
-# 이렇게 하고 싶다.
+## 이렇게 하고 싶다.
 
 * 만약 평가를 정말 필요할때 하면 어떨까? 
 * 자바스크립트에서 lazy 라는 키워드가 있다면..
@@ -51,171 +51,171 @@ console.log(soameValue);
 * 다만, 여기서 2번 반복해서 썼다고 해서 평가를 2번하는건 비효율 적이다.
 
 
-# 만들어 보자.
+## 만들어 보자.
 
 * 실제 자바스크립트 안에는 lazy 라는 키워드가 없기 때문에 lazy 라는 함수를 만들어 보자.
 
-  ## memoization 패턴을 이용한 반복호출을 피하자.
-  
-  ```javascript
-  const lazy = getter => {
-    let evaluated = false;
-    let _res = null;
+### memoization 패턴을 이용한 반복호출을 피하자.
 
-    const res = function(){
-      if(evaluated) return _res;
-      const _res = getter.apply(this, arguments);
-      evaluated = true;
-      return _res;
-    }
+```javascript
+const lazy = getter => {
+  let evaluated = false;
+  let _res = null;
 
-    return res;
-    }
-  ```
-  * lazy 함수는 getter 라는 함수를 인자로 받아서 getter를 호출시켜주는 새로운 함수를 반환한다.
-  * 클로저를 사용, evaluated 와 _res 변수는 반복 호출을 피하기 위한 자유변수들이다.
+  const res = function(){
+    if(evaluated) return _res;
+    const _res = getter.apply(this, arguments);
+    evaluated = true;
+    return _res;
+  }
 
-  ## 사용해보자.
+  return res;
+}
+```
+* lazy 함수는 getter 라는 함수를 인자로 받아서 getter를 호출시켜주는 새로운 함수를 반환한다.
+* 클로저를 사용, evaluated 와 _res 변수는 반복 호출을 피하기 위한 자유변수들이다.
 
-  ```javascript
-  let counter = 0;
+### 사용해보자.
 
-  const lazyVal = lazy(() => {
-    counter += 1;
-    return 'result';
-  })
+```javascript
+let counter = 0;
 
-  console.log(counter); // 0
-  console.log(lazyVal()); // result
-  console.log(counter); // 1
-  console.log(lazyVal()); // result
-  console.log(counter);  // 1
-  console.log(lazyVal()); // result
-  ```
-  * 여러번 호출하더라도 한번만 호출이 된다는걸 알수 있다.
+const lazyVal = lazy(() => {
+  counter += 1;
+  return 'result';
+})
 
-  * 이제 실질적으로 사용하면 되는가????
-    * 실제 lazyValue들 끼리 연산작업이 필요할 경우엔 어떻게 해야할까???
+console.log(counter); // 0
+console.log(lazyVal()); // result
+console.log(counter); // 1
+console.log(lazyVal()); // result
+console.log(counter);  // 1
+console.log(lazyVal()); // result
+```
+* 여러번 호출하더라도 한번만 호출이 된다는걸 알수 있다.
 
-    ```javascript
-      const actualVal1 = lazyVal1();
-      const actualVal2 = lazyVal2();
+* 이제 실질적으로 사용하면 되는가????
+* 실제 lazyValue들 끼리 연산작업이 필요할 경우엔 어떻게 해야할까???
 
-      console.log(actualVal1 + actualVal1);
-    ```
-    * 음..달라진게 없는거 같다. 
-    * 우리는 평가를 실제로 필요한 지점에서 사용하고 싶은데 그럼 어떻게 해야할까.
+```javascript
+const actualVal1 = lazyVal1();
+const actualVal2 = lazyVal2();
 
-    ```javascript
-    const newVal = lazy(() => {
-      const actualVal1 = lazyVal1();
-      const actualVal2 = lazyVal2();
-      return actualVal1 + actualVal2;
-    })
-    ```
-    * 다시 lazy로 감싸야한다.
-    * 음.. 아름답지가 않다.
+console.log(actualVal1 + actualVal1);
+```
+* 음..달라진게 없는거 같다. 
+* 우리는 평가를 실제로 필요한 지점에서 사용하고 싶은데 그럼 어떻게 해야할까.
 
-  ## 업그레이드 하자
+```javascript
+const newVal = lazy(() => {
+  const actualVal1 = lazyVal1();
+  const actualVal2 = lazyVal2();
+  return actualVal1 + actualVal2;
+})
+```
+* 다시 lazy로 감싸야한다.
+* 음.. 아름답지가 않다.
 
-  * 우리가 원하는 시점으로 평가를 할수있도록 뒤로 늦추긴 했지만 매번 lazy로 감싸야 하는 번거로움이 있었다.
-  * 체이닝으로 엮어서 표현하면 어떨까???
-  * 다시 lazy 함수를 업그레이드 해보자.
+### 업그레이드 하자
 
-    ### 이런 모양이면 좋겠다.
+* 우리가 원하는 시점으로 평가를 할수있도록 뒤로 늦추긴 했지만 매번 lazy로 감싸야 하는 번거로움이 있었다.
+* 체이닝으로 엮어서 표현하면 어떨까???
+* 다시 lazy 함수를 업그레이드 해보자.
 
-    ```javascript
-    let counter = 0;
+### 이런 모양이면 좋겠다.
 
-    const lazyVal = lazy(() => {
-      return counter += 1;
-    })
+```javascript
+let counter = 0;
 
-    /* 첫 평가 실행후 리턴 된 값으로 다시 lazy를 리턴 */
-    const lazyOp = lazyVal.then(v1 => lazy(()=> {
-      return v1 + 1;
-    }))
-    ```
+const lazyVal = lazy(() => {
+  return counter += 1;
+})
 
-    ### lazy를 수정하자.
+/* 첫 평가 실행후 리턴 된 값으로 다시 lazy를 리턴 */
+const lazyOp = lazyVal.then(v1 => lazy(()=> {
+  return v1 + 1;
+}))
+```
 
-    ```javascript
-    const lazy = getter => {
-      let evaluated = false;
-      let _res = null;
+### lazy를 수정하자.
 
-      const res = function(){
-        if(evaluated) return _res;
-        const _res = getter.apply(this, arguments);
-        evaluated = true;
-        return _res;
-      }
+```javascript
+const lazy = getter => {
+let evaluated = false;
+let _res = null;
 
-      /* 체이닝을 위한 then 함수 생성 */      
-      res.then = modifier => modifier(res());
-  
-      return res;
-      }
-    ```  
+const res = function(){
+  if(evaluated) return _res;
+  const _res = getter.apply(this, arguments);
+  evaluated = true;
+  return _res;
+}
 
-    * 리턴된 inner함수 (res) 에게 프로퍼티로 then 함수를 추가.
-    * then에서 인자로는 첫번째 평가 이후에 리턴된 값으로 다시 lazy를 수행할수 있는 next 함수를 받는다.
-    * 여기서 modifier 인자는 v1 => lazy() 함수가 되겠다. 
-    * res()는 lazyVal 함수가 될것이고 여기서 res() 호출된 결과는 즉, v1으로 들어갈 것이다.
-    * 받은 v1을 다시 lazy로 감싸서 lazyOp로 return 한다. 
+/* 체이닝을 위한 then 함수 생성 */      
+res.then = modifier => modifier(res());
 
-    ### map 함수를 만들어 보자.
+return res;
+}
+```  
 
-    * then 함수는 임의로 우리가 lazy 함수를 리턴해줬었어야 했다.
-    * 이번엔 그것마저 자동으로 해주는 map 함수를 만들어보자.
-    
-      #### 이런 모양이어야 한다.
+* 리턴된 inner함수 (res) 에게 프로퍼티로 then 함수를 추가.
+* then에서 인자로는 첫번째 평가 이후에 리턴된 값으로 다시 lazy를 수행할수 있는 next 함수를 받는다.
+* 여기서 modifier 인자는 v1 => lazy() 함수가 되겠다. 
+* res()는 lazyVal 함수가 될것이고 여기서 res() 호출된 결과는 즉, v1으로 들어갈 것이다.
+* 받은 v1을 다시 lazy로 감싸서 lazyOp로 return 한다. 
 
-      ```javascript
-      let counter = 0;
-     
-      /* 첫 평가 실행후 리턴 된 값으로 다시 lazy를 리턴 */
-      const lazyOp = lazy(() => counter += 1)
-      .map(v1 => 
-        v1 + 1
-      )
-      .map(v2 => 
-        v2 + 1
-      )
+### map 함수를 만들어 보자.
 
-      ```
+* then 함수는 임의로 우리가 lazy 함수를 리턴해줬었어야 했다.
+* 이번엔 그것마저 자동으로 해주는 map 함수를 만들어보자.
 
-      
-      #### 다시 lazy 함수를 수정하자.
+#### 이런 모양이어야 한다.
 
-      ```javascript
-      const lazy = getter => {
-        let evaluated = false;
-        let _res = null;
+```javascript
+let counter = 0;
 
-        const res = function(){
-          if(evaluated) return _res;
-          const _res = getter.apply(this, arguments);
-          evaluated = true;
-          return _res;
-        }
+/* 첫 평가 실행후 리턴 된 값으로 다시 lazy를 리턴 */
+const lazyOp = lazy(() => counter += 1)
+  .map(v1 => 
+    v1 + 1
+  )
+  .map(v2 => 
+    v2 + 1
+  )
 
-        /* 체이닝을 위한 then 함수 생성 */      
-        res.then = modifier => modifier(res());
-        /* map 함수 */
-        res.map = mapper => lazy(() => mapper(res()));
-        return res;
-        }
-      ```  
-
-# 정리
-  
-  * 자바스크립트에서의 게으른 평가는 결국 호출하고 싶은 코드들을 함수로 한번 더 감싸 실제 필요할때 평가한다.
-  * lazy 체이닝의 경우 연속된 함수 참조에 의해서 이뤄진다.
-
-  
+```
 
 
-# 참고
+#### 다시 lazy 함수를 수정하자.
+
+```javascript
+const lazy = getter => {
+  let evaluated = false;
+  let _res = null;
+
+  const res = function(){
+    if(evaluated) return _res;
+    const _res = getter.apply(this, arguments);
+    evaluated = true;
+    return _res;
+  }
+
+  /* 체이닝을 위한 then 함수 생성 */      
+  res.then = modifier => modifier(res());
+  /* map 함수 */
+  res.map = mapper => lazy(() => mapper(res()));
+  return res;
+}
+```  
+
+## 정리
+
+* 자바스크립트에서의 게으른 평가는 결국 호출하고 싶은 코드들을 함수로 한번 더 감싸 실제 필요할때 평가한다.
+* lazy 체이닝의 경우 연속된 함수 참조에 의해서 이뤄진다.
+
+
+
+
+## 참고
 
 [https://www.codementor.io/agustinchiappeberrini/lazy-evaluation-and-javascript-a5m7g8gs3](https://www.codementor.io/agustinchiappeberrini/lazy-evaluation-and-javascript-a5m7g8gs3)

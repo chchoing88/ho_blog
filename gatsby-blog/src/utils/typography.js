@@ -1,20 +1,21 @@
 import Typography from 'typography'
 import CodePlugin from 'typography-plugin-code'
-import Wordpress2016 from 'typography-theme-wordpress-2016'
+import usWebDesignStandardsTheme from 'typography-theme-us-web-design-standards'
 
-Wordpress2016.overrideThemeStyles = () => ({
-  'a.gatsby-resp-image-link': {
-    boxShadow: 'none',
+usWebDesignStandardsTheme.overrideThemeStyles = () => ({
+  'div.gatsby-highlight': {
+    marginBottom: '20px'
   },
-  'body': {
-    fontFamily:"'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif",
-  },
+  'a': {
+    textDecoration: 'none'
+  }
 })
-Wordpress2016.pugins =[
+usWebDesignStandardsTheme.plugins = [
   new CodePlugin(),
 ]
 
-const typography = new Typography(Wordpress2016)
+
+const typography = new Typography(usWebDesignStandardsTheme)
 
 // Hot reload typography in development.
 if (process.env.NODE_ENV !== 'production') {
