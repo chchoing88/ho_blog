@@ -172,6 +172,32 @@ Workspaces 를 활성화 시키면 yarn 은 dependency 구조를 좀더 최적�
 
 이것은 lerna 의 bootstrapping 의 `--hoint` flag 효과와 같다.
 
+```
+| jest/
+| ---- node_modules/
+| -------- chalk/
+| -------- diff/
+| -------- pretty-format/
+| -------- jest-matcher-utils/  (symlink) -> ../packages/jest-matcher-utils
+| ---- package.json
+| ---- packages/
+| -------- jest-matcher-utils/
+| ------------ node_modules/
+| ---------------- chalk/
+| ------------ package.json
+| -------- jest-diff/
+| ------------ node_modules/
+| ---------------- chalk/
+| ------------ package.json
+```
+
+위와 같은 구조에서 jest-diff 워크스페이스 안이라면, 코드 안에서 다음과 같이 resolve 될것이다.
+
+- require(‘chalk’) resolves to ./node_modules/chalk
+- require(‘diff’) resolves to ../../node_modules/diff
+- require(‘pretty-format’) resolves to ../../node_modules/pretty-format
+- require(‘jest-matcher-utils’) resolves to ../../node_modules/jest-matcher-utils that is a - symlink to ../packages/jest-matcher-utils
+
 ```sh
 /package.json
 /yarn.lock
