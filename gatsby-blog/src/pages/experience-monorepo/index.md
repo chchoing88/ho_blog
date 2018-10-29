@@ -121,6 +121,16 @@ $ lerna publish from-git
 ## lerna version을 별도로 수행하지 않고 현재 있는 태그로 publish를 도와준다. 
 ```
 
+* 패키지 모듈 생성 
+
+```sh
+$ lerna create test1
+
+## lerna로 관리될 패키지 모듈 생성
+## test1이라는 폴더 이름으로 packages 폴더 안에 생성된다. 
+```
+
+
 * 자세한건 lerna 공식 홈페이지 참조.
   [https://lernajs.io/](https://lernajs.io/)
 
@@ -147,6 +157,68 @@ Yarn Workspaces 는 단일 루트 package.json 파일의 하위 폴더에있는 
 
 Yarn Workspaces 는 lerna 툴 처럼 사용할 수 있는 low-level 의 primitives 이다.
 lerna 가 제공하는 high-level 의 특징들을 제공하진 않지만, 코어로직의 실행과 linking steps 로 더 향상된 퍼포먼스를 제공할 수 있다.
+
+```javascript
+// package.json 에 아래와 같이 설정
+"workspaces": [
+    "packages/*"
+  ],
+```
+
+```javascript
+// jest-matcher-utils package.json
+{
+  "name": "jest-matcher-utils",
+  "description": "...",
+  "version": "20.0.3",
+  "license": "...",
+  "main": "...",
+  "browser": "...",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "pretty-format": "^20.0.3"
+  }
+}
+```
+
+```javascript
+// jest-diff package.json
+{
+  "name": "jest-diff",
+  "version": "20.0.3",
+  "license": "...",
+  "main": "...",
+  "browser": "...",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "diff": "^3.2.0",
+    "jest-matcher-utils": "^20.0.3",
+    "pretty-format": "^20.0.3"
+  }
+}
+```
+
+위와 같이 설정 후 각 패키지 모듈안에서 `yarn install` 명령을 실행하면 아래와 같은 구조를 만들어준다.
+아래 구조에서 symlink를 잘 보자!!
+
+```
+| jest/
+| ---- node_modules/
+| -------- chalk/
+| -------- diff/
+| -------- pretty-format/
+| -------- jest-matcher-utils/  (symlink) -> ../packages/jest-matcher-utils
+| ---- package.json
+| ---- packages/
+| -------- jest-matcher-utils/
+| ------------ node_modules/
+| ---------------- chalk/
+| ------------ package.json
+| -------- jest-diff/
+| ------------ node_modules/
+| ---------------- chalk/
+| ------------ package.json
+```
 
 ### yarn Workspaces setting
 
