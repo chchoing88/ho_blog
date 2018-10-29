@@ -68,6 +68,13 @@ $ lerna updated
 ```sh
 $ lerna run [script]
 ```
+* 각 패키지 안에서 쉘 스크립트를 실행할수 있다.
+
+```sh
+$ lerna exec [command]
+## ex) lerna exec rm -rf ./node_modules
+```
+
 
 * 모듈간의 의존성 추가
 
@@ -82,6 +89,21 @@ $ lerna add modulea --scope=moduleb --dev
 $ lerna add modulea
 ```
 
+* 버젼을 수정합니다.
+
+```sh
+$ lerna version 1.0.1 # explicit
+$ lerna version patch # semver keyword
+$ lerna version       # select from prompt(s)
+```
+해당 버젼을 수행하면 다음과 같은 일이 일어난다.
+
+1. 이전 태그 릴리즈 이전으로 변경사항을 확인한다.
+2. 새로운 버젼에 대한 프롬프트 안내를 한다.
+3. 새로운 릴리즈 정보를 반영한 패키지를 수정한다.
+4. 커밋과 태그를 커밋한다. 
+5. git remote에 push한다.
+
 * 배포 ( git 및 npm )
 
 ```sh
@@ -93,6 +115,10 @@ $ lerna publish --skip-npm
 
 ## 이렇게 publish 하면 package.json 의 버전이 업데이트가 되고
 ## 그에 관련된 의존성있던 모듈들의 package.json의 devDependency 나 dependency의 해당 모듈의 버젼도 업데이트 시켜준다.
+
+$ lerna publish from-git 
+## explicitly publish packages tagged in current commit
+## lerna version을 별도로 수행하지 않고 현재 있는 태그로 publish를 도와준다. 
 ```
 
 * 자세한건 lerna 공식 홈페이지 참조.
@@ -212,7 +238,7 @@ Workspaces 를 활성화 시키면 yarn 은 dependency 구조를 좀더 최적�
 
 * 위 처럼 적용이 될때 workspace-b 에있는 파일에서 workspace-a 를 요구하면 현재 Github 에 게시 된 코드가 아니라 프로젝트 내부에있는 정확한 코드가 사용되며 cross-env 패키지가 올바르게 중복 제거되어 프로젝트의 루트에 놓입니다.
 
-* lerna 2.0.0 에선 lerna 커맨드 이용시 `--use-workspace` flag 를 사용하면 프로젝트의 bootstrap 을 Yarn 을 사용하게 된다. 이렇게 되면 `packages.json/workspaces` 필드에 `lerna.json/packages` 대신에 packages 라는 필드를 찾는다.
+* lerna 2.0.0 에선 lerna 커맨드 이용시 `--use-workspace` flag 를 사용하면 프로젝트의 bootstrap 을 Yarn 을 사용하게 된다. 이렇게 되면 root-level의 `packages.json/workspaces` 필드의 값이 `lerna.json/packages` 값을 재정의 한다.
 
 lerna.json 파일로 설정하는 방법은 아래와 같다.
 
