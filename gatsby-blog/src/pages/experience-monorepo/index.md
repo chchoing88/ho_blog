@@ -43,6 +43,8 @@ lerna 툴은 git 및 npm 을 사용하여 multi-package repositories 를 관리�
 
 Lerna 는 또한 개발 및 빌드 환경에서 패키지의 수많은 복사본에 대한 시간과 공간을 줄여줍니다.
 
+`lerna 3.0 이상을 기준으로 합니다.`
+
 ### lerna 명령어 사용법
 
 * lerna 초기화 및 independent 모드로 실행
@@ -104,6 +106,11 @@ $ lerna version       # select from prompt(s)
 4. 커밋과 태그를 커밋한다. 
 5. git remote에 push한다.
 
+`주의` : version 명령시에 git push를 할 수 있는 상태가 되어야 한다. 이미 push를 다 해버린 상태라면 push를 할 수가 없다고 에러가 뜬다.
+
+그래서 수동으로 package.json의 version 을 내리고 다시 lerna version으로 올리는 방법이 있겠다. 
+그전에 git tag -d 로 기존에 있던 tag들은 없앤다.
+
 * 배포 ( git 및 npm )
 
 ```sh
@@ -111,14 +118,16 @@ $ lerna version       # select from prompt(s)
 $ lerna publish
 
 ## npm 생략 ( 대신 git 에도 올라가지 않음 )
-$ lerna publish --skip-npm
-
+$ lerna publish --skip-npm ## Deprecated
 ## 이렇게 publish 하면 package.json 의 버전이 업데이트가 되고
 ## 그에 관련된 의존성있던 모듈들의 package.json의 devDependency 나 dependency의 해당 모듈의 버젼도 업데이트 시켜준다.
 
 $ lerna publish from-git 
 ## explicitly publish packages tagged in current commit
 ## lerna version을 별도로 수행하지 않고 현재 있는 태그로 publish를 도와준다. 
+## 주의할 점은 현재 커밋의 tagged를 배포한다는 것이다. 커밋만 있고 Annotated tag가 없다면 
+## No tagged release found 라는 메세지가 뜨면서 배포가 되질 않는다.
+## 그냥 커밋만 했을시엔 lerna publish 를 실행시켜서 다시 version 을 수정해주어야 한다.
 ```
 
 * 패키지 모듈 생성 
@@ -130,6 +139,11 @@ $ lerna create test1
 ## test1이라는 폴더 이름으로 packages 폴더 안에 생성된다. 
 ```
 
+`참고 1` : lerna 의 version 과 changed 의 기준은 최신 Annotated tag를 기준으로 한다. npm version 과 lerna version 의 경우 자동으로 Annotated tag를 생성해준다. ( npm version 의 경우 git 사용시 )
+
+`참고 2` : npm version 과 publish 는 git 이랑 무관하게 사용할 수 있다. 
+
+`참고 3` : npm publish 의 경우에는 오로지 npm package.json의 version 만 보고 해당 버져닝으로 배포한다. 
 
 * 자세한건 lerna 공식 홈페이지 참조.
   [https://lernajs.io/](https://lernajs.io/)
@@ -326,5 +340,6 @@ lerna.json 파일로 설정하는 방법은 아래와 같다.
 
 * lerna 와 yarn workspace 를 사용하면 중복되는 dependency 에 관해서 관리를 할 수 있다.
 * yarn workspace 와 lerna 는 쉽게 통합될수 있다.
+* lerna를 이용하면 버져닝과 publish의 flow를 강제해서 많은 모듈들을 관리할 수 있다.
 * lerna 를 이용하면 yarn workspace 에서 할수 없는 다양한 기능들을 사용할 수 있다. ( testing, 배포 , 버젼관리 , 패키지별 scripting 명령)
 * 같은 환경속에서 여러가지 dependency 를 가지고 여러 패키지들을 다룬다면 monorepo 를 사용할만 할것 같다.
