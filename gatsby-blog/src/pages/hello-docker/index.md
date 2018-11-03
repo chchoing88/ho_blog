@@ -196,9 +196,12 @@ RUN mkdir /app
 WORKDIR /app
 
 # 현재 경로에 있는 package.json을 /app에 복사
+# ADD와 기본적으로 동일하나 차이점은 URL을 지정할수 없고 압축파일을 자동으로 풀어주지 않는다. 
 COPY package.json /app
 
+# 파일과 디렉토리를 호스트에서 docker image로 copy한다.
 # src에 파일 대신 url을 입력할수 있고 압축 파일의 경우 압축을 해제하면서 복사
+# 호스트에 있는 . 경로에 있는걸 /usr/src/app 에 복사.
 ADD < src > < dest >
 ADD . /usr/src/app
 
