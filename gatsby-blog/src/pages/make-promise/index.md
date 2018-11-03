@@ -90,6 +90,9 @@ function Promise(fn) {
 
 위에서 본 헬퍼함수는 두종류가 존재한다. `getThen` , `doResolve` 함수이다.
 `getThen` 의 경우에는 Promise 객체의 특징은 then 함수가 있는지 없는지 파악하여 있으면 then 함수를 리턴 없으면 null 을 리턴한다. 또한 잘못된 Promise를 막아줌.
+여기서 특히 다시 doResolve를 실행시킬때 `then.bind(result)` 구문을 유의깊게 보자.
+then을 호출하는데 이 then의 경우에는 this를 result로 바꿔준다. 이는 곧 result(Promise객체)에 들어있는 then을 호출하겠다는 의미이다. 
+
 `doResolve` 의 함수의 경우에는 fulfill 과 reject 를 한번만 호출할수 있도록 도와준다.
 또한 fn 을 한번 호출한 뒤에는 내부적으로는 아무것도 할것이 없다. 다시 resolve나 reject를 사용자에서 호출을 해줘야 다음 절차를 이행해 간다. 
 
@@ -171,7 +174,7 @@ function Promise(fn) {
   }
 
   // 이 resolve 는 fulfill 또는 reject로 보낼수 있어야 한다.
-  // 여기서 value가 올수있는 값은 일반 plain 값이 올수 있고 다시 Promise가 올수있으므로 그 처리를 해두어야 한다.
+  // 여기서 result가 올수있는 값은 일반 plain 값이 올수 있고 다시 Promise가 올수있으므로 그 처리를 해두어야 한다.
   function resolve(result) {
     try {
       let then = getThen(result) // 여기 then 함수가 있으면 Promise로 왔다고 간주. (getThen 은 헬퍼함수)
@@ -198,7 +201,7 @@ function Promise(fn) {
 ## done 메서드 작성
 
 done 이라는 함수는 resolver 끝나고 실행되어야 할 함수를 등록하는 함수이다.
-then 이라는 함수를 작성하기 전에 done 이라는 함수를 작성해보자. done 메서느는 간단하면서도 then 메서드가 어떻게 실행이 되는지 생각해볼수 있게 한다.
+then 이라는 함수를 작성하기 전에 done 이라는 함수를 작성해보자. done 메서드는 간단하면서도 then 메서드가 어떻게 실행이 되는지 생각해볼수 있게 한다.
 done 메서드는 promise 가 끝나고 나서 해당의 행동을 정의하는 함수이다.
 
 ```javascript
@@ -208,11 +211,11 @@ promise.done(onFulfilled, onRejected) // 이렇게 실행이 되도록 할 것�
 done 함수의 몇가지 목표가 있다.
 
 * done 함수의 인자의 onFulfilled 와 onRejected 는 둘중 하나만 호출이 된다.
-* 호출될 함수는 한번만 호출이 된다.
-* 호출될 함수는 done 메서드가 return 되기 전까지 호출되지 않는다.
-* promise resolved 가 done 호출 전에 되었는지 후에 되었는지 상관없이 호출되어진다.
+* 호출될 함수(onFulfilled, onRejected)는 한번만 호출이 된다.
+* 호출될 함수(onFulfilled, onRejected)는 done 메서드가 return 되기 전까지 호출되지 않는다.
+* promise 안에 resolve 함수(어떠한 결과에 도달함)는 done 호출 전에 되었는지 후에 되었는지 상관없이 호출되어진다.
 
-실제로 javascript promise 에는 done 이라는게 없고 jqeury 의 Deferred 에 존재하긴 하다. 어떻게 움직이는지 보자.
+실제로 javascript promise 에는 done 이라는게 없고 jqeury 의 Deferred 에는 존재하긴 하다. 어떻게 움직이는지 보자.
 
 ```javascript
 const PENDIGN = 0
@@ -273,8 +276,11 @@ function Promise(fn) {
 
   const done = function(onFulfilled, onRejected) {
     // done 호출 되기 전에 남아있는 함수들을 다 호출하고 호출하기 위해
-    // 즉, 비동기를 보장하기 위한 setTimeout 함수.
-    // setTimeout으로 감싸면 스택에 쌓인것부터 무조건 우선순위를 갖는다. 호출 순서에 상관없이
+    // 즉, 여기 있는 함수가 다 호출한 뒤에 호출을 할 목적을 가진 setTimeout 함수.
+    // setTimeout으로 감싼 함수는 webapis timer에 의해 관리되고 
+    // 그이후에 나머지 코드를 스택에 쌓고 먼저 실행된다. 그 사이 타이머가 완료가 되고
+    // task queue에 콜백을 집어넣구 event loop는 스택이 비워져있으면 task queue에서 하나하나 꺼내어 
+    // 실행시킨다.
     setTimeout(function() {
       handle({
         onFulfilled: onFulfilled,
@@ -307,14 +313,29 @@ new Promise((resolve, reject) => {
 }).done(value => console.log(value))
 ```
 
-처음 Promise 인자로 받은 fn 은 `doResolve` 함수에 인자로 들어가서 호출당하게 된다. 이때 fn 에는 비동기인 setTimeout 함수가 호출되게 되고 이 안에 있는 `resolve(10)` 부분은 2 초 후에 큐에 쌓이게 된다.
-(여기서 큐는 스택에 있는 실행문이 다 실행이 되고나서 실행된다.) 그리고 나서 done 함수를 호출하게 되는데 여기서 done 호출도 비동기 함수인 setTimeout 함수가 실행이 되고 이는 0 초 후에 큐에 쌓이게 되어 먼저 큐에 쌓이게 된다. 따라서 done 이 실행이 먼저 되고 handle 함수에서 아직 pending 인 상태니 handlers 에 handle 객체를 push 하게 된다.
+처음 Promise 인자로 받은 `fn` 은 `doResolve` 함수에 인자로 들어가서 호출당하게 된다. 이때 fn 에는 비동기인 setTimeout 함수가 호출되게 되고 이 안에 있는 `resolve(10)` 부분은 2 초 후에 task queue에 쌓이게 된다.
+(여기서 task queue는 스택에 있는 실행문이 다 실행이 되고나서 실행된다.) 그리고 나서 done 함수를 호출하게 되는데 여기서 done 호출도 비동기 함수인 setTimeout 함수가 실행이 되고 이는 0 초 후에 task queue에 쌓이게 되어 타이머 차이로 위 `function(){ resolve(10) }` 보다 먼저 큐에 쌓이게 된다. 따라서 done 이 실행이 먼저 되고 handle 함수에서 status 를 파악 아직 pending 인 상태니 handlers 에 handle 객체를 push 하게 된다.
 
-그 이후에 `resolve(10)` 이 실행되면 resolve -> fulfill 함수를 거쳐 아까 push 해두었던 handler 를 실행하고 최종적으로는 `handler.onFulfilled(value)` 를 실행하게 된다.
+그 이후에 `resolve(10)` 이 실행되면 doResolve에 넘겼던 resolve 함수 호출 -> fulfill(Promise 함수안의 fulfill) 함수를 거쳐 아까 push 해두었던 handler 를 실행하고 최종적으로는 `handler.onFulfilled(value)` 를 실행하게 된다.
+
+여기서는 Promise의 resolve 함수가 done 함수 호출 이후에 호출이 되었다. resolve 함수가 아직 호출이 안되었기 때문에 상태는 PENDING 상태일 것이구 이때는 바로 실행하는 것이 아닌 handler 라는 배열에 잠시 넣어두고 나중에 호출하도록 한다.
+
+만약 resolve가 먼저 실행이 되어서 status 가 resolve된 상태(fulfill이 되든 reject가 되든)에 따라서 바로 done에 넘겼던 함수를 호출하게 된다.
+
+## 여기까지의 요약
+
+여기까지의 promise는 메인 객체 안에 넘겼던 함수가 최종적으로 결론이 났는지 (resolved 가 되었는지) 확인하는 상태값을 가지고 done에 등록해둔 함수를 호출할지 말지를 결정한다. 
+
+또한 자바스크립트의 고차 함수의 특성을 살려 함수를 인자로 받아 저장해두었다가 때가 되었을때 호출을 하게 된다.
+이때, 자바스크립트는 자신이 정의 내려졌던 환경들을 참조로 가지고 있다가 호출시에 평가하면서 ( 참조하는 곳의 값을 확인 ) 실행하게 된다.
+
+Promise에서 인자로 받는 fn 에는 resolve, reject 2개의 인자가 넘어가는데 이 resolve, reject의 경우에는 Promise 안에 있는 내장된 함수들이고 이 함수들을 인자로 넣어서 fn 을 실행하게 된다. 
+비동기가 완료 되었을때 resolve에 값을 넣어 호출하는 것은 Promise 안에 있는 내장함수를 수행 시키고 그에 따른 로직들이 수행이 되어 원하는 작업 이후에 호출될수 있도록 보장한다. 
+
 
 ## then 메서드 작성
 
-then 메서드의 경우에는 done 과 비슷하지만 Promise 를 반환하면서 체이닝을 구성할 수 있다.
+then 메서드의 경우에는 done 과 비슷하지만 Promise 를 반환하면서 체이닝을 구성할 수 있어야 한다.
 
 ```javascript
 new Promise(function(resolve, reject) {
@@ -325,7 +346,7 @@ new Promise(function(resolve, reject) {
 })
   .then(result => {
     console.log(result) // 1
-    return result + 10
+    return result + 10 // 여기서 return 값은 then이 반환하는 promise객체의 resolved 된 값이다.
   })
   .then(result => {
     console.log(result) // 11
@@ -358,11 +379,13 @@ function Promise(fn) {
     return new Promise((resolve, reject) => {
       // 체이닝을 하기 위해서 promise를 리턴하자.
       return self.done(
-        // done 함수 호출하면
+        // 여기서 done 함수는 앞서 등록했던 promise가 resolve 되었을시 
+        // 그 status에 따라 호출될 함수들을 등록시킨다.
         function(result) {
           if (typeof onFulfilled === 'function') {
             try {
-              resolve(onFulfilled(result)) // 리턴되는 값을 다시 새로운 resolve에 넘겨주어야 그 다음 then에게 전달. 
+              resolve(onFulfilled(result)) // 리턴되는 값(then에서 인자로 줬던 함수가 실행되고 난 return 값)을 
+              // 다시 새로운 resolve에 넘겨주어야 그 다음 then에게 전달. 
             } catch (e) {
               reject(e)
             }
@@ -406,7 +429,7 @@ then 함수의 경우에는 연속된 then 호출을 할수있도록 체이닝�
 위에서 then은 연속된 then 호출을 위해 promise로 감싸서 리턴을 하고있다. 
 
 
-기본적으로 then에서 리턴된 값은 즉시 다음 핸들러로 전달이 된다. 만약 리턴된 값이 promise라면 그 값이 귀결될때까지 다음 then 호출을 기다린다. promise의 결과값이 주어졌을 경우에 다음 next를 호출하게 된다. 
+기본적으로 then에서 리턴된 값은 즉시 다음 핸들러로 전달이 된다. 만약 리턴된 값이 promise라면 그 값이 귀결될때까지 다음 then 호출은 기다린다. promise의 결과값이 주어졌을 경우에 다음 then 함수를 호출하게 된다. 
 
 ```javascript
 new Promise(function(resolve, reject) { 
@@ -443,17 +466,21 @@ new Promise(function(resolve, reject) {
 
 * then이라는 체이닝을 제외하고 대략적인 구현 방식은 약속하고 싶은 코드를 먼저 실행을 하고 done 함수를 통해서 약속해둔 함수가 끝나면 실행될 함수를 등록한다. 비동기가 끝난 뒤 resolve를 실행 하게 되면 등록 되었던 함수가 동작하게 된다.즉, resolve 라는 함수는 해당 Promise 객체가 모든 수행을 다 했다는걸 알리기 위한 함수이고 내부적으로 등록해뒀던 handlers 들을 forEach 하면서 실행하게 된다. 
 
-* 체이닝의 경우 처음 동기화 부분이 다 진행된 뒤에 ( 비동기는 나중에 실행될 부분이므로 ) then 함수가 진행이 된다. then 함수는 기본적으로 Promise를 리턴하므로 체이닝으로 then 함수를 또 불러올수 있고 Promise 인자인 함수를 바로 호출하게 된다.
-여기서 done 함수를 이용해서 비동기 완료 후 불러올 handler를 등록을 해둔다. 그 이후로도 마지막 then까지 실행이 되며 그전 then에서 등록해둔 resolve 함수를 등록해둔다. 
+* 체이닝의 경우 처음 동기화 부분이 다 진행된 뒤에 ( 비동기는 나중에 실행될 부분이므로 ) then 함수가 진행이 된다. then 함수는 기본적으로 Promise를 리턴하므로 체이닝으로 then 함수를 또 불러올수 있고 Promise 인자인 함수를 바로 호출하게 된다.<br />
+여기서 done 함수를 이용해서 처음에 Promise로 넘겼던 함수(fn) 비동기 완료 후 (resolve 후) 불러올 handler를 등록을 해둔다. 그 이후로도 마지막 then까지 실행이 되며 (사실 이 중간에 각 Promise에 resolve가 호출 되었을수도 아닐수도 있다.) 이 then 메서드들은 각기 다른 Promise 객체(다른 context를 지님, then 호출시 new Promise를 하기 때문)의 핸들러(Promise안에 handler 배열 )에 fulfill 과 reject 함수를 등록시킨다.  <br />
 이후 비동기 값이 귀결값이 정해지면 done에서 등록해두었던 handler 함수가 실행 될것이고 hendler 안에는 then에서 등록해두었던 onFulfilled 함수를 실행한다. 여기서 나온 리턴값을 가지고 다시 resolve를 시켜주게 되면 계속적으로 등록해두었던 함수를 호출하게 된다.  
+<br />
+<br />
+즉, then함수는 새로운 약속을 잡을수 있는데 then에 인자로 넘긴 함수(onFulfilled, onRejected)의 실행이 완료되는 경우(resolved), 그 다음 체이닝 then으로 등록했던 함수에 인자로 그 결과를 다시 또 알려주겠다는 약속인 셈이다. 
 
-즉, then함수는 새로운 약속을 잡는데 then에 등록된 함수가 실행될 경우 다시 또 알려주겠다는 약속인 셈이다. then 내부적으로 resolve나 reject를 실행함으로써 then 내부에 있는 promise가 귀결되었다는걸 알린다. 그럼 이 약속에 또 다른 then으로 등록해두었던 함수들을 실행시킨다.
+* Promise의 인자 함수에 비동기 코드가 아닌 일반 코드가 들어갔을 경우 (ex. resolve(1)만 들어가있을 경우 ) 여기서 동기적인 resolve(1) 호출은 Promise의 resolve함수는 상태값과 귀결값(1) 만 셋팅해주고 나머지 done이나 then에서 등록된 함수를 내 상태(Promise에 등록해두었던 함수, 즉 Promise의 인자로 넘겼던 함수)가 귀결되었으므로 그 결과를 등록함수 인자로 넘겨서 실행시킨다.
 
-* Promise의 인자 함수에 비동기 코드가 아닌 일반 코드가 들어갔을 경우 (ex. resolve(1)만 들어가있을 경우 ) 여기서 동기적인 resolve(1) 호출은 Promise의 상태값과 귀결값(1) 만 셋팅해주고 나머지 done이나 then에서 호출되었을때 상태가 귀결되었으므로 인자로 받았던 함수를 아까 셋팅해둔 귀결값을 넣고 호출해주게 된다. 
+* then 체이닝에서 첫번째 then에 등록한 함수가 리턴 값이 Promise 값이라면 (return new Promise()) 
+then 에서 리턴할 Promise의 resolve 함수에서 Promise 객체를 인자로 받고 처음에 생각했던 resolve가 Promise 객체를 받는다면 이라는 로직을 수행하게 된다.(결과에 then 함수가 있다면 그 Promise 결과 객체({status:'', value:''...})에 있는 then을 수행하게 된다. then을 수행할때 바로 현재 실행하고 있는 resolve를 등록해줌으로써 Promise 결과 객체의 value 값을 추출해 올수 있다. ) 
 
-* then에서 리턴 된 값이 Promise 값이라면 본인의 promise를 resolve하지 않고 리턴된 Promise에 then 함수를 실행 시켜서 리턴된 Promise가 resolve 되면 본인의 promise에서 resolve를 then에 등록시켜서 리턴 된 Promise가 resolve 되고 난 이후에 본인의 resolve가 실행 되도록 시켜준다. 
+* resolve 함수에서 getThen 함수는 result 값이 Promise 객체일 경우 처리해주는 함수이다.
 
-* resolve 함수에서 getThen 과 doResolve 함수는 result 값이 Promise 객체일 경우 처리해주는 함수들이다. 
+* doResolve 해당 헬퍼 함수는 Promise에 등록되는 fn 에서 resolve 또는 reject 를 한번만 실행시킬수 있도록 보장해주는 함수이다. 또한 resolve가 일반 값 뿐만 아니라 Promise 객체를 받게끔 처리해준다.
 
 
 
@@ -561,8 +588,10 @@ fulfill 함수에 등록되었던 등록된 handlers 가 마저 실행된다.
 
 ## 결론
 
-* 위 코드는 아주 최소화된 Promise를 따라 구현해본것이다.
-* 여기서 중요한건 함수의 연속된 함수 참조를 이루고 있다는 것이다. 
+* 고차함수의 특성(함수를 인자로 받을수 있고 리턴 할 수 있다.)을 이용해서 Promise를 구현하고 있다.
+* then 으로 등록하는 함수 안에서 또다른 비동기를 구현한다면 Promise로 감싸 주어야 한다. 그래야 비동기 결과를 가지고 그 다음 then 으로 등록된 함수에 인자로 넣어줄 수 있다.
+* then을 수행시 마다 새로운 스코프 환경이 생긴다. then을 수행한다는 것은 자신의 스코프에 등록되어 있는 함수를 수행완료 시키고 나서 다음으로 호출되어야 하는 함수를 등록해줄 뿐만 아니라, 그 등록된 함수가 수행이 완료되고 나서의 또 다른 함수 호출을 보장하기 then의 실행 구문을 Promise로 감싸주고 리턴해준다.
+
 
 ## 출처
 
