@@ -7,7 +7,7 @@ date: "2018-02-01T10:00:03.284Z"
 
 - 웹팩을 알아보고 웹팩 번들링엔 어떤 특징이 있는지 알아보자.
 
-## webpack config
+## webpack config ( webpack version 3)
 
 ```javascript
 /**
@@ -61,6 +61,126 @@ module.exports = {
   }
 };
 ```
+
+
+## webpack config ( webpack version 4)
+
+- 기존과 달라졌다고 하는점은 기존에 config 파일에서 exports 를 객체로 넘겼다면 version 4 부턴 함수로 넘길 수 있다.
+- 첫번째 인자는 커맨드 라인에서 `--env` 옵션들이 객체 형태로 전달된다. 두번째 인자는 커맨드 라인에서 전달되는 모든 옵션이 객체 형태로 전달된다.
+- 웹팩 4 에서는 mode가 존재해서 개발환경인 mode 마다 옵션이 달라지고, 최적화도 자동으로 해준다.
+- CommonsChunkPlugin이 deprecated되고 SplitChunksPlugin으로 내장되었으며 optimization.splitChunks라는 옵션이 생겼다.
+- Production 빌드에선 UglifyWebpackPlugin 가 내장되어있다. 
+
+```javascript
+// vue-cli 에서 webpack 4에 맞게 수정 ( webpack version 4.25.1 )
+
+var path = require('path')
+var webpack = require('webpack')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+
+module.exports = (env, options) => {
+  const config = {
+    entry: './src/main.js',
+    output: {
+      path: path.resolve(__dirname, './dist'),
+      publicPath: '/dist/',
+      filename: 'build.js'
+    },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            'vue-style-loader',
+            'css-loader'
+          ],
+        },      {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+          options: {
+            loaders: {
+            }
+            // other vue-loader options go here
+          }
+        },
+        {
+          test: /\.js$/,
+          loader: 'babel-loader',
+          exclude: /node_modules/
+        },
+        {
+          test: /\.(png|jpg|gif|svg)$/,
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]?[hash]'
+          }
+        }
+      ]
+    },
+    resolve: {
+      alias: {
+        'vue$': 'vue/dist/vue.esm.js' 
+        // import 구문시 vue 라는 명칭이 정확히( 뒤에 $ 붙였을시 ) 맞아 떨어졌을때 해당 url 이용
+        // import vue from 'vue' => import vue from 'node_modules/vue/dist/vue.esm.js
+      },
+      extensions: ['*', '.js', '.vue', '.json']
+      // 자동으로 확장자를 설정해준다.
+    },
+    performance: {
+      hints: false
+    },
+    plugins: [
+      new VueLoaderPlugin()
+    ]
+  }
+
+  if (options.mode === 'production') {
+    config.devtool = '#source-map'
+    // http://vue-loader.vuejs.org/en/workflow/production.html
+    config.plugins = (config.plugins || []).concat([
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: '"production"'
+        }
+      }),
+      new CleanWebpackPlugin(['dist'])
+    ])
+  } else if (options.mode === 'development') {
+    config.devtool = '#eval-source-map'
+    config.devServer = {
+      historyApiFallback: true, // 404 에러시 index.html 페이지로 돌아가준다. boolean 값 말고도 object 형식으로 넘겨도 된다.
+      noInfo: true,
+      overlay: true,
+      host: '0.0.0.0',
+      disableHostCheck: true,
+    }
+  }
+  
+
+  return config
+}
+
+```
+
+```javascript
+// package.json
+{
+  "scripts": {
+    "build-dev": "webpack --mode development",
+    "build-prod": "webpack --mode production --progress --profile --hide-module", 
+    // --hide-modeuls : Hides info about modules
+    // --progress : Print compilation progress in percentage
+    // --progress 와 함께 --profile 을 함께 쓰면 어떤 뎁스에서 컴파일이 얼마나 걸렸는지 알수 있다.
+    "dev-server": "webpack-dev-server --open --mode development"
+  }
+}
+
+ 
+```
+
+
+
 
 ## webpack concept
 
@@ -189,6 +309,9 @@ module.exports = config;
 
 
 
+
+
+
 ## 번들된 녀석을 파해쳐 보자
 
 기본적으로 즉시 실행 함수를 사용하고 있다. (function(){})();
@@ -222,6 +345,8 @@ export {wtf};
 ```
 
 webpack은 어떤 모양으로 번들링을 만들까???
+
+`참고 : 아래 번들링 모양은 웹팩 3 버젼을 기준으로 합니다.`
 
 전체 프레임은 아래와 같다.
 
