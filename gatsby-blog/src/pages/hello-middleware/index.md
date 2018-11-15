@@ -219,6 +219,7 @@ middleware.go(function() {
 
 - 느낌 : 원본 go , 사본 go1, 사본 go2 이렇게 메모리에 적제 시켜놓구 ( use 함수를 써서 ) 최종적으로는 사본 go2를 호출 그럼 사본 go2는 사본 go1 을 호출하고 사본 go1 은 원본 go를 호출,
 각각의 go에는 등록해뒀던 코드를 실행하고 이 다음에 실행해야 할 코드를 인자로 받는다. 
+- use 를 사용해서 등록되는 함수는 클로저 함수에 의해 function으로 감싸져서 기억되고 있다가 그 클로저가 next 인자와 실행되는 순간 본래 go 함수의 next 인자로 전달이 된다. 
 
 ```javascript
 // sudo code
@@ -243,7 +244,7 @@ overide2 go = function(next){
 실행 go(regi3Fun)
 
 // 실행순서
-overide2 go 실행 ( next : regi3Fun ) -> overide1 go 실행 ( regi2Fun(next : regi3Fun) ) -> original go 실행 ( regi1Fun(next : regi2Fun(next : regi3Func)) ) -> next() 실행 ( regi1Fun(next : regi2Fun(next : regi3Func)) 이거 실행)
+실행 go(regi3Fun) -> overide2 go 실행 ( next : regi3Fun ) -> overide1 go 실행 ( next : function(){regi2Fun(next : regi3Fun)} ) -> original go 실행 ( next: regi1Fun(next : function(){regi2Fun(next : regi3Fun)}) ) 
 ```
 
 - 결국 `regi1Func(function(){regi2Func(regi3Func)})` 이 모양을 만들기 위해 존재하는 로직들이다.
