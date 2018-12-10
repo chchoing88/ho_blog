@@ -255,6 +255,13 @@ const cache = RestaurantsWithinRadiusCache.getInstance()
 ```
 
 ### <span id="factory">factory pattern</span>
+- 팩토리 패턴은 객체를 단순히 찍어내는 함수이다. 
+- Object.create 메서드 역시 언어 자체에 포함된 팩토리이다. 
+- 모듈은 데이터 감춤이라는 부가 기능이 있지만, 객체 생성/반환이 주 임무라는 점에서 엄밀히 말하면 팩토리 이다. 
+- 일반 new 나 일반 함수를 호출해서 객체를 만들어 쓰면 되는데, 굳이 팩토리를 이용하는 이유는 '제어와 추상화'를 강화하기 위해서이다. 
+
+#### 시나리오
+- 
 
 ### <span id="sandbox">sandbox pattern</span>
 
