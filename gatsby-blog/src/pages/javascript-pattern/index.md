@@ -520,7 +520,6 @@ fakeAttendeeWebApi = function(){
 };
 ```
 
-
 - 장식자
 ```javascript
 attendeeWebApiDecorator = function (baseWebApi) {
@@ -600,16 +599,88 @@ attendeeWebApiDecorator = function (baseWebApi) {
 - 기존 객체에서 발생하는 에러 및 성공을 잘 패스-스루(장식된 객체에서 -> 장식자 -> 호출부로의 전달) 해주는지 확인해야하고, 장식자의 고유 기능을 넣는다.
 - 논리적으로 다음 단계는 장식자의 일반화 문제를 다뤄야 한다.
 - 실제로 HTTP 의 PUT과 DELETE는 물론이고 연관된 POST GET 까지 캡슐화한 객체를 여럿 두고 구현한 애플리케이션도 있다. ( 예를 들어, 이미지 등록, 사용자 수정..등등의 여러 REST API) `모든 경우`에 적용할 수 있게 장식자를 일반화 하려면 어떻게 해야하는가??? ( 현재는 baseWebApi가 post와 getAll이 있는 녀석들을 받아야 한다. )
+- 공통의 기능을 상위 클래스 및 인터페이스로 일반화를 해보자.
 
-
-#### 장식자의 일반화
-- 모든 경우를 통용할수 있는 범위의 일반화된 장식자를 만들자.
-- 장식자의 패턴은 단위 기능을 수행하는 형식과 장식자 형식을 정의하고 일반화 하여 기반 클래스를 제공한다. 즉, 기능을 수행하는 형식과 그 형식을 정의하고 일반화한 기반 클래스 2가지로 나뉜다.
-- 예를 들어, 사진의 필터 ( 색조, 명도, 채도 )의 기능을 하는 녀석들이 있다고 보자. 여기서 필터라는 것은 기반  클래스라고 하며 컴포넌트라고 부르며 장식자에 멤버로 컴포넌트 형식을 포함한다. 이것을 멀티 필터가 있다고 가정하면 장식자는 멀티 필터가 될것이다. 각각의 색조필터, 명도필터, 채도필터는 단위 기능을 수행하는 형식이 될 것이고 이 형식을 정의하고 일반화한 것이 필터가 되겠다.
- 
 
 
 ### <span id="strategy">strategy pattern</span>
+- 전략 패턴은 특정 작업을 수행하는 다중 알고리즘, 즉 전략을 런타임 시 넣었다 뺐다 할 수 있는 모듈 단위로 나누기 위해 사용한다. 
+- 특정 작업을 수행하는 서로 다른 알고리즘(운수회사 교통편 예약)을 분리하고, 런타임 시점에 알고리즘, 즉 전략을 동적으로 지정할 수 있게 해주는 패턴
+- 여기서 팩토리 패턴을 사용함으로써 테스트가 덜 복잡해지고 전략을 추가/삭제할 때도 실행 콘텍스트는(transportScheduler) 전혀 고칠 필요가 없다. 
+
+#### 시나리오
+- 웹사이트에서 참가자는 자신이 선택한 택시 회사에 요청을 보내고 그 회사가 발급한 에약 확인번호를 돌려받는 식으로 콘퍼런스 행사장 교통편을 예약할 수 있다.
+- 택시 회사에서는 웹사이트 데시보드를 보면서 예약 상황을 모니터링하고, 주최자 역시 회사별 이용 실적이 얼마나 되는지 확인할 수 있어야 한다.
+- 운수회사 모듈 생성을 통틀어 관장하는 팩토리 함수를 하나 만드는게 좋을거 같다. 
+- 여기서 운수회사별 모듈이 바로 전략이다.
+
+#### code
+```javascript
+transportScheduler = function(auditService /* 집계 서비스 */ , transportCompanyFactory){
+  'use strict';
+
+  if(!auditService){
+    throw new Error(Conference.transportScheduler.messages.noAuditService);
+  }
+
+  if (!transportCompanyFactory) {
+    throw new Error(Conference.transportScheduler.messages.noCompanyFactory);
+  }
+
+  return {
+    scheduleTransportation : function scheduleTransportation(transportDetails) {
+      if (!transportDetails) {
+        throw new Error(Conference.transportScheduler.messages.noDetails);
+      }
+      var company;
+      // 여기서 어떤 운수회사 모듈을 생성한다. 
+      company = transportCompanyFactory.create(transportDetails);
+
+      // 여기서 운수회사는 schedulePickup 을 반드시 구현한다. 
+      return company.schedulePickup(transportDetails).
+        then(function successful(confirmation){
+          auditService.logReservation(transportDetails,confirmation);
+          return confirmation;
+      });
+    }
+  };
+};
+```
+
+```javascript
+// 운수회사
+redicabTransportCompany = function(httpService) {
+
+  'use strict';
+
+  var schedulePickupUrl = "http://redicab.com/schedulepickup";
+
+  return {
+    // RediCab사와 픽업 일정을 잡는다.
+    // 이 회사 API로부터 채번된 확인 코드로 귀결되는 프라미스를 반환한다.
+    schedulePickup: function schedulePicup(transportDetails){
+      var details = {
+        passenger: transportDetails.passengerName,
+        pickUp: "컨퍼런스 센터",
+        pickUpTime: transportDetails.departureTime,
+        dropOff: "공항",
+        rateCode: "JavaScriptConference"
+      };
+
+      return httpService.post(schedulePickupUrl,details)
+        .then(function resolve(confirmation){
+          return confirmation.confirmationCode;
+        });
+
+    },
+
+    //픽업 정보를 전송할 url을 반환한다.
+    getSchedulePickupUrl: function getSchedulePickupUrl(){
+      return schedulePickupUrl;
+    }
+  }
+};
+```
 
 ### <span id="proxy">proxy pattern</span>
 - 프록시는 대리인이라는 뜻이다. 즉, 사용자가 원하는 행동을 하기 전에 한번 거쳐가는 단계라고 생각하면 된다. 
@@ -622,5 +693,11 @@ attendeeWebApiDecorator = function (baseWebApi) {
 ### <span id="mediator">mediator pattern</span>
 
 ### <span id="observer">observer pattern</span>
+- 한 객체의 상태 변화에 따라 다른 객체의 상태도 연동되도록 일대다 객체 의존 관계를 구성 하는 패턴
+- 데이터의 변경이 발생했을 경우 상대 클래스나 객체에 의존하지 않으면서 데이터 변경을 통보하고자 할 때 유용
+- 통보 해야할 대상 객체의 관리를 Subject 클래스와 그 대상들이 꼭 구현을 해야할 observer 인터페이스로 일반화 한다.
+- 쉽게 여기서 통보 해야할 대상 객체는 구독자 라고 하고 그 구독자들은 update 함수를 구현해야할 약속을 이행하기 위한 observer 인터페이스를 갖는다. 또한 대상 객체의 관리를 하는 Subject는 신문사라고 생각 할 수 있다.
+
+### <span id="pubSub">pubSub pattern</span>
 
 ### <span id="builder">builder pattern</span>
