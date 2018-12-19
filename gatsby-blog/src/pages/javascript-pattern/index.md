@@ -686,6 +686,64 @@ redicabTransportCompany = function(httpService) {
 - 프록시는 대리인이라는 뜻이다. 즉, 사용자가 원하는 행동을 하기 전에 한번 거쳐가는 단계라고 생각하면 된다. 
 - 좋은 프록시는 사용자의 요청을 캐싱하여 성능을 높일 수도 있고, 에러를 잡아낼 수도 있지만 나쁘게 사용한다면 사용자의 요청을 왜곡하여 다른 동작을 하도록 만들 수 있다. 
 
+#### 주된용도
+- 클라이언 사용 패턴에 따라 데이터를 미리가져온다.
+- 실체에 클라이언트 요청이 과도하게 몰리지 않게 한다. ( ex. 디바운싱 프록시 : 수 밀리 초에 한번만 이벤트에 반응하도록 제한할 수 있다.)
+- 클라이언트가 접근하면 안 되는 자원을 통제한다.
+- HTTP 요청 n 개를 하나로 묶어 n-1개 요청에 따른 고정 비용을 줄인다.
+
+#### 시나리오
+- 콘퍼런스 참가자 명단에서 클릭하면 프로필 전체를 볼수있게 한다.
+- 프로필 화면에는 사진이 적어도 하나 이상 등록되어 있어서 전체 프로필을 처음부터 죄다 끌어오고 싶지는 않다.
+- 현재 페이지의 참가자 중 가장 접근 횟수가 많은 프로필만이라도 미리가져오는게 좋겠다.
+- 시간이 지나면서 쌓인 프로필 클릭 횟수에 따라 누가 유명 인사인지 시스템이 알아서 학습하도록 놔두고 그 사람들 프로필만 선취하면 될거같다.
+
+#### code
+```javascript
+//attendeeProfileService(profileService) 함수로 참가자 배열(attendees)에서
+//accessCount에 따라 가장 인기 있는 프로필부터 prefetchLimit개 만큼 선취하는 식으로
+//참가자 프로필 접근을 관리한다.
+Conference.attendeeProfileProxy = function (
+  attendees, profileService, prefetchLimit) {
+  'use strict';
+
+  var prefetched = {};
+
+  function prefetch(attendeeId) {
+    // 이놈이 진짜... getProfile 가져오는 놈...
+    prefetched[attendeeId] = profileService.getProfile(attendeeId);
+  }
+
+  if (prefetchLimit > attendees.length) {
+    prefetchLimit = attendees.length;
+  }
+  // 즉시 실행 함수로 감싸서 딱 한 번만 실행되도록
+  // 그리고 새 변수 sortedAttendees가 외부 스코프에 의해 더렵혀지지 않게 한다...
+  // 즉시 실행 함수도 prefetchAll 이라는 이름을 붙여 문서화 및 스택 추적 시 이정표로 삼는다..
+  (function prefetchAll() {
+    var ix,
+      sortedAttendees = attendees.slice().sort(function byViews(a, b) {
+        // 서버에서는 네트워크 효율 때문에 프로필 조회수가 업슨ㄴ 사람은 profileViews 프로퍼티를 전송하지 않는다.
+        // 따라서 예외 처리를 해준다.
+        return (b.profileViews || 0) - (a.profileViews || 0);
+      });
+    for (ix = 0; ix < prefetchLimit; ++ix) {
+      prefetch(sortedAttendees[ix].attendeeId);
+    }
+  })();
+
+  // 위에걸 한번 돌리고 나면... prefetched에 뭔가가 쌓인다.. 그게 뭐가 쌓이느냐.
+  // 서버에서 내려주는 profileViews 값이 높은순위별로.. prefetchLimit 갯수만큼 쌓인다..
+  // prefetced는 참가자의 id가 키 값이고 값은 진짜 getProfile ( 프로필 ) ..
+
+  return {
+    getProfile: function (attendeeId) {
+      return prefetched[attendId] || profileService.getProfile(attendeeId);
+    }
+  }
+};
+```
+
 ### <span id="chaning">chaning pattern</span>
 
 ### <span id="iterator">iterator pattern</span>
