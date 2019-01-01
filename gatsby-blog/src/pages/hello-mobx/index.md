@@ -265,6 +265,16 @@ autorun(() => {
 message.title = 'Bar'
 ```
 
+* tracked function 안에서의 역참조는 잘 반응 한다. author 와 author.name 은 모두 점으로 참조하고있습니다. 따라서 MobX 가 이 참조를 추적할 수 있습니다.
+
+```javascript
+autorun(() => {
+  console.log(message.author.name)
+})
+message.author.name = 'Sara'
+message.author = { name: 'John' }
+```
+
 * observable 한 객체를 tracking 없이 로컬 변수에 저장해서 사용하기. 아래 예제에서는 첫번째 변화에 대해선 잘 감지 할것이다. 그 이유는 message.author 가 주소를 넘기고 로컬 변수인 author 는 그 주소를 받아서 사용하기 때문에 같은 객체를 가리킨다. 그래서 위와 다르게 autorun 에서 반응을 할테지만 두번째 변화에 대해서는 감지를 하지 않는다. 그 이유는 autorun 에 의해 추적되는 author 는 message.author 가 가리키는 또다른 변수이지 message.author 를 추적하진 않는다. autorun 에 있는 author 는 아직 예전 객체를 가리키고 있기 때문이다.
 
 ```javascript
