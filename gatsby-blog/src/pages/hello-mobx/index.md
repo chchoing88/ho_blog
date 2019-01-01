@@ -365,7 +365,8 @@ const MyComponent = ({ message }) => (
 message.title = 'Bar'
 ```
 
-* 클래스의 로컬 필드에 observable 이 캐싱되는 것을 피하자. 아래 상황에서 author 의 name 의 변화에는 잘 반응 하지만 message 의 author 의 변화에는 반응하지 못한다 이것은 render() 메서드 밖에서 역참조를 진행 했기 때문이다. 오직 observer 컴포넌트는 render() 메서드가 tracked function 이다. 그래서 간단한 해결책은 render() 메서드 안에서 역참조 하는 것이고 또는 컴포넌트 인스턴스 내에 computed 프로퍼티를 이용해서 해결하는 방법이 있다.
+* 클래스의 로컬 필드에 observable 이 캐싱되는 것을 피하자. 아래 상황에서 author 의 name 의 변화에는 잘 반응 하지만 message 의 author 의 변화에는 반응하지 못한다. 이것은 render() 메서드 밖에서 역참조를 진행 했기 때문이다. 오직 observer 컴포넌트는 render() 메서드가 tracked function 이다. 그래서 간단한 해결책은 render() 메서드 안에서 역참조 하는 것이고 또는 컴포넌트 인스턴스 내에 computed 프로퍼티를 이용해서
+  this.author 를 update 시키면 render 에서 참조하는 값은 예전 주소의 값이므로 변경을 감지하여 반응하게 된다.
 
 ```javascript
 @observer
