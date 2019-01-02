@@ -9,8 +9,8 @@
       "component---src-pages-index-js-039a0e0cc12ee0a414a4.js.map"
     ],
     "path---javascript-basic-1": [
-      "path---javascript-basic-1-abf2e88df7df072fc7d1.js",
-      "path---javascript-basic-1-abf2e88df7df072fc7d1.js.map"
+      "path---javascript-basic-1-3514d965f490456c42f8.js",
+      "path---javascript-basic-1-3514d965f490456c42f8.js.map"
     ],
     "path---hello-docker": [
       "path---hello-docker-ded6ef6e2bd82fb1a877.js",
@@ -25,8 +25,8 @@
       "path----557518bd178906f8d58a.js.map"
     ],
     "path---hello-react": [
-      "path---hello-react-f9c74bdd2287d9c661bb.js",
-      "path---hello-react-f9c74bdd2287d9c661bb.js.map"
+      "path---hello-react-b4023cd6f2134da52df9.js",
+      "path---hello-react-b4023cd6f2134da52df9.js.map"
     ],
     "path---hello-express": [
       "path---hello-express-caf15ecb83e6270e44b2.js",
@@ -37,8 +37,8 @@
       "path---hello-monad-59e45b33826bee6342ec.js.map"
     ],
     "path---javascript-pattern": [
-      "path---javascript-pattern-76a18b1038c2a2cc7809.js",
-      "path---javascript-pattern-76a18b1038c2a2cc7809.js.map"
+      "path---javascript-pattern-648c1f680f29c9828e5a.js",
+      "path---javascript-pattern-648c1f680f29c9828e5a.js.map"
     ],
     "path---hello-oop": [
       "path---hello-oop-8753bd908c30244d5ee3.js",
@@ -60,6 +60,14 @@
       "component---src-layouts-index-js-60e98b905b7a1c56256e.js",
       "component---src-layouts-index-js-60e98b905b7a1c56256e.js.map"
     ],
+    "path---think-high-order-function": [
+      "path---think-high-order-function-58f7199816abbe8ab707.js",
+      "path---think-high-order-function-58f7199816abbe8ab707.js.map"
+    ],
+    "path---hello-mobx": [
+      "path---hello-mobx-275cf83c629aebf5d30d.js",
+      "path---hello-mobx-275cf83c629aebf5d30d.js.map"
+    ],
     "path---docker-depolyment": [
       "path---docker-depolyment-cc549f41f2b848409ae6.js",
       "path---docker-depolyment-cc549f41f2b848409ae6.js.map"
@@ -69,12 +77,12 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-d6e47afa64051378da30.js",
-      "path---index-d6e47afa64051378da30.js.map"
+      "path---index-04ef1bc6f89d9be5c899.js",
+      "path---index-04ef1bc6f89d9be5c899.js.map"
     ],
     "path---hello-webpack": [
-      "path---hello-webpack-0dfed3d9f4e21c6acac2.js",
-      "path---hello-webpack-0dfed3d9f4e21c6acac2.js.map"
+      "path---hello-webpack-b0122eda8ae66d76c639.js",
+      "path---hello-webpack-b0122eda8ae66d76c639.js.map"
     ],
     "path---hello-web-server": [
       "path---hello-web-server-50ce4db03e3201a76414.js",
@@ -86,6 +94,10 @@
       "commons-89d60b5b924ef4c6771c.js.map",
       "build-js-styles.css.map"
     ],
+    "path---hello-middleware": [
+      "path---hello-middleware-214cfa12d70783762915.js",
+      "path---hello-middleware-214cfa12d70783762915.js.map"
+    ],
     "path---webpack-config": [
       "path---webpack-config-d646c3ec578c78b12b66.js",
       "path---webpack-config-d646c3ec578c78b12b66.js.map"
@@ -95,9 +107,9 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-3be48bfed99e8333c9af.js",
+      "app-0fd4f46c27e9f2c1209f.js",
       "build-js-styles.css",
-      "app-3be48bfed99e8333c9af.js.map",
+      "app-0fd4f46c27e9f2c1209f.js.map",
       "build-js-styles.css.map"
     ],
     "path---lazy-evaluation": [
