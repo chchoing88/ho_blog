@@ -10,11 +10,11 @@ date: "2018-12-31T10:00:03.284Z"
 
 ## Concepts
 
-1. State
+### State
 
 * state 란 어플리케이션을 이끄는 데이터이다.
 
-2. Derivations ( 파생 )
+### Derivations ( 파생 )
 
 * state 로 부터 파생되는 값들이다. 다양한 형태로 존재할 수 있다.
 * 파생된 데이터는 todo 리스트에서 남아있는 todo item 갯수라고 할 수 있다.
@@ -27,13 +27,13 @@ date: "2018-12-31T10:00:03.284Z"
 * action 은 state 를 변화시키는 한 코드이다. 마치 스프레드 시트에 새로운 값을 입력하는 user 와 같은 것이다.
 * 만약 strict 모드를 사용한다면 액션 밖에서 state 를 강제로 바꾸는 일을 할 수 없게 된다.
 
-### imperative
+#### imperative programing
 
 * imperative 는 명령형 프로그래밍으로 쉽게는 순차적으로 명령을 하듯이 프로그래밍 하는것을 뜻한다. 컴퓨터가 수행할 명령들을 순서대로 적어놓아서 내가 원하는 결과를 얻는것이다. 즉, how 어떻게 할것인가에 포커싱을 맞춘다. 반대로는 선언적인 프로그래밍이 있다. 선언적 프로그래밍에선 데이터에 집중하기 보단 절차에 집중을 해서 만들어 낸다. 즉, what 무엇을 할 것인가에 초점을 맞춘다.
 
 * 데이터를 정의하고 그것의 변화 과정을 프로그래밍 할것이냐 행위를 정의하고 거기에 데이터를 집어 넣을 것이냐 방법의 차이. 즉, 생각의 주체를 데이터에 두느냐 function 에 두느냐의 차이.
 
-### reactive programing
+#### reactive programing
 
 * async 상황에서 이 async 데이터를 어떻게 처리할것이냐 , 아이디어는 stream 라는것으로 연결하고 그 stream 에 데이터를 흘려 보내자. 라는 생각이 reactive 프로그래밍이다. 함수의 동작은 async 하게 움직이지만 코드로는 순서대로.. async 한 작업을 functional 하게 처리하는 아이디어.
 
@@ -44,7 +44,7 @@ date: "2018-12-31T10:00:03.284Z"
 
 * 공식 문서에서의 imperative 란 반응형으로 이뤄진 코드 생태계의 외부 code 생태계라고 볼수있다. 이 외부 code 생태계는 반응형의 생태계의 side effect 정도 되겠다.
 
-## Principles
+### Principles
 
 * MobX 는 action 이 상태를 변경하고 그에 따른 views 를 업데이트하는 단방향 데이터 흐름을 지원합니다.
 * 모든 파생물들은 자동적으로 state 가 변할때마다 업데이트 된다. 결과적으로 그 중간값들을 관찰할 수 없다.
@@ -426,4 +426,4 @@ const Likes = observer(({ likes }) => (
 
 ## 참조
 
-(https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be)[https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be]
+[https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be](https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be)
