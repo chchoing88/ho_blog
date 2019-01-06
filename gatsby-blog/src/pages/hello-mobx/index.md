@@ -159,11 +159,25 @@ var disposer = upperCaseName.observe(change => console.log(change.newValue))
 
 * Computed values 는 다른 computed value 또는 지금 존재하는 state 로 부터 파생된 값이다.
 * 이 값은 실제로 수정가능한 state 를 최소화 시킬수 있는 방법중 하나이다.
-* computed 와 autorun 는 반응적으로 실행되는 표현식(expressions)이지만, computed 는 다른 observer 에 의해 사용될수 있는 값을 생성할때 사용되고 autorun 은 새로운 값을 만들어 내지 안흔ㄴ다 그 대신에 어떠한 효과를 이루기 위해 사용될수 있다. 예를들면 로깅이나 네트워크 요청 같은 것들 말이다.
+* computed 와 autorun 는 반응적으로 실행되는 표현식(expressions)이지만, computed 는 다른 observer 에 의해 사용될수 있는 값을 생성할때 사용되고 autorun 은 새로운 값을 만들어 내지 않는다 그 대신에 어떠한 효과를 이루기 위해 사용될수 있다. 예를들면 로깅이나 네트워크 요청 같은 것들 말이다.
 * Compute values 는 이전 값의 변화가 없다면 재 계산되지 않는다. 또한 다른 computed property 또는 reaction 에서 사용되 지 않으면 계산되지 않는다.
 * Computed values 는 사용되지 않으면 자동으로 가비지 컬렉터가 수거해 간다. 이는 autorun 과의 차이점 중에 하나이다. ( autorun 의 경우에는 그들 스스로가 dispose 해주어야 한다. )
 * 만약 항상 computed value 가 계산되길 원한다면 observe 또는 keepAlive 를 이용해서 사용할 수 있다.
 * computed 프로퍼티들은 enumerable 하지 않는다. 또한 상속 체인에 overwritten 되지 않는다.
+* computed value 를 위한 setter 도 정의할 수 있다. 이 setter 는 computed value 를 직접 변경하진 않지만 역 파생으로 사용될 수 있다. 예를 들면, 아래에서 `orderLine.total = 10` 이라고 셋팅하면 total 값이 직접적으로 바뀌는 것이 아닌 price 값이 변경되면서 다시 get 의 total 값이 반응하게 된다.
+
+```javascript
+const orderLine = observable.object({
+  price: 0,
+  amount: 1,
+  get total() {
+    return this.price * this.amount
+  },
+  set total(total) {
+    this.price = total / this.amount // infer price from total
+  },
+})
+```
 
 ### autorun
 
@@ -190,8 +204,24 @@ autorun(reaction => {
 * 만약 첫번째 인자로 문자열을 autorun 에 넘긴다면 그것은 디버그 네임으로 사용될 수 있다.
 * autorun 의 리턴 값은 해당 autorun 을 해지하는 disposer function 이다. 이 함수는 더이상 autorun 이 필요 없어질때 사용된다.
 * 반응(reaction) 그 자체는 autorun 에 제공하는 함수에 유일한 인수로 전달되며 이 인수를 autorun 함수 안에서 다룰수 있다. 이 의미는 두가지 방법으로 더이상 autorun 이 필요 없을때 dispose 할 수 있다는것을 뜻한다.
+* observer decorator/function 과 같이, autoron 은 오직 제공된 함수의 실행 동안 사용되는 데이터를 관찰 할수 있다.
 
 ### when
+
+```javascript
+when(predicate: () => boolean, effect?: () => void, options?)
+```
+
+* when 은 주어진 `predicate` return 값이 true 일때 까지 관찰하고 실행한다. predicate 가 true 값이 리턴되면 주어진 `effect` 값은 실행되고 자동으로 disposed 가 실행된다.
+* 이 함수는 실행되기 전에 미리 취소를 할 수 있도록 disposer 를 리턴한다.
+* 만약 `effect` 함수를 제공하지 않으면 when 은 `Promise`가 리턴된다. 이것은 async / await 랑 함께 쓰기 나이스하다.
+
+```javascript
+async function() {
+    await when(() => that.isVisible)
+    // etc..
+}
+```
 
 ### reaction
 
@@ -423,6 +453,33 @@ const Likes = observer(({ likes }) => (
 ```
 
 ## 관측값 변경하기
+
+### action
+
+```javascript
+action(fn)
+action(name, fn)
+@action classMethod() {}
+@action(name) classMethod () {}
+@action boundClassMethod = (args) => { body }
+@action(name) boundClassMethod = (args) => { body }
+@action.bound classMethod() {}
+```
+
+* Action 은 state 를 변화시키는 모든것들이다.
+* Action 은 인자로 함수를 받아서 같은 함수이지만 `transaction`, `untracked`, `allowStateChagnes`. 로 감싸진 함수를 반환한다. 사실 transaction 은 자동으로 적용된다.
+* action 은 변화들을 한다발로 묶는다. 그리고나서 computed value 와 reaction 들에게 가장 마지막 action 이 끝난 후에 통지한다. 이렇게 하면 action 이 끝날때 까지 action 실행 중에 나머지 application 은 중간값 또는 아직 끝나지 않은 값은 확인할 수가 없다.
+* observable 을 변경하는 모든 함수 또는 side effects 를 만드는 함수에는 (@)action 을 사용하는게 좋습니다.
+* @action 데코레이터를 사용하는 setter 는 지원하지 않습니다. 하지만 computed 프로퍼티의 setter 들은 자동으로 action 이 된다.
+* MobX config 에서 state 변화를 반드시 action 을 사용하도록 config 한다면 action 은 필수 적으로 사용되어져야 합니다. (enforceActions 옵션)
+* action decoreator / function 들은 javascript 의 기본적인 binding 룰을 따르게 됩니다. 그러나 `action.bound` 는 자동으로 action 에 대상 객체에 대한 this 를 bind 한다. action 과 다르게 (@)action.bound 는 name 파라미터를 받지 않는다. 대신 action.bound 를 적용하는 프로퍼티 이름에 기반으로 한다. action.bound 와 arrow 함수는 함께 사용하지 말자.
+* `runInAction(name?, thunk)` 는 간단한 유틸리티 이다. 이것은 code block 을 받고 익명의 action 을 실행한다. 이것은 즉석에서 액션을 생성하고 실행하는데 유용하다. 예를 들면 비동기적인 절차 안에서 사용하는 예가 있겠다. 간단하게 말해서 `runInaction(f)`은 `action(f)()` 과 같다.
+
+### async action & flow
+
+*
+
+### Object api
 
 ## 참조
 
