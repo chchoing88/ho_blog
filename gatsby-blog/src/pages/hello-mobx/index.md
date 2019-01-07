@@ -477,7 +477,199 @@ action(name, fn)
 
 ### async action & flow
 
-*
+* action wrapper / decorator 는 오직 현재 함수가 실행이 되고있을때 영향을 미친다. 하지만 현재 함수에 의해 스케쥴 된 함수(단지, 실행함수 말고)는 영향을 미치지 않는다. 이것이 의미하는건 setTimeout, promise then, async , state 를 변화시키는 callback 함수같은 함수들에게 action 으로 감싸줘야 한다는 것이다.
+* 비동기 action 을 생성하는 방법은 몇몇 가지가 있다.
+
+#### Promise
+
+```javascript
+mobx.configure({ enforceActions: 'observed' }) // don't allow state modifications outside actions
+
+class Store {
+  @observable githubProjects = []
+  @observable state = 'pending' // "pending" / "done" / "error"
+
+  @action
+  fetchProjects() {
+    this.githubProjects = []
+    this.state = 'pending'
+    fetchGithubProjectsSomehow().then(
+      projects => {
+        const filteredProjects = somePreprocessing(projects)
+        this.githubProjects = filteredProjects
+        this.state = 'done'
+      },
+      error => {
+        this.state = 'error'
+      }
+    )
+  }
+}
+```
+
+* 위 예제에서는 예외를 던집니다. `fetchGithubProjectsSomehow`에 넘긴 콜백들은 `fetchProject` 액션의 한 부분이 아니기도 하고, action 은 오직 현재 스택에만 적용되기 때문이다.
+* 가장 쉽게 고치는 방법은 callback 을 action 으로 추출하는 방법이 있다. ( 이때, action.bound 를 사용하는 것은 정확한 this 를 얻는데 중요하다. )
+
+```javascript
+mobx.configure({ enforceActions: 'observed' })
+
+class Store {
+  @observable githubProjects = []
+  @observable state = 'pending' // "pending" / "done" / "error"
+
+  @action
+  fetchProjects() {
+    this.githubProjects = []
+    this.state = 'pending'
+    fetchGithubProjectsSomehow().then(
+      this.fetchProjectsSuccess,
+      this.fetchProjectsError
+    )
+  }
+
+  @action.bound
+  fetchProjectsSuccess(projects) {
+    const filteredProjects = somePreprocessing(projects)
+    this.githubProjects = filteredProjects
+    this.state = 'done'
+  }
+
+  @action.bound
+  fetchProjectsError(error) {
+    this.state = 'error'
+  }
+}
+```
+
+* 위 코드는 깨끗하고 명확할수 있는 코드이지만 약간은 복잡한 flow 를 가지고 있습니다. ( 코드를 읽기에 왔다갔다 할 수 있다. ) 대안책으로는 promise callback 을 action 키워드로 감싸는 방법을 취할 수 있습니다. 해당 action 에 이름을 부여하는것은 추천하지만 의무는 아닙니다.
+
+```javascript
+mobx.configure({ enforceActions: 'observed' })
+
+class Store {
+  @observable githubProjects = []
+  @observable state = 'pending' // "pending" / "done" / "error"
+
+  @action
+  fetchProjects() {
+    this.githubProjects = []
+    this.state = 'pending'
+    fetchGithubProjectsSomehow().then(
+      // inline created action
+      action('fetchSuccess', projects => {
+        const filteredProjects = somePreprocessing(projects)
+        this.githubProjects = filteredProjects
+        this.state = 'done'
+      }),
+      // inline created action
+      action('fetchError', error => {
+        this.state = 'error'
+      })
+    )
+  }
+}
+```
+
+#### runInAction utility
+
+* 인라인 action 의 단점은 TypeScript 가 그것들을 추론하기 어렵다는 것이다. 그래서 모든 callback 에 type 을 적용해야한다. 이렇게 callback 전부에 action 을 생성하는 대신, action 함수안에 callback 을 약간 수정해서 state 를 수정할 수 있다.
+
+```javascript
+mobx.configure({ enforceActions: 'observed' })
+
+class Store {
+  @observable githubProjects = []
+  @observable state = 'pending' // "pending" / "done" / "error"
+
+  @action
+  fetchProjects() {
+    this.githubProjects = []
+    this.state = 'pending'
+    fetchGithubProjectsSomehow().then(
+      projects => {
+        const filteredProjects = somePreprocessing(projects)
+        // put the 'final' modification in an anonymous action
+        runInAction(() => {
+          this.githubProjects = filteredProjects
+          this.state = 'done'
+        })
+      },
+      error => {
+        // the alternative ending of this process:...
+        runInAction(() => {
+          this.state = 'error'
+        })
+      }
+    )
+  }
+}
+```
+
+* `runInAction` 또한 첫번째 인자로 이름을 넘길수 있다. `runInAction(f)`는 `action(f)()`로 볼 수있다.
+
+#### async / await
+
+* Async / await 를 기반으로 하는 함수는 처음에는 혼동스러울수 있다. 왜냐하면 문법적으로 그것들은 동기적인 함수처럼 보이기 때문이다. 이 방법은 @action 이 전체 함수에 적용되는 인상을 준다. 결론적으로 `@action`은 코드블럭에서 첫번째 await 까지 적용이 된다. 그 후에 await 가 비동기적으로 실행이 되고 await 이 끝난 후에 state 를 변경하는 코드는 action 으로 감싸줘야한다.
+
+```javascript
+mobx.configure({ enforceActions: 'observed' })
+
+class Store {
+  @observable githubProjects = []
+  @observable state = 'pending' // "pending" / "done" / "error"
+
+  @action
+  async fetchProjects() {
+    this.githubProjects = []
+    this.state = 'pending'
+    try {
+      const projects = await fetchGithubProjectsSomehow()
+      const filteredProjects = somePreprocessing(projects)
+      // after await, modifying state again, needs an actions:
+      runInAction(() => {
+        this.state = 'done'
+        this.githubProjects = filteredProjects
+      })
+    } catch (error) {
+      runInAction(() => {
+        this.state = 'error'
+      })
+    }
+  }
+}
+```
+
+#### flows
+
+* 내장된 `flow` 빌트인 함수를 사용하는건 나이스한 접근이지만, flow 는 generators 를 이용한다. 초보자들에겐 두려움이 될수 있지만 async/await 과 같이 움직인다고 보면 된다. 단지 async 대신에 `function *` 을 await 대신에 `yield`를 사용하는 것이다. 이 `flow`는 문법적으로 async/await 와 매우 닮아있고 비동기 파트에 대한 action 래핑이 따로 필요 없다는 것이다. 그 결과 깔끔한 코드를 작성할 수 있다.
+
+* `flow`는 함수처럼 사용이 되고 docorator 가 아니다. 또한 MobX 개발툴과 밀접하며 비동기 함수의 절차를 추적하기에 용이합니다.
+
+```javascript
+mobx.configure({ enforceActions: 'observed' })
+
+class Store {
+  @observable githubProjects = []
+  @observable state = 'pending'
+
+  fetchProjects = flow(function*() {
+    // <- note the star, this a generator function!
+    this.githubProjects = []
+    this.state = 'pending'
+    try {
+      const projects = yield fetchGithubProjectsSomehow() // yield instead of await
+      const filteredProjects = somePreprocessing(projects)
+      // the asynchronous blocks will automatically be wrapped in actions and can modify state
+      this.state = 'done'
+      this.githubProjects = filteredProjects
+    } catch (error) {
+      this.state = 'error'
+    }
+  })
+}
+```
+
+* flow 는 취소가능하다. 이 의미는 리턴되는 promise 에 있는 `cancel()` 함수를 호출할 수 있다는 뜻이다. 이 함수는 generator 를 즉시 중지 시킬수 있지만 finally 절은 실행이 됩니다. 반환된 promise 그 자체는 FLOW_CANCELLED 로 reject 로 귀결된다.
 
 ### Object api
 
