@@ -673,6 +673,14 @@ class Store {
 
 ### Object api
 
+## 기타
+
+### react-mobx
+
+* react 는 render 를 호출하는 방법은 2 가지가 있다. setState() 메서드와 forceUpdate() 이다. 여기서 forceUpdate() 메서드를 사용하게 되면 자식 컴포넌트들이 다 다시 render 가 된다.
+* react 에서 render 를 막을수 있는 방법은 shouldComponentUpdate 와 pure component 방법이 있겠다. 여기서 pure component 는 얕은 비교를 통해서 render 를 할지 안할지를 결정한다.
+* react-mobx 는 forceUpdate 메서드를 가지고 화면을 갱신하게 된다. 이때 문제는 불필요한 자식들까지 렌더링이 된다는 것이다. 이때 shouldComponentUpdate 를 오버라이딩 해놓고 얕은 비교를 통해서 업뎃을 할지 안할지를 결정한다. 따라서 prop 에 data 를 넘길때 observable 한 값을 넘기기 보다는 observable 을 포함한 변하지 않은 객체를 넘기는 것이 효율적이다.
+
 ## 참조
 
 [https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be](https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be)
