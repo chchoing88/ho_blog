@@ -292,9 +292,9 @@ http$
 그럼 여기서 어떻게 Notification Observable 을 만들 것인가.
 `retryWhen` operator 에 전달된 함수가 Notification Observable 을 만들고 이 함수는 Error Observable 을 인자로 받는다.
 
-에러가 발생 즉시 재시도를 하기 위해서 여기서 해야할 일은 Error Observable 을 변화시키지 않고 리턴하는 것이다. 그래야 이 Error Observable 을 구독함으로써 언제 정확히 에러가 발생하는지 알 수 있는 Notification Observable 을 만들어 낼 수 있다.
+에러가 발생 즉시 재시도를 하기 위해서 여기서 해야할 일은 Error Observable 을 변화시키지 않고 리턴하는 것이다. 그래야 이 Error Observable 을 구독함으로써 언제 정확히 에러가 발생하는지 알 수 있는 Notification Observable 을 만들어 낼 수 있다. 아래 코드에서는 tap operation을 사용했는데 이는 단지 로깅을 위한 목적으로 쓰이고 Error Observable은 변화시키지 않았다.
 
-여기서 기억해야하는것은 `retryWhen` 함수 호출에서 반환되는 Observable 은 Notification Observable 이라는 것이다. 이곳에서 값이 방출되는건 중요치 않다. 단지 재시도를 하기 위한 트리거이기 때문에 중요한건 언제 방출된 값을 받았는지가 중요하다.
+여기서 기억해야하는것은 `retryWhen` 함수 호출에서 반환되는 Observable 은 Notification Observable 이라는 것이다. 이곳에서 어떤 값이 방출되는건 중요치 않다. 단지 재시도를 하기 위한 트리거이기 때문에 중요한건 언제 방출된 값을 받았는지가 중요하다.
 
 ```javascript
 const http$ = this.http.get<Course[]>('/api/courses');
@@ -327,9 +327,37 @@ http$.pipe(
 또는 딜레이를 주는 방법이 있다. 특히 트레픽이 높아서 네트워크 실패인 경우 유용하게 사용할 수 있다.
 ex) `timer(3000,1000)` 3 초 뒤에 1 초마다 발생, 2 번쨰 인자는 옵셔널한 인자인데 주지 않는다면 3 초 뒤에 값이 한번 발생하고 complete 되는 것이다.
 
-한가지 중요한 점은 `retryWhen` Operator 의 Notification Observable 를 정의하는 함수는 오직 한번만 호출된다는 점이다. 그래서 Notification Observable 을 정의할 기회는 한번 뿐이고 이 Observable 은 한개만 생성이 된다는 뜻이다.
+한가지 중요한 점은 `retryWhen` Operator 의 Notification Observable 를 정의하는 함수(인자로 전해지는 함수)는 오직 한번만 호출된다는 점이다. 그래서 재 시도를 해야할 신호가 왔을때 Notification Observable 을 정의할 기회는 한번 뿐이라는 것이다.
 
-Error Observable 을 받을때 Notification Observable 을 정의하고 `delayWhen` 를 적용할 것이다.
+우리는 Error Observable 을 받을때 Notification Observable 을 정의하고 `delayWhen` 를 적용할 것이다.
+
+```javascript
+const http$ = this.http.get<Course[]>('/api/courses');
+
+http$.pipe(
+        tap(() => console.log("HTTP request executed")),
+        map(res => Object.values(res["payload"]) ),
+        shareReplay(),
+        retryWhen(errors => {
+            return errors
+                    .pipe(
+                        delayWhen(() => timer(2000)),
+                        tap(() => console.log('retrying...'))
+                    );
+        } )
+    )
+    .subscribe(
+        res => console.log('HTTP response', res),
+        err => console.log('HTTP Error', err),
+        () => console.log('HTTP request completed.')
+    );
+```
+
+Error Observable 에서 들어오는 각각의 error 값에 delay를 적용하기 위해서 `delayWhen` 에 전달된 함수(duration selector function 이라 부른다.)를 호출한다. 이 함수는 input value가 어느정도 경과했는지를 결정할 Observable을 방출한다.
+
+각각의 input value 에는 duration selector Observable을 가지고 있다. 이 Observable이 결국 값을 emit 하고 나면 input value가 delayWhen의 ouput으로 보여지게 된다.
+
+에러가 발생할때마다 `delayWhen` operator는 timer 함수를 호출함으로써 duration selector Observable 를 생성하게 된다. 이 duration selector Observable는 0값이 2초후에 발생하게 되고 그 후엔 complete 된다. 그 일이 일어나게 되면 `delayWhen` Observable은 주어졌던 error input의 경과시간을 알게 되고 2초라는 경과시간이 지나게 되면 error는 notification Observable ouput에 보여지게 된다. notification에 value가 emit 하게 되면, `retryWhen` operator는 재시도를 하게 된다.
 
 ## 출처
 
