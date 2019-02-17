@@ -292,7 +292,7 @@ http$
 그럼 여기서 어떻게 Notification Observable 을 만들 것인가.
 `retryWhen` operator 에 전달된 함수가 Notification Observable 을 만들고 이 함수는 Error Observable 을 인자로 받는다.
 
-에러가 발생 즉시 재시도를 하기 위해서 여기서 해야할 일은 Error Observable 을 변화시키지 않고 리턴하는 것이다. 그래야 이 Error Observable 을 구독함으로써 언제 정확히 에러가 발생하는지 알 수 있는 Notification Observable 을 만들어 낼 수 있다. 아래 코드에서는 tap operation을 사용했는데 이는 단지 로깅을 위한 목적으로 쓰이고 Error Observable은 변화시키지 않았다.
+에러가 발생 즉시 재시도를 하기 위해서 여기서 해야할 일은 Error Observable 을 변화시키지 않고 리턴하는 것이다. 그래야 이 Error Observable 을 구독함으로써 언제 정확히 에러가 발생하는지 알 수 있는 Notification Observable 을 만들어 낼 수 있다. 아래 코드에서는 tap operation 을 사용했는데 이는 단지 로깅을 위한 목적으로 쓰이고 Error Observable 은 변화시키지 않았다.
 
 여기서 기억해야하는것은 `retryWhen` 함수 호출에서 반환되는 Observable 은 Notification Observable 이라는 것이다. 이곳에서 어떤 값이 방출되는건 중요치 않다. 단지 재시도를 하기 위한 트리거이기 때문에 중요한건 언제 방출된 값을 받았는지가 중요하다.
 
@@ -353,16 +353,185 @@ http$.pipe(
     );
 ```
 
-Error Observable 에서 들어오는 각각의 error 값에 delay를 적용하기 위해서 `delayWhen` 에 전달된 함수(duration selector function 이라 부른다.)를 호출한다. 이 함수는 input value가 어느정도 경과했는지를 결정할 Observable을 방출한다.
+Error Observable 에서 들어오는 각각의 error 값에 delay 를 적용하기 위해서 `delayWhen` 에 전달된 함수(duration selector function 이라 부른다.)를 호출한다. 이 함수는 input value 가 어느정도 경과했는지를 결정할 Observable 을 방출한다.
 
-각각의 input value 에는 duration selector Observable을 가지고 있다. 이 Observable이 결국 값을 emit 하고 나면 input value가 delayWhen의 ouput으로 보여지게 된다.
+각각의 input value 에는 duration selector Observable 을 가지고 있다. 이 Observable 이 결국 값을 emit 하고 나면 input value 가 delayWhen 의 ouput 으로 보여지게 된다.
 
-에러가 발생할때마다 `delayWhen` operator는 timer 함수를 호출함으로써 duration selector Observable 를 생성하게 된다. 이 duration selector Observable는 0값이 2초후에 발생하게 되고 그 후엔 complete 된다. 그 일이 일어나게 되면 `delayWhen` Observable은 주어졌던 error input의 경과시간을 알게 되고 2초라는 경과시간이 지나게 되면 error는 notification Observable ouput에 보여지게 된다. notification에 value가 emit 하게 되면, `retryWhen` operator는 재시도를 하게 된다.
+에러가 발생할때마다 `delayWhen` operator 는 timer 함수를 호출함으로써 duration selector Observable 를 생성하게 된다. 이 duration selector Observable 는 0 값이 2 초후에 발생하게 되고 그 후엔 complete 된다. 그 일이 일어나게 되면 `delayWhen` Observable 은 주어졌던 error input 의 경과시간을 알게 되고 2 초라는 경과시간이 지나게 되면 error 는 notification Observable ouput 에 보여지게 된다. notification 에 value 가 emit 하게 되면, `retryWhen` operator 는 재시도를 하게 된다.
+
+## Higher-Order RxJs Mapping Operator (switchMap, mergeMap, concatMap, exhaustMap)
+
+제일먼저 mapping operation 을 이해하기 전에 기본 로직인 concat, merge, switch and exhaust 전략부터 살펴볼것이다.
+
+끝으로는 어떻게 mapping operation 이 동작하고 언제 사용하고 왜 사용하는 이유까지 알게 될것이다.
+
+### RxJs Map Operator
+
+map operator 라는건 input observable 의 값을 모두 mapping 해주는 것이다.
+
+### What is Higher-Order Observable Mappping?
+
+higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 것이 아닌 값을 Observable 로 map 하는 것이다. 즉, 결과는 higher-order Observable 인것이다. 다른 Observable 과 같은 것이지만 그 값 자체가 Observable 인 셈이다. 그래서 우리는 따로따로 subscribe 할 수있다.
+
+### why Higher-Order Observables?
+
+만약 폼 데이터를 중간에 조금씩 저장해서 만일에 잘못된 새로고침에 전체 양식의 손실을 방지하기 위한 작업이 필요하다고 생각해보자.
+폼의 value 들이 변화가 생기고 일정시간 가장 마지막 변화를 감지하면 그 값들을 가지고 백엔드에다가 저장시킨다고 해보자.
+
+그렇다고 하면 아래와 같은 그림이 될 것이다.
+
+```javascript
+this.form.valueChanges
+    .subscribe(
+       formValue => {
+
+           const httpPost$ =
+                 this.http.put(`/api/course/${courseId}`, formValue);
+
+           httpPost$.subscribe(
+               res => ... handle successful save ...
+               err => ... handle save error ...
+           );
+
+       }
+    );
+```
+
+하지만 위 그럼인 중첩된 subscribe 인 안티패턴에 속하게 된다.
+
+### Avoiding nested subscriptions
+
+만약 위 상황에서 여러 폼 값을 빠르게 연속적으로 내보내고 저장 작업을 완료하는데 시간이 걸리는 경우 어떻게 되는지 생각해보자.
+
+* 우리는 다른 save request 하기 전에 하나의 save request 가 완료되기를 기다리고 싶나?
+* 우리는 병렬로 save 들을 하고 싶나?
+* 우리는 새로운 save request 가 나타나면 진행했던것을 취소하고 싶나?
+* 우리는 이미 진행중인 save request 동안 새로운 save request 에 대해서 무시하고 싶나?
+
+위 처럼 중첩된 상황이라면 우리는 실제로 병렬로 save operation 을 발생시킵니다. 이것은 사실 우리가 원하는 방식은 아니다. 왜냐하면 백엔드에서 순차적으로 저장한다는 보장이 없기 때문이고, 마지막 유효한 값이 실제로 백엔드에 저장되었다고 볼수 없기 때문이다.
+
+### Understanding Observable Concatenation
+
+위 예제에서 순차적으로 저장을 하기 위해선 우린 새로운 Observable concatenation 개념을 소개한다.
+
+```javascript
+const series1$ = of('a', 'b')
+
+const series2$ = of('x', 'y')
+
+const result$ = concat(series1$, series2$)
+
+result$.subscribe(console.log)
+
+// 결과
+// a
+// b
+// x
+// y
+```
+
+여기서 `of()` 함수는 `of()`로 전달된 값을 방출하고 그 이후에 값을 모두 방출하면 complete 되는 Observable 을 생성한다.
+
+`concat()` 은 처음인자로 들어온 `series1$` 을 처음으로 구독하고 두번째 인자인 `series2$`는 구독하지 않는다. ( 이것이 중요한 이해이다. )
+`series1$`이 값을 방출하면 바로 `result$` Observable output 에 반영된다고 이때 `series2$`는 값을 방출하지 않는다. 왜냐하면 아직 구독하지 않기 때문이다. 이후에 `series1$` 이 complete 가 되면 `series2$`를 구독하기 시작한다. 그럼 `series2$` 값이 output 으로 반영되고 `series2$`가 complete 되면 `result$` Observable 도 끝나게 된다.
+
+여기서 중요한것은 첫번째 Observable 이 끝나야 다음 Observable 을 구독해서 실행한다는 것이다. 이 작업은 모든 Observable 이 끝날때 까지 실행된다.
+
+### Using Observable Concatenation to implement sequential saves
+
+위 폼 예제에서 값을 순차적으로 받아서 저장하기 위해서는 각각의 폼 값들을 받아서 그 값들을 `httpPost$` Observable 에 mapping 할 필요가 있다.
+그래서 우리는 여러 `httpPost$` Observable 들을 함께 concatenate 를 할 필요가 있다.
+
+우리가 필요한 것은 아래 두가지 이다.
+
+* a higher-order mapping operation( 폼 값을 받고 그 값을 `httpPost$` Observable 로 변환하기 위해서 )
+* `concat()` operation 은 여럿 `httpPost$` Observable 을 이전 save complete 가 되기 전에 HTTP save 가 만들어지지 않는 것을 보장하기 위해 concatenating 을 한다.
+
+이 두가지를 믹스 시킨것을 RxJs concatMap Operator 라고 이름을 붙일것이다.
+
+### The RxJs concatMap Operator
+
+위에서 말했던 concatMap 을 사용하면 아래 코드와 같을 것이다.
+
+```javascript
+this.form.valueChanges
+    .pipe(
+        concatMap(formValue => this.http.put(`/api/course/${courseId}`,
+                                             formValue))
+    )
+    .subscribe(
+       saveResult =>  ... handle successful save ...,
+        err => ... handle save error ...
+    );
+```
+
+이 concatMap 같은 higher-order mapping operator 를 사용하면 더이상 subscribe 를 중첩시키지 않아도 된다. 또한 모든 폼 값들이 backend 에 순차적으로 전달될것이며 이는 크롬 DevTools 의 네트워크 탭에서 확인할 수 있다.
+
+`concatMap` 은 각 폼 값을 save HTTP Observable 을로 변환을 시킨다. 이를 우리는 inner Observable 이라 부를 것이다. 그 후에 inner Observable 을 구독하고 그 결과를 output 시킨다.
+두번째 폼 값이 이전 값 저장하는 것보다 더 빠르게 방출될것이다. 만약 이런일이 발생한다면 새로운 폼 값은 그 즉시 HTTP request 로 mapping 되지 않는다. 대신에 `concatMap`은 이전 HTTP Observable 이 complete 될때 까지 기다린다.
+
+### Observable Merging
+
+만약 다른 상황을 우리가 원한다면, 이전 Observable 이 끝나기를 기다리지 않고 병렬로 처리를 원한다면 이때 우리는 Merge 전략을 사용할수 있다. Merge 는 Concat 과 다르게 Observable 이 끝나기를 기다려주지 않는다.
+
+대신에 merge 구독은 매 Observable 과 같은 타임에 merged 된다. 그 후에 각 source Observable 의 값들이 시간이 자나서 혼합되어서 여러 값으로 result Observable 에 나타나게 된다.
+
+```javascript
+const series1$ = interval(1000).pipe(map(val => val * 10))
+
+const series2$ = interval(1000).pipe(map(val => val * 100))
+
+const result$ = merge(series1$, series2$)
+
+result$.subscribe(console.log)
+
+// 결과
+// 0
+// 0
+// 10
+// 100
+// 20
+// 200
+// 30
+// 300
+```
+
+여기서 보면 혼합된 source Observable 의 값이 result Observable 에 즉시 나타난것을 볼수 있다. 만약 머지당한 source Observable 중 하나가 complete 된다면, merge operator 는 계속 다른 Observable 의 값을 방출할 것이다.
+
+### The RxJs mergeMap Operator
+
+만약 우리가 merge 전략과 higher-order Observable mapping 을 혼합한다면 우린 RxJs mergeMap Operation 을 얻을 수 있다.
+
+mergeMap operator 작동방법은 다음과 같다.
+
+각 source Observable 의 값은 concatMap 과 같이 inner Observable 로 mapping 된다. 이 inner Observable 은 mergeMap 에 의해서 구독된다.
+inner Observable 이 새로운 값을 방출할때, 그것들은 즉시 output Observable 에 반영된다.
+다만 concatMap 과 다르게 mergeMap 의 경우에는 다음 inner Observable 이 일으키기(triggering) 전에 이전 inner Observable 이 complete 되는것을 기다려주지 않는다. 이 의미는 mergeMap 은 여러개의 inner Observable 이 시간이 지나서 겹칠수도 있다는것을 뜻한다. result Observable 에 반영되는 값들이 서로 겹쳐서 진행될 수 있다는 것이다.
+
+위 예제의 경우 우린 concatMap 이 더 깔끔하다. 우린 병렬로 저장되길 원하지 않기 때문에 mergeMap 은 적합지 않다.
+
+```javascript
+this.form.valueChanges
+    .pipe(
+        mergeMap(formValue =>
+                 this.http.put(`/api/course/${courseId}`,
+                               formValue))
+    )
+    .subscribe(
+       saveResult =>  ... handle successful save ...,
+        err => ... handle save error ...
+    );
+```
+
+위와 같이 mergeMap 을 사용했을 경우 우린 여러번 save request 가 병렬로 동작하는 모습을 크롬의 네트워크 탭에서 볼 수 있다. 그래서 이 경우는 error 다. 이런 로드가 많은 경우 이러한 요청이 순서없이 처리 될 수 있기 때문이다.
+
+### Observable Switching
 
 ## 출처
 
-[https://www.youtube.com/watch?v=PhggNGsSQyg](https://www.youtube.com/watch?v=PhggNGsSQyg)
-[https://www.youtube.com/watch?v=2f09-veX4HA&t=1714s](https://www.youtube.com/watch?v=2f09-veX4HA&t=1714s)
-[https://oaksong.github.io/2017/12/23/concurrency-and-parallelism/](https://oaksong.github.io/2017/12/23/concurrency-and-parallelism/)
-[https://netbasal.com/understanding-subjects-in-rxjs-55102a190f3](https://netbasal.com/understanding-subjects-in-rxjs-55102a190f3)
-[https://blog.angular-university.io/rxjs-error-handling/](https://blog.angular-university.io/rxjs-error-handling/)
+* [https://www.youtube.com/watch?v=PhggNGsSQyg](https://www.youtube.com/watch?v=PhggNGsSQyg)
+* [https://www.youtube.com/watch?v=2f09-veX4HA&t=1714s](https://www.youtube.com/watch?v=2f09-veX4HA&t=1714s)
+* [https://oaksong.github.io/2017/12/23/concurrency-and-parallelism/](https://oaksong.github.io/2017/12/23/concurrency-and-parallelism/)
+* [https://netbasal.com/understanding-subjects-in-rxjs-55102a190f3](https://netbasal.com/understanding-subjects-in-rxjs-55102a190f3)
+* [https://blog.angular-university.io/rxjs-error-handling/](https://blog.angular-university.io/rxjs-error-handling/)
+* [https://blog.angular-university.io/rxjs-higher-order-mapping/](https://blog.angular-university.io/rxjs-higher-order-mapping/)
