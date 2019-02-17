@@ -367,18 +367,42 @@ Error Observable 에서 들어오는 각각의 error 값에 delay 를 적용하�
 
 ### RxJs Map Operator
 
-map operator 라는건 input observable 의 값을 모두 mapping 해주는 것이다.
+이름에서 알수 있듯이 그것은 무엇인가를 mapping 하고 있는 것이다. 하지만 정확히 무엇을 mapping 하고 있는 것인까?
+map 연산자를 사용하면 input stream 의 값들을 가져올 수 있으며 그 값에 파생하는 output stream 을 만들 수 있습니다.
+
+그래서 map operator 는 input observable 의 값들을 매핑해주는 것이다.
+
+```javascript
+const http$: Observable<Course[]> = this.http.get('/api/courses')
+
+http$
+  .pipe(
+    tap(() => console.log('HTTP request executed')),
+    map(res => Object.values(res['payload']))
+  )
+  .subscribe(courses => console.log('courses', courses))
+```
+
+위 예제를 보자. 우리는 하나의 HTTP observable 을 만들었다. 이것은 backend 에 요청을 보내고 그 답을 구독하게 된다. 이 observable 은 backend 의 응답이 오면 값을 방출하게 된다.
+
+이 경우, 응답은 data 의 payload 프로퍼티에 감싸여져서 내려온다. 이 값을 얻기 위해서 우린 RxJs map operator 를 사용한다. mapping function 은 JSON response payload 에 매핑하고 그 값을 추출한다.
 
 ### What is Higher-Order Observable Mappping?
 
-higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 것이 아닌 값을 Observable 로 map 하는 것이다. 즉, 결과는 higher-order Observable 인것이다. 다른 Observable 과 같은 것이지만 그 값 자체가 Observable 인 셈이다. 그래서 우리는 따로따로 subscribe 할 수있다.
+higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 것이 아닌 값을 Observable 로 map 해야 한다. 답은 higher-order Observable 이다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것의 값들은 우리가 별도로 구독할 수 있는 Observable 들이다.
+
+따라서 일반 우리가 아는 map 함수처럼 plain 값 1 을 단순히 10 으로 바꿔주는 것이 아니라 RxJs map 함수는 higher-order Observable mapping 함수이다. input Observable 을 받아서 새로운 Observable 을 낳는 함수.
+
+map(value => value\*10) : 여기서 map 함수가 higher-order Observable 이고 이 Observable 은 emit 하는 값으로 mapping function 의 리턴값(value\*10)을 지닌 또 다른 Observable 이 방출된다. 따라서 방출된 Observable 을 우리가 구독할 수 있다.
 
 ### why Higher-Order Observables?
 
 만약 폼 데이터를 중간에 조금씩 저장해서 만일에 잘못된 새로고침에 전체 양식의 손실을 방지하기 위한 작업이 필요하다고 생각해보자.
 폼의 value 들이 변화가 생기고 일정시간 가장 마지막 변화를 감지하면 그 값들을 가지고 백엔드에다가 저장시킨다고 해보자.
 
-그렇다고 하면 아래와 같은 그림이 될 것이다.
+폼 값들을 저장하는 수행을 함수형으로 짜기 위해선 값을 받고 그 이후에 HTTP observable 을 생성해야한다. 그리고 그 결과 값을 구독해야한다.
+
+이 수행을 매뉴얼하게 짠다고 하면 아래와 같은 그림이 될 것이다.
 
 ```javascript
 this.form.valueChanges
