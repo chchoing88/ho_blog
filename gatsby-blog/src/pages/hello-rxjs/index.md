@@ -389,11 +389,53 @@ http$
 
 ### What is Higher-Order Observable Mappping?
 
-higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 것이 아닌 값을 Observable 로 map 해야 한다. 답은 higher-order Observable 이다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것의 값들은 우리가 별도로 구독할 수 있는 Observable 들이다.
+higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 대신에 값을 Observable 로 map 해야 한다. 그 결과는 higher-order Observable 이다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것이 방출하는 값들은 일반 plain 값이 아닌 우리가 별도로 구독할 수 있는 Observable 들이라는 점이다.
 
-따라서 일반 우리가 아는 map 함수처럼 plain 값 1 을 단순히 10 으로 바꿔주는 것이 아니라 RxJs map 함수는 higher-order Observable mapping 함수이다. input Observable 을 받아서 새로운 Observable 을 낳는 함수.
+쉽게 말해 아래와 같은 코드가 있다.
 
-map(value => value\*10) : 여기서 map 함수가 higher-order Observable 이고 이 Observable 은 emit 하는 값으로 mapping function 의 리턴값(value\*10)을 지닌 또 다른 Observable 이 방출된다. 따라서 방출된 Observable 을 우리가 구독할 수 있다.
+```javascript
+const click$ = Observable.fromEvent(button, 'click')
+const interval$ = Observable.interval(1000)
+
+const clicksToInterval$ = click$.map(event => {
+  return interval$ // observable을 mapping
+})
+
+clicksToInterval$.subscribe(intervalObservable =>
+  console.log(intervalObservable)
+)
+```
+
+여기서 `clicksToInterval$`은 higher-order Observable 이다. 우리가 이 Observable 을 구독하는 순간 `click$` Observable 은 interval observable 과 함께 next()를 호출 할것이다. 그렇게 되면 클릭시 일반적인 map 에서 보였던 plain 한 값이 보이지 않고 실행되지 않은 interval observable 객체가 보일것이다.
+
+그것은 `interval$` observable 을 구독하지 않았기 때문이다. observable 들은 lazy 이다. 만약 observable 이 지닌 값들을 가져오고 싶다면 반듯이 `subscribe()` 해야한다.
+
+```javascript
+clicksToInterval$.subscribe(intervalObservable$ => {
+  intervalObservable$.subscribe(num => {
+    console.log(num)
+  })
+})
+```
+
+위 처럼 하면 다시 값이 보일것이다. 이게 가장 자연스럽게 이해할수있는 higer order observable 이다.
+
+특히 `mergeAll()` 메서드는 higher order observable 의 이해를 돕기 위한 좋은 예제이다.
+
+```javascript
+const click$ = Observable.fromEvent(button, ‘click’);
+const interval$ = Observable.interval(1000);
+
+const observable$ = click$.map(event => {
+   return interval$;
+});
+
+observable$.mergeAll().subscribe(num => console.log(num));
+```
+
+`mergeAll()`의 경우에는 inner observable(interval$)을 받아다가 그것을 구독하고 해당 값을 observer 에게 전달시켜 준다. 즉, inner observable 이 emits 될때 mergeAll()에게 outer observable(click$) 값들을 머지해서 알려달라는 뜻이다.
+
+그래서 mergeMap()은 단지 map() + mergeAll() 이다.
 
 ### why Higher-Order Observables?
 
@@ -422,6 +464,8 @@ this.form.valueChanges
 ```
 
 하지만 위 그럼인 중첩된 subscribe 인 안티패턴에 속하게 된다.
+
+단점으로는 첫번째로는 callback hell 에 빠질수 있고, 두번째로는 각각의 observable 의 subsciption 처리를 스스로가 해야한다는 점이 있다.
 
 ### Avoiding nested subscriptions
 
@@ -549,7 +593,65 @@ this.form.valueChanges
 
 위와 같이 mergeMap 을 사용했을 경우 우린 여러번 save request 가 병렬로 동작하는 모습을 크롬의 네트워크 탭에서 볼 수 있다. 그래서 이 경우는 error 다. 이런 로드가 많은 경우 이러한 요청이 순서없이 처리 될 수 있기 때문이다.
 
+아래는 가장 기본적인 mergeMap()의 실행문이다.
+
+```javascript
+function myMergeMap(innerObservable) {
+  /** the click observable, in our case */
+  const source = this
+
+  return new Observable(observer => {
+    source.subscribe(outerValue => {
+      /** innerObservable — the interval observable, in our case */
+      innerObservable(outerValue).subscribe(innerValue => {
+        observer.next(innerValue)
+      })
+    })
+  })
+}
+
+Observable.prototype.myMergeMap = myMergeMap
+```
+
 ### Observable Switching
+
+switching 은 merging 과 비슷하다. 그말인 즉슨, 어떤 Observable 이라도 끝날때 까지 기다려 주지 않는다는 말이다.
+
+하지만 merging 과 다르게 만약 새로운 Observable 의 값이 방출이 된다면 이전 Observable 의 구독을 취소해 버린다.
+
+Observable switching 은 사용하지않는 Observable 의 구독취소 트리거를 발생시켜서 자원을 released 한다.
+
+switching Marble Diagram 을 보면 맨 위의 higher-order Observable 에서 대각선으로 forks 되는 순간이 value Observable 이 방출되고 switch 에 구독되는 순간이다.
+
+여기서 중요한건 이런 그림들이 higher-order Observable 로 부터 fork 된 diagonal lint 의 그 시점 일때 각 inner Observable 이 구독이 되던지 또는 구독이 취소되던지 하는 그림이 필요하기 때문에 갈라지는 선을 표현하게 된다.
+
+### The RxJs switchMap Operator
+
+이제 switch 전략과 그것을 higer order mapping 을 적용시켜보자. 여기서 input stream 이 1,3 그리고 5 를 방출할 계획을 가지고 있다고 해보자.
+
+우리는 각 값을 Observable 로 mapping 한다. 다른 concatMap 그리고 mergeMap 케이스들과 같이 higer-order Observable 을 얻는다.
+만약 방출된 inner Observable 사이에서 switch 가 일어났다고 했을때, 그것들을 concatenating 또는 mergeing 하는 대신에 switchMap Operator 로 종료시킨다.
+
+```javascript
+function mySwitchMap(innerObservable) {
+  /** the click observable, in our case */
+  const source = this
+  let innerSubscription
+
+  return new Observable(observer => {
+    source.subscribe(outerValue => {
+      innerSubscription && innerSubscription.unsubscribe()
+
+      /** innerObservable — the interval observable, in our case */
+      innerSubscription = innerObservable(outerValue).subscribe(innerValue => {
+        observer.next(innerValue)
+      })
+    })
+  })
+}
+
+Observable.prototype.mySwitchMap = mySwitchMap
+```
 
 ## 출처
 
