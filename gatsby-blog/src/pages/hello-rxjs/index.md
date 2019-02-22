@@ -389,7 +389,7 @@ http$
 
 ### What is Higher-Order Observable Mappping?
 
-higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 대신에 값을 Observable 로 map 해야 한다. 그 결과는 higher-order Observable 이다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것이 방출하는 값들은 일반 plain 값이 아닌 우리가 별도로 구독할 수 있는 Observable 들이라는 점이다.
+higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 대신에 값을 Observable 로 mapping 한다. 그 observable 을 higher-order Observable 이라고 한다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것이 방출하는 값들은 일반 plain 값이 아닌 우리가 별도로 구독할 수 있는 Observable 들이라는 점이다.
 
 쉽게 말해 아래와 같은 코드가 있다.
 
@@ -406,7 +406,7 @@ clicksToInterval$.subscribe(intervalObservable =>
 )
 ```
 
-여기서 `clicksToInterval$`은 higher-order Observable 이다. 우리가 이 Observable 을 구독하는 순간 `click$` Observable 은 interval observable 과 함께 next()를 호출 할것이다. 그렇게 되면 클릭시 일반적인 map 에서 보였던 plain 한 값이 보이지 않고 실행되지 않은 interval observable 객체가 보일것이다.
+여기서 `clicksToInterval$`은 higher-order Observable 이다. 우리가 이 Observable 을 구독하는 순간 `click$` Observable 은 `interval$` observable 과 함께 next()를 호출 할것이다. 그렇게 되면 클릭시 일반적인 map 에서 보였던 plain 한 값이 보이지 않고 실행되지 않은 interval observable 객체가 보일것이다.
 
 그것은 `interval$` observable 을 구독하지 않았기 때문이다. observable 들은 lazy 이다. 만약 observable 이 지닌 값들을 가져오고 싶다면 반듯이 `subscribe()` 해야한다.
 
@@ -433,8 +433,9 @@ const observable$ = click$.map(event => {
 observable$.mergeAll().subscribe(num => console.log(num));
 ```
 
-`mergeAll()`의 경우에는 inner observable(interval$)을 받아다가 그것을 구독하고 해당 값을 observer 에게 전달시켜 준다. 즉, inner observable 이 emits 될때 mergeAll()에게 outer observable(click$) 값들을 머지해서 알려달라는 뜻이다.
+`mergeAll()`의 경우에는 inner observable(interval$)을 받아다가 그것을 구독하고 해당 값을 observer 에게 전달시켜 준다. 즉, inner observable 이 emits 될때 그 값들을 merging 해서 outer observable 에게 알려달라는 뜻이다.
 
+위의 경우에서는 source observable 은 `click$` observable 이고 inner observable 은 `interval$` 이다.
 그래서 mergeMap()은 단지 map() + mergeAll() 이다.
 
 ### why Higher-Order Observables?
@@ -476,7 +477,7 @@ this.form.valueChanges
 * 우리는 새로운 save request 가 나타나면 진행했던것을 취소하고 싶나?
 * 우리는 이미 진행중인 save request 동안 새로운 save request 에 대해서 무시하고 싶나?
 
-위 처럼 중첩된 상황이라면 우리는 실제로 병렬로 save operation 을 발생시킵니다. 이것은 사실 우리가 원하는 방식은 아니다. 왜냐하면 백엔드에서 순차적으로 저장한다는 보장이 없기 때문이고, 마지막 유효한 값이 실제로 백엔드에 저장되었다고 볼수 없기 때문이다.
+위 처럼 중첩된 상황이라면 우리는 실제로 병렬로 save operation 을 발생시킨다. 이것은 사실 우리가 원하는 방식은 아니다. 왜냐하면 백엔드에서 순차적으로 저장한다는 보장이 없기 때문이고, 마지막 유효한 값이 실제로 백엔드에 저장되었다고 볼수 없기 때문이다. 이 방법을 higher-order observable 로 피해보자.
 
 ### Understanding Observable Concatenation
 
@@ -652,6 +653,30 @@ function mySwitchMap(innerObservable) {
 
 Observable.prototype.mySwitchMap = mySwitchMap
 ```
+
+### The Exhaust Strategy
+
+만약 source observable 에서 나오는 새로운 값을 이전 값 처리가 완료 될때까지 무시하고 싶다면 어떻게 해야할까?? 예를들어, save 버튼을 눌러 backend 에 save request 요청을 보낸다고 해보자. 우리는 concatMap operator 를 사용해서 실행할것이다. 왜냐하면 save operation 이 순차적으로 저장되길 원하기 때문이다.
+
+```javascript
+fromEvent(this.saveButton.nativeElement, 'click')
+  .pipe(concatMap(() => this.saveCourse(this.form.value)))
+  .subscribe()
+```
+
+하지만 만약 사용자가 버튼을 여러번 눌렀다고 했을땐 어떤일이 일어날까? 20 번을 눌렀다고 한다면 20 번이 저장이 될것이다.
+우리는 이미 save 가 진행중인게 있다면 나머지 클릭들이 무시되길 원한다. 이때 exhaust Observable 전략을 사용할 수있다.
+
+다른것과 마찬가지로 marble diagram 에 가장 상위 라인이 higher-order Observable 을 가지고 있다.
+exhaust 는 첫번째로 나오는 inner Observable 을 구독한다.
+이때 처음 나오는 inner Observable 은 (a-b-c) 값을 방출하고 그건 그 즉시 output 에 반영된다.
+두번째 inner Observable 이 방출될때 (d-e-f) 아직 처음 Observable 이 진행되고 있다. (a-b-c)
+
+이떄 두번째 inner Observable 은 exhaust 전략에 따라 버려짐을 당한다. 그리고 그 두번째 Observable 은 구독하지 않는다.
+
+오직 첫번째 Observable 이 끝났을때, 새로운 Observable 이 구독된다.
+세번째 Observable(g-h-i)이 방출됬을때 첫번째는 이미 끝난 상태라 세번째는 버려지지 않고 구독을 시작하게 된다.
+여기서 (d-e-f)가 방출되지 않는 두번째와는 다르게 세번째 (g-h-i)는 result Observalbe 의 output 에 보여지게 된다.
 
 ## 출처
 
