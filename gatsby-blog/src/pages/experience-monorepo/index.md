@@ -57,7 +57,24 @@ $ lerna init -i
 
 ```sh
 $ lerna bootstrap
+# 1. 각 패키지의 모든 외부 dependecies를 npm install 해준다.
+# 2. 서로의 dependencies들을 가지고 있는 package들을 Symlink 해준다.
+# 3. 모든 bootstrap 당한 packaged들을 npm run prepublish를 실행한다. ( --ignore-prepublish가 없을경우)
+# 4. 모든 bootstrap 당한 packaged들을 npm run prepare를 실행한다.
+
+$ lerna bootstrap --hoist [glob]
+# glob에 매칭된 모든 외부 dependencies들을 repo의 root에 설치해준다. 
+# 이 dependencies들은 node_moules/.bin/ 디렉토리에 연결되고 npm script가 가능하게 해준다. 
 ```
+
+여기서 hoist를 사용하게 되면 다음과 같은 수행을 하게 됩니다.
+  - 공통된 dependencies들을 오직 top-level의 node_modules에 설치하고 각각의 package에의 node_modules에서 생략됩니다.
+  - 서로 다른 버젼을 가진 package들은 각 로컬에 정상적으로 설치하게 됩니다.
+  - 공통 패키지들의 바이너리 파일들은 개별 패키지의 node_modules/.bin/ 디렉토리와 심볼릭 링크되어 있으므로 package.json 스크립트를 수정없이 사용할수 있다.
+
+Node module resolution algorithm에 따르면 패키지 A를 찾으려고 할때 가장먼저 node_modules/A 를 찾고 그 후엔 ../node_modules/A, ../../node_modules/A, ../../../node_modules/A 이런식으로 상위 폴더의 node_modules를 찾곤한다. 
+
+하지만 특히 dependencies들이 local에 있다고 구체적으로 가정하거나 요구하는 경우에는 위 룰을 따르지 않는다. 그래서 이 문제를 해결하기 위해선 top-level에 있는 패키지를 각 패키지 node_module 디렉토리에 symlink 하는 방법이 있다. 하지만 lerna에선 지원하지 않는다.
 
 * 각 패키지들이 마지막 릴리즈 이후에 변화가 있었는지 체크
 
@@ -69,7 +86,10 @@ $ lerna updated
 
 ```sh
 $ lerna run [script]
+
+$ lerna run --scope my-component test
 ```
+
 * 각 패키지 안에서 쉘 스크립트를 실행할수 있다.
 
 ```sh
@@ -114,11 +134,12 @@ $ lerna version       # select from prompt(s)
 * 배포 ( git 및 npm )
 
 ```sh
-## git 뿐만 아니라 npmjs 에도 배포 ( npm publish )
-$ lerna publish
 
-## npm 생략 ( 대신 git 에도 올라가지 않음 )
+$ lerna publish
+## git 뿐만 아니라 npmjs 에도 배포 ( npm publish )
+
 $ lerna publish --skip-npm ## Deprecated
+## npm 생략 ( 대신 git 에도 올라가지 않음 )
 ## 이렇게 publish 하면 package.json 의 버전이 업데이트가 되고
 ## 그에 관련된 의존성있던 모듈들의 package.json의 devDependency 나 dependency의 해당 모듈의 버젼도 업데이트 시켜준다.
 
@@ -155,6 +176,8 @@ $ lerna create test1
 * command.publish.ignoreChanges: `lerna changed/puslish` 할때 포함시키지 않을 파일
 * command.bootstrap.ignore: `lerna bootstrap` 명령어 사용할시 bootstrap 안할 리스트 , 배열과 glob 사용
 * command.bootstrap.scope: `lerna bootstrap` 명령어 사용할시 packages 들의 영역을 지정한다. 배열과 glob 사용.
+* command.bootstrap.npmClientArgs: `lerna bootstrap` 명령 사용할시 `npm install`에 직접 넘겨야할 인자들을 배열로 받는다.
+
 
 ### lerna 장점
 
@@ -234,6 +257,42 @@ lerna 가 제공하는 high-level 의 특징들을 제공하진 않지만, 코�
 | ------------ package.json
 ```
 
+마지막으로 `yarn install`을 진행하면 아래와 같은 계층을 얻을수 있다.
+
+`yarn install`시 패키지들의 있는 모듈들을 root 디렉토리쪽으로 hoisted 시켜준다.
+대신 버젼이 다른 dependency 에 한해서는 hoisted 시켜주지 않는다.
+
+이것은 lerna 의 bootstrapping 의 `--hoint` flag 효과와 같다.
+
+```
+| jest/
+| ---- node_modules/
+| -------- chalk/
+| -------- diff/
+| -------- pretty-format/
+| -------- jest-matcher-utils/  (symlink) -> ../packages/jest-matcher-utils
+| ---- package.json
+| ---- packages/
+| -------- jest-matcher-utils/
+| ------------ node_modules/
+| ---------------- chalk/
+| ------------ package.json
+| -------- jest-diff/
+| ------------ node_modules/
+| ---------------- chalk/
+| ------------ package.json
+```
+
+패키지 `diff`, `pretty-format` 그리고 symlink인 `jest-matcher-utils` 들은 root의 node_moules 디렉토리로 hoist 된다.
+그러나 `chalk`의 경우네는 root에 이미 다른 버젼이 설치되어있기 때문에 root로 hoist 되지 않는다. 
+
+위와 같은 구조에서 jest-diff 워크스페이스 안이라면, 코드 안에서 다음과 같이 resolve 될것이다.
+
+- require(‘chalk’) resolves to ./node_modules/chalk
+- require(‘diff’) resolves to ../../node_modules/diff
+- require(‘pretty-format’) resolves to ../../node_modules/pretty-format
+- require(‘jest-matcher-utils’) resolves to ../../node_modules/jest-matcher-utils that is a - symlink to ../packages/jest-matcher-utils
+
 ### yarn Workspaces setting
 
 * root 에 있는 package.json 에 아래와 같이 셋팅한다.
@@ -277,38 +336,7 @@ Workspaces 를 활성화 시키면 yarn 은 dependency 구조를 좀더 최적�
 }
 ```
 
-* 마지막으로 `yarn install`을 진행하면 아래와 같은 계층을 얻을수 있다.
 
-`yarn install`시 패키지들의 있는 모듈들을 root 디렉토리쪽으로 hoisted 시켜준다.
-대신 버젼이 다른 dependency 에 한해서는 hoisted 시켜주지 않는다.
-
-이것은 lerna 의 bootstrapping 의 `--hoint` flag 효과와 같다.
-
-```
-| jest/
-| ---- node_modules/
-| -------- chalk/
-| -------- diff/
-| -------- pretty-format/
-| -------- jest-matcher-utils/  (symlink) -> ../packages/jest-matcher-utils
-| ---- package.json
-| ---- packages/
-| -------- jest-matcher-utils/
-| ------------ node_modules/
-| ---------------- chalk/
-| ------------ package.json
-| -------- jest-diff/
-| ------------ node_modules/
-| ---------------- chalk/
-| ------------ package.json
-```
-
-위와 같은 구조에서 jest-diff 워크스페이스 안이라면, 코드 안에서 다음과 같이 resolve 될것이다.
-
-- require(‘chalk’) resolves to ./node_modules/chalk
-- require(‘diff’) resolves to ../../node_modules/diff
-- require(‘pretty-format’) resolves to ../../node_modules/pretty-format
-- require(‘jest-matcher-utils’) resolves to ../../node_modules/jest-matcher-utils that is a - symlink to ../packages/jest-matcher-utils
 
 ```sh
 /package.json
