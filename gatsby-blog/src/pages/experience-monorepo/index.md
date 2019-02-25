@@ -120,10 +120,10 @@ $ lerna version       # select from prompt(s)
 ```
 해당 버젼을 수행하면 다음과 같은 일이 일어난다.
 
-1. 이전 태그 릴리즈 이전으로 변경사항을 확인한다.
+1. 이전 태그 릴리즈 이전부터의 지금까지의 변경사항을 확인한다.
 2. 새로운 버젼에 대한 프롬프트 안내를 한다.
 3. 새로운 릴리즈 정보를 반영한 패키지를 수정한다.
-4. 커밋과 태그를 커밋한다. 
+4. 변경사항을 커밋하고 그 커밋에 태그를 단다.
 5. git remote에 push한다.
 
 `주의` : version 명령시에 git push를 할 수 있는 상태가 되어야 한다. 이미 push를 다 해버린 상태라면 push를 할 수가 없다고 에러가 뜬다.
@@ -149,6 +149,11 @@ $ lerna publish from-git
 ## 주의할 점은 현재 커밋의 tagged를 배포한다는 것이다. 커밋만 있고 Annotated tag가 없다면 
 ## No tagged release found 라는 메세지가 뜨면서 배포가 되질 않는다.
 ## 그냥 커밋만 했을시엔 lerna publish 를 실행시켜서 다시 version 을 수정해주어야 한다.
+
+$ lerna publish from-package
+# explicitly publish packages where the latest version is not present in the registry
+# 각 package.json을 확인해서 version이 registry에 있지 않은 가장 마지막 커밋을 배포한다. 
+# 이는 이전 lerna publish가 모든 패키지 등록을 실패했을때 유용하게 사용할 수 있다.
 ```
 
 * 패키지 모듈 생성 
