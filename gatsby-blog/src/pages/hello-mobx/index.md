@@ -432,7 +432,7 @@ class MyComponent extends React.component {
 }
 ```
 
-* 아래와 같은 상황에서 `<Author author={ message.author.name} />` 와 같이 넘기고 message.author.name 이 변화가 생기면 Message 는 rerender 를 할것이다. 그럼에도 불구하고 Author 는 새로운 값을 받았기에 rerender 를 진행할것이다. 이러면 퍼포먼스 저하가 나온다. 따라서 가능한한 늦게 역참조를 진행하는 것이 옳다.
+* 아래와 같은 상황에서 `<Author author={ message.author.name} />` 와 같이 넘기고 message.author.name 이 변화가 생기면 Message 는 re-render 를 할것이다. 그럼에도 불구하고 Author 는 새로운 값을 받았기에 re-render 를 진행할것이다. 이러면 퍼포먼스 저하가 나온다. 따라서 가능한한 늦게 역참조를 진행하는 것이 옳다.
 
 * If likes were objects instead of strings, and if they were rendered by their own Like component, the Likes component would not rerender for changes happening inside a specific like.
 
@@ -451,6 +451,13 @@ const Likes = observer(({ likes }) => (
   <ul>{likes.map(like => <li>{like}</li>)}</ul>
 ))
 ```
+
+| 변화                               | re-rendering component                                          |
+|-----------------------------------|-----------------------------------------------------------------|
+| message.title = "Bar"             | Message                                                         |
+| message.author.name = "Susan"     | Author (.author is dereferenced in Message, but didn't change)* |
+| message.author = { name: "Susan"} | Message, Author                                                 |
+| message.likes[0] = "Michel"       | Likes                                                           |
 
 ## 관측값 변경하기
 
