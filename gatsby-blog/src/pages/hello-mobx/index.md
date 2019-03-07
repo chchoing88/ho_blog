@@ -432,9 +432,9 @@ class MyComponent extends React.component {
 }
 ```
 
-* 아래와 같은 상황에서 `<Author author={ message.author.name} />` 와 같이 넘기고 message.author.name 이 변화가 생기면 Message 는 re-render 를 할것이다. 그럼에도 불구하고 Author 는 새로운 값을 받았기에 re-render 를 진행할것이다. 이러면 퍼포먼스 저하가 나온다. 따라서 가능한한 늦게 역참조를 진행하는 것이 옳다.
+* 아래와 같은 상황에서 `<Author author={ message.author.name} />` 와 같이 호출한다면, `Message`는 역참조 컴포넌트가 되어서 message.author.name 이 변화가 생기면 Message 는 re-render 를 할것이다. 그럼에도 불구하고 Author 는 새로운 값을 받았기에 re-render 를 진행할것이다. 이러면 퍼포먼스 저하가 나온다. 따라서 가능한한 늦게 역참조를 진행하는 것이 옳다.
 
-* If likes were objects instead of strings, and if they were rendered by their own Like component, the Likes component would not rerender for changes happening inside a specific like.
+* 만약에 likes 데이터가 문자열이 아닌 객체들로 구성되어있다면, (ex. [{}, {}, {},...]) 그리고 그 객체들이 `Like` 컴포넌트에서 렌더링이 된다고 했을때 `Likes` 컴포넌트는 특정 like 객체의 변화에 re-render를 하지 않는다.
 
 ```javascript
 const Message = observer(({ message }) => (
