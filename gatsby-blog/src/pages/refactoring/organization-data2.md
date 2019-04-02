@@ -62,7 +62,7 @@ class Customer {
 class Order {
    constructor() {
      // 하나의 주문에 여러고객에 있을수 있으니.
-    this._customers = new HashSet()
+    this._customers = new Set()
   }
 
   addCustomer(customer) {
@@ -133,22 +133,26 @@ public 필드가 있을 땐 그 필드를 private로 만들고 필드용 읽기 
 
 ```javascript
 class Course {
-    constructor(name, isAdvaned) {
+    constructor(name, isAdvanced) {
       //...
+    }
+
+    isAdvanced() {
+      // return boolean
     }
 }
 
 class Person {
   constructor() {
-    this._courses = new HashSet()
+    this._courses = new Set()
   }
 
   getCourses() {
     return this._courses
   }
 
-  setCourses(course) {
-    this._courses = course
+  setCourses(courses) {
+    this._courses = courses
   }
 
   addCourse(course) {
@@ -159,11 +163,109 @@ class Person {
     this._courses.remove(course)
   }
 }
+
+// 위 처럼 코드가 있을때 우리는 아래처럼 사용할 수 있겠다.
+const kent = new Person()
+const s = new Set()
+s.add(new Course('스몰토크 프로그래밍', false))
+s.add(new Course('싱글몰트 음미하기', true))
+kent.setCourses(s)
+const refact = new Course('리펙토링', true)
+kent.addCourse(refact)
+
+// 고급과정을 알아내는 코드 
+const iter = kent.getCourses()[Symbol.iterator]()
+let count = 0
+for(let p of iter) {
+  if(p.done) break
+  if(p.value.isAdvaned()) count++
+}
+
 ```
 
-## 레코드를 데이터 클래스로 전환 (Replace Record with Data Class)
+`setCourses` 메서드에서 해당 참조 값을 여러군데에서 쓰이고 이 메서드가 많이 사용된다면 
+이 메서드 내용을 추가/삭제 기능의 코드로 바꿔야 한다. 
+즉, 쓰기 메서드 내용을 추가 메서드 내용으로 바꿔주면 된다. 
+이렇게 하면 컬렉션을 지닌 객체가 컬렉션의 원소 추가와 삭제를 통제할 수 있다.
+
+또한 `getCourses`의 읽기 메서드는 수정이 불가한 객체로 바꿔줘야 하는데 자바스크립트에서는 그 객체를 복사한 다른 객체를
+내보내 줘서 `this._courses`에 영향이 없도록 해야한다.
+
+
+```javascript
+
+
+class Person {
+  constructor() {
+    this._courses = new Set()
+  }
+
+  // 읽
+  getCourses() {
+    //return this._courses
+    return clone(this._courses)
+  }
+
+  // 쓰기 메서드는 절대 있으면 안된다. 
+  // setCourses(courses) {
+  //   this._courses = courses
+  // }
+
+  // 추가내용으로 바꾸자.
+  initializeCourses(courses) {
+    const iter = courses[Symbol.iterator]()
+    for (let p of iter) {
+      this.addCourse(p.value)
+    }
+  }
+
+  addCourse(course) {
+    this._courses.add(course)
+  }
+
+  removeCourse(course) {
+    this._courses.remove(course)
+  }
+  
+  numberOfAdvancedCourses() {
+    const iter = this.getCourses()[Symbol.iterator]()
+    let count = 0
+    for(let p of iter) {
+      if(p.value.isAdvaned()) count++
+    }
+  }
+}
+
+```
+
+추가적으로 고급과정을 알아내는 코드의 경우에도 `Person` 클래스 데이터만 사용하므로 응당 `Person` 클래스로 옮겨 마땅하다.
+
 
 ## 분류 부호를 클래스로 전환 (Replace Type Code with Class)
+
+기능에 영향을 미치는 숫자형 분류 부호가 든 클래스가 있을 땐 그 숫자를 새 클래스로 바꾸자.
+
+분류부호 이름을 상징적인 것으로 정하면 코드가 상당히 이해하기 쉬워진다.
+문제는 상징적 이름은 단지 별명에 불과하다는 점이다. 
+
+분류부호가 switch 문안에 사용되어 다른 기능을 수행하거나 메서드를 호출할 땐 클래스로 전환하면 안된다. 
+switch 문에는 임의로 클래스를 사용할 수 없으며 오직 정수 타입만 사용 가능하므로 클래스로 전환은 실패를 맞게 된다. 
+
+### 예제 
+
+다음과 같은 코드가 있다고 하자.
+
+```javascript
+class Person {
+  static O = 0
+  static A = 1
+  static B = 2
+  static AB = 3
+
+
+
+}
+```
 
 ## 분류 부호를 하위클래스로 전환 (Replace Type Code with Subclasses)
 
