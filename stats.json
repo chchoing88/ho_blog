@@ -16,6 +16,10 @@
       "path---hello-docker-05e42a31d1677fb4a2e0.js",
       "path---hello-docker-05e42a31d1677fb4a2e0.js.map"
     ],
+    "path---refactoring-organization-data-1": [
+      "path---refactoring-organization-data-1-0bb6825cd0a6cfce3a48.js",
+      "path---refactoring-organization-data-1-0bb6825cd0a6cfce3a48.js.map"
+    ],
     "path---hello-flow": [
       "path---hello-flow-f30a55513f3646cb48d1.js",
       "path---hello-flow-f30a55513f3646cb48d1.js.map"
@@ -40,6 +44,14 @@
       "path---javascript-pattern-648c1f680f29c9828e5a.js",
       "path---javascript-pattern-648c1f680f29c9828e5a.js.map"
     ],
+    "path---javascript-object": [
+      "path---javascript-object-a5446c0327b623ee17b9.js",
+      "path---javascript-object-a5446c0327b623ee17b9.js.map"
+    ],
+    "path---refactoring-method-cleanup": [
+      "path---refactoring-method-cleanup-b8edab2625700282f1eb.js",
+      "path---refactoring-method-cleanup-b8edab2625700282f1eb.js.map"
+    ],
     "path---hello-oop": [
       "path---hello-oop-8753bd908c30244d5ee3.js",
       "path---hello-oop-8753bd908c30244d5ee3.js.map"
@@ -56,6 +68,10 @@
       "component---src-templates-blog-post-js-dabe65ee189101b630a0.js",
       "component---src-templates-blog-post-js-dabe65ee189101b630a0.js.map"
     ],
+    "path---call-stack": [
+      "path---call-stack-ae217c5d96088f3ccd78.js",
+      "path---call-stack-ae217c5d96088f3ccd78.js.map"
+    ],
     "component---src-layouts-index-js": [
       "component---src-layouts-index-js-60e98b905b7a1c56256e.js",
       "component---src-layouts-index-js-60e98b905b7a1c56256e.js.map"
@@ -65,8 +81,8 @@
       "path---think-high-order-function-58f7199816abbe8ab707.js.map"
     ],
     "path---hello-mobx": [
-      "path---hello-mobx-f2babca8bd8e20bf745e.js",
-      "path---hello-mobx-f2babca8bd8e20bf745e.js.map"
+      "path---hello-mobx-ad590d5dcbb2361c0ba4.js",
+      "path---hello-mobx-ad590d5dcbb2361c0ba4.js.map"
     ],
     "path---docker-depolyment": [
       "path---docker-depolyment-4012246536442f60159d.js",
@@ -77,8 +93,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-e64a1724053bdf97b0bd.js",
-      "path---index-e64a1724053bdf97b0bd.js.map"
+      "path---index-d6c8403e1f0a3b4eb5f4.js",
+      "path---index-d6c8403e1f0a3b4eb5f4.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-b0122eda8ae66d76c639.js",
@@ -102,15 +118,31 @@
       "path---webpack-config-d646c3ec578c78b12b66.js",
       "path---webpack-config-d646c3ec578c78b12b66.js.map"
     ],
+    "path---refactoring-organization-data-2": [
+      "path---refactoring-organization-data-2-173c4c1ac9d99659be1e.js",
+      "path---refactoring-organization-data-2-173c4c1ac9d99659be1e.js.map"
+    ],
     "path---offline-plugin-app-shell-fallback": [
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js",
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-4523463df993ca1fbc72.js",
+      "app-a8e8af107a37e8885022.js",
       "build-js-styles.css",
-      "app-4523463df993ca1fbc72.js.map",
+      "app-a8e8af107a37e8885022.js.map",
       "build-js-styles.css.map"
+    ],
+    "path---refactoring-concise-conditionals": [
+      "path---refactoring-concise-conditionals-e36d92ade3524028972f.js",
+      "path---refactoring-concise-conditionals-e36d92ade3524028972f.js.map"
+    ],
+    "path---sop-and-cors-dns-rebinding": [
+      "path---sop-and-cors-dns-rebinding-cd8ad46a9df2aa7e8620.js",
+      "path---sop-and-cors-dns-rebinding-cd8ad46a9df2aa7e8620.js.map"
+    ],
+    "path---refactoring-moving-between-object": [
+      "path---refactoring-moving-between-object-0025971470c5dda7a512.js",
+      "path---refactoring-moving-between-object-0025971470c5dda7a512.js.map"
     ],
     "path---hello-rxjs": [
       "path---hello-rxjs-ad9ee72dc95c9077c219.js",
