@@ -1,6 +1,12 @@
+---
+title: Javascript 의 모든것은 Object 이다? 아니다?
+date: "2019-04-01T10:00:03.284Z"
+---
+
+
 번역 : http://blog.brew.com.hk/not-everything-in-javascript-is-an-object/
 
-# Javascript 의 모든것은 Object 이다.? 아니다.?
+
 
 자바스크립트가 OOP(객체 지향 언어인지 함수형 언어인지 많은 혼란들이 있다. 실제로 Javascript 는 이 두가지 모두 사용할 수 있다.
 

@@ -3,7 +3,7 @@ title: 데이터 체계화2
 date: "2019-04-01T10:00:03.284Z"
 ---
 
-# 데이터 체계화
+해당 글은 `리팩토링 (코드 품질을 개선하는 객체지향 사고법)` 에서 발췌 했습니다. 코드 예제는 javascript로 전환하였습니다.
 
 ## 클래스의 단방향 연결을 양방향으로 전환 (Change Unidirectional Association to Bidirectional)
 
@@ -125,7 +125,7 @@ public 필드가 있을 땐 그 필드를 private 로 만들고 필드용 읽기
 
 그리고 컬렉션 쓰기 메서드는 절대 있으면 안 되므로, 원소를 추가하는 메서드와 삭제하는 메서드를 대신 사용해야 한다.
 
-## 예제
+### 예제
 
 아래 예제에서는 한 사람이 여러 과정을 수강한다. 수강 과정을 나타내는 Course 클래스는 다음과 같이 아주 간단하다.
 
@@ -630,3 +630,89 @@ class EmployeeType {
 ```
 
 ## 하위클래스를 필드로 전환(Replace Subclass with Fields)
+
+여러 하위클래스가 상수 데이터를 반환하는 메서드만 다를 땐 각 하위 클래스의 메서드를 상위클래스 필드로 전환하고 하위클래스는 전부 삭제하자.
+
+기능을 추가하거나 기능을 조금씩 달리할 하위클래스를 작성하자. 다형적인 기능의 한 형태는 상수 메서드다. 상수 메서드는 하드코딩된 값을 반환하는 메서드다.
+상수 메서드는 읽기 메서드에 각기 다른 값을 반환하는 하위클래스에 넣으면 유용하다.
+
+상위클래스 안에 읽기 메서드를 정의하고 그 읽기 메서드를 하위클래스에서 다양한 값으로 구현하자.
+하위클래스를 상수메서드로만 구성한다고 해서 그만큼 효용성이 커지는것은 아니다. 상위클래스 안에 필드를 넣고 그런 하위클래스는 완전히 삭제하면 된다. 
+
+### 예제
+
+아래 Male 하위클래스와 Female 하위클래스는 하드코딩된 상수 메서드 반환만 다르다.
+이렇게 기능이 충실하지 못한 하위클래스는 삭제하자.
+
+```javascript
+// 상위 클래스 
+class Person {
+  isMale(){}
+  getCode(){}
+}
+
+class Male extends Person {
+  isMale(){
+    return true
+  }
+  getCode(){
+    return 'M'
+  }
+}
+
+class Female extends Person {
+  isMale(){
+    return false
+  }
+  getCode(){
+    return 'F'
+  }
+}
+```
+
+우선 생성자를 팩토리 메서드로 전환을 실시한다. 
+
+```javascript
+class Person {
+
+  constructor(isMale, code) {
+    this._isMale = isMale
+    this._code = code
+  }
+
+  static createMale() {
+    // return new Male()
+    return Person(true, 'M')
+  }
+
+  static createFemale() {
+    // return new Female()
+    return Person(false, 'F')
+  }
+
+  isMale() {
+    return this._isMale
+  }
+
+  getCode() {
+    return this._code
+  }
+
+}
+
+// 불필요한 하위 클래스들 삭제
+// class Male extends Person {
+//   constructor(){
+//     super(true, 'M')
+//   }
+// }
+
+// class Female extends Person {
+//   constructor(){
+//     super(false, 'F')
+//   }
+// }
+
+// 사용분
+const kent = Person.createMale()
+```
