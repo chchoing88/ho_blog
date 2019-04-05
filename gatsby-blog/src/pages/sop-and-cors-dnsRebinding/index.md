@@ -142,6 +142,9 @@ CORS 요청은 2가지 타입이 있다. Simple Request와 Preflight 이다. 대
 만약 서버가 승인하면, 응답이 클라이언트에 의해 처리 될것이다. 
 또한 Accept (허용 할 내용 유형), Accept-Language (브라우저에서 허용하는 언어) 및 Content-Language (요청 언어)와 같이 CORS 요청에 직접 적용되는 요청에서 보낼 수있는 몇 가지 추가 HTTP 헤더가 있다.
 
+우리 페이지 http://www.acceptmeplease.com 에서 core.example.com 으로 요청을 보내는 시도이다.
+요청 헤더에 있는 Host는 요청의 대상이 되는 서버의 호스트 명과 포트를 준다.
+
 요청
 ```
 GET / HTTP/1.1
@@ -167,7 +170,7 @@ Content-Length: 423
 ...
 ```
 
-요청시에 우리는 http://www.acceptmeplease.com 사이트에서 cors.example.com에 대한 우리의 CORS 단순 요청을 수행하며, 또한 http://www.acceptmeplease.com을 우리의 origin 지정한다. 서버는 우리의 origin을 승인하는 것에 응답한다. 따라서 브라우저는 Same-origin Policy의 도메인 제한을 완화한 채 요청을 계속할 수 있게 된다.
+요청시에 우리는 http://www.acceptmeplease.com 사이트에서 cors.example.com에 대한 우리의 CORS 단순 요청을 수행하며, 또한 이를(우리의 사이트 url을) 우리의 origin 지정한다. 서버는 우리의 origin을 승인하는 것에 응답한다. 따라서 브라우저는 Same-origin Policy의 도메인 제한을 완화한 채 요청을 계속할 수 있게 된다.
 
 ### Preflight Request
 
@@ -233,7 +236,7 @@ IE8 과 IE9 에서 사용하는 XDomainRequest도 마찬가지 이다. 어떤 �
 var invocation = new XMLHttpRequest();
 
 // We wish to open a POST method request
-invocation.open('POST', 'http://cors.example.com/sendData, true);
+invocation.open('POST', 'http://cors.example.com/sendData', true);
 
 // If we set this option, then in-browser credentials (cookies,
 // authentication, certificates) will be sent along with the
