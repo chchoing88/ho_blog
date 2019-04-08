@@ -610,7 +610,7 @@ class EmployeeType {
   static SALESMAN = 1
   static MANAGER = 2
 
-  getTypeCode() {}
+  getTypeCode() {} // 추상 클래스 
 
   static newType(type) {
     switch (type) {
