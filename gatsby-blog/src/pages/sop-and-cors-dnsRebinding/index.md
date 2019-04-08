@@ -3,8 +3,6 @@ title: sop와 cors 그리고 DNS Rebinding
 date: "2019-02-27T10:00:03.284Z"
 ---
 
-# SOP와 cors 그리고 DNS Rebinding
-
 ## SOP
 
 영어로 하면 same-origin policy 우리말로 하면 동일 출처 원칙 이라고 한다. 
