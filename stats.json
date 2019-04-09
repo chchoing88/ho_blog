@@ -1,5 +1,9 @@
 {
   "assetsByChunkName": {
+    "path---value-and-reference": [
+      "path---value-and-reference-6083800bc1607839d93d.js",
+      "path---value-and-reference-6083800bc1607839d93d.js.map"
+    ],
     "path---make-promise": [
       "path---make-promise-dc2b0ce814f7e412d396.js",
       "path---make-promise-dc2b0ce814f7e412d396.js.map"
@@ -89,8 +93,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-35cd88eaebdbceba6d82.js",
-      "path---index-35cd88eaebdbceba6d82.js.map"
+      "path---index-3fdbd54fcfb59f0a4de1.js",
+      "path---index-3fdbd54fcfb59f0a4de1.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-b0122eda8ae66d76c639.js",
@@ -115,22 +119,22 @@
       "path---webpack-config-d646c3ec578c78b12b66.js.map"
     ],
     "path---refactoring-organization-data-2": [
-      "path---refactoring-organization-data-2-173c4c1ac9d99659be1e.js",
-      "path---refactoring-organization-data-2-173c4c1ac9d99659be1e.js.map"
+      "path---refactoring-organization-data-2-95fec1c3b49226639317.js",
+      "path---refactoring-organization-data-2-95fec1c3b49226639317.js.map"
     ],
     "path---offline-plugin-app-shell-fallback": [
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js",
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-848fdd2ce5d6cb00a225.js",
+      "app-e957b3ea44d5064b878c.js",
       "build-js-styles.css",
-      "app-848fdd2ce5d6cb00a225.js.map",
+      "app-e957b3ea44d5064b878c.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
-      "path---refactoring-concise-conditionals-e36d92ade3524028972f.js",
-      "path---refactoring-concise-conditionals-e36d92ade3524028972f.js.map"
+      "path---refactoring-concise-conditionals-7046ec42e4b5646db9fe.js",
+      "path---refactoring-concise-conditionals-7046ec42e4b5646db9fe.js.map"
     ],
     "path---sop-and-cors-dns-rebinding": [
       "path---sop-and-cors-dns-rebinding-0d28de5fe72d23bb7185.js",
