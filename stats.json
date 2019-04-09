@@ -21,8 +21,8 @@
       "path---hello-docker-05e42a31d1677fb4a2e0.js.map"
     ],
     "path---refactoring-organization-data-1": [
-      "path---refactoring-organization-data-1-0bb6825cd0a6cfce3a48.js",
-      "path---refactoring-organization-data-1-0bb6825cd0a6cfce3a48.js.map"
+      "path---refactoring-organization-data-1-c25332472db29075caee.js",
+      "path---refactoring-organization-data-1-c25332472db29075caee.js.map"
     ],
     "path---hello-flow": [
       "path---hello-flow-f30a55513f3646cb48d1.js",
@@ -49,8 +49,8 @@
       "path---javascript-object-a5446c0327b623ee17b9.js.map"
     ],
     "path---refactoring-method-cleanup": [
-      "path---refactoring-method-cleanup-b8edab2625700282f1eb.js",
-      "path---refactoring-method-cleanup-b8edab2625700282f1eb.js.map"
+      "path---refactoring-method-cleanup-f516cf9cb01a1f326488.js",
+      "path---refactoring-method-cleanup-f516cf9cb01a1f326488.js.map"
     ],
     "path---hello-oop": [
       "path---hello-oop-8753bd908c30244d5ee3.js",
@@ -93,8 +93,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-22a168493e1fe9ed68d5.js",
-      "path---index-22a168493e1fe9ed68d5.js.map"
+      "path---index-f5449f2df9b913c90624.js",
+      "path---index-f5449f2df9b913c90624.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-b0122eda8ae66d76c639.js",
@@ -127,9 +127,9 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-57d70ffb6ad2415a2712.js",
+      "app-2f88f03f6bc8b445d92d.js",
       "build-js-styles.css",
-      "app-57d70ffb6ad2415a2712.js.map",
+      "app-2f88f03f6bc8b445d92d.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
@@ -141,8 +141,8 @@
       "path---sop-and-cors-dns-rebinding-0d28de5fe72d23bb7185.js.map"
     ],
     "path---refactoring-moving-between-object": [
-      "path---refactoring-moving-between-object-00f040cdecaa66306038.js",
-      "path---refactoring-moving-between-object-00f040cdecaa66306038.js.map"
+      "path---refactoring-moving-between-object-dd2f7f3aaad5a08cfecf.js",
+      "path---refactoring-moving-between-object-dd2f7f3aaad5a08cfecf.js.map"
     ],
     "path---hello-rxjs": [
       "path---hello-rxjs-ad9ee72dc95c9077c219.js",
