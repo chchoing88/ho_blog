@@ -16,21 +16,26 @@ date: "2019-03-27T10:00:03.284Z"
 
 ## 메서드 이동 (Move Method)
 
-메서드가 자신이 속한 클래스보다 다른 클래스 기능을 더 많이 이용할 땐그 메서드가 제일 많이 이용하는 클래스 안에서 비슷한 내용의 새 메서드를 작성하자.
+메서드가 자신이 속한 클래스보다 다른 클래스 기능을 더 많이 이용할 땐 그 메서드가 제일 많이 이용하는 클래스 안에서 비슷한 내용의 새 메서드를 작성하자.
 기존 메서드는 간단한 대리 메서드로 전환하든이 아예 삭제하자.
 
 메서드를 옮길지 확신이 서지 않을 때는 다른 메서드를 살펴본다. 다른 메서드를 옮길지를 판단하는 것이 대체로 더 쉽게 마련이다.
 
 ## 필드 이동 (Move Field)
 
-어떤 필드가 자신이 속한 클래스보다 다른 클래스에서 더 많이 사용될 때는대상 클래스 안에 새 필드를 선언하고 그 필드 참조 부분을 전부 새 필드 참조로 수정하자.
+어떤 필드가 자신이 속한 클래스보다 다른 클래스에서 더 많이 사용될 때는 대상 클래스 안에 새 필드를 선언하고 그 필드 참조 부분을 전부 새 필드 참조로 수정하자.
+
+어떤 필드가 자신이 속한 클래스보다 다른 클래스에 있는 메서드를 더 많이 참조해서 정보를 이용한다면 그 필드릴 옮기는 것을 생각해보자. 
+인터페이스에 따라 메서드를 옮기는 방법을 사용할 수도 있다. 하지만 메서드의 현재 위치가 적절하다고 판단되면 필드를 옮긴다.
 
 ### 예제: 필드 캡슐화
 
 ```javascript
 class Account {
   constructor() {
-    // this._interestRate
+    this._type
+    // 아래 필드를 AccountType 으로 옮기려 한다. 
+    // this._interestRate 
   }
 
   interestForAmount_days() {
@@ -43,7 +48,8 @@ class Account {
 
 class AccountType {
   constructor() {
-    // private
+    // private 
+    // 캡슐화
     this._interestRate
   }
 
@@ -81,19 +87,50 @@ class Account {
 }
 ```
 
+위와 같이 바꾸고 난 뒤에 다시 아래 처럼 코드를 바꾼다.
+
+```javascript
+class Account {
+  constructor() {
+    this._interestRate
+  }
+
+  interestForAmount_days() {
+    return getInterestRate() * 10
+  }
+
+  getInterestRate() {
+    return this._type.getInterestRate()
+  }
+
+  setInterestRate(arg) {
+    this._type.setInterestRate(arg)
+  }
+}
+```
+
 ## 클래스 추출 (Extract Class)
 
 두 클래스가 처리해야 할 기능이 하나의 클래스에 들어 있을 땐 새 클래스를 만들고 기존 클래스의 관련 필드와 메서드를 새 클래스로 옮기자.
 주로 함께 변화하거나 서로 유난히 의존적인 데이터의 일부분도 클래스로 떼어내기 좋다.
 이것을 판단하는 좋은 방법은 데이터나 메서드를 하나 제거하면 어떻게 될지, 다른 필드와 메서드를 추가하는 건 합리적이지 않은지 자문해보는 것이다.
 
+### 예제
+
+아래 `Person` 클래스에서 전화번호 기능을 하나의 클래스로 떼어 낼 수 있다.
+
 ```javascript
 class Person {
-  _officeTelephone = new TelephoneNumber()
-
+  constructor() {
+    this._name
+    this._officeAreaCode
+    this._officeNumber
+  }
+  
   getName() {
     return _name
   }
+  // 전화번호 기능을 하나의 클래스로 떼어 낼 수 있다.
   // getTelephoneNumber() {
   //   return _officeAreaCode + _officeNumber
   // }
@@ -109,6 +146,61 @@ class Person {
 위와 같은 `Person` 클래스에서 Telephone 관련한 부분들은 `TelephoneNumber` 객체로 떼어내자. 그 후 관련 메서드 들도 옮기자.
 그 후에 생각해야 할 것은 새로운 클래스를 클라이언트에 어느 정도 공개할지 결정하자.
 
+```javascript
+class TelephoneNumber {
+  constructor() {
+    this._areaCode
+    this._number
+  }
+
+  getAreaCode() {
+    return this._areaCode
+  }
+
+  setAreaCode(code) {
+    this._areaCode = code
+  }
+
+  getTelephoneNumber() {
+    return `(${this._areaCode}) ${this._number}`
+  }
+
+  getNumber() {
+    return this._number
+  }
+
+  setNumber(number) {
+    this._number = number
+  }
+}
+
+
+class Person {
+  constructor() {
+    this._officeTelephone = new TelephoneNumber()  
+  }
+
+  getName() {
+    return _name
+  }
+  
+  getTelephoneNumber() {
+    return this._officeTelephone.getTelephoneNumber()
+  }
+
+  getOfficeTelephone() {
+    return this._officeTelephone
+  }
+}
+```
+
+여기서 새로 만든 `TelephoneNumber` 클래스를 공개하는 방식을 사용할땐 왜곡의 위험을 고려해야한다. 
+
+- 모든 객체가 `TelephoneNumber` 클래스의 어느 부분이든 변경할 수 있음을 받아들인다. `TelephoneNumber` 클래스를 참조로 전환해서 `Person` 클래스가 
+`TelephoneNumber` 클래스의 접근 지점이 된다. 
+- 어느 주체이든 `Person` 클래스를 거치지 않고 `TelephoneNumber` 클래스의 값을 변경하지 못하게 한다. `TelephoneNumber`를 변경불가로 만들어야 한다.
+- `TelephoneNumber` 클래스를 외부로 전달하기 전에 복사한 후 변경불가로 만든다. 하지만 이 방법은 코드를 보는 이들이 값을 변경할 수 있다는 착각을 불러 일으킨다. 게다가 전화번호가 여기저기로 무수히 전달될 경우 클라이언트 간에 왜곡 문제가 발생할 수도 있다. 
+
 ## 클래스 내용 직접 삽입 (Inline Class)
 
 클래스에 기능이 너무 적을땐 그 클래시의 모든 기능을 다른 클래스로 합쳐 넣고 원래의 클래스는 삭제하자.
@@ -116,8 +208,28 @@ class Person {
 주로 클래스의 기능 대부분을 다른 곳으로 옮기는 리팩토리응ㄹ 실시해서 남은 기능이 거의 없어졌을 때 나타난다. 이럴 때는 이 작은 클래스를 가장 많이 사용하는 다른 클래스를 하나 고른후, 이 클래스를 거기에 합쳐야 한다.
 
 위에서 `Person` 객체의 기능이 많이 줄었다면 `TelephoneNumber` 클래스의 클라이언트를 찾아서 `Person` 클래스의 인터페이스를 사용하도록 다음과 같이 수정하자.
-
+즉, `Person` 클래스에 `TelephoneNumber` 클래스를 합친다.
 ```javascript
+// TelephoneNumber 클래스에 모든 외부 공개 메서드를 Person 클래스에 선언하자.
+class Person {
+  getAreaCode() {
+    return this._officeTelephone.getAreaCode()
+  }
+
+  setAreaCode(code) {
+    this._officeTelephone.setAreaCode(code)
+  }
+
+  getNumber() {
+    return this._officeTelephone.getNumber()
+  }
+
+  setNumber(number) {
+    this._officeTelephone.setNumber(number)
+  }
+}
+
+// TelephoneNumber 클래스의 클라이언트를 찾아서 Person 클래스의 인터페이스를 사용하도록하자.
 const martin = new Person()
 martin.getOfficeTelephone.setAreaCode('181')
 
@@ -125,6 +237,8 @@ martin.getOfficeTelephone.setAreaCode('181')
 const martin = new Person()
 martin.setAreaCode('181')
 ```
+
+그 이후에 TelephoneNumber 클래스의 메서드와 필드를 하나씩 전부 이동하자. 텅빈 TelephoneNumber 클래스는 삭제하자.
 
 ## 대리 객체 은폐 (Hide Delegate)
 
@@ -173,16 +287,22 @@ class Department {
 getManager() {
   return _department.getManager()
 }
+
+const manager = john.getManager()
 ```
+
+위와 같이 했다면 `Person` 클래스에 들어있는 `getDepartment` 읽기 메서드를 삭제하자.
 
 ## 과잉 중개 메서드 제거 (Remove Middle Man)
 
 클래스에 자잘한 위임이 너무 많을 땐 대리 객체를 클라이언트가 직접 호출하게 하자.
 
-대리 객체 은폐 기법의 장점을 얻는 대신 단점도 생긴다. 클라이언트가 대리 개체의 새 기능을 사용해야 할 때마다 서버에 간단한 위임 메서드를추가해야 한다는 점이다. 여기서 서버 클래스는 그저 중개자에 불과하므로, 이때는 클라이언트가 대리 객체를 직접 호출하게 해야 한다.
+위의 대리 객체 은폐 기법은 장점을 얻는 대신 단점도 생긴다. 클라이언트가 대리 개체의 새 기능을 사용해야 할 때마다 서버에 즉, Person 객체에 간단한 위임 메서드를 추가해야 한다는 점이다.
+여기서 서버개체 Person 객체는 그저 중개자에 불과하므로, 이때는 클라이언트가 대리 객체를 직접 호출하게 해야한다. 
 
 ```javascript
 class Person {
+  // 다시 부활.
   getDepartment() {
     return _department
   }
@@ -217,7 +337,7 @@ nextDay(arg) {
 이 상속확장 클래스를 원본 클래스의 하위 클래스나 래퍼 클래스로 만들자.
 
 클래스 제작자도 신이 아니므로 개발자에게 필요한 메서드가 전부 든 클래스를 만드는건 불가능에 가깝다. 원본 클래스를 수정하는 것이 불가능할 때가 대부분이다.
-필요한 메서드 수가 3 개 이상이면 필요한 메서드들을 적당한 곳에 모아둬야 한다.
+필요한 메서드 수가 3개 이상이면 필요한 메서드들을 적당한 곳에 모아둬야 한다.
 
 ### 예제: 하위 클래스 사용
 
