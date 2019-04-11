@@ -96,7 +96,7 @@ else return 0.5
 return onVacation() && lengthOfService() > 10 ? 1 : 0.5
 ```
 
-## 조건문의 공통 실행 코드 뺴내기 (Consolidate Duplicate Conditional Fragments)
+## 조건문의 공통 실행 코드 빼내기 (Consolidate Duplicate Conditional Fragments)
 
 조건문의 모든 절에 같은 실행 코드가 있을 땐 같은 부분을 조건문 밖으로 빼자.
 
