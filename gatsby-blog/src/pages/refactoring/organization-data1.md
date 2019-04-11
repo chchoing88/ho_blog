@@ -19,16 +19,33 @@ date: "2019-03-27T10:00:03.284Z"
 
 ```javascript
 class IntRange {
-  constructor() {
-    this._low
-    this._high
+  constructor(low, high) {
+    this._low = low
+    this._high = high
   }
 
+  includes(arg) {
+    return arg >= this._low && arg <= this._high
+  }
+
+  grow(factor) {
+    this._high = this._high * factor
+  }
+
+  // 읽기 / 쓰기 메서드를 활용하자.
   getLow() {
-    return _low
+    return this._low
   }
   setLow(arg) {
     this._log = arg
+  }
+
+  setLow(low) {
+    this._low = low
+  }
+
+  setHigh(high) {
+    this._high = high
   }
 }
 ```
@@ -48,6 +65,16 @@ class IntRange {
     this._high = high
   }
 
+  includes(arg) {
+    // return arg >= this._low && arg <= this._high
+    return arg >= this.getLow() && arg <= this.getHigh()
+  }
+
+  grow(factor) {
+    // this._high = this._high * factor
+    this.setHigh(this.getHigh() * factor)
+  }
+
   getLow() {
     return this._low
   }
@@ -56,12 +83,12 @@ class IntRange {
     return this._high
   }
 
-  setLow() {
-
+  setLow(low) {
+    this._low = low
   }
 
-  setHigh() {
-
+  setHigh(high) {
+    this._high = high
   }
 }
 ```
@@ -79,11 +106,15 @@ class CappedRange extends IntRange {
     return this._cap
   }
 
+  // 재정의 
+  // 상위 클래스 안의 필드에 접근하되 이 변수 접근을 하위클래스에서 계산된 값으로 재정의해야 할때!!
   getHigh() {
     return Math.min(super.getHigh(), this.getCap())
   }
 }
 ```
+
+IntRange의 기능을 전부 재정의하면 기능을 하나도 수정하지 않고 cap을 계산에 넣을 수 있다. 
 
 ## 데이터 값을 객체로 전환 (Replace Data Value with Object)
 
