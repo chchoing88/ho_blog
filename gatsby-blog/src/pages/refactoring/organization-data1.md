@@ -40,12 +40,47 @@ class IntRange {
 ```javascript
 class IntRange {
   constructor(low, high) {
-    init(low, high)
+    initialize(low, high)
   }
 
-  init(low, high) {
+  initialize(low, high) {
     this._low = low
     this._high = high
+  }
+
+  getLow() {
+    return this._low
+  }
+
+  getHigh() {
+    return this._high
+  }
+
+  setLow() {
+
+  }
+
+  setHigh() {
+
+  }
+}
+```
+
+이렇게 해두면 다음과 같은 하위 클래스가 생길 때 편리해진다.
+
+```javascript
+class CappedRange extends IntRange {
+  constructor(low, high, cap){
+    super(low, high)
+    this._cap = cap
+  }
+
+  getCap() {
+    return this._cap
+  }
+
+  getHigh() {
+    return Math.min(super.getHigh(), this.getCap())
   }
 }
 ```
@@ -108,6 +143,47 @@ class Customer {
 ### 예제
 
 ```javascript
+class Customer {
+  constructor(name) {
+    this._name = name
+  }
+
+  getName() {
+    return this._name
+  }
+}
+
+class Order {
+  constructor(customName) {
+    this._customer = new Customer(customerName)
+  }
+
+  getCustomerName() {
+    return this._customer.getName()
+  }
+}
+
+
+// 위 코드를 사용하는 일부 코드는 다음과 같다.
+numberOfOrdersFor(orders=[], cusomter='') {
+  let result = 0
+  const iter = orders[Symbol.iterator]()
+    for (let p of iter) {
+      if(p.value.getCustomerName() === customer) {
+        result++
+      }
+    }
+  return result
+}
+```
+
+이때 `Customer`는 값 객체다. 각 `Order` 인스턴스에는 고유한 `Customer` 객체가 들어있다. 
+개념상 동일한 고객에 주문이 여러 개 있을 경우 하나의 `Customer` 객체만 사용하게끔 이것을 수정해야 한다. 
+즉, 이 예제에서 고객 이름 하나당 한 개의 `Customer` 객체만 있어야 한다.
+
+우선 `Customer`의 생성자를 팩토리 메서드로 전환을 하자 이렇게 하면 생성 절차를 제어할 수 있다. 
+
+```javascript
 // Customer 인스턴스에 접근할 방법을 정해야 한다. 이때 별도의 객체를 사용하자.
 const _instances = {
   _store: {},
@@ -126,7 +202,8 @@ class Customer {
   }
 
   // static으로
-  // 메서드 변경 create -> getNamed
+  // 생성자를 팩토리 메서드로 전환
+  // 메서드 네이밍 변경 create -> getNamed
   static getNamed(name) {
     // 새로 생성하는 것이 아닌 미리 생성해둔 customer 인스턴스를 반환하게 하자.
     // return new Customer(name)
@@ -153,6 +230,8 @@ class Order {
 }
 ```
 
+
+
 ## 참조를 값으로 전환 (Change Reference to Value)
 
 참조 객체가 작고 수정할 수 없고 관리하기 힘들 땐 그 참조 객체를 값 객체로 만들자.
@@ -174,7 +253,7 @@ class Computer {
 }
 ```
 
-또 다른걸로는 집약관계라는것이 있는데 이것은 한 객체가 다른 객체를 포함하는 것이다.
+또 다른 관계로는 집약관계라는것이 있는데 이것은 한 객체가 다른 객체를 포함하는 것이다.
 전체 객체가 메모리에서 사라진다 해도 부분객체는 사라지지 않는다.
 
 ```javascript
@@ -189,20 +268,59 @@ class Computer {
 
 참조 객체를 사용한 작업이 복잡해지는 순간이 참조를 값으로 바꿔야 할 시점이다. 참조 객체는 어떤 식으로든 제어되어야 한다.
 값 객체는 분산 시스템이나 병렬 시스템에 주로 사용된다.
-값 객체는 변경할 수 없어야 한다는 주요 특성이 있다. 하나에 대한 질의를 호출하면 상항 결과가 같아야 한다.
+*값 객체는 변경할 수 없어야 한다*는 주요 특성이 있다. 하나에 대한 질의를 호출하면 항상 결과가 같아야 한다.
 
-여기서는 객체를 값으로 가지고 있기 때문에 같은 필들의 값을 가지고 있어도 같다고 볼수가 없다. 이런 문제점을 안고 있기에변경 불가한 값을 지니고 있어야 한다.
+여기서 값 객체란 (VO: Value Object)
+OOP에서는 다양한 것들을 객체로 만들 수 있다. 객체로 만들 수 있는 것중에 어떤 '값'도 포함할 수 있다. 잔고, 색상, 좌표 등 값 객체로 표현 될 수 있다.
+값 객체는 하나의 공통점이 있다. 값은 어디에 있든 같다. 빨간색이 여기에 있던 저기에 있던 같은 빨간색이라는 것이다. 
+일반적인 경우 어떤 대상이 있다면 그 대상이 어떤 이름을 가지고 있든 간에 같다고 생각한다. 
 
-즉, 아래 결과에 참이 나와야 한다.
+예를들어 내가키우는 강아지 이름이 '멀린' 혹은 '몰링' 이라 불린다고 하자. 하지만 다르게 불려도 다 내가 키우는 강아지 이다.
+다르게 생각하면 같은 '멀린' 이라도 다른 강아지를 가리킨다면 다른 강아지가 되는 것이다.
+
+일반적인 객체는 객체가 생성되는 순간 독립된 객체가 된다. 값 객체가 같은 값을 가지고 있다고 하더라도 다른 객체이기 때문에 같지 않다고 하는 것이다.
+이런 개념을 참조 객체라고 한다.
+
+여기서 값 객체 같음을 표현하는 방법은 동일과 동등을 이해해야 한다.
+동일은 객체가 잠조하는 것 다시말해 대상이 같다는 것을 의미 (=== 연산자)
+동등은 객체가 잠조하는 대상의 속성 값 혹은 동등하게 하는 조건이 같음을 의미 (equal 메서드)
+
+따라서 값 객체라는 것은 equal 메서드로 확인했을때 같음을 의미한다.
+
+### 예제 
 
 ```javascript
-new Currency('USD').equals(new Currency('USD'))
+class Currency {
+  // 생성자가 private 라고 가정하자.
+  constructor(code) {
+    this._code = code
+    this._currencies = {
+      'USD' : new Currency('USD')
+    }
+  }
+
+  getCode() {
+    return this._code
+  }
+
+  static get(code) {
+    return this._currences[code]
+  }
+}
+
+// 사용분
+const usd = Currency.get('USD')
 ```
 
-그렇기에 equals 메서드를 정의해야 한다. 이때, hashCode 메서드도 정의해야 한다.
-간단히 하려면 equals 메서드에 사용되는 필드의 해시코드를 가져다가 XOR 비트 연산을 수행해서 코드를 작성한다.
+위 클래스는 참조 객체이므로 사용할 인스턴스를 가져오려면 사용분 과 같이 주어진 code에 Currency의 동일 인스턴스를 반환하는 메서드를 사용해야 한다.
+Currency 클래스에는 여러 인스턴스가 들어있다. 생성자만 사용하는것은 불가능하다. 그래서 private 이다.
 
-여기서 XOR 연산은 입력값이 같지 않으면 '1'이 출력이 된다. 이는 두 입력 중 하나만이 배타적으로 참일 경우에만 일어난다.
+```javascript
+new Currency('USD').equals(new Currency('USD')) // false 반환
+```
+
+이것을 값 객체로 변환하려면 그 객체가 변경불가(immutable)인지 확인해야 한다. 
+변경불가가 아니면 값이 변경 가능할 경우 별칭 문제가 발생하므로 이 방법을 사용하지 말자.
 
 ```javascript
 class Currency {
@@ -225,6 +343,21 @@ class Currency {
   }
 }
 ```
+
+여기서는 객체를 값으로 가지고 있기 때문에 같은 필드의 값을 가지고 있어도 같다고 볼수가 없다. 이런 문제점을 안고 있기에 변경 불가한 값을 지니고 있어야 한다.
+즉, 아래 결과에 참이 나와야 한다.
+
+```javascript
+new Currency('USD').equals(new Currency('USD'))
+```
+
+그렇기에 equals 메서드를 정의해야 한다. 이때, hashCode 메서드도 정의해야 한다.
+간단히 하려면 equals 메서드에 사용되는 필드의 해시코드를 가져다가 XOR 비트 연산을 수행해서 코드를 작성한다.
+
+여기서 XOR 연산은 입력값이 같지 않으면 '1'이 출력이 된다. 이는 두 입력 중 하나만이 배타적으로 참일 경우에만 일어난다.
+
+이제 Currency 인스턴스를 원하는 수만큼 생성할 수 있다. 다음과 같이 Currency 클래스와 팩토리 메서드에 있는 모든 컨트롤러 기능을 삭제하고 생성자만 사용해도 된다.
+그 생성자를 이제 public으로 만들 수 있다. 
 
 ## 배열을 객체로 전환 (Replace Array with Object)
 
