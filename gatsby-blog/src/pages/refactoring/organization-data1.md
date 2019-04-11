@@ -138,17 +138,30 @@ class Order {
   }
 
   // 메서드 이름을 더 간단명료하게 수정하자.
-  //getCustomer() {
+  //getCustomer() => getCustomerName
   getCustomerName()
     //return this._customer
     return this._customer.getName()
   }
 
+  // 쓰기 메서드 - 기존의 this._customer를 수정하는 것이 아닌 새로운 인스턴스를 만든다.
   // 매개변수도 꼭 수정하자.
   setCustomer(customerName) {
     //this._customer = arg
     this._customer = new Customer(customerName)
   }
+}
+
+// 위 코드를 사용하는 일부 코드는 다음과 같다.
+numberOfOrdersFor(orders=[], cusomter='') {
+  let result = 0
+  const iter = orders[Symbol.iterator]()
+    for (let p of iter) {
+      if(p.value.getCustomerName() === customer) {
+        result++
+      }
+    }
+  return result
 }
 
 // customer 를 객체로 만들자.
@@ -162,6 +175,54 @@ class Customer {
   }
 }
 ```
+
+여기서 `Order` 클래스의 쓰기 메서드 `setCustomer`는 새 `Customer` 인스턴스를 생성하는데, 기존의 문자열 속성이 값 객체였으므로 위의 코드로 인해 
+`Customer`도 값 객체가 되었다. 즉, 각 `Order` 객체에 대응하는 `Customer` 객체가 존재한다. 규칙에 따라 값 객체는 변경불가(immutable)여야 한다. 
+그래야만 위험한 왜곡 버그를 피할 수 있다. 
+
+처음에 Order가 String(immutable value)을 가지고 있었기 때문에 다른 쪽에서 이런식으로 활용 했을 수 있다. 
+
+```javascript
+const value = order.getCustomer() // merlin
+const changeValue = value.addPrefix('hoho') // hoho merlin
+
+console.log(order.getCustomer()) // merlin
+
+// but getCustomer가 객체로 리턴된다면..그리고 그 객체에서 addPrefix라는 메서드가 존재한다면
+// 예기치 못한 버그가 튀어나올 것이다. 
+
+
+const value = order.getCustomer() // {name : merlin}
+const changeValue = value.addPrefix('hoho') // hoho merlin
+
+console.log(order.getCustomer()) // hoho merlin
+```
+
+여기서 추가적인 리팩토링을 실시한다면 그건 당연히 기존 `Customer` 객체를 매개변수로 받는 쓰기 메서드와 새 생성자를 추가하는 작업일 것이다.
+
+`Customer`에 신용등급과 주소 같은것을 추가하려면 지금 할 수는 없다. 왜냐하면 `Customer`는 *값 객체*로 취급되기 때문이다. 
+이런 속성을 추가하려면 `Customer`에 값을 참조로 전환을 적용해서 한 고객의 모든 주문이 하나의 `Customer` 객체를 사용하게 해야한다. 
+
+여기서 값 객체란 (VO: Value Object)
+OOP에서는 다양한 것들을 객체로 만들 수 있다. 객체로 만들 수 있는 것중에 어떤 '값'도 포함할 수 있다. 잔고, 색상, 좌표 등 값 객체로 표현 될 수 있다.
+값 객체는 하나의 공통점이 있다. 값은 어디에 있든 같다. 빨간색이 여기에 있던 저기에 있던 같은 빨간색이라는 것이다. 
+일반적인 경우 어떤 대상이 있다면 그 대상이 어떤 이름을 가지고 있든 간에 같다고 생각한다. 
+
+예를들어 내가키우는 강아지 이름이 '멀린' 혹은 '몰링' 이라 불린다고 하자. 하지만 다르게 불려도 다 내가 키우는 강아지 이다.
+다르게 생각하면 같은 '멀린' 이라도 다른 강아지를 가리킨다면 다른 강아지가 되는 것이다.
+
+일반적인 객체는 객체가 생성되는 순간 독립된 객체가 된다. 값 객체가 같은 값을 가지고 있다고 하더라도 다른 객체이기 때문에 같지 않다고 하는 것이다.
+이런 개념을 참조 객체라고 한다.
+
+여기서 값 객체 같음을 표현하는 방법은 동일과 동등을 이해해야 한다.
+동일은 객체가 잠조하는 것 다시말해 대상이 같다는 것을 의미 (=== 연산자)
+동등은 객체가 잠조하는 대상의 속성 값 혹은 동등하게 하는 조건이 같음을 의미 (equal 메서드)
+
+따라서 값 객체라는 것은 equal 메서드로 확인했을때 같음을 의미한다.
+
+값 객체는 변하지않고 항상 새로운 값 객체를 리턴하게 만들어야 한다.
+값 객체를 사용하면 객체의 참조 문제가 해결될 수 있다. 
+참조 변수 A 와 B가 C 라는 객체를 참조하고 있을 때, B에 조작 연산을 가하여도 A에는 아무런 변화가 생기지 않는다.
 
 ## 값을 참조로 전환 (Change Value to Reference)
 
@@ -300,23 +361,6 @@ class Computer {
 참조 객체를 사용한 작업이 복잡해지는 순간이 참조를 값으로 바꿔야 할 시점이다. 참조 객체는 어떤 식으로든 제어되어야 한다.
 값 객체는 분산 시스템이나 병렬 시스템에 주로 사용된다.
 *값 객체는 변경할 수 없어야 한다*는 주요 특성이 있다. 하나에 대한 질의를 호출하면 항상 결과가 같아야 한다.
-
-여기서 값 객체란 (VO: Value Object)
-OOP에서는 다양한 것들을 객체로 만들 수 있다. 객체로 만들 수 있는 것중에 어떤 '값'도 포함할 수 있다. 잔고, 색상, 좌표 등 값 객체로 표현 될 수 있다.
-값 객체는 하나의 공통점이 있다. 값은 어디에 있든 같다. 빨간색이 여기에 있던 저기에 있던 같은 빨간색이라는 것이다. 
-일반적인 경우 어떤 대상이 있다면 그 대상이 어떤 이름을 가지고 있든 간에 같다고 생각한다. 
-
-예를들어 내가키우는 강아지 이름이 '멀린' 혹은 '몰링' 이라 불린다고 하자. 하지만 다르게 불려도 다 내가 키우는 강아지 이다.
-다르게 생각하면 같은 '멀린' 이라도 다른 강아지를 가리킨다면 다른 강아지가 되는 것이다.
-
-일반적인 객체는 객체가 생성되는 순간 독립된 객체가 된다. 값 객체가 같은 값을 가지고 있다고 하더라도 다른 객체이기 때문에 같지 않다고 하는 것이다.
-이런 개념을 참조 객체라고 한다.
-
-여기서 값 객체 같음을 표현하는 방법은 동일과 동등을 이해해야 한다.
-동일은 객체가 잠조하는 것 다시말해 대상이 같다는 것을 의미 (=== 연산자)
-동등은 객체가 잠조하는 대상의 속성 값 혹은 동등하게 하는 조건이 같음을 의미 (equal 메서드)
-
-따라서 값 객체라는 것은 equal 메서드로 확인했을때 같음을 의미한다.
 
 ### 예제 
 
