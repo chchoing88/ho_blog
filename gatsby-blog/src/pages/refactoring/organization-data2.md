@@ -20,6 +20,7 @@ date: "2019-04-01T10:00:03.284Z"
 `Order` 객체에 연결제어 기능을 구현하자.
 
 ```javascript
+// 연결제어 객체
 class Order {
   constructor() {
     this._customer
@@ -39,17 +40,19 @@ class Order {
   }
 }
 
-// 고객 한명이 여러 건의 주문을 할 수 있으므로 _orders는 HashSet으로 셋팅
+// 고객 한명이 여러 건의 주문을 할 수 있으므로 _orders는 Set 셋팅
+// Customer에는 Order 참조가 여러개
 class Customer {
   constructor() {
-    this._orders = new HashSet()
+    this._orders = new Set()
   }
 
   friendOrders() {
+    // 연결을 변경할 때 Order에 의해서만 사용되어야 함
     return this._orders
   }
 
-  // Customer 클래스를 거쳐서 연결을 변경하려면
+  // Customer 클래스를 거쳐서 연결을 변경하려면 Customer 클래스 안에 제어 메서드 호출 코드를 넣으면 된다.
   addOrder(order) {
     order.setCustomer(this)
   }
@@ -65,6 +68,7 @@ class Order {
     this._customers = new Set()
   }
 
+  // 연결 제어 메서드
   addCustomer(customer) {
     customer.friendOrders().add(this)
     this._customers.add(customer)
@@ -88,6 +92,111 @@ class Customer {
 ```
 
 ## 클래스의 양방향 연결을 단방향으로 전환 (Change Bidirectional Association to Unidirectional)
+
+두 클래스가 양방향으로 연결되어 있는데 한 클래스가 다른 클래스의 기능을 더 이상 사용하지 않게 됐을 땐 불필요한 방향의 연결을 끊자.
+
+양방향 연결로 인해 두 클래스는 서로 종속된다. 한 클래스를 수정하면 다른 클래스도 변경된다. 종속성이 많으면 시스템의 결합력이 강해져서 사소한 수정에도 예기치 못한 
+각종 문제가 발생한다. 
+
+### 예제
+
+이전 예제와 같이 양방향으로 연결된 Customer와 Order 클래스는 다음과 같다.
+
+```javascript
+class Order {
+  constructor(customer) {
+    this._customer = customer
+  }
+
+  getCustomer() {
+    return this._customer
+  }
+
+  // 이전에 맺었던 customer와의 관계는 끊고 새로운 customer와 관계를 맺는다.
+  setCustomer(arg) { // Customer
+    if(this._customer !== null) this._customer.friendOrder().remove(this)
+    this._customer = arg
+    if(this_customer !== null) this._customer.friendOrder().add(this)
+  }
+}
+
+class Customer {
+  constructor() {
+    this._order = new Set()
+  }
+
+  addOrder(arg) { // Order
+    arg.setCustomer(this)
+  }
+
+  friendOrder() {
+    // 연결을 변경할 때 Order 클래스를 통해서만 사용되어야 함
+    return this._order
+  }
+}
+```
+
+위 코드를 보면 customer가 먼저 있어야만 order가 있음을 알 수 있다. 
+따라서 Order 클래스에서 Customer 클래스로 가는 연결을 끊어야 한다. 즉, Order 클래스에 Customer 객체를 참조하는 코드를 빼야한다.
+한 명령을 Customer 객체에 하나의 매개변수로 전달하는 방법을 사용할 때가 많다. 이것을 간단한 예로 들면 다음과 같다.
+
+```javascript
+class Order {
+  getDiscountedPrice() {
+    // customer를 참조하는 코드.
+    return getGrossPrice() * (1 - this._customer.getDiscount())
+  }
+}
+
+// as-is
+class Order {
+  getDiscountedPrice(customer) {
+    // 매개변수로 전환
+    return getGrossPrice() * (1 - customer.getDiscount())
+  }
+}
+```
+
+위 코드는 기능이 Customer 클래스를 통해 호출될 때 특히 효과가 있다. 왜냐하면 기능 자체를 하나의 인자로 전달하는 것이 수월하기 때문이다. 
+
+```javascript
+class Customer {
+  getPriceFor(order) {
+    Assert.isTrue(this._order.contains(order))
+    return order.getDiscountedPrice()
+  }
+}
+```
+
+따라서 위 코드를 아래처럼 수정하면 된다.
+
+```javascript
+class Customer {
+  getPriceFor(order) {
+    Assert.isTrue(this._order.contains(order))
+    // customer 의 인스턴스인 this를 넘긴다.
+    return order.getDiscountedPrice(this)
+  }
+}
+```
+
+또는 속성 읽기 메서드를 수정해서 필드를 사용하지 않고 customer를 가져오게 할 수도 있다. 이렇게 하면 Order.getCustomer 메서드의 코드에 다음과 같이 알고리즘 전환을 
+적용할 수 있다.
+
+```javascript
+class Order {
+  // Customer 인스턴스들을 모조리 가져와서 내 Order가 들었나 안들었나 확인
+  getCustomer() {
+    const iter = Customer.getInstances()[Symbol.iterator]()
+    for( let i of iter) {
+      const each = i.value
+      if(each.containsOrder(this)) return each
+    }
+
+    return null
+  }
+}
+```
 
 ## 마법 숫자를 기호 상수로 전환 (Replace Magic Number with Symbolic Constant)
 
