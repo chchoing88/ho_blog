@@ -167,7 +167,7 @@ checkSecurity(people=[]) {
 }
 ```
 
-### 메서드를 매개변수로 전환
+## 메서드를 매개변수로 전환
 
 여러 메서드가 기능은 비슷하고 안에 든 값만 다를 땐 서로 다른 값을 하나의 매개변수로 전달받는 메서드를 하나 작성하자.
 
@@ -274,8 +274,9 @@ class Employee {
 ```javascript
 class Employee {
   static create(type) {
-    // 이렇게 호출이 되어야 하는데 사실 this._type이라는 객체를 따로 생성하지 않았기 때문에
-    // 조건문을 재정의 기법을 사용하기가 어렵다.
+    // 이렇게 호출이 되고 해당 타입에 따라 실행하는 로직은 하위 클래스로 빼두어야 하는데
+    // Employee.create() 를 호출할 상황에서는 Employtee 내부에 this._type이라는 객체 즉, 직업군에 해당하는 객체를 
+    // 따로 생성하지 않았기 때문에 조건문을 재정의 기법을 사용하기가 어렵다.
     this._type.create()
   }
 }
@@ -383,6 +384,10 @@ class TempRange {
 객체가 A 메서드를 호출해서 그 결과를 B 메서드에 매개변수로 전달하는데,
 결과를 매개변수로 받는 B 메서드도 직접 A 메서드를 호출할 수 있을 땐매개변수를 없애고 A 메서드를 B 메서드가 호출하게 하자.
 
+전달할 매개변수를 줄이려면 같은 계산을 수신 메서드도 할 수 있는지 검사해야 한다. 
+객체가 자신의 메서드를 호출하지만 호출한 메서드의 매개변수가 계산에 전혀 사용되지 않는다면, 
+그 계산을 별도의 메서드로 만들고 매개변수를 삭제할 수 있다. 호출하는 객체를 참조하는 다른 객체에 있는 메서드를 호출할 떄도 마찬가지다.
+
 ### 예제
 
 할인 주문 예제이다.
@@ -391,10 +396,10 @@ class TempRange {
 getPrice() {
   const basePrice = this._quantity * this._itemPrice
   let discountLevel
-  // 추출
+  // 할인 등급 계산 부분 
   if(this._quantity > 100) discountLevel = 2
   else discountLevel = 1
-  //
+  // 할인 등급 계산 부분
   const finalPrice = this.discountePrice(basePrice, discountLevel)
   return fianlPrice
 }
@@ -405,13 +410,15 @@ discountePrice(basePrice, discountLevel) {
 }
 ```
 
-할인 등급 계산 부분을 메서드로 추출하자. 그리고 임시변수인 `discountLevel`를 삭제시켜 보자.
+할인 등급 계산 부분을 메서드(`getDiscountLevel`)로 추출하자. 그리고 임시변수인 `discountLevel`를 삭제시켜 보자.
 
 ```javascript
 getPrice() {
   const basePrice = this._quantity * this._itemPrice
-  /// getDiscountLevel 생성 및 임시변수 삭제
+  // getDiscountLevel 생성 및 임시변수 삭제
+  // this.getDiscountLevel 계산을 this.discountPrice 메서드도 할 수 있다.
   // let discountLevel = this.getDiscountLevel()
+
   // const finalPrice = this.discountePrice(basePrice, discountLevel)
   const finalPrice = this.discountePrice(basePrice)
   return fianlPrice
@@ -423,6 +430,7 @@ getDiscountLevel() {
 }
 
 discountePrice(basePrice) {
+  // discountLevel 변수보단 직접 쓰게 만들자. 
   if(this.getDiscountLevel() === 2) return basePrice * 0.1
   else return basePrice * 0.05
 }
@@ -580,11 +588,105 @@ const flow = anAccount.getFlowBetween(new DtateRange(startDate, endDate))
 쓰기 메서드가 있다는건 필드 값을 변경할 수 있다는 얘기다. 객체가 생성된 후에는 필드가 변경되지 말아야 한다면, 쓰기 메서드를 작성하지 않아야 한다.
 그렇게 하면 확실히 의도가 달성되고 필드가 수정될 가능성을 차단할 수 있다.
 
+java 에서는 final 과 private 키워드들이 존재하지만 자바스크립트에서는 존재하지 않기에 네이밍 규칙으로써 이를 표현해본다.
+
+### 예제
+
+간단한 예를 들어보자. 생성할때 지정한 필드 값이 절대로 변경되지 말아야 한다.
+
+```javascript
+class Account {
+  constructor(id) {
+    this.setId(id)
+  }
+
+  setId(id) {
+    this._id =id
+  }
+}
+```
+
+위와 같은 코드가 있다고 할때 `this._id`는 private 한 변수이다. 이를 절대 변하지 않도록 상수화 시킨다면
+
+```javascript
+// set 메서드를 만들어 두지 않는다.
+function accountContainer() {
+  let ID
+  return class Account {
+    constructor(id) {
+      ID = id
+    }
+
+    getId() {
+      return ID
+    }
+  }
+}
+```
+
+문제는 여기서 매개변수로 계산을 수행할때 이다. 계산식이 복잡하거나 그럴땐 별도의 메서드를 두고 호출해야한다.
+이때 메서드 이름은 의도가 확살히 드러나게 정해야 한다.
+
+```javascript
+function accountContainer() {
+  let ID
+  return class Account {
+    constructor(id) {
+      initializeId(id)
+    }
+
+    getId() {
+      return ID
+    }
+
+    initializeId(id) {
+      ID = 'ZZ' + id
+    }
+  }
+}
+```
+
+이번에는 하위클래스가 상위 클래스의 private 변수를 초기화 하는 예이다.
+
+```javascript
+function accountContainer() {
+  let ID
+  return class Account {
+    constructor(id) {
+      initializeId(id)
+    }
+
+    getId() {
+      return ID
+    }
+
+    initializeId(id) {
+      ID = 'ZZ' + id
+    }
+  }
+}
+
+const Acc = accountContainer()
+
+class interestAccount extends Acc {
+  constructor(id, rate) {
+    // 상위 클래스 생성자 이용.
+    super(id)
+
+    // 또는 관련 메서드 이용.
+    this.initializeId(id)
+
+    this._interest = rate
+  }
+}
+```
+
 ## 메서드 은폐
 
 메서드가 다른 클래스에 사용되지 않을 땐 그 메서드의 반환 타입을 private 로 만들자.
-
 다른 클래스가 그 메서드를 사용한다면 개방도를 높여야 한다. 하지만 메서드의 개방도를 어떨 때 낮춰야 할지를 판단하기는 비교적 어렵다.
+
+javascript 에서는 메서드도 _(underbar)를 이용해서 private를 표시해두자.
 
 ## 생성자를 팩토리 메서드로 전환
 
