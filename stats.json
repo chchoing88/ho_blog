@@ -76,6 +76,10 @@
       "component---src-layouts-index-js-60e98b905b7a1c56256e.js",
       "component---src-layouts-index-js-60e98b905b7a1c56256e.js.map"
     ],
+    "path---refactoring-simplifying-method-calls": [
+      "path---refactoring-simplifying-method-calls-0caec077f12b02d41334.js",
+      "path---refactoring-simplifying-method-calls-0caec077f12b02d41334.js.map"
+    ],
     "path---think-high-order-function": [
       "path---think-high-order-function-58f7199816abbe8ab707.js",
       "path---think-high-order-function-58f7199816abbe8ab707.js.map"
@@ -93,8 +97,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-f5449f2df9b913c90624.js",
-      "path---index-f5449f2df9b913c90624.js.map"
+      "path---index-a72f2b87f1dad93fb420.js",
+      "path---index-a72f2b87f1dad93fb420.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-b0122eda8ae66d76c639.js",
@@ -119,17 +123,17 @@
       "path---webpack-config-d646c3ec578c78b12b66.js.map"
     ],
     "path---refactoring-organization-data-2": [
-      "path---refactoring-organization-data-2-95fec1c3b49226639317.js",
-      "path---refactoring-organization-data-2-95fec1c3b49226639317.js.map"
+      "path---refactoring-organization-data-2-346734035cdbd43eeed7.js",
+      "path---refactoring-organization-data-2-346734035cdbd43eeed7.js.map"
     ],
     "path---offline-plugin-app-shell-fallback": [
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js",
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-2499467960eeff649831.js",
+      "app-623011d71ecd468fd0d4.js",
       "build-js-styles.css",
-      "app-2499467960eeff649831.js.map",
+      "app-623011d71ecd468fd0d4.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
