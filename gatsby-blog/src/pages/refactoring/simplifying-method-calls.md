@@ -275,7 +275,7 @@ class Employee {
 class Employee {
   static create(type) {
     // 이렇게 호출이 되고 해당 타입에 따라 실행하는 로직은 하위 클래스로 빼두어야 하는데
-    // Employee.create() 를 호출할 상황에서는 Employtee 내부에 this._type이라는 객체 즉, 직업군에 해당하는 객체를 
+    // Employee.create() 를 호출할 상황에서는 Employtee 내부에 this._type이라는 객체 즉, 직업군에 해당하는 객체를
     // 따로 생성하지 않았기 때문에 조건문을 재정의 기법을 사용하기가 어렵다.
     this._type.create()
   }
@@ -384,8 +384,8 @@ class TempRange {
 객체가 A 메서드를 호출해서 그 결과를 B 메서드에 매개변수로 전달하는데,
 결과를 매개변수로 받는 B 메서드도 직접 A 메서드를 호출할 수 있을 땐매개변수를 없애고 A 메서드를 B 메서드가 호출하게 하자.
 
-전달할 매개변수를 줄이려면 같은 계산을 수신 메서드도 할 수 있는지 검사해야 한다. 
-객체가 자신의 메서드를 호출하지만 호출한 메서드의 매개변수가 계산에 전혀 사용되지 않는다면, 
+전달할 매개변수를 줄이려면 같은 계산을 수신 메서드도 할 수 있는지 검사해야 한다.
+객체가 자신의 메서드를 호출하지만 호출한 메서드의 매개변수가 계산에 전혀 사용되지 않는다면,
 그 계산을 별도의 메서드로 만들고 매개변수를 삭제할 수 있다. 호출하는 객체를 참조하는 다른 객체에 있는 메서드를 호출할 떄도 마찬가지다.
 
 ### 예제
@@ -396,7 +396,7 @@ class TempRange {
 getPrice() {
   const basePrice = this._quantity * this._itemPrice
   let discountLevel
-  // 할인 등급 계산 부분 
+  // 할인 등급 계산 부분
   if(this._quantity > 100) discountLevel = 2
   else discountLevel = 1
   // 할인 등급 계산 부분
@@ -430,7 +430,7 @@ getDiscountLevel() {
 }
 
 discountePrice(basePrice) {
-  // discountLevel 변수보단 직접 쓰게 만들자. 
+  // discountLevel 변수보단 직접 쓰게 만들자.
   if(this.getDiscountLevel() === 2) return basePrice * 0.1
   else return basePrice * 0.05
 }
@@ -601,7 +601,7 @@ class Account {
   }
 
   setId(id) {
-    this._id =id
+    this._id = id
   }
 }
 ```
@@ -686,7 +686,7 @@ class interestAccount extends Acc {
 메서드가 다른 클래스에 사용되지 않을 땐 그 메서드의 반환 타입을 private 로 만들자.
 다른 클래스가 그 메서드를 사용한다면 개방도를 높여야 한다. 하지만 메서드의 개방도를 어떨 때 낮춰야 할지를 판단하기는 비교적 어렵다.
 
-javascript 에서는 메서드도 _(underbar)를 이용해서 private를 표시해두자.
+javascript 에서는 메서드도 \_(underbar)를 이용해서 private 를 표시해두자.
 
 ## 생성자를 팩토리 메서드로 전환
 
@@ -793,7 +793,14 @@ const kent = Person.createMale()
 
 메서드가 에러를 나타내는 특수한 부호를 반환할 땐 그 부호 반환 코드를 예외 통지 코드로 바꾸자.
 
-뭔가가 잘못되었을 때 개발자는 그 오류에 대응하는 작업을 실시해야 한다.
+에러 코드를 만났을 때 프로그램을 중단되게 할 수 있다. 하지만 이것은 비행기를 놓쳤다고 자살하는 것이나 다를 바 없다.
+물론 소프트웨어를 중단시키는 방식에도 장점은 있다. 프로그램 충돌이 사소하고 사용자도 인내심이 많아면 프로그램을 중단시키는 방법이 괜찮지만, 그보다 중요한 프로그램이라면좀 더 확실한 방법이 필요하다.
+
+문제는 프로그램에서 에러를 찾는 코드 부분에 반드시 그 에러를 처리하는 기능이 들어 있는 것은 아니란 점이다.
+에러 찾기 루틴은 에러를 발견하면 자신을 호출한 부분에 그것을 알리며, 호출한 부분이 그 에러를 상위 호출 코드로 보낼 수도 있다.
+
+예전 시스템은 과거 어떤 루틴의 성공이나 실패를 표시하기 위해 반환 코드를 사용하는데 (ex, -1 , 0)
+예외는 에러 처리를 일반적인 처리와 확실히 분리시키기 때문에 좋다.
 
 호출 전에 호출하는 부분이 조건을 검사해야 한다면 미확인 예외로 하자.
 에외가 확인된 것이면 새 예외를 작성하거나 기존 예외를 사용하자.
@@ -813,13 +820,24 @@ class Account {
 }
 ```
 
-### 예제: 미확인 예외
+위 코드가 예외를 사용하게 수정하려면 우선 확인된 예외와 미확인 예외 중 어느것을 사용할지 정해야 한다.
+이 결정은 출금 전의 잔액 검사하는 기능을 호출 코드가 담당하는지 출금 메서드가 담당하는지에 따라 달라진다.
 
 여기서 계좌 잔액 검사가 호출 부분에서 이뤄진다면 withdraw 메서드에 잔액보다 큰 금액을 전달하면서 호출하는 건 프로그래밍 에러다.
-프로그래밍 에러, 즉 버그는 미 확인 예외를 사용해야 한다. 반환 코드를 사용하는 부분이 없어야 한다. 그건 프로그래머 에러이기 때문이다.
+프로그래밍 에러, 즉 버그는 미 확인 예외를 사용해야 한다.
+
+> 버그란? 소프트웨어가 예상한 동작을 하지 않고 잘못된 결과를 내거나, 오류가 발생하거나, 작동이 실패하는 등의 문제를 뜻한다. 버그는 프로그램의 소스 코드나 설계 과정에서의 실수와 오류 때문에 발생한다.
+
+잔액검사가 withdraw 메서드에서 이뤄진다면 예외를 반드시 인터페이스 안에 선언해야 한다.
+
+### 예제: 미확인 예외
+
+반환 코드를 사용하는 부분이 없어야 한다. 그건 프로그래머 에러이기 때문이다.
 미확인 예외를 사용해야 할 경우부터 살펴보면, 호출 부분이 검사를 담당할 것이다.
+여기서 `withdraw` 메서드는 사실 안쪽에서 따로 검사를 안 한다고 생각하면 된다. 그래서 `Account` 에 검사하는 메서드를 하나 더 둔다.
 
 ```javascript
+// 잔액 검사를 호출하는 부분에서 이뤄진다.
 // as-is
 if (account.withdraw(amount) === -1) {
   handleOverdrawn()
@@ -827,6 +845,8 @@ if (account.withdraw(amount) === -1) {
   doTheUsalThing()
 }
 
+// 위 코드를 다음과 같이 수정해야 한다.
+// canWithdraw 메서드로 확인한다.
 // to-be
 if (!account.canWithdraw(amount)) {
   handleOverdrawn()
@@ -836,14 +856,13 @@ if (!account.canWithdraw(amount)) {
 }
 ```
 
-에러 상황에 대한 예외를 통지해야 한다.
+이제 에러코드를 삭제하고 에러 상황에 대한 예외를 통지해야 한다.
 
 ```javascript
 class Account {
   withdraw(amount) {
     // 감시 절
     if (amount > this._balance) throw new Error('액수가 너무 큽니다.')
-
     this._balance -= amount
   }
 }
@@ -853,8 +872,11 @@ class Account {
   withdraw(amount) {
     // 감시 절
     Assert.isTrue('잔액이 충분합니다', amount <= this._balance)
-
     this._balance -= amount
+  }
+
+  canWithdraw() {
+
   }
 }
 
@@ -869,13 +891,14 @@ Assert {
 
 ### 예제: 확인된 예외
 
-잔액 검사가 withdraw 메서드에서 이뤄진다면 예외를 반드시 인터페이스 안에 선언해야한다.
 확인된 예외를 사용할 땐 처리방법이 약간 다르다.
+`withdraw` 메서드 안쪽에서 검사를 하고 예외를 발생시키기 때문에 호출 부분에서는 `try...catch`를 활용한다.
 
 ```javascript
 // 새 예외 객체 작성
 class BalanceException extends Exception {}
 
+// 호출부분을 다음과 같이 수정하자.
 try {
   account.withdraw(amount)
   doTheUsalThing()
@@ -890,3 +913,87 @@ withdraw() {
 ```
 
 ## 예외 처리를 테스트로 교체
+
+호출 부분에 사전 검사 코드를 넣으면 될 상황인데 예외 통지를 사용했을 땐 호출 부분이 사전 검사를 실시하게 수정하자.
+
+예외 처리는 예외적 기능, 즉 예기치 못한 에러에 사용해야 한다. 예외 처리를 조건문 대용으로 사용해선 안된다.
+호출 부분이 메서드를 호출하기 전에 당연히 조건을 검사할 것으로 예상한다면, 개발자는 테스트를 작성해야 하고 호출 부분은 그 테스트를 사용해야 한다.
+
+### 예제
+
+각종 리소스를 관리하는 객체를 사용하겠다. 데이터베이스 접속이 좋은 예다.
+리소스 관리 객체는 두개의 리소스 풀이 들어 있다. 하나는 가용 리소스 풀이고 또 하나는 할당 리소스 풀이다.
+클라이언트가 리소스를 요청하면 리소스 관리 객체는 리소스를 넘겨주고 가용 풀에 있던 리소스를 할당 풀로 전달한다.
+
+클라이언트가 리소스를 해제하면 관리 객체는 거꾸로 할당 풀의 리소스를 가용 풀로 전달한다.
+클라이언트가 리소스를 요청했는데 사용 가능한 리소스가 없다면 관리 객체는 새 리소스를 생성한다.
+
+```javascript
+class ResourcePool {
+  constructor() {
+    this._available // stack
+    this._allocated // stack
+  }
+
+  getResource() {
+    let result
+    try {
+      result = this._available.pop()
+      this._allocated.push(result)
+      return result
+    } catch (e) {
+      result = new Resource()
+      this._allocated.push(result)
+      return result
+    }
+  }
+}
+```
+
+여기서 리소스 고갈은 예기치 못한 일이 아니므로 예외 처리를 사용하면 안된다.
+
+```javascript
+class ResourcePool {
+  constructor() {
+    this._available // stack
+    this._allocated // stack
+  }
+
+  getResource() {
+    let result
+
+    if (this._available.isEmpty()) {
+      result = new Resource()
+      this._allocated.push(result)
+      return result
+    } else {
+      result = this._available.pop()
+      this._allocated.push(result)
+      return result
+    }
+  }
+}
+```
+
+조건문의 공통 실행 코드 빼내기를 적용한다.
+
+```javascript
+class ResourcePool {
+  constructor() {
+    this._available // stack
+    this._allocated // stack
+  }
+
+  getResource() {
+    let result
+
+    if (this._available.isEmpty()) {
+      result = new Resource()
+    } else {
+      result = this._available.pop()
+    }
+    this._allocated.push(result)
+    return result
+  }
+}
+```
