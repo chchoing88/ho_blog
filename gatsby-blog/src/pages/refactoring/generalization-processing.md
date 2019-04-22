@@ -46,7 +46,34 @@ Employee : string name
 
 메서드를 매개변수로 전환 -> 메서드 안의 로직은 비슷하고 어떤 특정한 값만 다를때 그 값을 매개변수로 전달 받는 메서드를 하나 작성하자. 여기서 추가 메서드가 생겨날 수도 있고 2개의 메서드가 하나의 메서드로 합쳐질 수 도 있다. ( 메서드 호출 단순화 참조 )
 
+메서드 상향을 실시해야 할 특수한 상황은 하위클래스 메서드가 상위클래스 메서드를 재정의함에도 불구하고 기능이 같을 때다.
+
 ## 생성자 내용 상향
+
+하위클래스마다 거의 비슷한 내용의 생성자가 있을 땐 상위클래스에 생성자를 작성하고, 그 생성자를 하위클래스의 메서드에서 호출하자.
+
+### 예제
+
+```javascript
+
+// as-is
+class Manager extends Employee {
+  constructor(name, id, grade){
+    this._name = name
+    this._id = id
+    this._grade = grade
+  }
+}
+
+// to-be
+class Manager extends Employee {
+  constructor(name, id, grade){
+    super(name, id)
+    this._grade = grade
+  }
+}
+```
+
 ## 메서드 하향
 ## 필드 하향
 ## 하위클래스 추출
