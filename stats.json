@@ -77,8 +77,8 @@
       "component---src-layouts-index-js-60e98b905b7a1c56256e.js.map"
     ],
     "path---refactoring-simplifying-method-calls": [
-      "path---refactoring-simplifying-method-calls-7d720af0a46f554a79c8.js",
-      "path---refactoring-simplifying-method-calls-7d720af0a46f554a79c8.js.map"
+      "path---refactoring-simplifying-method-calls-28042feca569f0919e54.js",
+      "path---refactoring-simplifying-method-calls-28042feca569f0919e54.js.map"
     ],
     "path---think-high-order-function": [
       "path---think-high-order-function-58f7199816abbe8ab707.js",
@@ -131,9 +131,9 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-95eae618e747620b7324.js",
+      "app-7ddeab82821418bf7bfd.js",
       "build-js-styles.css",
-      "app-95eae618e747620b7324.js.map",
+      "app-7ddeab82821418bf7bfd.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
