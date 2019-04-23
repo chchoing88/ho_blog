@@ -559,6 +559,51 @@ class LifelineSite extends Site {
 
 상속 대신 위임을 이용하면 위임받은 클래스의 일부만 사용하려는 의도가 더욱 확실해진다. 인터페이스의 어느 부분을 사용하고 어느 부분을 무시할지를 개발자가 제어할 수 있다. 단지 위임하는 메서드를 추가로 작성하면 된다. 
 
+### 예제
 
+```javascript
+class MyStack extends Vector {
+  push(element) {
+    this.insertElementAt(element,0) // Vector에 있는 메서드
+  }
+
+  pop() {
+    const result = this.firstElement()
+    this.removeElementAt(0)
+    return result
+  }
+}
+```
+
+위의 클래스를 사용하는 부분을 보다가, 클라이언트가 스택으로 네 개의 메서드 push, pop, size, isEmpty만 호출함을 발견했다.
+size와 isEmpty 메서드는 Vector 클래스에서 상속된다. 
+
+이것을 위임으로 바꾸게 되면 `this._vector`에 위임받을 Vector 인스턴스를 담아두자.
+
+```javascript
+class MyStack {
+  constructor() {
+    this._vector = new Vector()
+  }
+
+  push(element) {
+    this._vector.insertElementAt(element,0)
+  }
+
+  pop() {
+    const result = this._vector.firstElement()
+    this._vector.removeElementAt(0)
+    return result
+  }
+
+  size() {
+    return this._vector.size()
+  }
+
+  isEmpty() {
+    return this._vector.isEmpty()
+  }
+}
+```
 
 ## 위임을 상속으로 전환
