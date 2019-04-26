@@ -559,6 +559,8 @@ class LifelineSite extends Site {
 
 상속 대신 위임을 이용하면 위임받은 클래스의 일부만 사용하려는 의도가 더욱 확실해진다. 인터페이스의 어느 부분을 사용하고 어느 부분을 무시할지를 개발자가 제어할 수 있다. 단지 위임하는 메서드를 추가로 작성하면 된다. 
 
+쉽게 상속은 `extends`를 통해서 상위클래스에서 하위클래스로 상속하는 것이고 위임은 해당 클래스에 위임받을 클래스 인스턴스를 지니고 있는 것이다. 
+
 ### 예제
 
 ```javascript
@@ -607,3 +609,67 @@ class MyStack {
 ```
 
 ## 위임을 상속으로 전환
+
+위임을 이용 중인데 인터페이스 전반에 간단한 위임으로 도배하게 될 땐 위임 클래스를 대리 객체의 하위클래스로 만들자.
+예를 들어 Employee 클래스 안에 Person 클래스 인스턴스를 가지고 있다면 이 Employee 클래스를 Person(대리 객체)의 하위클래스로 만들자.
+
+두 가지 주의사항을 염두에 두자. 위임하려는 클래스의 모든 메서드를 사용하는 게 아닐 경우엔 위임을 상속으로 전환을 적용해선 안된다.
+왜냐하면 하위클래스는 반드시 상위클래스의 인터페이스를 따라야 하기 때문이다. 
+
+위임 메서드가 거치적 거리면 다른 방법도 있다. _과잉 중개 메서드 제거_를 적용해서 클라이언트가 대리를 직접 호출하게 하는 것이다. 
+여기서 _과잉 중개 메서드 제거_란 A 클래스에서 B 클래스를 숨기기 위해 대신해서 작업을 도왔다면 이제 그냥 A 클래스에서 B클래스를 내보내는 메서드를 만들어 `getB` 
+클라이언트가 직접 호출하게 만드는 기법이다.
+
+하위클래스 추출(하위클래스를 만드는 것)을 적용해서 공통 인터페이스를 분리한 후 새 클래스에서 상속받으면 된다. 비슷한 방법으로 인터페이스 추출을 적용해도 된다.
+
+또 한가지 주의할 상황은 위임상황에서 대리 객체를 둘 이상의 객체가 사용하고 변경 가능할 때다. 이럴 땐 데이터를 더 이상 공유할 일이 없어서 위임을 상속으로 바꿀 수 없다.
+데이터 공유는 상속으로 되돌릴 수 없는 작업이다. 반면, 객체가 변경 불가일 땐 바로 복사할 수도 있고 다른 부분에선 모르기 때문에 데이터 공유가 문제되지 않는다.
+
+### 예제
+
+Employee 클래스는 간단한 Person 객체에 위임한다.
+
+```javascript
+class Employee {
+  constructor () {
+    this._person = new Person()
+  }
+
+  getName() {
+    return this._person.getName()
+  }
+
+  setName(arg) {
+    return this._person.setName(arg)
+  }
+  toSting(){
+    return `사원 : ${this._person.getLastName()}`
+  }
+}
+
+class Person {
+  constructor() {
+    this._name
+  }
+
+  getName() {
+    return this._name
+  }
+
+  setName(arg) {
+    this._name = arg
+  }
+
+  getLastName() {
+    return this._name.substring(this._name.lastIndexOf(' ') + 1)
+  }
+}
+```
+
+위와 같은 코드를 상위클래스 - 하위클래스 관계로 전환하자.
+
+```javascript
+class Employee extends Person {
+  //...
+}
+```
