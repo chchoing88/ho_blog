@@ -46,10 +46,49 @@ date: "2018-12-31T10:00:03.284Z"
 
 ### Principles
 
+```
+Action -> State -> Views
+```
+
 * MobX 는 action 이 상태를 변경하고 그에 따른 views 를 업데이트하는 단방향 데이터 흐름을 지원합니다.
-* 모든 파생물들은 자동적으로 state 가 변할때마다 업데이트 된다. 결과적으로 그 중간값들을 관찰할 수 없다.
-* 모든 파생물들은 기본 동기적으로 업데이트 된다. 이 의미는 actions 은 state 가 변화된 후 computed value 를 안전하게 확인할 수 있다.
+* 모든 파생들은 자동적으로 state 가 변할때마다 업데이트 된다. 결과적으로 그 중간값들을 관찰할 수 없다.
+* 모든 파생들은 기본 동기적으로 업데이트 된다. 이 의미는 actions 은 state 가 변화된 후 computed 된 value 를 안전하게 확인할 수 있다.
 * Computed value 는 update 가 게으르게 된다. 실제로 사용되지 않는 Computed value 는 side effect 위해 필요로 하지 않는 이상 업데이트 되지 않는다. 만약 view 가 더이상 사용하지 않는다면 가비지 컬렉터가 수거해 간다.
+* 모든 Computed 된 value들은 pure하다. 이것들은 state 변화를 지원하지 않는다. 
+
+### Illustration
+
+```javascript
+import {observable, autorun} from 'mobx';
+
+var todoStore = observable({
+    /* some observable state : 상태 값*/
+    todos: [],
+
+    /* a derived value : 파생된 값 */
+    get completedCount() {
+        return this.todos.filter(todo => todo.completed).length;
+    }
+});
+
+/* a function that observes the state : 상태를 관찰한다. */
+autorun(function() {
+    console.log("Completed %d of %d items",
+        todoStore.completedCount,
+        todoStore.todos.length
+    );
+});
+
+/* ..and some actions that modify the state : 상태를 수정하는 액션을 취한다. */
+todoStore.todos[0] = {
+    title: "Take a walk",
+    completed: false
+};
+// -> synchronously prints 'Completed 0 of 1 items'
+
+todoStore.todos[0].completed = true;
+// -> synchronously prints 'Completed 1 of 1 items'
+```
 
 ## 사물을 관찰 가능하게 만들기
 
@@ -62,11 +101,13 @@ observable(value)
 
 * observable 이라는건 "MobX 이 값을 추적해줘, 그러면 observer 들을 업데이트 시킬수 있다."
 * Observable values 의 값으로는 js 의 원시타입, 참조, 일반객체 , 클래스 인스턴스, array 그리고 map 이 될수 있다.
-* value 가 ES6 의 Map : 새로운 Observable Map 이 리턴된다. 이것은 구체적인 엔트리의 변화에 대한 반응을 하고 싶지 않을때 유용하다. 또한 엔트리 항목의 추가 제거에도 반응하고 싶지 않을때 유용하다.
-* value 가 array : 새로운 Observable Array 가 리턴된다.
-* value 가 prototype 이 없는 객체 : 모든 그 객체의 프로퍼티들을 observable 로 만들 수 있다.
-* value 가 prototype 에 원시타입, 함수를 가진 객체인 경우 독립된 observable 참조를 생성하길 원한다면 Boxed Observable 를 사용해라. MobX 는 prototype 들을 자동으로 observable 한 객체로 만들어 주지 않는다. observable 한 객체는 그 class 의 constructor 함수안에서만 을 가지고 만들어준다.
-* class 를 정의할때 그것의 constructor 에서 extendObservable 을 사용하거나 @observale / decorate 를 사용해라.
+  1. value 가 ES6 의 Map : 새로운 Observable Map 이 리턴된다. 이것은 구체적인 엔트리의 변화에 대한 반응을 하고 싶지 않을때 유용하다. 또한 엔트리 항목의 추가 제거에도 반응하고 싶지 않을때 유용하다.
+  2. value 가 ES6 의 Set : 새로운 Observable Set 이 리턴된다.
+  3. value 가 array : 새로운 Observable Array 가 리턴된다.
+  4. value 가 prototype 이 없는 객체 : 모든 그 객체의 프로퍼티들을 observable 로 만들 수 있다.
+  5. value 가 prototype 을 지닌 object라면 (원시타입 및 함수) `observable`은 에러를 던질 것이다. 그러한 값에 대한 독립형 관찰 가능 참조를 작성하려는 경우 Boxed Observable 를 사용해야 한다. MobX 는 prototype를 지닌 object 들을 자동으로 observable 한 객체로 만들어 주지 않는다. 이는 생성자 함수의 책임으로 간주된다. 생성자에서 extendObservable을 사용하거나 클래스 정의에서 @observable / decorate를 대신 사용해라.
+
+
 * 기본적으로 데이터 구조를 observable 하게 만든다는 것은 infective(감염적)이다. 이 의미는 observable 은 자동적으로 그 데이터 구조안에 포함된 어떤 값이라도 자동으로 적용한다는 의미이다. 또는 나중에 포함될 어느 값 또한 적용된다. 이 행위는 modifiers 에 의해 변화될수 있다.
 
 ### @observable
@@ -95,12 +136,14 @@ class OrderLine {
 observable.object(props, decorators?, options?)
 ```
 
-* 만약 plain 한 객체가 observable 에 전달된다면 안에있는 모든 프로퍼티들은 복제본에 복사되어 관측할수 있게 된다. ( 여기서 plain 한 객체라 하면 생성자 함수를 사용하여 만들지는 않았지만 객체를 프로토 타입으로 사용하거나 프로토 타입을 전혀 사용하지 않는 객체입니다. )
+* 만약 plain 한 객체가 observable 에 전달된다면 안에있는 모든 프로퍼티들은 복제본에 복사되어 관측할수 있게 된다. ( 여기서 plain 한 객체라 하면 생성자 함수를 사용하여 만들지는 않았고 해당객체의 프로토타입(__proto__)이 `Object`을 가지거나 프로토타입 프로퍼티가 전혀 없는경우이다. )
 * observable 은 디폴트로 재귀적으로 적용이 됩니다. 그래서 만약 값들중 하나가 object 또는 array 라면 그 값들 또한 observable 하게 적용된다.
-* non-plain object 에서 observable 프로퍼티를 초기화하는것은 constructor 의 책임이라고 간주된다. @observable 또는 extendObservable 함수를 이용할 수 있다.
+* 오직 plain object만 observable 하게 만들 수 있다. non-plain object 의 경우에는 생성자에서 observable 프로퍼티를 초기화 해줘야 한다. @observable 또는 extendObservable 함수를 이용할 수 있다.
 * getter 프로퍼티는 자동적으로 @computed 처럼 파생 프로퍼티로 전환된다.
 * observable 은 재귀적으로 전체 object 그래프에 적용됩니다. 인스턴스화된 것과 나중에 새롭게 observable 프로퍼티들에 할당될 새로운 값(object 객체)들에 대해서도 적용이 된다.
 * Observable 은 non-plain objects 를 재귀하지 않는다. 즉, 클래스로 인스턴스를 만들어서 observable 한것은 재귀 하지 않는다.
+* 속성 값의 자동 변환을 사용하지 않으려면 {deep : false}를 3 번째 인수로 전달하십시오.
+* 이 객체에 친숙한 디버그 이름을 할당하려면 {name : "my object"}를 전달하십시오.
 
 ### arrays
 
@@ -130,6 +173,27 @@ autorun(() => {
 
 ### boxed values
 
+JavaScript의 모든 원시객체 값은 변경 가능하지(immutable) 않으므로 정의에 따라 관찰 할 수 없다. 일반적으로 MobX는 관찰 가능한 값을 포함하는 속성(property)을 만들 수 있기 때문에 괜찮다.
+드문 경우지만 "원시객체를"를 observable로 만드는 것이 편리 할 수 있을때가 있다. 이러한 경우에는 이러한 프리미티브를 관리하는 관찰 가능한 상자를 만들 수 있다.
+
+#### example
+
+```javascript
+import {observable} from "mobx";
+
+const cityName = observable.box("Vienna");
+
+console.log(cityName.get());
+// prints 'Vienna'
+
+cityName.observe(function(change) {
+    console.log(change.oldValue, "->", change.newValue);
+});
+
+cityName.set("Amsterdam");
+// prints 'Vienna -> Amsterdam'
+```
+
 ### decorators
 
 ## 관측 대상에 반응하기
@@ -158,12 +222,13 @@ var disposer = upperCaseName.observe(change => console.log(change.newValue))
 ```
 
 * Computed values 는 다른 computed value 또는 지금 존재하는 state 로 부터 파생된 값이다.
+* Computed는 reaction 들이 일어나고 나서 계산이 수행 된다.
 * 이 값은 실제로 수정가능한 state 를 최소화 시킬수 있는 방법중 하나이다.
-* computed 와 autorun 는 반응적으로 실행되는 표현식(expressions)이지만, computed 는 다른 observer 에 의해 사용될수 있는 값을 생성할때 사용되고 autorun 은 새로운 값을 만들어 내지 않는다 그 대신에 어떠한 효과를 이루기 위해 사용될수 있다. 예를들면 로깅이나 네트워크 요청 같은 것들 말이다.
-* Compute values 는 이전 값의 변화가 없다면 재 계산되지 않는다. 또한 다른 computed property 또는 reaction 에서 사용되 지 않으면 계산되지 않는다.
+* computed 와 autorun 는 반응적으로 실행되는 표현식(expressions)이지만, `computed` 는 다른 observer 에 의해 사용되는 값을 생성할때 사용되고 `autorun` 은 새로운 값을 만들어 내지 않는다 그 대신에 어떠한 효과를 이루기 위해 사용될수 있다. 예를들면 로깅이나 네트워크 요청 같은 것들 말이다.
+* Compute values 이전 계산에서 사용 된 데이터가 변경되지 않으면 계산 된 속성이 다시 실행되지 않는다. 뿐만 아니라 다른 computed property 또는 reaction 에서 사용되지 않으면 계산되지 않는다.
 * Computed values 는 사용되지 않으면 자동으로 가비지 컬렉터가 수거해 간다. 이는 autorun 과의 차이점 중에 하나이다. ( autorun 의 경우에는 그들 스스로가 dispose 해주어야 한다. )
 * 만약 항상 computed value 가 계산되길 원한다면 observe 또는 keepAlive 를 이용해서 사용할 수 있다.
-* computed 프로퍼티들은 enumerable 하지 않는다. 또한 상속 체인에 overwritten 되지 않는다.
+* computed 프로퍼티들은 `enumerable` 하지 않는다. 여기서 `enumerable` 하다는 뜻은 `for..in` 루프로 프로퍼티들을 순회 할 수 있다는 뜻이다. 또한 이 computed 프로퍼티들은 상속 된 값으로 덮어 씌여지지 않는다.
 * computed value 를 위한 setter 도 정의할 수 있다. 이 setter 는 computed value 를 직접 변경하진 않지만 역 파생으로 사용될 수 있다. 예를 들면, 아래에서 `orderLine.total = 10` 이라고 셋팅하면 total 값이 직접적으로 바뀌는 것이 아닌 price 값이 변경되면서 다시 get 의 total 값이 반응하게 된다.
 
 ```javascript
@@ -177,6 +242,27 @@ const orderLine = observable.object({
     this.price = total / this.amount // infer price from total
   },
 })
+```
+
+> 주의 : @computed get 메서드 내용에 일반 함수를 호출하면 되지만 @action을 넣으면 computed가 반응을 하지 않는다.
+
+```javascript
+// 동작
+@computed  
+get total() {
+  return this.something()
+}
+
+something() {}
+
+// 동작 안함
+@computed  
+get total() {
+  return this.something()
+}
+
+@action
+something() {}
 ```
 
 ### autorun
