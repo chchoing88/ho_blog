@@ -54,63 +54,75 @@ Action -> State -> Views
 * 모든 파생들은 자동적으로 state 가 변할때마다 업데이트 된다. 결과적으로 그 중간값들을 관찰할 수 없다.
 * 모든 파생들은 기본 동기적으로 업데이트 된다. 이 의미는 actions 은 state 가 변화된 후 computed 된 value 를 안전하게 확인할 수 있다.
 * Computed value 는 update 가 게으르게 된다. 실제로 사용되지 않는 Computed value 는 side effect 위해 필요로 하지 않는 이상 업데이트 되지 않는다. 만약 view 가 더이상 사용하지 않는다면 가비지 컬렉터가 수거해 간다.
-* 모든 Computed 된 value들은 pure하다. 이것들은 state 변화를 지원하지 않는다. 
+* 모든 Computed 된 value 들은 pure 하다. 이것들은 state 변화를 지원하지 않는다.
 
 ### Illustration
 
 ```javascript
-import {observable, autorun} from 'mobx';
+import { observable, autorun } from 'mobx'
 
 var todoStore = observable({
-    /* some observable state : 상태 값*/
-    todos: [],
+  /* some observable state : 상태 값*/
+  todos: [],
 
-    /* a derived value : 파생된 값 */
-    get completedCount() {
-        return this.todos.filter(todo => todo.completed).length;
-    }
-});
+  /* a derived value : 파생된 값 */
+  get completedCount() {
+    return this.todos.filter(todo => todo.completed).length
+  },
+})
 
 /* a function that observes the state : 상태를 관찰한다. */
 autorun(function() {
-    console.log("Completed %d of %d items",
-        todoStore.completedCount,
-        todoStore.todos.length
-    );
-});
+  console.log(
+    'Completed %d of %d items',
+    todoStore.completedCount,
+    todoStore.todos.length
+  )
+})
 
 /* ..and some actions that modify the state : 상태를 수정하는 액션을 취한다. */
 todoStore.todos[0] = {
-    title: "Take a walk",
-    completed: false
-};
+  title: 'Take a walk',
+  completed: false,
+}
 // -> synchronously prints 'Completed 0 of 1 items'
 
-todoStore.todos[0].completed = true;
+todoStore.todos[0].completed = true
 // -> synchronously prints 'Completed 1 of 1 items'
 ```
 
-## 사물을 관찰 가능하게 만들기
-
-### observable
+## observable
 
 ```javascript
 observable(value)
 @observable classProperty = value
 ```
 
-* observable 이라는건 "MobX 이 값을 추적해줘, 그러면 observer 들을 업데이트 시킬수 있다."
+* Observable 이라는건 "MobX! 이 값을 추적해줘, 그러면 observer 들을 업데이트 시킬수 있다."
+* RxJs 에서도 Observable 을 사용하고 있는데 여기서 느낌을 말하자면..[참조글](https://netbasal.com/javascript-observables-under-the-hood-2423f760584)
 * Observable values 의 값으로는 js 의 원시타입, 참조, 일반객체 , 클래스 인스턴스, array 그리고 map 이 될수 있다.
+* 다음 변환 규칙이 적용되지만 *modifiers*를 이용해서 세부 조정을 할 수 있다. 여기서 _modifiers_ 란 observable 프로퍼티들의 동작방식을 정의 하는데 사용되는 부분이다. ( ex. observable.deep, observable.ref)
   1. value 가 ES6 의 Map : 새로운 Observable Map 이 리턴된다. 이것은 구체적인 엔트리의 변화에 대한 반응을 하고 싶지 않을때 유용하다. 또한 엔트리 항목의 추가 제거에도 반응하고 싶지 않을때 유용하다.
   2. value 가 ES6 의 Set : 새로운 Observable Set 이 리턴된다.
   3. value 가 array : 새로운 Observable Array 가 리턴된다.
   4. value 가 prototype 이 없는 객체 : 모든 그 객체의 프로퍼티들을 observable 로 만들 수 있다.
-  5. value 가 prototype 을 지닌 object라면 (원시타입 및 함수) `observable`은 에러를 던질 것이다. 그러한 값에 대한 독립형 관찰 가능 참조를 작성하려는 경우 Boxed Observable 를 사용해야 한다. MobX 는 prototype를 지닌 object 들을 자동으로 observable 한 객체로 만들어 주지 않는다. 이는 생성자 함수의 책임으로 간주된다. 생성자에서 extendObservable을 사용하거나 클래스 정의에서 @observable / decorate를 대신 사용해라.
+  5. value 가 prototype 을 지닌 object 라면 (원시타입 및 함수) `observable`은 에러를 던질 것이다. 그러한 값에 대한 독립형 관찰 가능 참조를 작성하려는 경우 Boxed Observable 를 사용해야 한다. MobX 는 prototype 를 지닌 object(function 같은) 들을 자동으로 observable 한 객체로 만들어 주지 않는다. 이 객체는 생성자 함수에서 생성자에서 수행하도록 고려되어져야 한다. extendObservable 을 사용하거나 클래스 정의에서 @observable / decorate 를 대신 사용해라.
 
+- 여기서 observable reference 란 객체를 observable 로 바꿀 필요가 없을때 사용하는 것이다. 전형적인 케이스들은 immutable object 들 또는 내가 아닌 외부 라이브러리에 의해 관리되는 object 들이다. 예를 들면 JSX elements, DOM elements, History, window 같은 네이티브 object 들이다. 이런 객체들에 대해서는 observable 로 바꾸지 않고 단지 reference 만 저장 및 추적하면 된다.
+
+```javascript
+class Message {
+  @observable message = 'Hello world'
+
+  // fictional example, if author is immutable, we just need to store a reference and shouldn't turn it into a mutable, observable object
+  // author가 불변의 값이라면, 참조 값만 저장하고 변경가능하고 관찰 가능한 객체로 바꾸면 안된다.
+  @observable.ref author = null
+}
+```
 
 * 기본적으로 데이터 구조를 observable 하게 만든다는 것은 infective(감염적)이다. 이 의미는 observable 은 자동적으로 그 데이터 구조안에 포함된 어떤 값이라도 자동으로 적용한다는 의미이다. 또는 나중에 포함될 어느 값 또한 적용된다. 이 행위는 modifiers 에 의해 변화될수 있다.
 
-### @observable
+## @observable
 
 ```javascript
 import { observable, computed } from 'mobx'
@@ -130,22 +142,65 @@ class OrderLine {
 * @observable 은 인스턴스 필드나 getter 프로퍼티에 사용될 수 있다.
 * 이렇게하면 개체의 어떤 부분을 관찰 할 수 있는지에 대한 세부적인 제어가 가능합니다.
 
-### objects
+## objects
 
 ```javascript
 observable.object(props, decorators?, options?)
+
+import {observable, autorun, action} from "mobx";
+
+var person = observable({
+    // observable properties:
+    name: "John",
+    age: 42,
+    showAge: false,
+
+    // computed property:
+    get labelText() {
+        return this.showAge ? `${this.name} (age: ${this.age})` : this.name;
+    },
+
+    setAge(age) {
+        this.age = age;
+    }
+}, {
+  // decorators
+    setAge: action
+});
+
+// object properties don't expose an 'observe' method,
+// but don't worry, 'mobx.autorun' is even more powerful
+autorun(() => console.log(person.labelText));
+
+person.name = "Dave";
+// prints: 'Dave'
+
+person.setAge(21);
+// etc
 ```
 
-* 만약 plain 한 객체가 observable 에 전달된다면 안에있는 모든 프로퍼티들은 복제본에 복사되어 관측할수 있게 된다. ( 여기서 plain 한 객체라 하면 생성자 함수를 사용하여 만들지는 않았고 해당객체의 프로토타입(__proto__)이 `Object`을 가지거나 프로토타입 프로퍼티가 전혀 없는경우이다. )
+* 만약 plain 한 객체가 observable 에 전달된다면 안에있는 모든 프로퍼티들은 복제본에 복사되어 관측할수 있게 된다. ( 여기서 plain 한 객체라 하면 생성자 함수를 사용하여 만들지는 않았고 해당객체의 프로토타입(**proto**)이 `Object`을 가지거나 프로토타입 프로퍼티가 전혀 없는경우이다. )
 * observable 은 디폴트로 재귀적으로 적용이 됩니다. 그래서 만약 값들중 하나가 object 또는 array 라면 그 값들 또한 observable 하게 적용된다.
-* 오직 plain object만 observable 하게 만들 수 있다. non-plain object 의 경우에는 생성자에서 observable 프로퍼티를 초기화 해줘야 한다. @observable 또는 extendObservable 함수를 이용할 수 있다.
+* 오직 plain object 만 observable 하게 만들 수 있다. non-plain object 의 경우에는 생성자에서 observable 프로퍼티를 초기화 해줘야 한다. @observable 또는 extendObservable 함수를 이용할 수 있다.
 * getter 프로퍼티는 자동적으로 @computed 처럼 파생 프로퍼티로 전환된다.
 * observable 은 재귀적으로 전체 object 그래프에 적용됩니다. 인스턴스화된 것과 나중에 새롭게 observable 프로퍼티들에 할당될 새로운 값(object 객체)들에 대해서도 적용이 된다.
 * Observable 은 non-plain objects 를 재귀하지 않는다. 즉, 클래스로 인스턴스를 만들어서 observable 한것은 재귀 하지 않는다.
 * 속성 값의 자동 변환을 사용하지 않으려면 {deep : false}를 3 번째 인수로 전달하십시오.
 * 이 객체에 친숙한 디버그 이름을 할당하려면 {name : "my object"}를 전달하십시오.
 
-### arrays
+```javascript
+// plain object
+function isPlainObject(value) {
+  if (value === null || typeof value !== 'object') return false
+  // 지정된 __proto__  타입을 반환한다.
+  // __proto__ : 나를 누가 만들었는가.
+  // prototype : 나를 이용해서 만들면 해당 prototype을 기반으로 만든다.
+  const proto = Object.getPrototypeOf(value)
+  return proto === Object.prototype || proto === null
+}
+```
+
+## arrays
 
 ```javascript
 observable.array(values?)
@@ -169,36 +224,34 @@ autorun(() => {
 * array 의 빌트인 함수들 뿐만 아니라 observable array 는 다음과 같은 유용한 기능을 사용할 수 있다.
   * intercept(interceptor), observe(listener, fireImmediately? = false), clear(), replace(newItems), find(predicate: (item, index, array) => boolean, thisArg?), findIndex(predicate: (item, index, array) => boolean, thisArg?) , remove(value)
 
-### maps
+## maps
 
-### boxed values
+## boxed values
 
-JavaScript의 모든 원시객체 값은 변경 가능하지(immutable) 않으므로 정의에 따라 관찰 할 수 없다. 일반적으로 MobX는 관찰 가능한 값을 포함하는 속성(property)을 만들 수 있기 때문에 괜찮다.
-드문 경우지만 "원시객체를"를 observable로 만드는 것이 편리 할 수 있을때가 있다. 이러한 경우에는 이러한 프리미티브를 관리하는 관찰 가능한 상자를 만들 수 있다.
+JavaScript 의 모든 원시객체 값은 변경 가능하지(immutable) 않으므로 정의에 따라 관찰 할 수 없다. 일반적으로 MobX 는 관찰 가능한 값을 포함하는 속성(property)을 만들 수 있기 때문에 괜찮다.
+드문 경우지만 "원시객체를"를 observable 로 만드는 것이 편리 할 수 있을때가 있다. 이러한 경우에는 이러한 프리미티브를 관리하는 관찰 가능한 상자를 만들 수 있다.
 
-#### example
+### example
 
 ```javascript
-import {observable} from "mobx";
+import { observable } from 'mobx'
 
-const cityName = observable.box("Vienna");
+const cityName = observable.box('Vienna')
 
-console.log(cityName.get());
+console.log(cityName.get())
 // prints 'Vienna'
 
 cityName.observe(function(change) {
-    console.log(change.oldValue, "->", change.newValue);
-});
+  console.log(change.oldValue, '->', change.newValue)
+})
 
-cityName.set("Amsterdam");
+cityName.set('Amsterdam')
 // prints 'Vienna -> Amsterdam'
 ```
 
-### decorators
+## decorators
 
-## 관측 대상에 반응하기
-
-### (@)Computed
+## (@)Computed
 
 ```javascript
 class OrderLine {
@@ -222,7 +275,7 @@ var disposer = upperCaseName.observe(change => console.log(change.newValue))
 ```
 
 * Computed values 는 다른 computed value 또는 지금 존재하는 state 로 부터 파생된 값이다.
-* Computed는 reaction 들이 일어나고 나서 계산이 수행 된다.
+* Computed 는 reaction 들이 일어나고 나서 계산이 수행 된다.
 * 이 값은 실제로 수정가능한 state 를 최소화 시킬수 있는 방법중 하나이다.
 * computed 와 autorun 는 반응적으로 실행되는 표현식(expressions)이지만, `computed` 는 다른 observer 에 의해 사용되는 값을 생성할때 사용되고 `autorun` 은 새로운 값을 만들어 내지 않는다 그 대신에 어떠한 효과를 이루기 위해 사용될수 있다. 예를들면 로깅이나 네트워크 요청 같은 것들 말이다.
 * Compute values 이전 계산에서 사용 된 데이터가 변경되지 않으면 계산 된 속성이 다시 실행되지 않는다. 뿐만 아니라 다른 computed property 또는 reaction 에서 사용되지 않으면 계산되지 않는다.
@@ -244,7 +297,7 @@ const orderLine = observable.object({
 })
 ```
 
-> 주의 : @computed get 메서드 내용에 일반 함수를 호출하면 되지만 @action을 넣으면 computed가 반응을 하지 않는다.
+> 주의 : @computed get 메서드 내용에 일반 함수를 호출하면 되지만 @action 을 넣으면 computed 가 반응을 하지 않는다.
 
 ```javascript
 // 동작
@@ -292,7 +345,7 @@ autorun(reaction => {
 * 반응(reaction) 그 자체는 autorun 에 제공하는 함수에 유일한 인수로 전달되며 이 인수를 autorun 함수 안에서 다룰수 있다. 이 의미는 두가지 방법으로 더이상 autorun 이 필요 없을때 dispose 할 수 있다는것을 뜻한다.
 * observer decorator/function 과 같이, autoron 은 오직 제공된 함수의 실행 동안 사용되는 데이터를 관찰 할수 있다.
 
-### when
+## when
 
 ```javascript
 when(predicate: () => boolean, effect?: () => void, options?)
@@ -309,7 +362,7 @@ async function() {
 }
 ```
 
-### reaction
+## reaction
 
 ```javascript
 reaction(() => data, (data, reaction) => { sideEffect }, options?)
@@ -322,14 +375,54 @@ reaction(() => data, (data, reaction) => { sideEffect }, options?)
 * 두번째 인자로 넘겨지는 함수는 effect function 은 2 개의 인자를 받는다. 첫번째 인자는 data function 에서 리턴되는 값이고, 두번째 인자는 현재 반응하는 reaction 이다. 이것은 실행되는 동안에 이 reaction 을 dispose 하는 용도로 사용될 수 있다.
 * side effect 는 data expression 에서 accessed 한 데이터에만 반응한다. 이 data 표현식은 사실 effect 에서 사용되는 data 보다 적을 수 있다. 또한 side effect 는 오직 data expression 에 의해 변경되는 data 가 리턴되었을때 반응한다. 다시말해, reaction 은 side effect 에서 필요한것을 생산하도록 요구하는 것이다.
 
-### (@)observer
+## (@)observer
 
 * @observer 라고 데코레이터를 사용하는 것은 MobX 에게 "이 컴포넌트의 rendering 은 observables 관련으로 부터 파생될수 있다." 말하는 것과 같다.
 * observer function / decorator 는 react components 를 반응형 컴포넌트로 변환시킬수 있다.
-* 이것은 컴포넌트의 render 함수를 autorun 으로 감싸고 렌더링에 사용되는 데이터가 변경되면 컴포넌트를 강제로 re-rendering 을 하게 만든다.
+* 이것은 컴포넌트의 렌더링에 사용되는 데이터가 변경되면 컴포넌트를 강제로 re-rendering 을 하게 만들기 위해서 render 함수를 `mobx.autorun` 으로 감싼다.
 * 'mobx-react' 패키지의 한 부분으로 이용가능하다.
 
-### Understanding what MobX reacts to
+```javascript
+import { observer } from 'mobx-react'
+
+var timerData = observable({
+  secondsPassed: 0,
+})
+
+setInterval(() => {
+  timerData.secondsPassed++
+}, 1000)
+
+@observer
+class Timer extends React.Component {
+  render() {
+    return <span>Seconds passed: {this.props.timerData.secondsPassed} </span>
+  }
+}
+
+ReactDOM.render(<Timer timerData={timerData} />, document.body)
+```
+
+Tip: `observer`가 다른 데코레이터나 higher-order-compoenets 와 함께 이용할 필요가 있을땐, `observer`가 가장 먼저 적용되도록 해야한다. 그렇지 않으면 작동안될수 있다.
+
+`observer` 를 observer(class Timer{...}) 로도 이용이 가능하다.
+
+### dereference values inside your components
+
+> dereference 라는건 주소를 참조하고 있는 변수(reference)를 보고 해당 주소로 찾아가서 값을 보는 것을 말한다. c 언어로 예를 들자면 & 기호가 reference operator 고 \* 기호가 dereference operator 라고 보면 되겠다.
+
+Mobx 는 많은 것을 할 수있지만, 원시타입을 observable 로 만들 수 없다.(비록 boxed obserbables 로 감싸면 observable 로 만들 수 있다.) 그렇기 때문에 값들을 observable 하고 있는게 아니라 객체의 프로퍼티들을 observable 하고 있다는 것이다. 이것이 의미하는건 `@observer`는 사실 역참조한 값에 반응하는것 이다.
+좀 더 쉽게 말하면 `const person = {name : 'merlin'}` person 이라는 객체가 있을 때 name 이 observable 이라면 'merlin'이란 값이 바뀌는거에 대해서 포커스를 두는 것이 아니라 `person.name` 의 변화에 포커스를 두고 있다는 사실이다.
+이 때 아마도 person.name 의 `defineProperty` 으로 `get`과 `set` 메서드를 설정해 두어서 그런게 아닐까 싶다.
+그래서 위 예제에서 Timer components 는 다음과같이 초기화 된 경우 반응하지 않는다.
+
+```javascript
+React.render(<Timer timerData={timerData.secondsPassed} />, document.body)
+```
+
+그래서 observer 하고 있는 컴포넌트 안에서 역 참조한 값을 접근해야 한다.
+
+## Understanding what MobX reacts to
 
 * MobX 는 observable 프로퍼티에 반응한다. 이 프로퍼티를 추적하는 함수의 실행을 하는동안 읽어짐으로써 반응한다.
 * 'reading' 이라 함은 object 의 프로퍼티에 접근하는 것이다. ( ex. user.name or user['name'])
@@ -340,7 +433,7 @@ reaction(() => data, (data, reaction) => { sideEffect }, options?)
   * 비동기적으로 호출되는 코드 블럭에서 읽혀진 Observables 들
 * MobX 는 값이 아닌 프로퍼티의 주소를 추적한다. 즉, 주소가 바뀌면 변화를 감지한다.
 
-#### Example
+### Example
 
 ```javascript
 let message = observable({
@@ -520,7 +613,7 @@ class MyComponent extends React.component {
 
 * 아래와 같은 상황에서 `<Author author={ message.author.name} />` 와 같이 호출한다면, `Message`는 역참조 컴포넌트가 되어서 message.author.name 이 변화가 생기면 Message 는 re-render 를 할것이다. 그럼에도 불구하고 Author 는 새로운 값을 받았기에 re-render 를 진행할것이다. 이러면 퍼포먼스 저하가 나온다. 따라서 가능한한 늦게 역참조를 진행하는 것이 옳다.
 
-* 만약에 likes 데이터가 문자열이 아닌 객체들로 구성되어있다면, (ex. [{}, {}, {},...]) 그리고 그 객체들이 `Like` 컴포넌트에서 렌더링이 된다고 했을때 `Likes` 컴포넌트는 특정 like 객체의 변화에 re-render를 하지 않는다.
+* 만약에 likes 데이터가 문자열이 아닌 객체들로 구성되어있다면, (ex. [{}, {}, {},...]) 그리고 그 객체들이 `Like` 컴포넌트에서 렌더링이 된다고 했을때 `Likes` 컴포넌트는 특정 like 객체의 변화에 re-render 를 하지 않는다.
 
 ```javascript
 const Message = observer(({ message }) => (
@@ -538,16 +631,14 @@ const Likes = observer(({ likes }) => (
 ))
 ```
 
-| 변화                               | re-rendering component                                          |
-|-----------------------------------|-----------------------------------------------------------------|
-| message.title = "Bar"             | Message                                                         |
-| message.author.name = "Susan"     | Author (.author is dereferenced in Message, but didn't change)* |
-| message.author = { name: "Susan"} | Message, Author                                                 |
-| message.likes[0] = "Michel"       | Likes                                                           |
+| 변화                              | re-rendering component                                           |
+| --------------------------------- | ---------------------------------------------------------------- |
+| message.title = "Bar"             | Message                                                          |
+| message.author.name = "Susan"     | Author (.author is dereferenced in Message, but didn't change)\* |
+| message.author = { name: "Susan"} | Message, Author                                                  |
+| message.likes[0] = "Michel"       | Likes                                                            |
 
-## 관측값 변경하기
-
-### action
+## action
 
 ```javascript
 action(fn)
@@ -568,12 +659,12 @@ action(name, fn)
 * action decoreator / function 들은 javascript 의 기본적인 binding 룰을 따르게 됩니다. 그러나 `action.bound` 는 자동으로 action 에 대상 객체에 대한 this 를 bind 한다. action 과 다르게 (@)action.bound 는 name 파라미터를 받지 않는다. 대신 action.bound 를 적용하는 프로퍼티 이름에 기반으로 한다. action.bound 와 arrow 함수는 함께 사용하지 말자.
 * `runInAction(name?, thunk)` 는 간단한 유틸리티 이다. 이것은 code block 을 받고 익명의 action 을 실행한다. 이것은 즉석에서 액션을 생성하고 실행하는데 유용하다. 예를 들면 비동기적인 절차 안에서 사용하는 예가 있겠다. 간단하게 말해서 `runInaction(f)`은 `action(f)()` 과 같다.
 
-### async action & flow
+## async action & flow
 
 * action wrapper / decorator 는 오직 현재 함수가 실행이 되고있을때 영향을 미친다. 하지만 현재 함수에 의해 스케쥴 된 함수(단지, 실행함수 말고)는 영향을 미치지 않는다. 이것이 의미하는건 setTimeout, promise then, async , state 를 변화시키는 callback 함수같은 함수들에게 action 으로 감싸줘야 한다는 것이다.
 * 비동기 action 을 생성하는 방법은 몇몇 가지가 있다.
 
-#### Promise
+### Promise
 
 ```javascript
 mobx.configure({ enforceActions: 'observed' }) // don't allow state modifications outside actions
@@ -663,7 +754,7 @@ class Store {
 }
 ```
 
-#### runInAction utility
+### runInAction utility
 
 * 인라인 action 의 단점은 TypeScript 가 그것들을 추론하기 어렵다는 것이다. 그래서 모든 callback 에 type 을 적용해야한다. 이렇게 callback 전부에 action 을 생성하는 대신, action 함수안에 callback 을 약간 수정해서 state 를 수정할 수 있다.
 
@@ -700,7 +791,7 @@ class Store {
 
 * `runInAction` 또한 첫번째 인자로 이름을 넘길수 있다. `runInAction(f)`는 `action(f)()`로 볼 수있다.
 
-#### async / await
+### async / await
 
 * Async / await 를 기반으로 하는 함수는 처음에는 혼동스러울수 있다. 왜냐하면 문법적으로 그것들은 동기적인 함수처럼 보이기 때문이다. 이 방법은 @action 이 전체 함수에 적용되는 인상을 준다. 결론적으로 `@action`은 코드블럭에서 첫번째 await 까지 적용이 된다. 그 후에 await 가 비동기적으로 실행이 되고 await 이 끝난 후에 state 를 변경하는 코드는 action 으로 감싸줘야한다.
 
@@ -732,7 +823,7 @@ class Store {
 }
 ```
 
-#### flows
+### flows
 
 * 내장된 `flow` 빌트인 함수를 사용하는건 나이스한 접근이지만, flow 는 generators 를 이용한다. 초보자들에겐 두려움이 될수 있지만 async/await 과 같이 움직인다고 보면 된다. 단지 async 대신에 `function *` 을 await 대신에 `yield`를 사용하는 것이다. 이 `flow`는 문법적으로 async/await 와 매우 닮아있고 비동기 파트에 대한 action 래핑이 따로 필요 없다는 것이다. 그 결과 깔끔한 코드를 작성할 수 있다.
 
@@ -764,11 +855,11 @@ class Store {
 
 * flow 는 취소가능하다. 이 의미는 리턴되는 promise 에 있는 `cancel()` 함수를 호출할 수 있다는 뜻이다. 이 함수는 generator 를 즉시 중지 시킬수 있지만 finally 절은 실행이 됩니다. 반환된 promise 그 자체는 FLOW_CANCELLED 로 reject 로 귀결된다.
 
-### Object api
+## Object api
 
 ## 기타
 
-### react-mobx
+## react-mobx
 
 * react 는 render 를 호출하는 방법은 2 가지가 있다. setState() 메서드와 forceUpdate() 이다. 여기서 forceUpdate() 메서드를 사용하게 되면 자식 컴포넌트들이 다 다시 render 가 된다.
 * react 에서 render 를 막을수 있는 방법은 shouldComponentUpdate 와 pure component 방법이 있겠다. 여기서 pure component 는 얕은 비교를 통해서 render 를 할지 안할지를 결정한다.
@@ -776,4 +867,4 @@ class Store {
 
 ## 참조
 
-[https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be](https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be)
+[https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be](https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be

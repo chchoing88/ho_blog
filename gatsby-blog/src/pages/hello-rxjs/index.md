@@ -27,6 +27,125 @@ date: "2019-01-28T10:00:03.284Z"
   * AsyncSubject : 가장 마지막 emit 한 value 의 값을 complete 한 메서드가 호출 되었을때만 가져오게 된다. 만약 complete() 메서드가 호출 되지 않는다면 아무것도 observer 는 받아오지 않는다.
 * Schedulers : Schedulers 들은 중앙의 dispatcher 들이다. 이 디스패처들은 concurrency 를 컨트롤 하는 녀석들인데 여기서 concurrency 를 컨트롤 한다는 것은 시분할을 조절한다는 뜻이다. 이것은 계산이 언제 일어나는지를 조정할수 있게 합니다. 예를 들면 setTimeout 또는 requestAnimationFrame 그 외의 것들입니다.
 
+아주 간단한 Observable 을 만든다면 아래와 같을 것이다.
+
+```javascript
+class Observable {
+  constructor(functionThatThrowsValues) {
+    this._functionThatThrowsValues = functionThatThrowsValues
+  }
+  subscribe(observer) {
+    return this._functionThatThrowsValues(observer)
+  }
+}
+
+// 실행문
+let fakeAsyncData$ = new Observable(observer => {
+  setTimeout(() => {
+    observer.next('New data is coming')
+    observer.complete()
+  }, 2000)
+})
+
+fakeAsyncData$.subscribe({
+  next(val) {
+    console.log(val)
+  },
+  error(e) {
+    console.log(e)
+  },
+  complete() {
+    console.log('complete')
+  },
+})
+```
+
+여기서 중요한 것은 Observable 에 넘기는 함수`(functionThatThrowsValues)`는 반드시 `구독(subscribe)` 하는 녀석이 있어서 실행된다는 것이다.
+
+또한 Observable 에서 observer 들을 모두 배열이나 다른 데이터 구조로 지니고 있는 것이 아니라 구독할때 observer 자신을 넘긴다는 것이다. `(subscribe(observer))` 그리고 나서 값이 새로 생성되는 함수에 observer 를 넘겨서 실행하면 `(this._functionThatThrowsValues(observer))` 해당 함수에서 동기 또는 비동기 적으로라도 observer 에 next 메서드를 호출해서 새로운 값을 push 해줄 수 있다.
+
+`subscribe` 메서드로 여러 observer 들을 등록해도 모두 push 해줄 수 있다.
+
+아래 코드는 조금 더 진화된 코드
+
+```javascript
+class Observable {
+
+  constructor(functionThatThrowsValues) {
+    this._functionThatThrowsValues = functionThatThrowsValues;
+  }
+
+  subscribe(next, error, complete) {
+    if (typeof next === "function") {
+      return this._functionThatThrowsValues({
+        next,
+        error: error || () => {},
+        complete: complete || () => {}
+      });
+    }
+    else {
+      return this._functionThatThrowsValues(next);
+    }
+
+  }
+
+
+  map(projectionFunction) {
+      return new Observable(observer => {
+        return this.subscribe({
+           next(val) { observer.next(projectionFunction(val)) },
+           error(e) { observer.error(e) } ,
+           complete() { observer.complete() }
+        });
+      });
+  }
+
+  mergeMap(anotherFunctionThatThrowsValues) {
+    return new Observable(observer => {
+      return this.subscribe({
+        next(val) {
+          anotherFunctionThatThrowsValues(val).subscribe({
+            next(val) {observer.next(val)},
+            error(e) { observer.error(e) } ,
+            complete() { observer.complete() }
+          });
+        },
+        error(e) { observer.error(e) } ,
+        complete() { observer.complete() }
+      });
+    });
+  }
+
+  static fromArray(array) {
+    return new Observable(observer => {
+      array.forEach(val => observer.next(val));
+      observer.complete();
+    });
+  }
+
+  static fromEvent(element, event) {
+    return new Observable(observer => {
+      const handler = (e) => observer.next(e);
+      element.addEventListener(event, handler);
+      return () => {
+        element.removeEventListener(event, handler);
+      };
+    });
+  }
+
+  static fromPromise(promise) {
+    return new Observable(observer => {
+      promise.then(val => {
+        observer.next(val); observer.complete();
+      })
+      .catch(e => {
+        observer.error(val); observer.complete();
+      });
+    })
+  }
+}
+```
+
 ## Examples
 
 ### Purity
@@ -387,6 +506,28 @@ http$
 
 이 경우, 응답은 data 의 payload 프로퍼티에 감싸여져서 내려온다. 이 값을 얻기 위해서 우린 RxJs map operator 를 사용한다. mapping function 은 JSON response payload 에 매핑하고 그 값을 추출한다.
 
+아래는 간단한 map 함수의 매커니즘이다.
+
+```javascript
+fakeAsyncData$.map(val => `New value ${val}`).subscribe({
+   next(val) { console.log(val) } ,
+   error(e) { console.log(e) } ,
+   complete() { console.log(‘complete’) }
+});
+
+map(projectionFunction) {
+     return new Observable(observer => {
+       return this.subscribe({
+          next(val) { observer.next( projectionFunction(val)) },
+          error(e) { observer.error(e) } ,
+          complete() { observer.complete() }
+        });
+     });
+  }
+```
+
+우리가 `map` 메서드를 호출하게 되면 `new Observable`이 리턴된다. 이 Observable 에는 현재 source 코드에 대한 subscribes 가 들어있는데 이때 source 에 해당하는 것이 `fakeAsyncData$`가 되겠다. source 코드에서 새로운 값이 던져지게 되면 map 메서드가 받게 되고, 그 값을 `projectionFunction` 에 실어서 실행하게 된다. 그리곤 map 메서드에서 리턴했던 Observable 을 구독하고 있는 우리에게 그 `projectionFunction` 실행하고 리턴된 값이 전해지게 된다. (우리는 map Observable 을 구독하고 있어야 한다는 점을 명심하자.)
+
 ### What is Higher-Order Observable Mappping?
 
 higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 대신에 값을 Observable 로 mapping 한다. 그 observable 을 higher-order Observable 이라고 한다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것이 방출하는 값들은 일반 plain 값이 아닌 우리가 별도로 구독할 수 있는 Observable 들이라는 점이다.
@@ -686,3 +827,4 @@ exhaust 는 첫번째로 나오는 inner Observable 을 구독한다.
 * [https://netbasal.com/understanding-subjects-in-rxjs-55102a190f3](https://netbasal.com/understanding-subjects-in-rxjs-55102a190f3)
 * [https://blog.angular-university.io/rxjs-error-handling/](https://blog.angular-university.io/rxjs-error-handling/)
 * [https://blog.angular-university.io/rxjs-higher-order-mapping/](https://blog.angular-university.io/rxjs-higher-order-mapping/)
+* [https://netbasal.com/javascript-observables-under-the-hood-2423f760584](https://netbasal.com/javascript-observables-under-the-hood-2423f760584)
