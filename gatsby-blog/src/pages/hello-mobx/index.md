@@ -251,7 +251,65 @@ cityName.set('Amsterdam')
 
 ## decorators
 
+MobX에는 관찰 가능한 속성의 동작 방식을 정의하는 데코레이터 세트가 있습니다.
 
+- observable: An alias for observable.deep.
+- observable.deep: This is the default modifier, used by any observable. It clones and converts any (not yet observable) array, Map or plain object into it's observable counterpart upon assignment to the given property
+- observable.ref: Disables automatic observable conversion, just creates an observable reference instead.
+- observable.shallow: Can only used in combination with collections. Turns any assigned collection into an observable, but the values of that collection will be treated as-is.
+- observable.struct: Like ref, but will ignore new values that are structurally equal to the current value
+- computed: Creates a derived property, see computed
+- computed(options): Idem, sets additional options.
+- computed.struct: Same as computed, but will only notify any of it's observers when the value produced by the view is structurally different from the previous value
+- action: Creates an action, see action
+- action(name): Creates an action, overrides the name
+- action.bound: Creates an action, and binds this to the instance
+
+```javascript
+import {observable, autorun, action} from "mobx";
+
+var person = observable({
+    name: "John",
+    age: 42,
+    showAge: false,
+
+    get labelText() {
+        return this.showAge ? `${this.name} (age: ${this.age})` : this.name;
+    },
+
+    // action:
+    setAge(age) {
+        this.age = age;
+    }
+}, {
+    setAge: action
+    // the other properties will default to observables  / computed
+});
+```
+
+```javascript
+class Person {
+    name = "John"
+    age = 42
+    showAge = false
+
+    get labelText() {
+        return this.showAge ? `${this.name} (age: ${this.age})` : this.name;
+    }
+
+    setAge(age) {
+        this.age = age;
+    }
+}
+// when using decorate, all fields should be specified (a class might have many more non-observable internal fields after all)
+decorate(Person, {
+    name: observable,
+    age: observable,
+    showAge: observable,
+    labelText: computed,
+    setAge: action
+})
+```
 
 ## (@)Computed
 
