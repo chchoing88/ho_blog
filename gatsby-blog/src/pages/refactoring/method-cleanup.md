@@ -3,9 +3,7 @@ title: (리팩토링) 메서드 정리
 date: "2019-03-20T10:00:03.284Z"
 ---
 
-
-
-해당 글은 `리팩토링 (코드 품질을 개선하는 객체지향 사고법)` 에서 발췌 했습니다. 코드 예제는 javascript로 전환하였습니다.
+해당 글은 `리팩토링 (코드 품질을 개선하는 객체지향 사고법)` 에서 발췌 했습니다. 코드 예제는 javascript 로 전환하였습니다.
 
 ## 메서드 추출 (Extract Method)
 
@@ -194,7 +192,8 @@ console.log(area)
 
 ## 메서드를 메서드 객체로 전환 (Replace Method with Method Object)
 
-지역변수 때문에 메서드 추출을 적용할 수 없는 긴 메서드가 있을땐 그 메서드 자체를 객체로 전환해서 모든 지역변수를 객체의 필드로 만들자.
+장황한 메서드에서 각 부분을 간결한 메서드로 빼내면 코드가 훨씬 이해하기 쉬워진다.
+지역변수 때문에 메서드 추출을 적용할 수 없는 긴 메서드가 있을땐 그 *메서드 자체를 객체로 전환*해서 모든 지역변수를 객체의 필드로 만들자.
 그런 다음 그 메서드를 객체 안의 여러 메서드로 쪼개면 된다.
 
 ```javascript
@@ -214,11 +213,13 @@ class Account {
 }
 ```
 
-gamma 라는 메서드 대신 객체를 새로 생성하자.
+gamma 라는 메서드 대신 객체(Gamma)를 새로 생성하자.
+그런 다음 원본 메서드(gamma)가 이 메서드 객체로 위임하게 수정하자.
 
 ```javascript
 class Account {
   gamma() {
+    // 위임
     return new Gamma(this, inputValue, quantity, yearToData).compute()
   }
 }
@@ -255,3 +256,41 @@ class Gamma {
 
 알고리즘을 더 분명한 것으로 교체해야 할땐 해당 메서드의 내용을 새 알고리즘으로 바꾸자.
 이렇게 하려면 먼저 메서드를 최대한 잘게 쪼개야 한다. 길고 복잡한 알고리즘은 수정하기 어려우므로, 우선 간단한 알고리즘으로 교체해야만 수정 작업이 편해진다.
+
+어떤 작업을 약간 다르게 처리해야 해서 알고리즘을 변경해야 할 때도 있는데, 이럴 때는 좀 더 변경하기 쉬운 알고리즘으로 교체하는 것이 간편하다.
+
+이렇게 하려면 먼저 메서드를 최대한 잘게 쪼개야 한다. 길고 복잡한 알고리즘은 수정하기 어려우므로, 우선 간단한 알고리즘으로 교체해야만 수정 작업이 편해진다.
+
+### 예제
+
+```javascript
+foundPerson(people=[]) {
+  for(let i =0; i < people.length; i++) {
+    if(people[i].equals('Don')){
+      return 'Don'
+    }
+    if(people[i].equals('John')){
+      return 'John'
+    }
+    if(people[i].equals('Kent')){
+      return 'Kent'
+    }
+  }
+}
+```
+
+아래처럼 바꿔보자.
+
+```javascript
+foundPerson(people=[]) {
+  const candidates = new Set(['Don', 'John', 'Kent'])
+
+  for(let i =0; i < people.length; i++) {
+    if(candidates.has(people[i])) {
+      return people[i]
+    }
+  }
+
+  return ''
+}
+```
