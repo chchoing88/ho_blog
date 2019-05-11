@@ -120,13 +120,28 @@ IntRange 의 기능을 전부 재정의하면 기능을 하나도 수정하지 �
 
 데이터 항목에 데이터나 기능을 더 추가해야 할 때는 데이터 항목을 객체로 만들자.
 
-예를 들어 한동안은 전화번호를 문자열로 표현해도 상관없지만 시간이 더 흐르면 형시고하, 지역번호 추출 등을 위한 특수한 기능이 필요해진다.
+예를 들어 한동안은 전화번호를 문자열로 표현해도 상관없지만 시간이 더 흐르면 형식화, 지역번호 추출 등을 위한 특수한 기능이 필요해진다.
 한두 항목은 객체 안에 메서드를 넣어도 되겠지만, 금세 중복코드나 잘못된 소속이라는 코드 구린내가 난다.
 
-각 Order 인스턴스에는 교유한 Customer 객체가 들어있다. 이때 Customer 는 값 객체다.
-개념상 동일한 고객을 나타내는 객체긴 하다. 개념상 동일한 고객에 주문이 여러개 있을 경우 하나의 Customer 객체만 사용하게끔 이것을 수정해야 한다.
-
 ### 예제
+
+```javascript
+class Order {
+  constructor(customer: String) {
+    this._customer = customer
+  }
+
+  getCustomer() {
+    return this._customer
+  }
+
+  setCustomer(arg) {
+    this._customer = arg
+  }
+}
+```
+
+각 Order 인스턴스에는 Sting customer 가 들어있었다. 하여 우리가 Customer 를 객체로 바꿀 때에는 Customer 는 값 객체로 만들어야 한다. 규칙에 따라 값 객체는 변경불가여야 한다. 매번 새롭게 메모리를 할당받는 객체가 되어야 한다는 말이다. 참고로 원시 객체는 변경 불가한 녀석들이다.
 
 ```javascript
 // Order 객체는 주문 고객을 문자열로 저장한다.
@@ -144,7 +159,7 @@ class Order {
     return this._customer.getName()
   }
 
-  // 쓰기 메서드 - 기존의 this._customer를 수정하는 것이 아닌 새로운 인스턴스를 만든다.
+  // 쓰기 메서드 - 값 객체이기 때문에 기존의 this._customer를 수정하는 것이 아닌 새로운 인스턴스를 만든다.
   // 매개변수도 꼭 수정하자.
   setCustomer(customerName) {
     //this._customer = arg
@@ -177,10 +192,9 @@ class Customer {
 ```
 
 여기서 `Order` 클래스의 쓰기 메서드 `setCustomer`는 새 `Customer` 인스턴스를 생성하는데, 기존의 문자열 속성이 값 객체였으므로 위의 코드로 인해
-`Customer`도 값 객체가 되었다. 즉, 각 `Order` 객체에 대응하는 `Customer` 객체가 존재한다. 규칙에 따라 값 객체는 변경불가(immutable)여야 한다.
-그래야만 위험한 왜곡 버그를 피할 수 있다.
+`Customer`도 값 객체가 되었다. 즉, 각 `Order` 객체에 대응하는 `Customer` 객체가 존재한다. 규칙에 따라 값 객체는 변경불가(immutable)여야 한다. 그래야만 위험한 왜곡 버그를 피할 수 있다.
 
-처음에 Order 가 String(immutable value)을 가지고 있었기 때문에 다른 쪽에서 이런식으로 활용 했을 수 있다.
+처음에 Order 가 customer 를 String(immutable value)타입으로 가지고 있었기 때문에 다른 쪽에서 이런식으로 활용 했을 수 있다.
 
 ```javascript
 const value = order.getCustomer() // merlin
@@ -202,7 +216,10 @@ console.log(order.getCustomer()) // hoho merlin
 `Customer`에 신용등급과 주소 같은것을 추가하려면 지금 할 수는 없다. 왜냐하면 `Customer`는 *값 객체*로 취급되기 때문이다.
 이런 속성을 추가하려면 `Customer`에 값을 참조로 전환을 적용해서 한 고객의 모든 주문이 하나의 `Customer` 객체를 사용하게 해야한다.
 
-여기서 값 객체란 (VO: Value Object)
+또한 개념상 동일한 고객을 나타내는 객체긴 하다. 개념상 동일한 고객에 주문이 여러개 있을 경우 하나의 Customer 객체만 사용하게끔 이것을 수정해야 한다.
+
+#### 여기서 값 객체란 (VO: Value Object)
+
 OOP 에서는 다양한 것들을 객체로 만들 수 있다. 객체로 만들 수 있는 것중에 어떤 '값'도 포함할 수 있다. 잔고, 색상, 좌표 등 값 객체로 표현 될 수 있다.
 값 객체는 하나의 공통점이 있다. 값은 어디에 있든 같다. 빨간색이 여기에 있던 저기에 있던 같은 빨간색이라는 것이다.
 일반적인 경우 어떤 대상이 있다면 그 대상이 어떤 이름을 가지고 있든 간에 같다고 생각한다.
