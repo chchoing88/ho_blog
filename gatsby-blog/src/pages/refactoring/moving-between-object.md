@@ -308,8 +308,11 @@ class Person {
   }
 }
 
+// 클라이언트가 대리 객체를 먼저 거치게끔 다음과 같이 수정하자.
 manager = john.getDepartment().getManager()
 ```
+
+편의상 일부 위임 메서드는 그대로 둬야 할 때도 있다. 대리 객체를 일부 클라이언트에게만 감추고 나머지 클라이언트에겐 공개해야 할 때도 있다. 그럴 때는 간단한 위임 메서드 중 일부를 그대로 내버려 두면 된다. 
 
 ## 외래 클래스에 메서드 추가 (Introduce Foreign Method)
 
@@ -361,3 +364,48 @@ class MfDateSub extends Date {
   }
 }
 ```
+
+### 예제: 래퍼 클래스 사용
+
+```javascript
+class MfDateWrap {
+  constructor(dateString) {
+    this._original = new Date(dateString)
+  }
+
+  // 원본 Date 클래스의 모든 메서드를 위임하는 지루한 작업
+  getYear() {
+    return this._original.getYears()
+  }
+  // 원본 Date 클래스에도 있는 equals
+  equals(arg) {
+    if(this === arg) return true
+    if(! (arg instanceof MfDateWrap)) return false
+    const other = arg
+    return (this._original.equals(other._original))
+  }
+
+  nextDay() {
+    // 더이상 date 객체를 받지 않아도 사용가능하다.
+    return new Date(this.getYear(), this.getMonth(), this.getDate() + 1)
+  }
+}
+```
+
+래퍼 클래스화 방식을 사용할 때는 원본 클래스를 인자로 받는 `after(Date arg)` 메서드들을 처리하는 방법이 문제가 된다.
+
+```javascript
+aWrapper.after(aDate) // 동작함
+aWrapper.after(anotherWrapper) // 동작함
+aDate.after(aWrapper) // 돌아가질 않음
+```
+
+이런식으로 같은 이름의 메서드를 정의(재정의)하는 이유는 래퍼 클래스 사용 사실을 원본 클래스 사용 부분이 모르게 하기 위해서다.
+래퍼 클래스 사용 부분은 래퍼 클래스에 전혀 관여해선 안되며 원본과 래퍼를 동등하게 다룰 수 있어야 하므로 이방식이 좋다.
+하지만 래퍼 클래스 사용 사실을 완벽히 감추진 못한다. 문제는 `equals` 같은 특정 시스템 메서드에 있다. 
+
+`equals` 메서드는 대칭적으로 돌아가는 반면 이 전제에 어긋나는 코딩을 하면 각종 이상한 버그가 생길 것이다. 
+따라서 이런 상황에서는 어쩔 수 없이 래퍼 클래스 사용 사실을 공개할 수 밖에 없다. `equalsDate` 메서드를 새로 만든다.
+
+결론은 기능을 재정의 하지 않는 이상, 하위클래스화 방식을 사용할 땐 이런 문제가 없다. 그러나 기능을 재정의하면 메서드를 검색할때 애를 먹게 된다.
+그냥 상속확장 클래스를 사용할 땐 메서드를 재정의하지 않고 그냥 메서드를 추가하자.
