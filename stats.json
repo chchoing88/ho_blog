@@ -21,8 +21,8 @@
       "path---hello-docker-05e42a31d1677fb4a2e0.js.map"
     ],
     "path---refactoring-organization-data-1": [
-      "path---refactoring-organization-data-1-cae0baf2297843c65bb0.js",
-      "path---refactoring-organization-data-1-cae0baf2297843c65bb0.js.map"
+      "path---refactoring-organization-data-1-3cae99d84479a08a4086.js",
+      "path---refactoring-organization-data-1-3cae99d84479a08a4086.js.map"
     ],
     "path---hello-flow": [
       "path---hello-flow-f30a55513f3646cb48d1.js",
@@ -53,8 +53,8 @@
       "path---maintainable-javascript-user-error-throwing-218079333e752cfd7755.js.map"
     ],
     "path---refactoring-method-cleanup": [
-      "path---refactoring-method-cleanup-cb9f0a0850ebb9fd393b.js",
-      "path---refactoring-method-cleanup-cb9f0a0850ebb9fd393b.js.map"
+      "path---refactoring-method-cleanup-46236c286e9dee8da3fa.js",
+      "path---refactoring-method-cleanup-46236c286e9dee8da3fa.js.map"
     ],
     "path---hello-oop": [
       "path---hello-oop-8753bd908c30244d5ee3.js",
@@ -81,8 +81,12 @@
       "component---src-layouts-index-js-60e98b905b7a1c56256e.js.map"
     ],
     "path---refactoring-simplifying-method-calls": [
-      "path---refactoring-simplifying-method-calls-ec3525621de518f8ac1e.js",
-      "path---refactoring-simplifying-method-calls-ec3525621de518f8ac1e.js.map"
+      "path---refactoring-simplifying-method-calls-3bde5afc9acbdbfc9b1d.js",
+      "path---refactoring-simplifying-method-calls-3bde5afc9acbdbfc9b1d.js.map"
+    ],
+    "path---refactoring": [
+      "path---refactoring-139f89d7543074818589.js",
+      "path---refactoring-139f89d7543074818589.js.map"
     ],
     "path---think-high-order-function": [
       "path---think-high-order-function-58f7199816abbe8ab707.js",
@@ -101,8 +105,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-9f7eade3bd7b590e7eb7.js",
-      "path---index-9f7eade3bd7b590e7eb7.js.map"
+      "path---index-3421b779c1280f85f51f.js",
+      "path---index-3421b779c1280f85f51f.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-b0122eda8ae66d76c639.js",
@@ -143,9 +147,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-715230de4671064a039a.js",
+      "app-3d6b8dd1e3f51e6e9960.js",
       "build-js-styles.css",
-      "app-715230de4671064a039a.js.map",
+      "app-3d6b8dd1e3f51e6e9960.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
@@ -165,8 +169,8 @@
       "path---maintainable-javascript-event-handling-08483da9a7c1874195de.js.map"
     ],
     "path---refactoring-moving-between-object": [
-      "path---refactoring-moving-between-object-39e44ed537fc256caadb.js",
-      "path---refactoring-moving-between-object-39e44ed537fc256caadb.js.map"
+      "path---refactoring-moving-between-object-9e40449234c2cb6b787d.js",
+      "path---refactoring-moving-between-object-9e40449234c2cb6b787d.js.map"
     ],
     "path---hello-rxjs": [
       "path---hello-rxjs-3872b9c973e75356e524.js",
