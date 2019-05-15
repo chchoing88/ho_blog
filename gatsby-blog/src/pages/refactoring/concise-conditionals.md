@@ -7,7 +7,7 @@ date: "2019-04-03T10:00:03.284Z"
 
 ## 조건문 쪼개기 (Decompose Conditional)
 
-복잡한 조건문(if-then-else)이 있을땐 if, tehn, eles 부분을 각각 메서드로 빼내자.
+복잡한 조건문(if-then-else)이 있을땐 if, then, eles 부분을 각각 메서드로 빼내자.
 
 ```javascript
 // bad
@@ -123,7 +123,11 @@ send()
 
 ## 제어 플래그 제거 (Remove Control Flag)
 
+여러 조건문이 사용된 코드에는 조건문을 빠져나갈 시점을 결정하는 제어 플래그가 흔히 사용된다.
 논리 연산식의 제어 플래그 연할을 하는 변수가 있을땐 그 변수를 break 문이나 return 문으로 바꾸자.
+
+break 문이나 continue 문이 있는 언어에서도 메서드 추출 후 return 문으로 바꾸는 방법을 선호한다.
+대체로 return 문을 사용할 수 있는 코드가 있으면 무슨 수를 써서라도 그 부분을 메서드로 추출해야 한다.
 
 ### 예제: 간단한 제어 플래그를 break 문으로 교체
 
@@ -134,7 +138,7 @@ send()
       if(!found) {
         if(people[i].equals('Don')) {
           sendAlert()
-          found = true
+          found = true // 제어 플래그
         }
 
         if(people[i].equals('John')) {
@@ -188,7 +192,7 @@ checkSecurity(people) {
   }
 ```
 
-found 는 결과를 나타내기도 하고 제어 플래그 역할도 한다. 이럴땐 found 변수를 알아내는 코드를 메서드로 빼내자.
+여기서 `found` 는 결과를 나타내기도 하고 제어 플래그 역할도 한다. 이럴땐 `found` 변수를 알아내는 코드를 메서드로 빼내자.
 
 ```javascript
 checkSecurity(people) {
@@ -200,8 +204,8 @@ checkSecurity(people) {
   for(let i = 0; i < people.length; i++) {
 
     if(people[i].equals('Don')) {
-      sendAlert()
-      return 'Don'
+      sendAlert() // 상태 변경 관련 코드
+      return 'Don' // 값 반환 코드
     }
 
     if(people[i].equals('John')) {
@@ -213,13 +217,21 @@ checkSecurity(people) {
 }
 ```
 
+이 메서드의 기능엔 아직 부작용이 있다. 그래서 `상태 변경 메서드와 값 반환 메서드를 분리` 기법을 실시해야 한다.
+
 ## 여러 겹의 조건문을 감시 절로 전환 (Replace Nested Conditional with Guard Clauses)
 
 메서드에 조건문이 있어서 정상적인 실행 경로를 파악하기 힘들 땐 모든 특수한 경우에 감시 절을 사용하자.
 
+조건식은 주로 두 가지 형태를 띤다. 첫째는 어느 한 경로가 정상적인 동작의 일부인지 검사하는 형태이고, 둘째는 조건식 판별의 한 결과만 정상적인 동작을 나타내고 나머지는 비정상적인 동작을 나타내는 형태다.
+
+_만약 둘다 정상 동작의 일부분이라면 if 절과 else 절로 구성된 조건문을 사용하고, 조건문이 특이한 조건이라면 그 조건을 검사해서 조건이 true 일 경우 반환하자. 이런 식의 검사를 감시 절이라고 한다._
+
 여러 겹의 조건문을 감시 절로 전환기법의 핵심은 강조 부분이다. if-then-else 문을 사용하면 if 절과 else 절의 비중이 동등하다.
 따라서 코드를 보는 사람은 if 절과 else 절의 비중이 같다고 판단하게 된다.
 그와 달리, 감시 절은 "이것은 드문 경우이니 이 경우가 발생하면 작업을 수행한 후 빠져나와라" 하고 명령한다.
+
+유일한 진입점은 현대의 프로그래밍 언어에 표준처럼 굳어졌지만, 유일한 이탈점 규칙은 별로 바람직하지 않다.
 메서드의 이탈점을 하나만 사용해서 더 명확해진다면 그렇게 해야겠지만, 그렇지 않을 때는 굳이 한 개의 이탈점을 고집하지 말자.
 
 ### 예제
@@ -252,6 +264,8 @@ getPayAmount() {
   return normalPayAmount()
 }
 ```
+
+메서드에 더 이상 중요한 작업이 남아 있지 않다면, 그 메서드를 빠져나오게 해서 관심이 없음을 나타낸다.
 
 ### 예제: 조건문을 역순으로 만들기
 
@@ -286,10 +300,12 @@ getAdjustedCapital() {
 
 이런 조건문 덩어리가 프로그램의 여러 곳에 있을 때 가장 큰 효과를 볼 수 있다. 새 타입을 추가하려면 모든 조건문을 찾아서 수정해야 한다. 그러나 하위클래스를 사용하면 새 하위클래스를 작성하고 적당한 메서드만 넣으면 된다. 클래스 사용 부분은 그 하위클래스를 알 필요가 없어서 시스템 내부의 의존성이 줄어들고 수정이 쉬워진다.
 
+이것을 적용할 조건문은 switch-case 문이나 if 문이다.
+
 ### 예제
 
 사원 월급 예제를 보자. `분류 부호를 상태/전략 패턴으로 전환` 예제를 참고하자.
-Employee 클래스의 payAmount 메서드의 switch 문을 리펙토링 해보자.
+Employee 클래스의 `payAmount 메서드`의 switch 문을 리펙토링 해보자.
 
 ```javascript
 class Employee {
@@ -305,7 +321,7 @@ class Employee {
     this._type = EmployeeType.newType(type)
   }
 
-  // 이제 payAmount 메서드에 조건문을 재정의로 전환 기법을 적용할 수 있다.
+  // 이제 payAmount 메서드에 `조건문을 재정의로 전환 기법`을 적용할 수 있다.
   payAmount() {
     switch (this.getType()) {
       case EmployeeType.ENGINEER:
@@ -323,7 +339,7 @@ class Employee {
 }
 ```
 
-위 코드에서 `payAmount` 메서드를 `EmployeeType` 클래스로 옮기고 Employee 클래스의 데이터가 필요하므로 Employee 클래스를 인자로 전달해야한다.
+위 코드에서 `payAmount` 메서드를 `EmployeeType` 클래스로 옮기고 `Employee 클래스의 데이터`가 필요하므로 Employee 클래스를 인자로 전달해야한다.
 
 ```javascript
 class Employee {
@@ -364,8 +380,9 @@ class EmployeeType {
 }
 ```
 
-위의 코드에서 `payAmount`메서드를 정리해보자. 하나씩 case 문의 ENGINEER 절 코드를 `Engineer` 클래스로 코드를 복사하자.
-그리고 `EmployeeType` 클래스에 payAmount 메서드는 추상 메서드로 선언하자.
+위의 코드에서 `payAmount`메서드를 정리해보자.
+하나씩 case 문의 ENGINEER 절 코드를 `Engineer` 클래스로 코드를 복사하자.
+그리고 `EmployeeType` 클래스(상위클래스)에 payAmount 메서드는 추상 메서드로 선언하자.
 
 ```javascript
 class Employee {
@@ -388,7 +405,7 @@ class EmployeeType {
   static SALESMAN = 1
   static MANAGER = 2
 
-  payAmount(emp) {} // 추상메서드로 남겨두자.
+  payAmount(emp) {} // abstract 추상메서드로 남겨두자.
 
   static newType(type) {
     switch (type) {
