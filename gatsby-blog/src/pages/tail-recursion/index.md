@@ -96,7 +96,7 @@ function trampoline(fn) {
   while (fn && fn instanceof Function) { 
 //continue if fn is not undefined/null and if it is still a
 //function
-    fn = fn();
+    fn = fn(); // recur.bind(null,1*4,3) 을 실행.. 이 함수도 thunk 함수이다. 함수 호출 이후에 함수를 리턴함으로
   }
 //we call the function and assign the result of called previous fn
 //to new fn
