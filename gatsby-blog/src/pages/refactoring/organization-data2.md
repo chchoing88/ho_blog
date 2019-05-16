@@ -3,7 +3,7 @@ title: (리팩토링) 데이터 체계화2
 date: "2019-04-01T10:00:03.284Z"
 ---
 
-해당 글은 `리팩토링 (코드 품질을 개선하는 객체지향 사고법)` 에서 발췌 했습니다. 코드 예제는 javascript로 전환하였습니다.
+해당 글은 `리팩토링 (코드 품질을 개선하는 객체지향 사고법)` 에서 발췌 했습니다. 코드 예제는 javascript 로 전환하였습니다.
 
 ## 클래스의 단방향 연결을 양방향으로 전환 (Change Unidirectional Association to Bidirectional)
 
@@ -95,12 +95,11 @@ class Customer {
 
 두 클래스가 양방향으로 연결되어 있는데 한 클래스가 다른 클래스의 기능을 더 이상 사용하지 않게 됐을 땐 불필요한 방향의 연결을 끊자.
 
-양방향 연결로 인해 두 클래스는 서로 종속된다. 한 클래스를 수정하면 다른 클래스도 변경된다. 종속성이 많으면 시스템의 결합력이 강해져서 사소한 수정에도 예기치 못한 
-각종 문제가 발생한다. 
+양방향 연결로 인해 두 클래스는 서로 종속된다. 한 클래스를 수정하면 다른 클래스도 변경된다. 종속성이 많으면 시스템의 결합력이 강해져서 사소한 수정에도 예기치 못한각종 문제가 발생한다.
 
 ### 예제
 
-이전 예제와 같이 양방향으로 연결된 Customer와 Order 클래스는 다음과 같다.
+이전 예제와 같이 양방향으로 연결된 Customer 와 Order 클래스는 다음과 같다.
 
 ```javascript
 class Order {
@@ -113,10 +112,11 @@ class Order {
   }
 
   // 이전에 맺었던 customer와의 관계는 끊고 새로운 customer와 관계를 맺는다.
-  setCustomer(arg) { // Customer
-    if(this._customer !== null) this._customer.friendOrder().remove(this)
+  setCustomer(arg) {
+    // Customer
+    if (this._customer !== null) this._customer.friendOrder().remove(this)
     this._customer = arg
-    if(this_customer !== null) this._customer.friendOrder().add(this)
+    if (this_customer !== null) this._customer.friendOrder().add(this)
   }
 }
 
@@ -125,7 +125,8 @@ class Customer {
     this._order = new Set()
   }
 
-  addOrder(arg) { // Order
+  addOrder(arg) {
+    // Order
     arg.setCustomer(this)
   }
 
@@ -136,7 +137,7 @@ class Customer {
 }
 ```
 
-위 코드를 보면 customer가 먼저 있어야만 order가 있음을 알 수 있다. 
+위 코드를 보면 customer 가 먼저 있어야만 order 가 있음을 알 수 있다.
 따라서 Order 클래스에서 Customer 클래스로 가는 연결을 끊어야 한다. 즉, Order 클래스에 Customer 객체를 참조하는 코드를 빼야한다.
 한 명령을 Customer 객체에 하나의 매개변수로 전달하는 방법을 사용할 때가 많다. 이것을 간단한 예로 들면 다음과 같다.
 
@@ -157,7 +158,7 @@ class Order {
 }
 ```
 
-위 코드는 기능이 Customer 클래스를 통해 호출될 때 특히 효과가 있다. 왜냐하면 기능 자체를 하나의 인자로 전달하는 것이 수월하기 때문이다. 
+위 코드는 기능이 Customer 클래스를 통해 호출될 때 특히 효과가 있다. 왜냐하면 기능 자체를 하나의 인자로 전달하는 것이 수월하기 때문이다.
 
 ```javascript
 class Customer {
@@ -180,17 +181,16 @@ class Customer {
 }
 ```
 
-또는 속성 읽기 메서드를 수정해서 필드를 사용하지 않고 customer를 가져오게 할 수도 있다. 이렇게 하면 Order.getCustomer 메서드의 코드에 다음과 같이 알고리즘 전환을 
-적용할 수 있다.
+또는 속성 읽기 메서드를 수정해서 필드를 사용하지 않고 customer 를 가져오게 할 수도 있다. 이렇게 하면 Order.getCustomer 메서드의 코드에 다음과 같이 알고리즘 전환을적용할 수 있다.
 
 ```javascript
 class Order {
   // Customer 인스턴스들을 모조리 가져와서 내 Order가 들었나 안들었나 확인
   getCustomer() {
     const iter = Customer.getInstances()[Symbol.iterator]()
-    for( let i of iter) {
+    for (let i of iter) {
       const each = i.value
-      if(each.containsOrder(this)) return each
+      if (each.containsOrder(this)) return each
     }
 
     return null
@@ -347,16 +347,23 @@ class Person {
 분류부호 이름을 상징적인 것으로 정하면 코드가 상당히 이해하기 쉬워진다.
 문제는 상징적 이름은 단지 별명에 불과하다는 점이다.
 
-숫자형 분류부호를 클래스로 빼내면 컴파일러는 그 클래스 안에서 종류 판단을 수행할 수 있다.
-그 클래스 안에 팩토리 메서드를 작성하면 유효한 인스턴스만 생성되는지와 그런 인스턴스가 적절한 객체로 전달되는지를 정적으로 검사할 수 있다.
+_숫자형 분류부호를 클래스로 빼내면 컴파일러는 그 클래스 안에서 종류 판단을 수행할 수 있다._
+그 클래스 안에 팩토리 메서드를 작성하면 유효한 인스턴스만 생성되는지와 그런 인스턴스가 적절한 객체로 전달되는지를 정적으로 검사할 수 있다. 그 전까지 Person 클래스 메서드 들은 int 타입만 받아왔었는데 이 기법을 사용하면 명시적으로
+`BloodGroup` 타입을 받는지 확인할 수 있다.
 
-분류부호가 switch 문안에 사용되어 다른 기능을 수행하거나 메서드를 호출할 땐 클래스로 전환하면 안된다.
+분류 부호가 클래스로 만드는 건 _분류 부호가 순수한 데이터일 때만_ 실시해야 한다. 다시말해, 분류부호가 switch 문안에 사용되어 다른 기능을 수행하거나 메서드를 호출할 땐 클래스로 전환하면 안된다.
+
 switch 문에는 임의로 클래스를 사용할 수 없으며 오직 정수 타입만 사용 가능하므로 클래스로 전환은 실패를 맞게 된다.
+더 중요한건, 모든 switch 문은 `조건문을 재정의로 전환` 기법을 적용해 전부 없애야 한다는 사실이다.
+
+조건문을 재정의로 전환 기법을 실시하려면 우선 `분류 부호를 하위 클래스로 전환`이나 `분류 부호를 상태/전략 패턴으로 전환`기법을 적용해서 분류 부호부터 처리해야 한다.
 
 ### 예제
 
 다음과 같은 코드가 있다고 하자.
 `Person` 클래스엔 다음과 같이 분류 부호로 나타낸 혈액형 그룹이 들어 있다.
+
+여기서 특징은 분류 부호 클래스는 데이터 클래스로써만 사용 된다는 것이고 Person 클래스 안에서도 데이터를 저장만 하고 그 데이터에 따른 어떠한 다른 부가 로직도 보이지 않는다는 것이다.
 
 ```javascript
 class Person {
@@ -442,39 +449,52 @@ thePerson.setBloodGroup(BloodGroup.AB)
 
 클래스 기능에 영향을 주는 변경불가 분류 부호가 있을 땐 분류 부호를 하위클래스로 만들자.
 
-분류부호가 클래스 기능에 영향을 준다면 재정의를 통해 조금씩 다른 기능을 처리하는 것이 최선이다.
-분류부호가 클래스 기능에 영향을 미치는 현상은 case 문 같은 조건문이 있을 때 주로 나타난다. 그런 조건문은 switch 문 아니면 if-then-else 문이다.
-어느 조건문이든 분류 부호의 값을 검사해서 그 값에 따라 다른 코드를 실행한다. 이런 조건문은 조건문을 재정의로 전환을 실시해서 재정의로 바꿔야 한다.
+클래스 기능에 영향을 주지 않는 분류 부호가 있을 땐 분류 부호를 클래스 전환 기법을 실시하면 된다. 그러나 분류 부호가 클래스 기능에 영향을 준다면 재정의를 통해 조금씩 다른 기능을 처리하는 것이 최선이다.
+
+분류 부호가 클래스 기능에 영향을 미치는 현상은 case 문 같은 조건문이 있을 때 주로 나타난다. 그런 조건문은 switch 문 아니면 if-then-else 문이다. 어느 조건문이든 분류 부호의 값을 검사해서 그 값에 따라 다른 코드를 실행한다.
+이런 조건문은 `조건문을 재정의로 전환`을 실시해서 재정의로 바꿔야 한다.
+
 이런 기법이 효과를 보려면 분류부호를 다형화된 기능이 든 상속 구조로 고쳐야 한다.
+
+이 기법의 장점은 클래스 사용 부분에 있던 다형적인 기능 관련 데이터가 클래스 자체로 이동한다는 데 있다. 변형된 새 기능을 추가할땐 하위클래스만 하나 추가하면 되기 때문이다. 다형성, 즉 재정의를 이용하지 않는다면 조건문을 전부 찾아서 일일이 수정해야 한다.
 
 ### 예제
 
+아래 Employee 클래스의 분류 부호인 `this._type` 변수를 없애고 각 타입들을 하위클래스로 빼는데 목적이 있다. 왜냐하면 Employee 클래스 로직에는 저 타입에 따른 여러가지 다른 코드를 실행하는 코드들이 얽힐 것이기 때문이다.
+그래서 각 타입에 따른 코드 실행은 각 하위 클래스에 정리하도록 한다.
+
 ```javascript
-// 분류 부호에 필드 자체 캡슐화 기법을 사용.
 class Employee {
   static ENGINEER = 0
   static SALESMAN = 1
   static MANAGER = 2
 
+  // Employee 클래스의 생성자 메서드가 분류 부호를 매개변수로 받으니까,
+  // 그 생성자 메서드를 다음과 같이 팩토리 메서드로 바꿔야 한다.
+  static create(type) {
+    return new Employee(type)
+  }
+
   constructor(type) {
-    this._type = type
+    this._type = type // 분류 부호
   }
 
   getType() {
     return this._type
   }
-
-  // 팩토리 메서드
-  static create(type) {
-    return new Employee(type)
-  }
 }
+
+// 사용
+
+const engineer = Employee.create(Employee.ENGINEER)
 ```
 
-먼저 분류부호 ENGINNER 변수를 `Engineer` 하위클래스로 만들자. 다음과 같이 하위클래스를 작성하고 ENGINEER 분류 부호에 해당하는 재정의 메서드를 작성하자.
+먼저 `분류부호 ENGINNER` 변수를 `Engineer` 하위클래스로 만들자. 다음과 같이 하위클래스를 작성하고 `ENGINEER 분류 부호`에 해당하는 재정의 메서드를 작성하자.
 
 ```javascript
+// 하위클래스 Engineer
 class Engineer extends Employee {
+  // 재정의 메서드
   getType() {
     return Employee.ENGINEER
   }
@@ -483,19 +503,30 @@ class Engineer extends Employee {
 // 적절한 객체를 생성하게 팩토리 메서드도 다음과 같이 고친다.
 
 class Employee {
+  static ENGINEER = 0
+  static SALESMAN = 1
+  static MANAGER = 2
+
   static create(type) {
     if (type === ENGINEER) return new Engineer()
     else return new Employee(type)
   }
 }
 
+// 위 식으로 나머지 분류 부호도 한번에 하나씩 하위클래스로 수정하자.
 // 한번더 정리하면 Employee 클래스의 분류부호 필드를 삭제하고 팩토리 메서드는 다음과 같다.
 
 class Employee {
+  // Employee 클래스의 분류 부호 필드를 삭제
+  static ENGINEER = 0
+  static SALESMAN = 1
+  static MANAGER = 2
+
+  // 불가피하게 인스턴스를 생성할 때만 딱 한번 사용
   static create(type) {
     switch (type) {
       case ENGINEER:
-        return new Engineer()
+        return new Engineer() // 하위 클래스
         break
       case SALESMAN:
         return new Salesman()
@@ -506,14 +537,21 @@ class Employee {
       default:
     }
   }
+  // abstract 타입
+  getType() {}
 }
+
+// 사용
+const engineer = Employee.create(Employee.ENGINEER)
 ```
+
+하위클래스를 작성했으면 `메서드 하향`과 `필드하향`을 실시해서 Employee 클래스의 특정 분류 부호에만 관련된 모든 메서드와 필드를 특정 부호에 해당하는 하위클래스로 옮겨야 한다.
 
 ## 분류 부호를 상태/전략 패턴으로 전환 (Replace Type Code with State/Strategy)
 
 분류 부호가 클래스의 기능에 영향을 주지만 하위클래스로 전환할 수 없을 땐 그 분류 부호를 상태 객체로 만들자.
 
-분류 부호가 객체 수명주기 동안 변할 때나 다른 이유로 하위 클래스로 만들 수 없을 때 사용한다. 이 기법은 상태 패턴이나 전략 패턴중 하나를 사용한다.
+_분류 부호가 객체 수명주기 동안 변할 때나 다른 이유로 하위 클래스로 만들 수 없을 때 사용한다._ 이 기법은 상태 패턴이나 전략 패턴중 하나를 사용한다.
 조건문을 재정의로 전환으로 하나의 알고리즘을 단순화해야할 때는 전략이 더 적절하며, 상태별 데이터를 이동하고 객체를 변화하는 상태로 생각할 때는 상태 패턴이 더 적절하다.
 
 여기서 말하는 상태/전략 패턴이란 전략을 설정하는 부분 따로 실행하는 부분 따로 두고 전략을 설정해두면 실행하기 전까지 자유롭게 전략을 바꿔나갈수 있는 방법이다.
@@ -572,7 +610,7 @@ class Employee {
     this._type = type
   }
 
-  // 앞의 코드를ㄹ 사용해 조건별로 기능을 실행하는 코드이다.
+  // 앞의 코드를 사용해 조건별로 기능을 실행하는 코드이다.
   payAmount() {
     switch (this._type) {
       case ENGINEER:
@@ -634,6 +672,7 @@ class Employee {
 ```javascript
 // 상태 클래스 선언
 class EmployeeType {
+  // abstract
   getTypeCode() {}
 }
 
@@ -663,6 +702,8 @@ class Employee {
     return this._type.getTypeCode()
   }
   // EmployeeType 인 상태 클래스를 사용하다 보니 setType 메서드에 스위치 문이 생겼다.
+  // 이 switch 문은 분류가 변할 때만 실행된다.
+  // 생성자를 팩토리 메서드로 전환 기법을 실시해서 각 경우별 팩토리 메서드를 작성하는 방법도 있다.
   setType(type) {
     switch (type) {
       case ENGINEER:
@@ -688,6 +729,11 @@ class Employee {
   // 여기에 정의 내렸던 분류 부호 정의를 삭제
   // EmployeeType 클래스 참조를 넣자.
   // ...
+  constructor(type) {
+    // this._type = type
+    this.setType(type)
+  }
+
   getType() {
     // 이제 _type은 EmployeeType의 인스턴스다.
     return this._type.getTypeCode()
@@ -697,7 +743,7 @@ class Employee {
     this._type = EmployeeType.newType(type)
   }
 
-  // 이제 payAmount 메서드에 조건문을 재정의로 전환 기법을 적용할 수 있다.
+  // 이제 payAmount 메서드에 `조건문을 재정의로 전환 기법`을 적용할 수 있다.
   payAmount() {
     switch (this.getType()) {
       case EmployeeType.ENGINEER:
@@ -719,7 +765,7 @@ class EmployeeType {
   static SALESMAN = 1
   static MANAGER = 2
 
-  getTypeCode() {} // 추상 클래스 
+  getTypeCode() {} // 추상 클래스
 
   static newType(type) {
     switch (type) {
@@ -736,7 +782,13 @@ class EmployeeType {
     }
   }
 }
+
+// 사용
+const engineer = new Employee(EmployeeType.ENGINEER)
+engineer.payAmount()
 ```
+
+이것으로 payAmout 메서드에 `조건문을 재정의로 전환기법`을 적용할 수 있게 됐다.
 
 ## 하위클래스를 필드로 전환(Replace Subclass with Fields)
 
@@ -746,7 +798,7 @@ class EmployeeType {
 상수 메서드는 읽기 메서드에 각기 다른 값을 반환하는 하위클래스에 넣으면 유용하다.
 
 상위클래스 안에 읽기 메서드를 정의하고 그 읽기 메서드를 하위클래스에서 다양한 값으로 구현하자.
-하위클래스를 상수메서드로만 구성한다고 해서 그만큼 효용성이 커지는것은 아니다. 상위클래스 안에 필드를 넣고 그런 하위클래스는 완전히 삭제하면 된다. 
+하위클래스를 상수메서드로만 구성한다고 해서 그만큼 효용성이 커지는것은 아니다. 상위클래스 안에 필드를 넣고 그런 하위클래스는 완전히 삭제하면 된다.
 
 ### 예제
 
@@ -754,36 +806,35 @@ class EmployeeType {
 이렇게 기능이 충실하지 못한 하위클래스는 삭제하자.
 
 ```javascript
-// 상위 클래스 
+// 상위 클래스
 class Person {
-  isMale(){}
-  getCode(){}
+  isMale() {}
+  getCode() {}
 }
 
 class Male extends Person {
-  isMale(){
+  isMale() {
     return true
   }
-  getCode(){
+  getCode() {
     return 'M'
   }
 }
 
 class Female extends Person {
-  isMale(){
+  isMale() {
     return false
   }
-  getCode(){
+  getCode() {
     return 'F'
   }
 }
 ```
 
-우선 생성자를 팩토리 메서드로 전환을 실시한다. 
+우선 생성자를 팩토리 메서드로 전환을 실시한다.
 
 ```javascript
 class Person {
-
   constructor(isMale, code) {
     this._isMale = isMale
     this._code = code
@@ -806,7 +857,6 @@ class Person {
   getCode() {
     return this._code
   }
-
 }
 
 // 불필요한 하위 클래스들 삭제
