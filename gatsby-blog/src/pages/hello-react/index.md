@@ -28,7 +28,7 @@ class Coldelab extends React.Component{
     render(){
         let text = "Hi i am coldelab";
         let style = {
-            baackgroundColor:'aqua'
+            baackgroundColor:'aqua'       
         };
         return(
             // <div>Codelab</div>
@@ -50,10 +50,107 @@ class App extends React.Component{
 ReactDom.render(<App/>,document.getElementById("root"));
 ```
 
+### React element
+
+- `react element`는 컴포넌트 인스턴스 또는 돔 노드를 설명해주고 그것이 원하는 프로퍼티를 설명하는 객체이다. 
+- 이 객체 안에는 오직 컴포넌트의 타입(<button>), 프로퍼티(color), 그리고 그 안에 들어있는 child node들의 정보이다. 
+- element는 실제 인스턴스가 아닙니다. 오히려, React에게 화면에보고 싶은 것을 알려주는 방법입니다.
+- element의 어떤 method도 호출할 수 없습니다. 이것은 단지 immutable 한 2개의 필드(type: (string | Component) and props: Object.)를 가진 object 설명서입니다.
+
+```javascript
+const Button = {
+  type: 'button',
+  props: {
+    className: 'button button-blue',
+    children: {
+      type: 'b',
+      children: 'OK!'
+    }
+  }
+}
+```
+
+- component를 설명하는 element 또한 element 이다. 단지 element는 DOM node를 설명하는 것이다. 그것들은 다른것들과 중첩될 수 있다. 
+
+```javascript
+const DeleteAccount = () => ({
+  type: 'div',
+  props: {
+    children: [{
+      type: 'p',
+      props: {
+        children: 'Are you sure?'
+      }
+    }, {
+      type: DangerButton,
+      props: {
+        children: 'Yep'
+      }
+    }, {
+      type: Button,
+      props: {
+        color: 'blue',
+        children: 'Cancel'
+      }
+   }]
+});
+```
+
+- React는 element type에 class나 함수가 오면 주어진 props와 함께 어떤 element를 render 그려야 할지 물어본다.
+- element는 plain object이다. 이 object는 DOM 노드들 또는 다른 컴포넌트들의 관점에서 화면에 표시할 내용을 설명하는 일반 객체이다. Element 들은 다른 element들을 props안에 포함할 수 있다.
+
+### React component
+
+- React component는 props를 input 으로 받아서 element tree를 output으로 방출하는 것이다. 이게 component이다! 
+- 이렇게 반환 된 요소 트리에는 DOM 노드를 설명하는 요소와 다른 구성 요소를 설명하는 요소가 모두 포함될 수 있습니다. 이렇게하면 내부 DOM 구조에 의존하지 않고도 UI의 독립적 인 부분을 작성할 수 있습니다.
+- component는 class로도 정의 될 수 있다. 함수 컴포넌트보다 조금더 파워풀 하다. 
+- 함수나 클래스나 모든 컴포넌트는 React 이라는 것이다. 컴포넌트들은 props를 받고 element 를 반환한다는 것이다.
+
+
+```javascript
+// React: You told me this...
+// 여기서 From 이 component 라고 한다면 아래 props를 input으로 받아서 새로운 element를 output으로 내놓을 것이다.
+{
+  type: Form,
+  props: {
+    isSubmitted: false,
+    buttonText: 'OK!'
+  }
+}
+// React: ...And Form told me this...
+{
+  type: Button,
+  props: {
+    children: 'OK!',
+    color: 'blue'
+  }
+}
+// React: ...and Button told me this! I guess I'm done.
+{
+  type: 'button',
+  props: {
+    className: 'button button-blue',
+    children: {
+      type: 'b',
+      props: {
+        children: 'OK!'
+      }
+    }
+  }
+}
+```
+
+- 위 수행으로 React가 최종 DOM tree를 안다. 그리곤 ReactDOM 이나 React Native 같은 rederer로 update가 필요한 부분에 실제 DOM 노드를 최소한으로 적용시킨다.
+- component는 2가지로 표현할 수 있다. render() 메서드를 지닌 React.Component를 상속받은 class가 하나고, function 이 또다른 하나다. 이 두가지 케이스는 props를 input으로 받고 return으로는 element 트리를 리턴한다.
+- component가 몇몇 props를 input으로 받는다는 것은 부모 component가 그것의 타입과 그들의 prop를 리턴했기 때문이다. 
+- instance는 작성한 컴포넌트 클래스에서 this 참조하는 인스턴스입니다. 로컬 상태를 저장하고 수명주기 이벤트에 반응하는 데 유용합니다.
+- Function component들은 intstaces를 전혀 가지지 못합니다. Class 컴포넌트들은 instances 들을 가진다. 이 instance는 사용자가 직접적으로 만들 필요는 없다. 
+- element를 만들기 위해서는 React.createElement(), JSX, 또는 element factory helper 함수를 이용할 수 있다.
+
 ### jsx
 
 xml같은 문법을 네이티브 자바스크립트로 변환을 해줍니다. 괄호는 가독성을 위해 사용
-바벨이 jsx로더를 사용해서 jsx 형태코드를 변환해준다.
+바벨이 jsx로더를 사용해서 jsx 형태코드를 변환해준다. 
 
 ```jsx
 
@@ -375,3 +472,7 @@ module.exports = {
 - Rxjs , redux-observable
 - flow
 - esLint & airbnb
+
+## 참고 
+
+[https://medium.com/@dan_abramov/react-components-elements-and-instances-90800811f8ca](https://medium.com/@dan_abramov/react-components-elements-and-instances-90800811f8ca)
