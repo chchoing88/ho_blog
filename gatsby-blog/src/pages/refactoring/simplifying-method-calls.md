@@ -837,6 +837,15 @@ Unchecked 예외(`미확인 예외`) 는 실행 단계에서 확인되며 명시
 한편 class.forName(str) 은 str이 유효한 클래스 이름을 담고 있지 않으면 검사 예외를 던진다. 
 이렇게 다른 이유는 integer.parseInt를 호출하기 전에는 문자열이 유효한 정수인지 검사할 수 있다. 하지만 실제로 클래스를 로드해보기 전에는 해당 클래스를 로드할 수 있는지 알 수 없기 때문이다. 
 
+Checked Exception과 Unchecked Exception의 가장 명확한 구분 기준은 ‘꼭 처리를 해야 하느냐’이다. Checked Exception이 발생할 가능성이 있는 메소드라면 반드시 로직을 try/catch로 감싸거나 throw로 던져서 처리해야 한다. 반면에 Unchecked Exception은 명시적인 예외처리를 하지 않아도 된다. 이 예외는 피할 수 있지만 개발자가 부주의해서 발생하는 경우가 대부분이고, 미리 예측하지 못했던 상황에서 발생하는 예외가 아니기 때문에 굳이 로직으로 처리를 할 필요가 없도록 만들어져 있다.
+
+체크 예외가 발생할 수 있는 메소드를 사용할 경우, 복구가 가능한 예외들이기 때문에 반드시 예외를 처리하는 코드를 함께 작성해야 한다. catch문으로 예외를 잡든, throws로 예외를 자신을 호출한 클래스로 던지는 방법으로 해결
+언체크 예외는 따로 catch문으로 잡거나, throws로 선언하지 않아도 된다. 언체크 예외는 프로그램에 오류가 있을 때 발생하도록 의도된 것들이다.
+
+참조 : 
+- [http://www.nextree.co.kr/p3239/](http://www.nextree.co.kr/p3239/)
+- [https://plus4070.github.io/nhn%20entertainment%20devdays/Exception.html](https://plus4070.github.io/nhn%20entertainment%20devdays/Exception.html)
+
 ### 예제
 
 ```javascript
