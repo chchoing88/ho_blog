@@ -784,8 +784,10 @@ class EmployeeType {
 }
 
 // 사용
-const engineer = new Employee(EmployeeType.ENGINEER)
-engineer.payAmount()
+const employee = new Employee(EmployeeType.ENGINEER)
+employee.payAmount() // engineer payamount
+employee.setType(EmployeeType.SALESMAN) // 타입변환
+employee.payAmount() // salesman payamount
 ```
 
 이것으로 payAmout 메서드에 `조건문을 재정의로 전환기법`을 적용할 수 있게 됐다.
