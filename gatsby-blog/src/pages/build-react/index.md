@@ -534,3 +534,33 @@ function reconcileChildren(instance, element) {
 ```
 
 ## Components and State
+
+위 코드에서는 몇몇 가지 문제사항이 있었다. 
+
+- 모든 변화는 전체 가상 DOM 트리에 대한 조정을 트리거합니다.
+- State가 글로벌하게 존재합니다.
+- state가 변화 된 후 render 함수를 좀 더 명시적으로 호출해야 합니다.
+
+Components 는 이러한 이슈를 해결하는데 도움을 줄수 있습니다.
+
+- JSX를 이용해 Custom tag를 정의 할 수 있습니다.
+- lifecycle 이벤트에 Hook을 걸수 있습니다. 
+
+먼저해야 할 일은 컴포넌트가 확장 될 Component 기본 클래스를 제공하는 것입니다. 우리는 구성 요소 상태를 업데이트하는 데 사용할 `partialState`를 받는 `setState` 메서드와 props 매개 변수가있는 생성자가 필요합니다.
+
+```js
+class Component {
+  constructor(props) {
+    this.props = props;
+    this.state = this.state || {};
+  }
+
+  setState(partialState) {
+    this.state = Object.assign({}, this.state, partialState);
+  }
+}
+```
+
+어플리케이션 코드에서는 이 클래스를 상속받을 것입니다. 그 후에 div 와 span 같이 `<MyComponent>` 처럼 사용할 것입니다.
+여기서 중요한건 우리가 만들었던 `createElement` 수정이 필요 없습니다. element `type`으로 class 컴포넌트를 받고 `props`를 다룰것입니다.
+그래서 여기선 이 element를 받았을때 component instance( public instances라고 부릅니다.)를 생성해주는 함수를 만들 필요가 있습니다.
