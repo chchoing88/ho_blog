@@ -263,7 +263,7 @@ function render(element, parentDom) {
 
 React 에서는 위에서 말한 달라진 곳을 비교하는것 이 "diffing" 프로세싱을 **reconciliation** 이라 부릅니다. 우리도 이와같이 하기 위해서 이전 render 에 사용 되었던 element tree 구조를 보관할 필요가 있고 이것을 새로운 element tree 구조와 비교할 것입니다. 다른말로 하면 우리의 virtual DOM 버젼을 계속 유지해 나갈 것이다.
 
-virtual DOM 안에 있는 노드들은 무엇을 해야 할까요? 이미 그것은 element 로 사용을 하고 있고 element 들은 `props.children` 프로퍼티를 이미 가지고 있다. 이 프로퍼티는 tree 구조 처럼 element 들 탐색을 가능하게 한다. 하지만 여기서 2 가지 문제점이 있는데, 하나는 reconciliation 을 좀 더 쉽게 진행하기 위해서 각 노드의 virtual DOM 에 실제 DOM reference 를 가지고 있어야 한다는 점이고, element들을 immutable하게 유지해야 한다. 두번째 문제는 우리는 나중에 본인만의 state 를 갖고 있는 Components 를 지원해야하고 element 들이 그것을 다루지 못하게 해야한다.
+virtual DOM 안에 있는 노드들은 무엇을 해야 할까요? 이미 그것은 element 로 사용을 하고 있고 element 들은 `props.children` 프로퍼티를 이미 가지고 있다. 이 프로퍼티는 tree 구조 처럼 element 들 탐색을 가능하게 한다. 하지만 여기서 2 가지 문제점이 있는데, 하나는 reconciliation 을 좀 더 쉽게 진행하기 위해서 각 노드의 virtual DOM 에 실제 DOM reference 를 가지고 있어야 한다는 점이고, element 들을 immutable 하게 유지해야 한다. 두번째 문제는 우리는 나중에 본인만의 state 를 갖고 있는 Components 를 지원해야하고 element 들이 그것을 다루지 못하게 해야한다.
 
 ### Instances
 
@@ -286,7 +286,8 @@ function render(element, container) {
   rootInstance = nextInstance
 }
 
-function reconcile(parentDom, instance, element) { // 부모 real DOM, 이전 instance , 새로운 element
+function reconcile(parentDom, instance, element) {
+  // 부모 real DOM, 이전 instance , 새로운 element
   if (instance == null) {
     // 초기 render 시
     const newInstance = instantiate(element)
@@ -536,162 +537,249 @@ function reconcileChildren(instance, element) {
 
 ## Components and State
 
-위 코드에서는 몇몇 가지 문제사항이 있었다. 
+위 코드에서는 몇몇 가지 문제사항이 있었다.
 
-- 모든 변화에 전체 virtual DOM tree를 reconciliation을 진행합니다. 
-- State가 글로벌하게 존재합니다.
-- state가 변화 된 후 render 함수를 좀 더 명시적으로 호출해야 합니다.
+* 모든 변화에 전체 virtual DOM tree 를 reconciliation 을 진행합니다.
+* State 가 글로벌하게 존재합니다.
+* state 가 변화 된 후 render 함수를 좀 더 명시적으로 호출해야 합니다.
 
 Components 는 이러한 이슈를 해결하는데 도움을 줄수 있습니다.
 
-- JSX를 이용해 Custom tag를 정의 할 수 있습니다.
-- lifecycle 이벤트에 Hook을 걸수 있습니다. 
+* JSX 를 이용해 Custom tag 를 정의 할 수 있습니다.
+* lifecycle 이벤트에 Hook 을 걸수 있습니다.
 
 먼저해야 할 일은 컴포넌트가 확장 될 Component 기본 클래스를 제공하는 것입니다. 우리는 구성 요소 상태를 업데이트하는 데 사용할 `partialState`를 받는 `setState` 메서드와 props 매개 변수가있는 생성자가 필요합니다.
 
 ```js
 class Component {
   constructor(props) {
-    this.props = props;
-    this.state = this.state || {};
+    this.props = props
+    this.state = this.state || {}
   }
 
   setState(partialState) {
-    this.state = Object.assign({}, this.state, partialState);
+    this.state = Object.assign({}, this.state, partialState)
   }
 }
 ```
 
 어플리케이션 코드에서는 이 클래스를 상속받을 것입니다. 그 후에 div 와 span 같이 `<MyComponent>` 처럼 사용할 것입니다.
 여기서 중요한건 우리가 만들었던 `createElement` 수정이 필요 없습니다. element `type`으로 class 컴포넌트를 받고 `props`를 다룰것입니다.
-그래서 여기선 이 element를 받았을때 component instance( public instances라고 부릅니다.)를 생성해주는 함수를 만들 필요가 있습니다.
+그래서 여기선 이 element 를 받았을때 component instance( public instances 라고 부릅니다.)를 생성해주는 함수를 만들 필요가 있습니다.
 
 ```js
 function createPublicInstance(element, internalInstance) {
-  const { type, props } = element;
-  const publicInstance = new type(props);
-  publicInstance.__internalInstance = internalInstance;
-  return publicInstance;
+  const { type, props } = element
+  const publicInstance = new type(props)
+  publicInstance.__internalInstance = internalInstance
+  return publicInstance
 }
 ```
 
-public instance 생성을 하면서 internal instance(virtual DOM) 의 레퍼런스를 추가적으로 가지고 있을것입니다. 이것은 오직 public instance state가 변경 되었을때 해당 instance sub-tree 업데이트 하는데 필요합니다.
+public instance 생성을 하면서 internal instance(virtual DOM) 의 레퍼런스를 추가적으로 가지고 있을것입니다. 이것은 오직 public instance state 가 변경 되었을때 해당 instance sub-tree 업데이트 하는데 필요합니다.
 
 ```js
 class Component {
   constructor(props) {
-    this.props = props;
-    this.state = this.state || {};
+    this.props = props
+    this.state = this.state || {}
   }
 
   setState(partialState) {
-    this.state = Object.assign({}, this.state, partialState);
-    updateInstance(this.__internalInstance);
+    this.state = Object.assign({}, this.state, partialState)
+    updateInstance(this.__internalInstance)
   }
 }
 
 function updateInstance(internalInstance) {
-  const parentDom = internalInstance.dom.parentNode;
-  const element = internalInstance.element;
-  reconcile(parentDom, internalInstance, element);
+  const parentDom = internalInstance.dom.parentNode
+  const element = internalInstance.element
+  reconcile(parentDom, internalInstance, element)
 }
 ```
 
-`instantiate` 함수도 update가 필요합니다. components들은 public instace로 생성하고 component의 `render` 함수를 child element를 얻기 위해 호출해준다. 그리곤 해당 element를 다시 `instantiate` 함수로 호출해준다. 
+`instantiate` 함수도 update 가 필요합니다. components 들은 public instace 로 생성하고 component 의 `render` 함수를 child element 를 얻기 위해 호출해준다. 그리곤 해당 element 를 다시 `instantiate` 함수로 호출해준다.
 
 ```js
 function instantiate(element) {
-  const { type, props } = element;
-  const isDomElement = typeof type === "string";
+  const { type, props } = element
+  const isDomElement = typeof type === 'string'
 
   if (isDomElement) {
     // Instantiate DOM element
-    const isTextElement = type === TEXT_ELEMENT;
+    const isTextElement = type === TEXT_ELEMENT
     const dom = isTextElement
-      ? document.createTextNode("")
-      : document.createElement(type);
+      ? document.createTextNode('')
+      : document.createElement(type)
 
-    updateDomProperties(dom, [], props);
+    updateDomProperties(dom, [], props)
 
-    const childElements = props.children || [];
-    // childElements 는 배열로 들어오기 때문에 map 돌리면서 instantiate 함수 호출해줌. 
-    const childInstances = childElements.map(instantiate);
-    const childDoms = childInstances.map(childInstance => childInstance.dom);
-    childDoms.forEach(childDom => dom.appendChild(childDom));
+    const childElements = props.children || []
+    // childElements 는 배열로 들어오기 때문에 map 돌리면서 instantiate 함수 호출해줌.
+    const childInstances = childElements.map(instantiate)
+    const childDoms = childInstances.map(childInstance => childInstance.dom)
+    childDoms.forEach(childDom => dom.appendChild(childDom))
 
-    const instance = { dom, element, childInstances };
-    return instance;
+    const instance = { dom, element, childInstances }
+    return instance
   } else {
     // element.type이 class 일 경우.
     // Instantiate component element
-    const instance = {};
-    const publicInstance = createPublicInstance(element, instance);
-    const childElement = publicInstance.render();
+    const instance = {}
+    const publicInstance = createPublicInstance(element, instance)
+    const childElement = publicInstance.render()
     // child 인스턴스가 하나임.
-    const childInstance = instantiate(childElement);
-    const dom = childInstance.dom;
+    const childInstance = instantiate(childElement)
+    const dom = childInstance.dom
 
-    Object.assign(instance, { dom, element, childInstance, publicInstance });
-    return instance;
+    Object.assign(instance, { dom, element, childInstance, publicInstance })
+    return instance
   }
 }
 ```
 
-component elements 에 해당하는 internal instance 과 dom element들은 다르다. Component internal instance 들은 오직 하나의 child(render 함수에서 리턴되는) 만 가지고 있다. 그래서 internal instance 들은 dom instances 들이 가지고 있는 배열인 `childInstances` 대신에 childInstance 프로퍼티 하나를 가지고 있다. 또한, component internal instance들은 public instance를 가지고 있을 필요가 있다. 그래야 render 함수가 reconciliation 하는 동안 불려질수 있기 때문이다.
+component elements 에 해당하는 internal instance 과 dom element 들은 다르다. Component internal instance 들은 오직 하나의 child(render 함수에서 리턴되는) 만 가지고 있다. 그래서 internal instance 들은 dom instances 들이 가지고 있는 배열인 `childInstances` 대신에 childInstance 프로퍼티 하나를 가지고 있다. 또한, component internal instance 들은 public instance 를 가지고 있을 필요가 있다. 그래야 render 함수가 reconciliation 하는 동안 불려질수 있기 때문이다.
 
-한가지 놓친것이 있다면 component instance의 reconciliation를 다루는 것이다. 그래서 우린  reconciliation algorithm 에 한가지 케이스를 더 추가할 것이다. children reconciliation을 다루지 않아도 되는 한가지 child만 가지고 있는 component instance가 주어졌을때, 우린 public instance의 props를 update 시키고 child를 re-render 시켜주면 된다.
+한가지 놓친것이 있다면 component instance 의 reconciliation 를 다루는 것이다. 그래서 우린 reconciliation algorithm 에 한가지 케이스를 더 추가할 것이다. children reconciliation 을 다루지 않아도 되는 한가지 child 만 가지고 있는 component instance 가 주어졌을때, 우린 public instance 의 props 를 update 시키고 child 를 re-render 시켜주면 된다.
 
 ```js
 function reconcile(parentDom, instance, element) {
   if (instance == null) {
     // Create instance
-    const newInstance = instantiate(element);
-    parentDom.appendChild(newInstance.dom);
-    return newInstance;
+    const newInstance = instantiate(element)
+    parentDom.appendChild(newInstance.dom)
+    return newInstance
   } else if (element == null) {
     // Remove instance
-    parentDom.removeChild(instance.dom);
-    return null;
+    parentDom.removeChild(instance.dom)
+    return null
   } else if (instance.element.type !== element.type) {
     // Replace instance
-    const newInstance = instantiate(element);
-    parentDom.replaceChild(newInstance.dom, instance.dom);
-    return newInstance;
-  } else if (typeof element.type === "string") {
+    const newInstance = instantiate(element)
+    parentDom.replaceChild(newInstance.dom, instance.dom)
+    return newInstance
+  } else if (typeof element.type === 'string') {
     // Update dom instance
-    updateDomProperties(instance.dom, instance.element.props, element.props);
-    instance.childInstances = reconcileChildren(instance, element);
-    instance.element = element;
-    return instance;
+    updateDomProperties(instance.dom, instance.element.props, element.props)
+    instance.childInstances = reconcileChildren(instance, element)
+    instance.element = element
+    return instance
   } else {
     //Update composite instance
-    instance.publicInstance.props = element.props;
-    const childElement = instance.publicInstance.render();
-    const oldChildInstance = instance.childInstance;
-    const childInstance = reconcile(parentDom, oldChildInstance, childElement);
-    instance.dom = childInstance.dom;
-    instance.childInstance = childInstance;
-    instance.element = element;
-    return instance;
+    instance.publicInstance.props = element.props
+    const childElement = instance.publicInstance.render()
+    const oldChildInstance = instance.childInstance
+    const childInstance = reconcile(parentDom, oldChildInstance, childElement)
+    instance.dom = childInstance.dom
+    instance.childInstance = childInstance
+    instance.element = element
+    return instance
   }
 }
-
 ```
 
-이게 전부이다. 이 코드를 사용해서 활용한 예제이다. : [codepen](https://codepen.io/pomber/pen/RVqBrx) 
-
+이게 전부이다. 이 코드를 사용해서 활용한 예제이다. : [codepen](https://codepen.io/pomber/pen/RVqBrx)
 
 ## Fiber: Incremental reconciliation
 
-리액트 16버젼이 출시 되었다. 그것은 리액트의 코드 대부분을 재 작성해야 할 필요가 생긴 새로운 내부적인 아키텍쳐를 가지고 있다. 
+리액트 16 버젼이 출시 되었다. 그것은 리액트의 코드 대부분을 재 작성해야 할 필요가 생긴 새로운 내부적인 아키텍쳐를 가지고 있다.
 이것은 예전 아키텍처로는 개발하기 힘든 일부 기능이 선적되었음을 의미합니다. 또한 이 시리즈에서 작성한 대부분의 코드는 현재 가치가 없다는 것을 의미합니다.
 
-이제는 16에서 사용하는 새로운 아키텍쳐를 사용해서 다시 코드를 작성해볼 예정이다. 특히, 구조, 변수들, 함수이름들을 리액트 코드베이스로 부터 가져와서 작성할 것입니다.
-여기서 우리가 건들지 않아도 되는 API는 다음과 같습니다.
+이제는 16 에서 사용하는 새로운 아키텍쳐를 사용해서 다시 코드를 작성해볼 예정이다. 특히, 구조, 변수들, 함수이름들을 리액트 코드베이스로 부터 가져와서 작성할 것입니다.
+여기서 우리가 건들지 않아도 되는 API 는 다음과 같습니다.
 
-- createElemetn()
-- render() (오직 DOM 을 rendering 하는 함수)
-- Component ( setState() 메서드를 포함한. context나 life cycle은 미포함)
+* createElemetn()
+* render() (오직 DOM 을 rendering 하는 함수)
+* Component ( setState() 메서드를 포함한. context 나 life cycle 은 미포함)
 
-이제 왜 우리가 예전 코드를 다시 작성해야 하는지를 설명하겠다. 
+이제 왜 우리가 예전 코드를 다시 작성해야 하는지를 설명하겠다.
 
+### Why Fiber
+
+브라우저의 메인 쓰레드는 시간을 많이 쓰는 무엇인가로 인해 매우 바쁘게 움직있다고 할때, 매우 중요한 task 들은 끝날때 까지 기다려야 한다.
+
+이런 문제를 위해서 몇가지 데모를 준비했다. [데모](https://pomber.github.io/incremental-rendering-demo/react-sync.html)에서 행서들이 도는걸 유지하기 위해서 메인 쓰레드는 매 16ms 마다 사용가능 하도록 유지 시켜주어야 한다. 만약 이 메인쓰레드가 다른 무엇인가로 blocked 당했다고 한다면 여기서 매 200ms 라고 하자. 메인 쓰레드가 다시 자유로워 질때 까지 행성들이 멈춰있고 해당 프레임이 사라지는걸 확인 할 수 있을 것이다.
+
+무엇이 메인 쓰레드 즉, 몇 에니메이션을 부드럽고 UI 응답을 유지하기 위해 예비의 마이크로 초도 둘수없게 바쁘게 하는가?
+
+reconciliation 코드를 기억하는가? 한번 reconciliation 코드를 실행하면 멈추지 않는다. 메인 스레드가 다른 작업을 수행해야하는 경우 reconciliation 코드는 대기해야합니다. 그리고 이 reconciliation 코드는 많은 재귀 호출로 인해서 지연될 수 있는 코드 입니다. 이런이유로 우리는 해당 코드를 재귀 호출을 루프로 교체가능한 새로운 데이터 구조를 사용하는 reconciliation 코드를 재 작성해야 합니다.
+
+### Scheduling micro-tasks
+
+우린 이제 work 를 작은 단위로 나눌 필요가 있다. 짧은 시간동안 동작하기 위해서 짧은 단위로 나눈다. 메인 스레드가 더 우선 순위가 높은 작업을 수행하게하고 보류중인 작업이 있으면 작업을 끝내기 위해 다시 돌아옵니다.
+이런 작업을 돕기 위해서 `requestIdelCallback()` 함수를 이용 할 것이다. 이것은 callback 함수를 큐에 넣어 두는데 이것은 브라우저가 idle 타임에 호출이 되고, 얼만큼 이용가능한 시간인지 설명해주는 `deadline` 파라미터를 포함하고 있다.
+
+```js
+const ENOUGH_TIME = 1 // milliseconds
+
+let workQueue = []
+let nextUnitOfWork = null
+
+function schedule(task) {
+  workQueue.push(task)
+  requestIdleCallback(performWork)
+}
+
+// requestIdleCallback 인자로 들어갈 함수
+// 이 함수는 브라우저가 idle 시점에 호출되고
+// deadline 파라미터로 적절한 시간이 남았는지를 확인해서 해당 로직을 수행한다.
+function performWork(deadline) {
+  if (!nextUnitOfWork) {
+    nextUnitOfWork = workQueue.shift()
+  }
+
+  while (nextUnitOfWork && deadline.timeRemaining() > ENOUGH_TIME) {
+    nextUnitOfWork = performUnitOfWork(nextUnitOfWork)
+  }
+
+  if (nextUnitOfWork || workQueue.length > 0) {
+    requestIdleCallback(performWork)
+  }
+}
+```
+
+실제 작업은 `performUnitOfWork` 함수에서 일어난다. 우린 저기 안에 우리의 reconciliation code 를 작성할 필요가 있다. 그 함수는 조각 단위로 일을 할 것이고 그리곤 다음에 작업을 다시 시작하는 데 필요한 모든 정보를 반환합니다.
+<br />
+이런 작업의 조각을 추적하기위해 fibers 를 사용할 것이다.
+
+### The fiber data structure
+
+우리는 render 를 우너하는 각 컴포넌트를 위해 fiber 를 생성할 것이다. `nextUnitOfWork` 는 우리가 원하는 다음 작업인 next fiber 를 위한 참조 값이다. `performUnitOfWork` 는 fiber 를 작업하고 완료가 되면 새로운 fiber 를 리턴한다.
+<br />
+fiber 는 어떻게 생겼는가?
+
+```js
+let fiber = {
+  tag: HOST_COMPONENT,
+  type: 'div',
+  parent: parentFiber,
+  child: childFiber,
+  sibling: null,
+  alternate: currentFiber,
+  stateNode: document.createElement('div'),
+  props: { children: [], className: 'foo' },
+  partialState: null,
+  effectTag: PLACEMENT,
+  effects: [],
+}
+```
+
+이것은 보통의 오래된 자바스크립트 객체이다.
+<br />
+우리는 `parents`, `child` 그리고 `sibling` 프로퍼티를 fiber tree 를 구축하기 위해 사용할 것이다.
+이것들은 component 의 tree 를 설명해줄것이다.
+<br />
+`stateNode`는 component instance 를 위한 참조 값이다. 이 값으론 DOM element 또는 유저가 정의한 class component 의 instance 를 가질 수 있다.
+<br />
+예를 들면,
+
+![fiber01.png](./fiber01.png)
+
+위 예제에서 우리가 지원할 서로 다른 3 가지 종류의 컴포넌트들을 볼수 있다.
+
+* `b`,`p` 그리고 `i` 를 위한 fiber 들은 **host components** 대표한다. 이들의 식별자는 tag 에 `HOST_COMPONENT` 라고 지칭 할것이다. `type`은 string(html element 의 태그) 이 될것이다. `props`는 속성값과 해당 element 의 이벤트 리스너가 되겠다.
+* `Foo` fiber 는 **class component** 를 대표한다. 이것의 `tag`는 `CLASS_COMPONENT` 가 될 것이고, `type`은 유저가 정의한 `Didact.Component`를 상속한 `class` 의 참조값이 될것이다.
+* `div`를 위한 fiber 는 **host root** 를 대표한다. 이것은 위에서 언급한 host component 과 유사한데 그 이유는 DOM element 를 지니고 있기 때문이다. 그러나 이 host root 는 트리의 root 가 되어서 특별하게 다뤄질 것이다. `tag`는 `HOST_ROOT`가 될것이다. 이 fiber 의 stateNod 는 `Didact.render()`로 전달 받은 DOM node 이다.
+
+다른 중요한 프로퍼티는 `alternate` 이다. 이것은 대부분의 시간동안 두가지의 fiber tree 를 가지기에 필요하다.
+**한가지 tree 는 우리가 이미 render 한 DOM 에 관한 것이고, 이것을 우린 current tree 또는 old tree 라고 부를 것이다. 또 다른 하나는 우리가 `setState()` 또는 `Didact.render()` 호출을 통해서 새로운 update 작업을 할때 생성되는 tree 이다.**
