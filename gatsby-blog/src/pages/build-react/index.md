@@ -740,11 +740,11 @@ function performWork(deadline) {
 
 실제 작업은 `performUnitOfWork` 함수에서 일어납니다. `performUnitOfWork` 안에 우리의 reconciliation code 를 작성할 필요가 있습니다. `performUnitOfWork` 함수는 작업 조각을 동작시켜야 합니다. 그리곤 다음에 작업을 다시 시작하는 데 필요한 모든 정보를 반환해야 햡니다.
 <br />
-이런 작업의 조각을 추적하기위해 fiber들을 사용할 것입니다.
+이런 작업의 조각들을 추적하기위해 fiber 들을 사용할 것입니다. 즉, fiber 는 일련의 작업을 다시 시작하기 위해 만들어졌고 이것을 작업 정보 명세서라고 생각하면 될거 같다.
 
 ### The fiber data structure
 
-우리는 render 를 원하는 각 컴포넌트에 대해 fiber 를 생성할 것입니다. `nextUnitOfWork` 는 우리가 원하는 다음 작업인 next fiber 를 위한 참조 값입니다. `performUnitOfWork` 는 fiber 대해 작업하고 완료가 되면 새로운 fiber 를 리턴한다.
+우리는 render 를 원하는 각 컴포넌트에 대해 fiber 를 생성할 것입니다. `nextUnitOfWork` 는 우리가 원하는 다음 작업인 next fiber 를 위한 참조 값입니다. `performUnitOfWork` 는 fiber 대한 작업을하고 완료가 되면 새로운 fiber 를 리턴한다.
 <br />
 fiber 는 어떻게 생겼는가?
 
@@ -766,10 +766,9 @@ let fiber = {
 
 이것은 보통의 오래된 자바스크립트 객체이다.
 <br />
-우리는 `parents`, `child` 그리고 `sibling` 프로퍼티를 fiber들의 tree 를 구축하기 위해 사용할 것이다.
-이것들은 component 의 tree 를 설명해줄것이다.
+우리는 `parents`, `child` 그리고 `sibling` 프로퍼티를 사용하여 component 의 tree 를 설명 하는 fiber 들의 tree 를 구축합니다.
 <br />
-`stateNode`는 component instance 에 대한 참조 값이다. 이 값으론 DOM element 또는 유저가 정의한 class component 의 instance 를 가질 수 있다.
+`stateNode`는 component instance 에 대한 참조 값이다. 이 값으론 DOM element 또는 유저가 정의한 class component 의 instance 를 가질 수 있습니다.
 <br />
 예를 들면,
 
@@ -782,13 +781,13 @@ let fiber = {
 * `div`를 위한 fiber 는 **host root** 를 대표한다. 이것은 위에서 언급한 host component 과 유사한데 그 이유는 DOM element 를 지니고 있기 때문이다. 그러나 이 host root 는 트리의 root 가 되어서 특별하게 다뤄질 것이다. `tag`는 `HOST_ROOT`가 될것이다. 이 fiber 의 stateNod 는 `Didact.render()`로 전달 받은 DOM node 이다.
 
 다른 중요한 프로퍼티는 `alternate` 이다. 이것은 대부분의 시간동안 두가지의 fiber tree 를 가지기에 필요하다.
-**한가지 tree 는 우리가 이미 render 한 DOM 에 관한 것이고, 이것을 우린 current tree 또는 old tree 라고 부를 것이다. 또 다른 하나는 우리가 `setState()` 또는 `Didact.render()` 호출을 통해서 새로운 update 작업을 할때 생성되는 tree 이다. 이것을 우린 _work-in-progress tree_ 라고 부를 것이다.**
+**한가지 tree 는 우리가 이미 render 한 DOM 에 관한 것이고, 이것을 우린 current tree 또는 old tree 라고 부를 것이다. 또 다른 하나는 우리가 `setState()` 또는 `Didact.render()` 호출을 통해서 새로운 update 작업을 할때 생성되는 tree 이다. 이것을 우린 _work-in-progress tree_ 라고 부를 것입니다.**
 
-work-in-progress tree는 old tree를 갖는 어떤 fiber와 공유하지 않습니다. 일단 work-in-progress tree를 완성하고나면 DOM을 변화 시키고, 다시 이 work-in-progress tree가 old tree 가됩니다.
+work-in-progress tree 는 old tree 를 갖는 어떤 fiber 와 공유하지 않습니다. 일단 work-in-progress tree 를 완성하고나면 DOM 을 변화 시키고, 다시 이 work-in-progress tree 가 old tree 가됩니다.
 
-그래서 `alternate`를 work-in-progress tree fiber들과 그것과 일치하는 old tree로 부터 나온 fiber들을 연결하기 위해 사용합니다. fiber와 그것의 `alternate`는 같은 `tag`, `type` 그리고 `stateNode`를 공유합니다. 때때론 새로운 rendering 작업이 있을떈 fiber들은 `alternate`를 안가지고 있을 수 있다. 
+그래서 `alternate`를 work-in-progress tree fiber 들과 그것과 일치하는 old tree 로 부터 나온 fiber 들을 연결하기 위해 사용합니다. fiber 와 그것의 `alternate`는 같은 `tag`, `type` 그리고 `stateNode`를 공유합니다. 때때론 새로운 rendering 작업이 있을떈 fiber 들은 `alternate`를 안가지고 있을 수 있다.
 
-마지막으로, `effects`리스트와 `effectTag`를 갖습니다.  work-in-progress tree 안에서 DOM이 변화할 필요가 있는 fiber를 찾았을때 `effectTag`를 `PLACEMENT`, `UPDATE` 또는 `DELETION`으로 설정합니다. 모든 DOM 변화를 손쉽게 처리하기 위해 `effects`에 나열된 `effectTag`가 있는 모든 fibers (fiber하위 트리의 목록)의 목록을 유지합니다.
+마지막으로, `effects`리스트와 `effectTag`를 갖습니다. work-in-progress tree 안에서 DOM 이 변화할 필요가 있는 fiber 를 찾았을때 `effectTag`를 `PLACEMENT`, `UPDATE` 또는 `DELETION`으로 설정합니다. 모든 DOM 변화를 손쉽게 처리하기 위해 `effects` 나열된 `effectTag`를 가지고 있는 모든 fiber 들의 목록(fiber 하위 트리로부터 나온 fiber 들)을 유지합니다.
 
 ### Didact call hierarchy
 
@@ -798,33 +797,32 @@ work-in-progress tree는 old tree를 갖는 어떤 fiber와 공유하지 않습�
 
 `render()` 및 `setState()` 에서 시작하여 `commitAllWork()` 에서 끝나는 흐름을 따릅니다.
 
-
 ### Old code
 
 대부분의 코드를 재 작성해야 한다고 이야기 했었었다. 하지만 먼저 수정하지 않은 코드를 리뷰해보자.
 
-우리가 작성한 `createElement()` 함수는 변할 필요가 없다. 우린 계속 같은 element들을 유지할 것이기 때문이다. 여기서 element는 `type`,`props` 그리고 `children`을 가진 평범한 자바스크립트 객체였다.
+우리가 작성한 `createElement()` 함수는 변할 필요가 없다. 우린 계속 같은 element 들을 유지할 것이기 때문이다. 여기서 element 는 `type`,`props` 그리고 `children`을 가진 평범한 자바스크립트 객체였다.
 
-우린 노드의 DOM 프로퍼티를 update 하기 위해 `updateDomProperties()` 도 작성했었다. 또 DOM element들을 생성하기 위해 `createDomElement()` 함수도 추출했습니다. 이 두 함수 모두 [이곳](https://gist.github.com/pomber/c63bd22dbfa6c4af86ba2cae0a863064)에서 볼수 있습니다. 
+우린 노드의 DOM 프로퍼티를 update 하기 위해 `updateDomProperties()` 도 작성했었다. 또 DOM element 들을 생성하기 위해 `createDomElement()` 함수도 추출했습니다. 이 두 함수 모두 [이곳](https://gist.github.com/pomber/c63bd22dbfa6c4af86ba2cae0a863064)에서 볼수 있습니다.
 
-base class 인 `Component` 도 작성했었습니다. 여기서 `setState()`가 `scheduleUpdate()` 를 호출하게 만들고 `createInstance()` 가 instance에 fiber를 참조하도록 만듭시다.
+base class 인 `Component` 도 작성했었습니다. 여기서 `setState()`가 `scheduleUpdate()` 를 호출하게 만들고 `createInstance()` 가 instance 에 fiber 를 참조하도록 만듭시다.
 
 ```js
 class Component {
   constructor(props) {
-    this.props = props || {};
-    this.state = this.state || {};
+    this.props = props || {}
+    this.state = this.state || {}
   }
 
   setState(partialState) {
-    scheduleUpdate(this, partialState);
+    scheduleUpdate(this, partialState)
   }
 }
 
 function createInstance(fiber) {
-  const instance = new fiber.type(fiber.props);
-  instance.__fiber = fiber;
-  return instance;
+  const instance = new fiber.type(fiber.props)
+  instance.__fiber = fiber
+  return instance
 }
 ```
 
@@ -837,34 +835,34 @@ function createInstance(fiber) {
 
 ```js
 // Fiber tags
-const HOST_COMPONENT = "host";
-const CLASS_COMPONENT = "class";
-const HOST_ROOT = "root";
+const HOST_COMPONENT = 'host'
+const CLASS_COMPONENT = 'class'
+const HOST_ROOT = 'root'
 
 // Global state
-const updateQueue = [];
-let nextUnitOfWork = null;
-let pendingCommit = null;
+const updateQueue = []
+let nextUnitOfWork = null
+let pendingCommit = null
 
-// render 함수 
+// render 함수
 // 아래서 render 함수라는건 이 함수를 가리킴
 // 이 render는 처음에 딱 한번 실행함.
 function render(elements, containerDom) {
   updateQueue.push({
     from: HOST_ROOT,
     dom: containerDom,
-    newProps: { children: elements }
-  });
-  requestIdleCallback(performWork);
+    newProps: { children: elements },
+  })
+  requestIdleCallback(performWork)
 }
 
 function scheduleUpdate(instance, partialState) {
   updateQueue.push({
     from: CLASS_COMPONENT,
     instance: instance,
-    partialState: partialState
-  });
-  requestIdleCallback(performWork);
+    partialState: partialState,
+  })
+  requestIdleCallback(performWork)
 }
 ```
 
@@ -876,40 +874,45 @@ function scheduleUpdate(instance, partialState) {
 ![fiber04.png](./fiber04.png)
 
 ```js
-const ENOUGH_TIME = 1; // milliseconds
+const ENOUGH_TIME = 1 // milliseconds
 
+// render 또는 scheduleUpdate 에서
+// requestIdleCallback(performWork) 로 호출함.
 function performWork(deadline) {
-  workLoop(deadline);
+  workLoop(deadline)
   if (nextUnitOfWork || updateQueue.length > 0) {
-    requestIdleCallback(performWork);
+    requestIdleCallback(performWork)
   }
 }
 
+// nextUnitOfWork은 처음에 null로 셋팅되어 있음.
 function workLoop(deadline) {
   if (!nextUnitOfWork) {
-    resetNextUnitOfWork();
+    // 여기서 처음에 nextUnitOfWork 을 셋팅함.
+    resetNextUnitOfWork()
   }
   while (nextUnitOfWork && deadline.timeRemaining() > ENOUGH_TIME) {
-    nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
+    nextUnitOfWork = performUnitOfWork(nextUnitOfWork)
   }
   if (pendingCommit) {
-    commitAllWork(pendingCommit);
+    commitAllWork(pendingCommit)
   }
 }
 ```
+
 여기 우리가 앞서 보았던 `performUnitOfWork()` 패턴을 사용합니다.
 
-`requestIdleCallback()`은  deadline 파라미터를 함께 가진 타겟 함수를 호출합니다. `performWork()` deadline 을 받아서 `workLoop()` 로 전달해줍니다. `workLoop()` returns 후에, `performWork()` 작업 준비가 되었는지 체크를 합니다. 만약 준비가 됬다면, 자기 자신을 새로운 지연 호출로 스케쥴링 시킵니다.
+`requestIdleCallback()`은 deadline 파라미터를 함께 가진 타겟 함수를 호출합니다. `performWork()` deadline 을 받아서 `workLoop()` 로 전달해줍니다. `workLoop()` returns 후에, `performWork()` 작업 준비가 되었는지 체크를 합니다. 만약 준비가 됬다면, 자기 자신을 새로운 지연 호출로 스케쥴링 시킵니다.
 
-`workLoop()` 은 시간을 주시하는 함수입니다. 만약 deadline이 너무 가깝다면, 루프 작업은 멈추고 다음 업데이트 해야할 작업을 남겨둡니다. 그래서 다시 다음 타임에 재개 될 수 있도록 합니다.
+`workLoop()` 은 시간을 주시하는 함수입니다. 만약 deadline 이 너무 가깝다면, 루프 작업은 멈추고 다음 업데이트 해야할 작업을 남겨둡니다. 그래서 다시 다음 타임에 재개 될 수 있도록 합니다.
 
-> deadline.timeRemaining()이 다른 작업 단위를 실행하기에 충분한지 아닌지 확인하기 위해 ENOUGH_TIME (1ms 상수, React와 동일)을 사용합니다. performUnitOfWork ()가 그 이상을 수행하면 마감 시간이 초과됩니다. 최종 기한은 브라우저의 제안 일 뿐이므로 몇 밀리 초 동안 오버런하는 것은 그렇게 나쁘지 않습니다.
+> deadline.timeRemaining()이 다른 작업 단위를 실행하기에 충분한지 아닌지 확인하기 위해 ENOUGH_TIME (1ms 상수, React 와 동일)을 사용합니다. performUnitOfWork ()가 그 이상을 수행하면 마감 시간이 초과됩니다. 최종 기한은 브라우저의 제안 일 뿐이므로 몇 밀리 초 동안 오버런하는 것은 그렇게 나쁘지 않습니다.
 
-`performUnitOfWork ()`는 업데이트를위한 work-in-progress 트리를 만들고 DOM에 적용해야 할 변경 사항을 찾아 낼 것입니다. **이것은 한 번에 한 fiber씩 점진적으로 이루어질 것입니다.**
+`performUnitOfWork()`는 업데이트를위한 work-in-progress 트리를 만들고 DOM 에 적용해야 할 변경 사항을 찾아 낼 것입니다. **이것은 한 번에 한 fiber 씩 점진적으로 이루어질 것입니다.**
 
-`performUnitOfWork()`가 현재 업데이트에 대한 모든 작업을 완료하면 null을 반환하고 보류중인 DOM 변경 사항을 `pendingCommit`에 남겨 둡니다. 마지막으로 `commitAllWork()`는 `pendingCommit` 에서 `effects`를 받아 DOM을 변경합니다.
+`performUnitOfWork()`가 현재 업데이트에 대한 모든 작업을 완료하면 null 을 반환하고 보류중인 DOM 변경 사항을 `pendingCommit`에 남겨 둡니다. 마지막으로 `commitAllWork()`는 `pendingCommit` 에서 `effects`를 받아 DOM 을 변경합니다.
 
-`commitAllWork()`는 루프 외부에서 호출됩니다. `performUnitOfWork()`에서 수행 된 작업은 DOM을 변경하지 않으므로 분할하는 것이 좋습니다. 반면에, `commitAllWork()`는 DOM을 돌연변이시킬 것이고 일관성없는 UI를 피하기 위해 한번에 모두 완료되어야합니다.
+`commitAllWork()`는 루프 외부에서 호출됩니다. `performUnitOfWork()`에서 수행 된 작업은 DOM 을 변경하지 않으므로 분할하는 것이 좋습니다. 반면에, `commitAllWork()`는 DOM 을 돌연변이시킬 것이고 일관성없는 UI 를 피하기 위해 한번에 모두 완료되어야합니다.
 
 우리는 여전히 어디서 `nextUnitOfWork`를 처음으로 불러오는지 보지 못했습니다.
 
@@ -918,52 +921,371 @@ function workLoop(deadline) {
 업데이트를 받아서 첫 번째 `nextUnitOfWork`로 변환하는 함수는 `resetNextUnitOfWork()` 입니다.
 
 ```js
+// render 할때나 scheduleUpdate 호출될때 updateQueue에 update를 넣게 되는데
+// 이때 처음으로 updateQueue에 있는 update 를 꺼내오는 함수.
+// update 를 꺼내와서 nextUnitOfWork 의 fiber를 만들어줌.
 function resetNextUnitOfWork() {
-  const update = updateQueue.shift();
+  const update = updateQueue.shift()
   if (!update) {
-    return;
+    return
   }
 
   // Copy the setState parameter from the update payload to the corresponding fiber
+  // 여기서 instance는 component의 public instance를 가리킴.
+  // partialState 이것은 update할 새로운 값 (setState로 넘어오는 인자)
   if (update.partialState) {
-    update.instance.__fiber.partialState = update.partialState;
+    update.instance.__fiber.partialState = update.partialState
   }
 
   // 그런 다음 old fiber tree의 root를 찾습니다.
   const root =
     update.from == HOST_ROOT
       ? update.dom._rootContainerFiber
-      : getRoot(update.instance.__fiber);
+      : getRoot(update.instance.__fiber)
 
- // 새로운 fiber
- // 새로운 work-in-progress tree의 root
+  // 새로운 fiber
+  // 새로운 work-in-progress tree의 root
+  // update에 dom값이 있으면 처음 render 함수 호출하는거
+  // update에 newProps 값이 있으면 처음 render 함수 호출하는거.
   nextUnitOfWork = {
     tag: HOST_ROOT,
     stateNode: update.dom || root.stateNode,
     props: update.newProps || root.props,
-    alternate: root
-  };
+    alternate: root,
+  }
 }
 
 function getRoot(fiber) {
-  let node = fiber;
+  let node = fiber
   while (node.parent) {
-    node = node.parent;
+    node = node.parent
   }
-  return node;
+  return node
 }
 ```
 
 `resetNextUnitOfWork()`는 대기열에서 첫 번째 업데이트를 가져 와서 시작합니다.
 
-update 객체에 컴포넌트 인스턴스에 속해있는 fiber에 저장시켜둔 `partialState`가있는 경우 나중에 컴포넌트의 `render()`를 호출 할 때 사용할 수 있습니다.
+update 객체에 `partialState`가 있다면 컴포넌트 인스턴스에 속해있는 fiber 에 그것을 저장 시켜 놓습니다. 그래서 나중에 컴포넌트의 `render()`를 호출 할 때 사용할 수 있습니다.
 
-그런 다음 old fiber tree의 root를 찾습니다. `render()`가 처음 호출 된 시점부터 업데이트가 발생하면 루트가 없으므로 `root`가 `null`이 됩니다. `render()`에 대한 후속 호출에서 오는 경우 DOM 노드의 `_rootContainerFiber` 속성에서 루트를 찾을 수 있습니다. 그리고 업데이트가 `setState()`에서 오는 경우 부모가없는 fiber가 발견 될 때까지 인스턴스 fiber에서 위로 이동해야합니다.
+그런 다음 old fiber tree 의 root 를 찾습니다. 처음 호출되는 `render()`함수로 update 객체들이 넘어왔을 경우에는 루트 fiber 가 없으므로 `root`가 `null`이 됩니다. `render()`에 대한 후속 호출에서 오는 경우 DOM 노드의 `_rootContainerFiber` 속성에서 루트를 찾을 수 있습니다. 그리고 업데이트가 `setState()`에서 오는 경우에는, 부모가없는 fiber 가 발견 될 때까지 인스턴스 fiber 에서 위로 이동해야합니다.
 
-그런 다음 `nextUnitOfWork`에 새 fiber를 할당합니다. **이 fiber는 새로운 work-in-progress tree의 root입니다.**
+그런 다음 `nextUnitOfWork`에 새 fiber 를 할당합니다. **이 fiber 는 새로운 work-in-progress tree 의 root 입니다.**
 
-old root가 없다면, `stateNode`는 `render()` 호출할때 매개 변수로 받은 DOM 노드입니다. `props` 는 update객체의 `newProps`가됩니다 : element(render()의 다른 매개 변수)들을 가지고있는 children 프로퍼티를 가진 객체. `alternate`은 null이 될 것입니다.
+만약 old root 가 없다면(이미 그려진 DOM 이 없다면), `stateNode`(component instance)는 `render()` 호출할때 매개 변수로 받은 DOM 노드(containerDom)입니다. `props` 는 update 객체의 `newProps`가됩니다 : 여기서 `newProps`는 element(render()의 element 매개변수)들을 가지고있는 children 프로퍼티를 가진 객체이다(위 `render` 함수 참고). `alternate`은 null 이 될 것입니다. 왜냐하면 처음으로 호출되는 `render` 이기 때문에 루트 fiber 가 없다.
 
-old root가 있다면 stateNode는 이전 루트의 DOM 노드가됩니다. 소포는 다시 newProps가 null이 아니면 그렇지 않으면 이전 루트에서 소품을 복사합니다. 대체는 이전 루트가됩니다.
+만약 old root 가 있다면 `stateNode`는 이전 루트의 DOM 노드가됩니다. `props`는 다시 newProps 가 null 이 아니면 `newProps`로 할당되고 그렇지 않으면 이전 루트에서 `props` 복사합니다. `alternate`는 이전 루트가됩니다.
 
-이제 우리는 작업 중 트리의 근원을 가지고 나머지 부분을 만들기 시작합시다.
+이제 우리는 work-in-progress tree 의 root 을 가지고 나머지 부분을 만들기 시작합시다.
+
+![fiber06.png](./fiber06.png)
+
+```js
+// wipFiber
+// {
+//   tag: HOST_ROOT,
+//   stateNode: update.dom || root.stateNode,
+//   props: update.newProps || root.props,
+//   alternate: root,
+// }
+
+function performUnitOfWork(wipFiber) {
+  beginWork(wipFiber)
+  if (wipFiber.child) {
+    return wipFiber.child
+  }
+
+  // No child, we call completeWork until we find a sibling
+  let uow = wipFiber
+  while (uow) {
+    completeWork(uow)
+    if (uow.sibling) {
+      // Sibling needs to beginWork
+      return uow.sibling
+    }
+    uow = uow.parent
+  }
+}
+```
+
+`performUnitOfWork()`는 진행중인 작업 트리를 탐색합니다.
+
+`beginWork()`를 호출한다. --이것은 새로운 fiber 의 children 을 만들기 위한 작업이다.-- 그리고 나서 첫번째 child 를 리턴한다. 그러면 그게 `nextUnitOfWork` 가 된다.
+
+만약 어떤 child 도 없다면, `completeWork()`를 호출하고 `nextUnitOfWork`가 될 `sibling`을 리턴한다.
+
+만약 `sibling`가 없다면, parents 로 올라가서 해당 parents 를 인자로 `completeWork()`를 호출한다. 이 작업은 `sibling`을 찾을때 또는 root 에 도달했을 때까지 반복한다.
+
+`performUnitOfWork()` 가 여러번 호출 된다는 것은 트리를 내려가면서 각 fiber 에 첫번째 child 의 children 을 생성한다는 것입니다. 이 작업은 children 이 없는 fiber 를 찾을때 까지 반복한다. 그리고 오른쪽으로 옮겨서 siblings 를 가지고 같은 작업을 시행한다. 그리고 다시 위로 올라와서 같은 작업을 반복한다.
+
+![fiber07.png](./fiber07.png)
+
+```js
+// wipFiber
+// {
+//   tag: HOST_ROOT,
+//   stateNode: update.dom || root.stateNode,
+//   props: update.newProps || root.props,
+//   alternate: root,
+// }
+
+function beginWork(wipFiber) {
+  if (wipFiber.tag == CLASS_COMPONENT) {
+    updateClassComponent(wipFiber)
+  } else {
+    updateHostComponent(wipFiber)
+  }
+}
+
+function updateHostComponent(wipFiber) {
+  if (!wipFiber.stateNode) {
+    wipFiber.stateNode = createDomElement(wipFiber)
+  }
+  const newChildElements = wipFiber.props.children
+  reconcileChildrenArray(wipFiber, newChildElements)
+}
+
+function updateClassComponent(wipFiber) {
+  let instance = wipFiber.stateNode
+  if (instance == null) {
+    // Call class constructor
+    instance = wipFiber.stateNode = createInstance(wipFiber)
+  } else if (wipFiber.props == instance.props && !wipFiber.partialState) {
+    // No need to render, clone children from last time
+    cloneChildFibers(wipFiber)
+    return
+  }
+
+  instance.props = wipFiber.props
+  instance.state = Object.assign({}, instance.state, wipFiber.partialState)
+  wipFiber.partialState = null
+
+  const newChildElements = wipFiber.stateNode.render()
+  reconcileChildrenArray(wipFiber, newChildElements)
+}
+```
+
+`beginWork()`는 두가지를 합니다:
+
+* `stateNode`를 가지고 있지 않다면 생성해줍니다.
+* component children 을 얻고 `reconcileChildrenArray()`에 그것들을 넘겨준다.
+
+두가지 타입의 component 를 우리가 다루기 때문에 우리는 2 가지로 나눠야 한다. `updateHostComponent()` 와 `updateClassComponent()` 이다.
+
+`updateHostComponent()`는 host component 들과 root component 를 다룬다. 그것은 필요하다면 새로운 DOM 을 만들어내고 **fiber props 에서 나온 child element 들을 이용해서 `reconcileChildrenArray()`를 호출한다.**
+
+`updateClassComponent()`는 class component instance 들을 다룬다. 그것은 필요하다면 component 의 생성자를 호출해서 instance 를 만들어낸다. **instance 의 props 와 state 를 업데이트를 하고 `render()`를 호출해서 새로운 children 을 얻는다.**
+
+`updateClassComponent()` 또한 `render()`를 호출하는것이 맞는지 확인합니다. 이것은 `shouldComponentUpdate()`의 간단한 버전이다. 만약 re-render 할 필요가 없어 보인다면, 어떠한 reconciliation 없이 현재 sub-tree 를 work-in-progress 트리로 복사합니다.
+
+이제 `newChildElements`를 가지고있고, work-in-grogress fiber 를 위한 child fiber 들을 만들 준비가 되었습니다.
+
+![fiber08.png](./fiber08.png)
+
+이것이 이 library 의 심장입니다. work-in-progress 트리가 커지며 커밋 단계에서 DOM 에 대해 어떤 변경 작업을 수행할지 결정합니다.
+
+```js
+// Effect tags
+const PLACEMENT = 1
+const DELETION = 2
+const UPDATE = 3
+
+function arrify(val) {
+  return val == null ? [] : Array.isArray(val) ? val : [val]
+}
+
+function reconcileChildrenArray(wipFiber, newChildElements) {
+  const elements = arrify(newChildElements)
+
+  let index = 0
+  let oldFiber = wipFiber.alternate ? wipFiber.alternate.child : null
+  let newFiber = null
+  while (index < elements.length || oldFiber != null) {
+    const prevFiber = newFiber
+    const element = index < elements.length && elements[index]
+    const sameType = oldFiber && element && element.type == oldFiber.type
+
+    if (sameType) {
+      newFiber = {
+        type: oldFiber.type,
+        tag: oldFiber.tag,
+        stateNode: oldFiber.stateNode,
+        props: element.props,
+        parent: wipFiber,
+        alternate: oldFiber,
+        partialState: oldFiber.partialState,
+        effectTag: UPDATE,
+      }
+    }
+
+    if (element && !sameType) {
+      newFiber = {
+        type: element.type,
+        tag:
+          typeof element.type === 'string' ? HOST_COMPONENT : CLASS_COMPONENT,
+        props: element.props,
+        parent: wipFiber,
+        effectTag: PLACEMENT,
+      }
+    }
+
+    if (oldFiber && !sameType) {
+      oldFiber.effectTag = DELETION
+      wipFiber.effects = wipFiber.effects || []
+      wipFiber.effects.push(oldFiber)
+    }
+
+    if (oldFiber) {
+      oldFiber = oldFiber.sibling
+    }
+
+    if (index == 0) {
+      wipFiber.child = newFiber
+    } else if (prevFiber && element) {
+      prevFiber.sibling = newFiber
+    }
+
+    index++
+  }
+}
+```
+
+시작하기 전에 `newChildElements`가 배열인지 확인하십시오. (이전의 reconciliation 알고리즘과 달리 `reconcileChildrenArray`는 항상 자식 배열과 함께 작동합니다. 즉, 이제 component 의 `render()` 함수에서 배열을 반환 할 수 있습니다.)
+
+그 후에 old fiber tree 의 children 들을 새로운 element 와 비교하기 시작합니다. (fiber 와 element 를 비교하는 것이다.) old fiber tree 의 children 들은 wipFiber.alternate 의 children 이다. 새로운 element 들은 `wipFiber.props.children` 에서 얻어 오거나 또는 `wipFiber.stateNode.render()` 호출해서 얻어온 것입니다.
+
+reconciliation 알고리즘은 첫번째 old fiber(`wipFiber.alternate.child`)와 첫번째 child element(`element[0]`) 를 일치 시키고, 두번째 old fiber(`wipFiber.alternate.child.sibling`) 두번째 child element(`element[1]`)도 반복합니다. 각각 oldFiber-element 쌍을 이루게 합니다.
+
+* 만약 oldFiber 와 element 가 타입이 같다면, 이것은 좋은 소식입니다, 이것은 기존의 stateNode 를 유지할수 있다는 뜻이다. 우리는 new fiber 를 예전거 기반에서 생성합니다. `UPDATE`를 `effectTag`에 추가시킨다. 그리고 새로운 fiber 를 work-in-progress tree 에 덧붙입니다.
+
+* 만약 element 의 type 이 oldFiber 와 다르거나 oldFiber 가 없다면(왜냐하면 기존 자식들보다 새로운 자식들을 많이 가지고 있는 경우), 우리가 가지고 있는 element 정보를 가지고 새로운 fiber 를 생성합니다. 이 새로운 fiber 는 `alternate` 와 `stateNode`를 가지고 있지 않는다. (`stateNode`는 `beginWork()`에서 생성됩니다.) 이 fiber 의 `effectTag` 는 `PLACEMENT` 입니다.
+
+* 만약 oldFiber 와 element 가 다른 type 이거나 이 oldFiber 를 위한 어떠한 element 도 없는 경우(왜냐하면 기존 자식들이 새로운 자식들 보다 많이 가지고 있기 때문) oldFiber 는 DELETION 태그를 붙입니다. 이 fiber 는 작업 중(work-in-progress) 트리의 일부가 아니기 때문에, 그것을 추적할 수 없게끔 wipFiber.effets 목록에 추가해야 합니다.
+
+> 리액트와는 달리 재조정을 위해 keys 를 사용하지 않으므로, 이전 위치에서 벗어난 자식이 있는지 알 수 없습니다.
+
+![fiber09.png](./fiber09.png)
+
+`updateClassComponent()` 는 재조정을 하는 대신 지름길로 old fiber 하위 트리를 work-in-progress 트리로 복제하는 특별한 경우가 있습니다.
+
+```js
+function cloneChildFibers(parentFiber) {
+  const oldFiber = parentFiber.alternate
+  if (!oldFiber.child) {
+    return
+  }
+
+  let oldChild = oldFiber.child
+  let prevChild = null
+  while (oldChild) {
+    const newChild = {
+      type: oldChild.type,
+      tag: oldChild.tag,
+      stateNode: oldChild.stateNode,
+      props: oldChild.props,
+      partialState: oldChild.partialState,
+      alternate: oldChild,
+      parent: parentFiber,
+    }
+    if (prevChild) {
+      prevChild.sibling = newChild
+    } else {
+      parentFiber.child = newChild
+    }
+    prevChild = newChild
+    oldChild = oldChild.sibling
+  }
+}
+```
+
+`cloneChildFibers()` 는 각 `wipFiber.alternate` 자식들(children)을 복제하고 work-in-progress 트리에 추가합니다. 아무것도 변경하지 않아도 되므로 어떠한 `effectTag` 도 추가할 필요가 없습니다.
+
+![fiber10.png](./fiber10.png)
+
+`performUnitOfWork()` 에서 wipFiber 가 새로운 자식들(children)을 가지고 있지 않거나 이미 모든 자식들이 이미 작업을 완료 했을 때, `completeWork()`를 호출합니다.
+
+```js
+function completeWork(fiber) {
+  if (fiber.tag == CLASS_COMPONENT) {
+    fiber.stateNode.__fiber = fiber
+  }
+
+  if (fiber.parent) {
+    const childEffects = fiber.effects || []
+    const thisEffect = fiber.effectTag != null ? [fiber] : []
+    const parentEffects = fiber.parent.effects || []
+    fiber.parent.effects = parentEffects.concat(childEffects, thisEffect)
+  } else {
+    pendingCommit = fiber
+  }
+}
+```
+
+`completeWork()`는 먼저 클래스 컴포넌트의 인스턴스와 관련된 fiber 에 대한 참조를 업데이트합니다. (솔직히 말해서, 여기 있을 필요는 없지만 어딘가에 있어야 합니다.)
+
+그런 다음 `effects` 목록을 작성합니다. 이 목록에는 effectTag 가 있는 work-in-progress 서브 트리의 모든 fiber 들이 포함됩니다. (DELETION effectTag 를 가진 이전 하위 트리의 파이버도 포함). 이 아이디어는 effectTag 가 있는 모든 fiber 를 root `effects` 목록에 누적하는 것입니다.
+
+마지막으로 fiber 에 부모(`parent`)가 없다면, work-in-progress 트리의 루트에 위치 해 있는것 입니다. 따라서 우리는 업데이트에 대한 모든 작업을 완료하고 모든 effects 를 수집했습니다. `workLoop()`이 `commitAllWork()`를 호출 할 수 있도록 `pendingCommit` 에 root 를 대입합니다.
+
+![fiber11.png](./fiber11.png)
+
+이제 마지막으로 남은건 DOM 을 변경하는 것입니다.
+
+```js
+function commitAllWork(fiber) {
+  fiber.effects.forEach(f => {
+    commitWork(f)
+  })
+  fiber.stateNode._rootContainerFiber = fiber
+  nextUnitOfWork = null
+  pendingCommit = null
+}
+
+function commitWork(fiber) {
+  if (fiber.tag == HOST_ROOT) {
+    return
+  }
+
+  let domParentFiber = fiber.parent
+  while (domParentFiber.tag == CLASS_COMPONENT) {
+    domParentFiber = domParentFiber.parent
+  }
+  const domParent = domParentFiber.stateNode
+
+  if (fiber.effectTag == PLACEMENT && fiber.tag == HOST_COMPONENT) {
+    domParent.appendChild(fiber.stateNode)
+  } else if (fiber.effectTag == UPDATE) {
+    updateDomProperties(fiber.stateNode, fiber.alternate.props, fiber.props)
+  } else if (fiber.effectTag == DELETION) {
+    commitDeletion(fiber, domParent)
+  }
+}
+
+function commitDeletion(fiber, domParent) {
+  let node = fiber
+  while (true) {
+    if (node.tag == CLASS_COMPONENT) {
+      node = node.child
+      continue
+    }
+    domParent.removeChild(node.stateNode)
+    while (node != fiber && !node.sibling) {
+      node = node.parent
+    }
+    if (node == fiber) {
+      return
+    }
+    node = node.sibling
+  }
+}
+```
+
+`commitAllWork()` 먼저 각각의 모든 루트 `effects` 를 순회하여 `commitWork()` 반복해서 호출합니다. `commitWork()`는 각 fiber 의 `effectTag` 를 검사합니다.
+
+* `PLACEMENT` 인 경우 우리는 부모 DOM 노드를 찾은 다음 단순히 fiber 의 stateNode 를 추가합니다.
+
+* `UPDATE` 인 경우 stateNode 를 이전 props 및 새 props 와 함께 전달하고 `updateDomProperties()`가 업데이트 할 항목을 결정하도록 합니다.
+
+* `DELETION` 이고 fiber 가 호스트 컴포넌트인 경우 간단합니다. 그저 `removeChild()`를 호출하면 됩니다. 그러나 fiber 가 클래스 컴포넌트인 경우 `removeChild()`를 호출하기 전에 fiber 하위 트리에서 모든 호스트 컴포넌트를 찾아서 제거해야 합니다.
+
+모든 effects 가 끝나면 `nextUnitOfWork` 및 `pendingCommit` 을 초기화 할 수 있습니다. work-in-progress 트리는 작업중인 트리가 아닌 이전 트리가 되므로 루트를 \_rootContainerFiber 에 할당합니다. 이제 우리는 현재의 업데이트가 끝냈고 다음 업데이트를 시작할 준비가 되었습니다.
