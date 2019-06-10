@@ -702,11 +702,11 @@ function reconcile(parentDom, instance, element) {
 
 무엇이 메인 쓰레드 즉, 몇 에니메이션을 부드럽고 UI 응답을 유지하기 위해 예비의 마이크로 초도 둘수없게 바쁘게 하는가?
 
-reconciliation 코드를 기억하는가? 한번 reconciliation 코드를 실행하면 멈추지 않는다. 메인 스레드가 다른 작업을 수행해야하는 경우 reconciliation 코드는 대기해야합니다. 그리고 이 reconciliation 코드는 많은 재귀 호출로 인해서 지연될 수 있는 코드 입니다. 이런이유로 우리는 해당 코드를 재귀 호출을 루프로 교체가능한 새로운 데이터 구조를 사용하는 reconciliation 코드를 재 작성해야 합니다.
+reconciliation 코드를 기억하는가? 한번 reconciliation 코드를 실행하면 멈추지 않는다. 메인 스레드가 다른 작업을 수행해야하는 경우 reconciliation 코드는 대기해야합니다. 그리고 이 reconciliation 코드는 많은 재귀 호출로 인해서 지연될 수 있는 코드다. 이런이유로 우리는 해당 코드를 재귀 호출을 루프로 교체가능한 새로운 데이터 구조를 사용하는 reconciliation 코드를 재 작성해야 합니다.
 
 ### Scheduling micro-tasks
 
-우린 이제 work 를 작은 단위로 나눌 필요가 있다. 짧은 시간동안 동작하기 위해서 짧은 단위로 나눈다. 메인 스레드가 더 우선 순위가 높은 작업을 수행하게하고 보류중인 작업이 있으면 작업을 끝내기 위해 다시 돌아옵니다.
+우린 이제 작업을 작은 단위로 나눌 필요가 있습니다. 짧은 시간동안 동작하기 위해서 짧은 단위로 나눈다. 메인 스레드가 더 우선 순위가 높은 작업을 수행하게하고 보류중인 작업이 있으면 작업을 끝내기 위해 다시 돌아옵니다.
 이 작업을 돕기 위해서 `requestIdelCallback()` 함수를 이용 할 것입니다. 이것은 callback 함수를 큐에 넣어 두는데 이것은 브라우저가 idle 타임에 호출이 되고, 얼만큼 이용가능한 시간인지 설명해주는 `deadline` 파라미터를 포함하고 있다.
 
 ```js
@@ -744,7 +744,7 @@ function performWork(deadline) {
 
 ### The fiber data structure
 
-우리는 render 를 원하는 각 컴포넌트에 대해 fiber 를 생성할 것입니다. `nextUnitOfWork` 는 우리가 원하는 다음 작업인 next fiber 를 위한 참조 값입니다. `performUnitOfWork` 는 fiber 대한 작업을하고 완료가 되면 새로운 fiber 를 리턴한다.
+우리는 render 를 원하는 각 컴포넌트에 대해 fiber 를 생성할 것입니다. `nextUnitOfWork` 는 우리가 원하는 다음 작업인 next fiber 를 위한 참조 값입니다. `performUnitOfWork` 는 fiber 대한 작업을하고 완료가 되면 새로운 fiber 를 리턴합니다.
 <br />
 fiber 는 어떻게 생겼는가?
 
@@ -780,7 +780,7 @@ let fiber = {
 * `Foo` fiber 는 **class component** 를 대표한다. 이것의 `tag`는 `CLASS_COMPONENT` 가 될 것이고, `type`은 유저가 정의한 `Didact.Component`를 상속한 `class` 의 참조값이 될것이다.
 * `div`를 위한 fiber 는 **host root** 를 대표한다. 이것은 위에서 언급한 host component 과 유사한데 그 이유는 DOM element 를 지니고 있기 때문이다. 그러나 이 host root 는 트리의 root 가 되어서 특별하게 다뤄질 것이다. `tag`는 `HOST_ROOT`가 될것이다. 이 fiber 의 stateNod 는 `Didact.render()`로 전달 받은 DOM node 이다.
 
-다른 중요한 프로퍼티는 `alternate` 이다. 이것은 대부분의 시간동안 두가지의 fiber tree 를 가지기에 필요하다.
+다른 중요한 프로퍼티는 `alternate` 이다. 이 `alternate` 가 필요한 이유는 대부분의 시간동안에 두가지의 fiber tree 를 가져야 하기 때문입니다.
 **한가지 tree 는 우리가 이미 render 한 DOM 에 관한 것이고, 이것을 우린 current tree 또는 old tree 라고 부를 것이다. 또 다른 하나는 우리가 `setState()` 또는 `Didact.render()` 호출을 통해서 새로운 update 작업을 할때 생성되는 tree 이다. 이것을 우린 _work-in-progress tree_ 라고 부를 것입니다.**
 
 work-in-progress tree 는 old tree 를 갖는 어떤 fiber 와 공유하지 않습니다. 일단 work-in-progress tree 를 완성하고나면 DOM 을 변화 시키고, 다시 이 work-in-progress tree 가 old tree 가됩니다.
