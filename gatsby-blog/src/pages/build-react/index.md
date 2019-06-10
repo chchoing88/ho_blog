@@ -1016,7 +1016,7 @@ function performUnitOfWork(wipFiber) {
 
 만약 `sibling`가 없다면, parents 로 올라가서 해당 parents 를 인자로 `completeWork()`를 호출한다. 이 작업은 `sibling`을 찾을때 또는 root 에 도달했을 때까지 반복한다.
 
-`performUnitOfWork()` 가 여러번 호출 된다는 것은 트리를 내려가면서 각 fiber 에 첫번째 child 의 children 을 생성한다는 것입니다. 이 작업은 children 이 없는 fiber 를 찾을때 까지 반복한다. 그리고 오른쪽으로 옮겨서 siblings 를 가지고 같은 작업을 시행한다. 그리고 다시 위로 올라와서 같은 작업을 반복한다.
+`performUnitOfWork()`를 여러 번 호출하면 자식(children)이 없는 파이버를 찾을 때까지 각 파이버의 첫번째 자식의 자식들을 생성하면서 계속해서 트리의 하위로 내려갑니다. 그리고 오른쪽으로 옮겨서 siblings 에도 같은 작업을 수행합니다. 그리고 다시 위로 올라와서 같은 작업을 수행합니다.
 
 ![fiber07.png](./fiber07.png)
 
