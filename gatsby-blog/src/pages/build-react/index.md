@@ -801,9 +801,9 @@ work-in-progress tree 는 old tree 를 갖는 어떤 fiber 와 공유하지 않�
 
 대부분의 코드를 재 작성해야 한다고 이야기 했었었다. 하지만 먼저 수정하지 않을 코드가 있는지 살펴봅시다.
 
-우리가 작성한 `createElement()` 함수는 변할 필요가 없다. 우린 계속 같은 element 들을 유지할 것이기 때문이다. 여기서 element 는 `type`,`props` 그리고 `children`을 가진 평범한 자바스크립트 객체였다.
+트랜스파일된 JSX 가 사용하는 함수인 createElement 함수를 작성했습니다. 우리가 작성한 `createElement()` 함수는 변할 필요가 없다. 우린 계속 동일한 element 들을 사용할 것이기 때문이다. 여기서 element 는 `type`,`props` 그리고 `children`을 가진 평범한 자바스크립트 객체였다.
 
-우린 노드의 DOM 프로퍼티를 update 하기 위해 `updateDomProperties()` 도 작성했었다. 또 DOM element 들을 생성하기 위해 `createDomElement()` 함수도 추출했습니다. 이 두 함수 모두 [이곳](https://gist.github.com/pomber/c63bd22dbfa6c4af86ba2cae0a863064)에서 볼수 있습니다.
+우린 노드의 DOM 프로퍼티를 갱신 하기 위해 `updateDomProperties()` 도 작성했었다. 또 DOM element 들을 생성하기 위해 `createDomElement()` 함수도 추출했습니다. 이 두 함수 모두 [이곳](https://gist.github.com/pomber/c63bd22dbfa6c4af86ba2cae0a863064)에서 볼수 있습니다.
 
 base class 인 `Component` 도 작성했었습니다. 여기서 `setState()`가 `scheduleUpdate()` 를 호출하게 만들고 `createInstance()` 가 instance 에 fiber 를 참조하도록 만듭시다.
 
