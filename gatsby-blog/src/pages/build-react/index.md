@@ -14,7 +14,7 @@ date: "2019-06-03T10:00:03.284Z"
 
 예를 들면 아래와 같다.
 
-```js
+```javascript
 const element = {
   type: 'div',
   props: {
@@ -41,7 +41,7 @@ const element = {
 보통 element 를 위 처럼 만들지 않고 `createElement`를 사용해서 만들기에 우리도 하나 만들어 볼 것이다.
 그러기 전에 해당 element 를 받았을때 실제 dom 에 render 하는 함수를 만들어 보자.
 
-```js
+```javascript
 function render(element, parentDom) {
   const { type, props } = element
   const dom = document.createElement(type)
@@ -56,7 +56,7 @@ render(element, document.getElementById('root'))
 
 위에서 빠뜨린 부분이 있다면 프로퍼티들과 이벤트 리스너이다. 빠뜨린 부분들을 다시 작성해 보자.
 
-```js
+```javascript
 function render(element, parentDom) {
   const { type, props } = element
   const dom = document.createElement(type)
@@ -88,7 +88,7 @@ function render(element, parentDom) {
 다음은 DOM 의 Text Nodes 를 render 하는 방법이다.
 여기서 Text Node 를 표현하는 방법은 children 배열에 element 객체가 아닌 plain text 가 들어간 경우가 되겠다.
 
-```js
+```javascript
 const reactElement = {
   type: 'span',
   props: {
@@ -99,7 +99,7 @@ const reactElement = {
 
 하지만 여기서 children 배열에 type 과 props 가 들어간 객체만 온다는 룰을 가지고 있으면 우린 더 적은 if 문을 만들 수 있을 것이다. 해서 text 타입은 "TEXT ELEMENT" 라고 props 에는 nodeValue 라는 프로퍼티를 갖게 만들자.
 
-```js
+```javascript
 const textElement = {
   type: 'span',
   props: {
@@ -115,7 +115,7 @@ const textElement = {
 
 여기서 우리가 정의한 text element 대로 render 하는 함수를 다시 수정해보자. 여기서 달라지는 점이 있다면 일반 dom type 일 경우에는 `createElement` 의 dom api 를 썼을텐데 text 는 `createTextNode` 라는 dom api 를 사용하자.
 
-```js
+```javascript
 function render(element, parentDom) {
   const { type, props } = element
 
@@ -158,7 +158,7 @@ function render(element, parentDom) {
 
 바벨을 사용한다면 JSX 표현은 다음과 같이 변경된다.
 
-```js
+```javascript
 const element = (
   <div id="container">
     <input value="foo" type="text" />
@@ -170,7 +170,7 @@ const element = (
 
 [try it on babel REPL](https://babeljs.io/repl/#?babili=false&evaluate=true&lineWrap=false&presets=react&targets=&browsers=&builtIns=false&debug=false&code=%2F**%20%40jsx%20createElement%20*%2F%0A%0Aconst%20element%20%3D%20%28%0A%20%20%3Cdiv%20id%3D%22container%22%3E%0A%20%20%20%20%3Cinput%20value%3D%22foo%22%20type%3D%22text%22%20%2F%3E%0A%20%20%20%20%3Ca%20href%3D%22%2Fbar%22%3Ebar%3C%2Fa%3E%0A%20%20%20%20%3Cspan%20onClick%3D%7Be%20%3D%3E%20alert%28%22Hi%22%29%7D%3Eclick%20me%3C%2Fspan%3E%0A%20%20%3C%2Fdiv%3E%0A%29%3B)
 
-```js
+```javascript
 const element = createElement(
   'div',
   { id: 'container' },
@@ -183,7 +183,7 @@ const element = createElement(
 그래서 우린 createElement 함수를 만들어 줄 것이다. 첫번째 인자는 type 인자이고 두번째 인자는 props 이다. 그리고 나머지 인자들은 children 이다.
 createElement 함수는 props 객체를 만들어주고 두번째 인자의 값들을 전부 할당해 주어야 한다. 또, children 프로퍼티는 두번째 이후로 오는 인자들을 배열로 만들어서 props 의 children 에 셋팅해준다. 그리고 type 과 props 를 반환하면 된다.
 
-```js
+```javascript
 function createElement(type, props, ...args) {
   const props = Object.assign({}, config)
   const hasChildren = args.length > 0
@@ -196,7 +196,7 @@ function createElement(type, props, ...args) {
 
 아까 우린 위에서 text node 도 `{ type: TEXT_ELEMENT, props: {nodeValue: 'test'}}` 로 만들어 주기로 했었다. 해서 createElement 를 수정해야 한다.
 
-```js
+```javascript
 const spanElement = createElement(
   'span',
   { onClick: e => alert('Hi') },
@@ -214,7 +214,7 @@ spanElement = {
 
 수정해 보자.
 
-```js
+```javascript
 const TEXT_ELEMENT = 'TEXT ELEMENT'
 
 function createElement(type, config, ...args) {
@@ -241,7 +241,7 @@ function createTextElement(value) {
 기존 render 는 실제 DOM 을 만들어서 appendChild 를 하는 방식이라서 update 에 적합하지가 않다.
 그래서 처음으로 바꿔야 할 부분은 dom 을 replace 하는 작업이고, render 함수 마지막 부분에 parent dom 이 child dom 을 가지고 있는지 확인한다. 만약 그렇다면 새로운 element 로 만든 dom 을 replace 해준다.
 
-```js
+```javascript
 function render(element, parentDom) {
   // ...
   // Create dom from element
@@ -277,7 +277,7 @@ instance 를 재사용할수록 DOM 트리를 수정하는 횟수가 줄어 듭�
 
 여기서 우리 render 함수를 reconciliation 알고리즘을 적용해보고, element 를 주어지면 instance 를 생성하는 instantiate 함수를 추가해보자.
 
-```js
+```javascript
 let rootInstance = null
 
 function render(element, container) {
@@ -341,7 +341,7 @@ function instantiate(element) {
 이전과 코드는 같지만, 여기서 다른점은 마지막으로 호출한 render 에서 나온 instance 를 저장하고 있다는점이다.
 dom nodes 를 재사용하기 위해서는, dom 프로퍼티들을 update 할 방법이 필요하다. ( className, style, onCLick, etc...) 그래서 dom 프로퍼티를 update 하는 함수를 작성해보자.
 
-```js
+```javascript
 function instantiate(element) {
   const { type, props } = element
 
@@ -405,7 +405,7 @@ function updateDomProperties(dom, prevProps, nextProps) {
 
 reconciliation 알고리즘은 DOM nodes 를 가능하면 재 사용하는 것이라고 말했다. 그래서 type 이 같다면 해당 DOM node 를 재사용할 것이다. ( 프로퍼티만 update 할것이다. )
 
-```js
+```javascript
 function reconcile(parentDom, instance, element) {
   if (instance == null) {
     // Create instance
@@ -436,7 +436,7 @@ Children reconciliation 은 주요 기술중 하나이다. 여기서는 이전�
 
 Children reconciliation 을 실행하기 위해선 이전 child instances 인 `instance.childInstances` 와 새로운 element 의 children `element.props.children`을 매칭시킬 것입니다. 그리곤 재귀적으로 reconcil 함수를 호출할 것입니다. 또한 reconcile 에서 리턴된 모든 instances 들을 유지해서 childInstances 를 업데이트 할 수 있습니다.
 
-```js
+```javascript
 function reconcile(parentDom, instance, element) {
   if (instance == null) {
     // Create instance
@@ -489,7 +489,7 @@ function reconcileChildren(instance, element) {
 
 dom 이 제거되는걸 고려하지 않았기 때문이다. 그래서 두가지를 체크 할 것이다. 하나는 reconcile 함수에서 element 가 null 인 경우와 reconcileChildren 함수에서 newChildInstance 가 null 인 경우를 필터해줄 것이다.
 
-```js
+```javascript
 function reconcile(parentDom, instance, element) {
   if (instance == null) {
     // Create instance
@@ -550,7 +550,7 @@ Components 는 이러한 이슈를 해결하는데 도움을 줄수 있습니다
 
 먼저해야 할 일은 컴포넌트가 확장 될 Component 기본 클래스를 제공하는 것입니다. 우리는 구성 요소 상태를 업데이트하는 데 사용할 `partialState`를 받는 `setState` 메서드와 props 매개 변수가있는 생성자가 필요합니다.
 
-```js
+```javascript
 class Component {
   constructor(props) {
     this.props = props
@@ -567,7 +567,7 @@ class Component {
 여기서 중요한건 우리가 만들었던 `createElement` 수정이 필요 없습니다. element `type`으로 class 컴포넌트를 받고 `props`를 다룰것입니다.
 그래서 여기선 이 element 를 받았을때 component instance( public instances 라고 부릅니다.)를 생성해주는 함수를 만들 필요가 있습니다.
 
-```js
+```javascript
 function createPublicInstance(element, internalInstance) {
   const { type, props } = element
   const publicInstance = new type(props)
@@ -578,7 +578,7 @@ function createPublicInstance(element, internalInstance) {
 
 public instance 생성을 하면서 internal instance(virtual DOM) 의 레퍼런스를 추가적으로 가지고 있을것입니다. 이것은 오직 public instance state 가 변경 되었을때 해당 instance sub-tree 업데이트 하는데 필요합니다.
 
-```js
+```javascript
 class Component {
   constructor(props) {
     this.props = props
@@ -600,7 +600,7 @@ function updateInstance(internalInstance) {
 
 `instantiate` 함수도 update 가 필요합니다. components 들은 public instace 로 생성하고 component 의 `render` 함수를 child element 를 얻기 위해 호출해준다. 그리곤 해당 element 를 다시 `instantiate` 함수로 호출해준다.
 
-```js
+```javascript
 function instantiate(element) {
   const { type, props } = element
   const isDomElement = typeof type === 'string'
@@ -642,7 +642,7 @@ component elements 에 해당하는 internal instance 과 dom element 들은 다
 
 한가지 놓친것이 있다면 component instance 의 reconciliation 를 다루는 것이다. 그래서 우린 reconciliation algorithm 에 한가지 케이스를 더 추가할 것이다. children reconciliation 을 다루지 않아도 되는 한가지 child 만 가지고 있는 component instance 가 주어졌을때, 우린 public instance 의 props 를 update 시키고 child 를 re-render 시켜주면 된다.
 
-```js
+```javascript
 function reconcile(parentDom, instance, element) {
   if (instance == null) {
     // Create instance
@@ -709,7 +709,7 @@ reconciliation 코드를 기억하는가? 한번 reconciliation 코드를 실행
 우린 이제 작업을 작은 단위로 나눌 필요가 있습니다. 짧은 시간동안 동작하기 위해서 짧은 단위로 나눈다. 메인 스레드가 더 우선 순위가 높은 작업을 수행하게하고 보류중인 작업이 있으면 작업을 끝내기 위해 다시 돌아옵니다.
 이 작업을 돕기 위해서 `requestIdelCallback()` 함수를 이용 할 것입니다. 이것은 callback 함수를 큐에 넣어 두는데 이것은 브라우저가 idle 타임에 호출이 되고, 얼만큼 이용가능한 시간인지 설명해주는 `deadline` 파라미터를 포함하고 있다.
 
-```js
+```javascript
 const ENOUGH_TIME = 1 // milliseconds
 
 let workQueue = []
@@ -748,7 +748,7 @@ function performWork(deadline) {
 <br />
 fiber 는 어떻게 생겼는가?
 
-```js
+```javascript
 let fiber = {
   tag: HOST_COMPONENT,
   type: 'div',
@@ -807,7 +807,7 @@ work-in-progress tree 는 old tree 와 어떤 fiber를 공유하지 않습니다
 
 base class 인 `Component` 도 작성했었습니다. 여기서 `setState()`가 `scheduleUpdate()` 를 호출하게 만들고 `createInstance()` 가 instance 에 fiber 를 참조하도록 만듭시다.
 
-```js
+```javascript
 class Component {
   constructor(props) {
     this.props = props || {}
@@ -833,7 +833,7 @@ function createInstance(fiber) {
 `Component` 클래스와 `createElement()` 외에도 `render()`와 `setState()`라는 두 개의 공용 함수가 있으며 `setState()`가 `scheduleUpdate()`를 호출하는 것을 보았습니다.
 `render()` 및 `scheduleUpdate()` 도 비슷합니다. 이 두 함수들은 새 업데이트 할것을 받고 대기열(큐)에 넣습니다.
 
-```js
+```javascript
 // Fiber tags
 const HOST_COMPONENT = 'host'
 const CLASS_COMPONENT = 'class'
@@ -873,7 +873,7 @@ function scheduleUpdate(instance, partialState) {
 
 ![fiber04.png](./fiber04.png)
 
-```js
+```javascript
 const ENOUGH_TIME = 1 // milliseconds
 
 // render 또는 scheduleUpdate 에서
@@ -920,7 +920,7 @@ function workLoop(deadline) {
 
 업데이트를 받아서 첫 번째 `nextUnitOfWork`로 변환하는 함수는 `resetNextUnitOfWork()` 입니다.
 
-```js
+```javascript
 // render 할때나 scheduleUpdate 호출될때 updateQueue에 update를 넣게 되는데
 // 이때 처음으로 updateQueue에 있는 update 를 꺼내오는 함수.
 // update 를 꺼내와서 nextUnitOfWork 의 fiber를 만들어줌.
@@ -980,7 +980,7 @@ update 객체에 `partialState`가 있다면 컴포넌트 인스턴스에 속해
 
 ![fiber06.png](./fiber06.png)
 
-```js
+```javascript
 // wipFiber
 // {
 //   tag: HOST_ROOT,
@@ -1027,7 +1027,7 @@ function performUnitOfWork(wipFiber) {
 
 ![fiber07.png](./fiber07.png)
 
-```js
+```javascript
 // wipFiber
 // {
 //   tag: HOST_ROOT,
@@ -1091,7 +1091,7 @@ function updateClassComponent(wipFiber) {
 
 이것이 이 library 의 심장입니다. work-in-progress 트리가 커지며 커밋 단계에서 DOM 에 대해 어떤 변경 작업을 수행할지 결정합니다.
 
-```js
+```javascript
 // Effect tags
 const PLACEMENT = 1
 const DELETION = 2
@@ -1176,7 +1176,7 @@ reconciliation 알고리즘은 첫번째 old fiber(`wipFiber.alternate.child`)�
 
 `updateClassComponent()` 는 재조정을 하는 대신 지름길로 old fiber 하위 트리를 work-in-progress 트리로 복제하는 특별한 경우가 있습니다.
 
-```js
+```javascript
 function cloneChildFibers(parentFiber) {
   const oldFiber = parentFiber.alternate
   if (!oldFiber.child) {
@@ -1212,7 +1212,7 @@ function cloneChildFibers(parentFiber) {
 
 `performUnitOfWork()` 에서 wipFiber 가 새로운 자식들(children)을 가지고 있지 않거나 이미 모든 자식들이 이미 작업을 완료 했을 때, `completeWork()`를 호출합니다.
 
-```js
+```javascript
 function completeWork(fiber) {
   if (fiber.tag == CLASS_COMPONENT) {
     fiber.stateNode.__fiber = fiber
@@ -1241,7 +1241,7 @@ function completeWork(fiber) {
 
 이제 마지막으로 남은건 DOM 을 변경하는 것입니다.
 
-```js
+```javascript
 function commitAllWork(fiber) {
   fiber.effects.forEach(f => {
     commitWork(f)
@@ -1311,7 +1311,7 @@ rootFiber.child 에 childFiber01로 넣고 나머지는 이전 작업했던 fibe
 
 예를 들면 아래 와 같은 구조를 구성한다. 
 
-```js
+```javascript
 rootFiber.child = childFiber01
 
 childFiber02.parent = rootFiber
