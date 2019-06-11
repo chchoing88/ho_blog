@@ -1018,6 +1018,13 @@ function performUnitOfWork(wipFiber) {
 
 `performUnitOfWork()`를 여러 번 호출하면 자식(children)이 없는 파이버를 찾을 때까지 각 파이버의 첫번째 자식의 자식들을 생성하면서 계속해서 트리의 하위로 내려갑니다. 그리고 오른쪽으로 옮겨서 siblings 에도 같은 작업을 수행합니다. 그리고 다시 위로 올라와서 같은 작업을 수행합니다.
 
+![fiber-search.png](./fiber-search.png)
+
+위 처럼 트리구조가 있을때 순서는 다음과 같다. 
+
+파란색 순서는 `beginWork()` 가 호출되는 순서이고
+빨간색 순서는 `completeWork()` 가 호출되는 순서이다.
+
 ![fiber07.png](./fiber07.png)
 
 ```js
@@ -1226,6 +1233,8 @@ function completeWork(fiber) {
 
 그런 다음 `effects` 목록을 작성합니다. 이 목록에는 effectTag 가 있는 work-in-progress 서브 트리의 모든 fiber 들이 포함됩니다. (DELETION effectTag 를 가진 이전 하위 트리의 파이버도 포함). 이 아이디어는 effectTag 가 있는 모든 fiber 를 root `effects` 목록에 누적하는 것입니다.
 
+자신fiber 의 자식들 effect, 내 effect, 부모 fiber effect를 한데 모아서 내 부모 fiber의 effect로 모아준다. 
+
 마지막으로 fiber 에 부모(`parent`)가 없다면, work-in-progress 트리의 루트에 위치 해 있는것 입니다. 따라서 우리는 업데이트에 대한 모든 작업을 완료하고 모든 effects 를 수집했습니다. `workLoop()`이 `commitAllWork()`를 호출 할 수 있도록 `pendingCommit` 에 root 를 대입합니다.
 
 ![fiber11.png](./fiber11.png)
@@ -1290,3 +1299,47 @@ function commitDeletion(fiber, domParent) {
 * `DELETION` 이고 fiber 가 호스트 컴포넌트인 경우 간단합니다. 그저 `removeChild()`를 호출하면 됩니다. 그러나 fiber 가 클래스 컴포넌트인 경우 `removeChild()`를 호출하기 전에 fiber 하위 트리에서 모든 호스트 컴포넌트를 찾아서 제거해야 합니다.
 
 모든 effects 가 끝나면 `nextUnitOfWork` 및 `pendingCommit` 을 초기화 할 수 있습니다. work-in-progress 트리는 작업중인 트리가 아닌 이전 트리가 되므로 루트를 \_rootContainerFiber 에 할당합니다. 이제 우리는 현재의 업데이트가 끝냈고 다음 업데이트를 시작할 준비가 되었습니다.
+
+
+### fiber 정리
+
+fiber root 를 가지고 처음엔 `beginWork(rootFiber)` 를 작업한다.  
+ 
+여기서 `beginWork()` 한다는 것은 `stateNode` 생성해주고 자식들을 `reconcileChildrenArray()` 실행해준다.
+그러면 `reconcileChildrenArray()` 이 하는 일은 여러명의 자식중에 첫번째 자식은 
+rootFiber.child 에 childFiber01로 넣고 나머지는 이전 작업했던 fiber(childFiber01)에 sibling으로 fiber(childFiber02)를 넣는다. 
+
+예를 들면 아래 와 같은 구조를 구성한다. 
+
+```js
+rootFiber.child = childFiber01
+
+childFiber02.parent = rootFiber
+childFiber01.sibling = childFiber02
+
+childFiber02.parent = rootFiber
+childFiber02.sibling = childFiber03
+```
+이 작업을 통해서 fiber 트리 구조를 잡아준다. 
+
+child가 없을때면 그때부터 해당 fiber를 `completeWork()`를 수행해줌. sibling이 있으면 sibling 들도 `complateWork()`를 수행하고 리턴해줍니다.
+더이상의 sibling이 없으면 부모로 올라가서 `complateWork()`를 수행해 줍니다. 다시 부모의 sibling이 있으면 sibling들을 complateWork()를 해주면서 천천히 올라갑니다.
+
+정리하면 트리 구조의 왼쪽 맨 아래쪽으로 내려가 sibling들을 `complateWork()`를 실행해주고 
+다시 부모로 올라가 부모를 `complateWork()`를 하고 부모의 sibling 을 리턴합니다. 리턴된 sibling에서 다시 child를 확인하면서 반복 실행한다. 
+
+`complateWork()` 이 하는 일은 해당 fiber에 부모가 존재한지 확인한 후에 자신(fiber)의 자식들 effect에 자신의 effect를 만들고 부모가 가진 effect를 concat(합쳐서) 
+부모 fiber에 effect로 넘겨줍니다. 
+이렇게 하면 최종적으로 root fiber의 effect에는 배열로 각 fiber의 정보가 수집되게 됩니다. 
+
+마지막으로는 `commitAllWork()` 함수가 root fiber 의 effect리스트들을 돌면서 `commitWork()`를 수행합니다.
+`commitWork()` 에서는 `effectTag`를 보면서 적절한 DOM 변이를 처리 합니다.
+
+최종적으론 fiber tree 구조를 만들면서 순회를 합니다. 이때, 각 필요한 DOM 변이를 최종 root fiber의 effects 배열로 전달해준다. 이 작업은 재귀 없이 분할작업으로 처리를 한다. 
+그렇게 해서 완성된 root fiber effects를 가지고 실제 DOM 변이를 일으킨다. 이 작업은 나누지 않고 한번에 작업하도록 한다. 
+
+
+
+
+
+
