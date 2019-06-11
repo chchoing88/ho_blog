@@ -764,7 +764,7 @@ let fiber = {
 }
 ```
 
-이것은 보통의 오래된 자바스크립트 객체이다.
+이것은 보통의 자바스크립트 객체입니다.
 <br />
 우리는 `parents`, `child` 그리고 `sibling` 프로퍼티를 사용하여 component 의 tree 를 설명 하는 fiber 들의 tree 를 구축합니다.
 <br />
@@ -783,11 +783,11 @@ let fiber = {
 다른 중요한 프로퍼티는 `alternate` 이다. 이 `alternate` 가 필요한 이유는 대부분의 시간동안에 두가지의 fiber tree 를 가져야 하기 때문입니다.
 **한가지 tree 는 우리가 이미 render 한 DOM 에 관한 것이고, 이것을 우린 current tree 또는 old tree 라고 부를 것이다. 또 다른 하나는 우리가 `setState()` 또는 `Didact.render()` 호출을 통해서 새로운 update 작업을 할때 생성되는 tree 이다. 이것을 우린 _work-in-progress tree_ 라고 부를 것입니다.**
 
-work-in-progress tree 는 old tree 를 갖는 어떤 fiber 와 공유하지 않습니다. 일단 work-in-progress tree 를 완성하고나면 DOM 을 변화 시키고, 다시 이 work-in-progress tree 가 old tree 가됩니다.
+work-in-progress tree 는 old tree 와 어떤 fiber를 공유하지 않습니다. 일단 work-in-progress tree 를 완성하고나면 DOM 을 변화 시키고, 다시 이 work-in-progress tree 가 old tree 가됩니다.
 
-그래서 `alternate`를 work-in-progress tree fiber 들과 그것과 일치하는 old tree 로 부터 나온 fiber 들을 연결하기 위해 사용합니다. fiber 와 그것의 `alternate`는 같은 `tag`, `type` 그리고 `stateNode`를 공유합니다. 때때론 새로운 rendering 작업이 있을떈 fiber 들은 `alternate`를 안가지고 있을 수 있다.
+따라서 `alternate`는 work-in-progress tree fiber 들을 old tree 에 상응하는 fiber 들과 연결하기 위해 사용합니다. fiber 와 그것의 `alternate`는 같은 `tag`, `type` 그리고 `stateNode`를 공유합니다. 때론 새로운 rendering 작업이 있을떈 fiber 들은 `alternate`를 안가지고 있을 수 있다.
 
-마지막으로, `effects`리스트와 `effectTag`를 갖습니다. work-in-progress tree 안에서 DOM 이 변화할 필요가 있는 fiber 를 찾았을때 `effectTag`를 `PLACEMENT`, `UPDATE` 또는 `DELETION`으로 설정합니다. 모든 DOM 변화를 손쉽게 처리하기 위해 `effects` 나열된 `effectTag`를 가지고 있는 모든 fiber 들의 목록(fiber 하위 트리로부터 나온 fiber 들)을 유지합니다.
+마지막으로, `effects`리스트와 `effectTag`를 갖습니다. work-in-progress tree 안에서 DOM 이 변화할 필요가 있는 fiber 를 찾았을때 `effectTag`를 `PLACEMENT`, `UPDATE` 또는 `DELETION`으로 설정합니다. 모든 DOM 변화를 손쉽게 처리하기 위해 `effectTag`를 가지고 있는 모든 fiber 들의 목록(fiber 하위 트리로부터 나온 fiber 들)을 `effects`에 유지합니다.
 
 ### Didact call hierarchy
 
@@ -866,8 +866,8 @@ function scheduleUpdate(instance, partialState) {
 }
 ```
 
-`updateQueue` 배열을 사용해서 update 준비중인것들을 추적합니다. 매 `render()` 또는 `scheduleUpdate()` 호출은 새로운 업데이트를 `updateQueue` 큐에 넣는다.
-각 업데이트들의 업데이트 정보는 다르고 이것을 우리가 나중에 `resetNextUnitOfWork()` 에서 어떻게 사용할지 볼수 있을것이다.
+`updateQueue` 배열을 사용해서 보류중인 update 추적할 것입니다. 매 `render()` 또는 `scheduleUpdate()` 호출은 새로운 업데이트를 `updateQueue` 큐에 넣는다.
+각 업데이트들의 업데이트 정보는 다르고 이것을 우리가 나중에 `resetNextUnitOfWork()` 에서 어떻게 사용할지 볼수 있을것입니다.
 
 업데이트를 큐에 넣고 나서, `performWork()`에 대한 지연 호출을 트리거합니다.
 
@@ -902,15 +902,15 @@ function workLoop(deadline) {
 
 여기 우리가 앞서 보았던 `performUnitOfWork()` 패턴을 사용합니다.
 
-`requestIdleCallback()`은 deadline 파라미터를 함께 가진 타겟 함수를 호출합니다. `performWork()` deadline 을 받아서 `workLoop()` 로 전달해줍니다. `workLoop()` returns 후에, `performWork()` 작업 준비가 되었는지 체크를 합니다. 만약 준비가 됬다면, 자기 자신을 새로운 지연 호출로 스케쥴링 시킵니다.
+`requestIdleCallback()`은 deadline 파라미터를 함께 가진 타겟 함수를 호출합니다. `performWork()` deadline 을 받아서 `workLoop()` 로 전달해줍니다. `workLoop()` returns 후에, `performWork()` 작업 준비가 되었는지 체크를 합니다. 만약 준비가 됬다면, 자기 자신을 새로운 지연 호출로 스케줄링 시킵니다.
 
-`workLoop()` 은 시간을 주시하는 함수입니다. 만약 deadline 이 너무 가깝다면, 루프 작업은 멈추고 다음 업데이트 해야할 작업을 남겨둡니다. 그래서 다시 다음 타임에 재개 될 수 있도록 합니다.
+`workLoop()` 은 시간을 주시하는 함수입니다. 만약 deadline 이 너무 가깝다면(마감시간), 루프 작업은 멈추고 다음 업데이트 해야할 작업을 남겨둡니다. 그래서 다시 다음 타임에 재개 될 수 있도록 합니다.
 
-> deadline.timeRemaining()이 다른 작업 단위를 실행하기에 충분한지 아닌지 확인하기 위해 ENOUGH_TIME (1ms 상수, React 와 동일)을 사용합니다. performUnitOfWork ()가 그 이상을 수행하면 마감 시간이 초과됩니다. 최종 기한은 브라우저의 제안 일 뿐이므로 몇 밀리 초 동안 오버런하는 것은 그렇게 나쁘지 않습니다.
+> `deadline.timeRemaining()`이 다른 작업 단위를 실행하기에 충분한지 아닌지 확인하기 위해 ENOUGH_TIME (1ms 상수, React 와 동일)을 사용합니다. `performUnitOfWork()`가 그 이상을 수행하면 마감 시간이 초과 될것입니다. deadline은 브라우저의 제안 일 뿐이므로 몇 밀리 초 동안 초과실행 하는것은 그렇게 나쁘지 않습니다.
 
-`performUnitOfWork()`는 업데이트를위한 work-in-progress 트리를 만들고 DOM 에 적용해야 할 변경 사항을 찾아 낼 것입니다. **이것은 한 번에 한 fiber 씩 점진적으로 이루어질 것입니다.**
+`performUnitOfWork()`는 업데이트를위한 work-in-progress 트리를 만들고 DOM 에 적용해야 할 변경 사항을 남겨둡니다. **이것은 한 번에 한 fiber 씩 점진적으로 이루어질 것입니다.**
 
-`performUnitOfWork()`가 현재 업데이트에 대한 모든 작업을 완료하면 null 을 반환하고 보류중인 DOM 변경 사항을 `pendingCommit`에 남겨 둡니다. 마지막으로 `commitAllWork()`는 `pendingCommit` 에서 `effects`를 받아 DOM 을 변경합니다.
+`performUnitOfWork()`가 현재 업데이트에 대한 모든 작업을 완료하면 null 을 반환하고 보류중인 DOM 변경 사항을 `pendingCommit`에 남겨 둡니다. 마침내 `commitAllWork()`는 `pendingCommit` 에서 `effects`를 받아 DOM 을 변경합니다.
 
 `commitAllWork()`는 루프 외부에서 호출됩니다. `performUnitOfWork()`에서 수행 된 작업은 DOM 을 변경하지 않으므로 분할하는 것이 좋습니다. 반면에, `commitAllWork()`는 DOM 을 돌연변이시킬 것이고 일관성없는 UI 를 피하기 위해 한번에 모두 완료되어야합니다.
 
@@ -1010,7 +1010,7 @@ function performUnitOfWork(wipFiber) {
 
 `performUnitOfWork()`는 진행중인 작업 트리를 탐색합니다.
 
-`beginWork()`를 호출한다. --이것은 새로운 fiber 의 children 을 만들기 위한 작업이다.-- 그리고 나서 첫번째 child 를 리턴한다. 그러면 그게 `nextUnitOfWork` 가 된다.
+`beginWork()`를 호출한다. --이것은 새로운 fiber 의 children 을 만들기 위한 작업이다.-- 그리고 나서 첫번째 child을 리턴한다. 그리고나서 그것을  `nextUnitOfWork` 에 대입한다.
 
 만약 어떤 child 도 없다면, `completeWork()`를 호출하고 `nextUnitOfWork`가 될 `sibling`을 리턴한다.
 
@@ -1068,7 +1068,7 @@ function updateClassComponent(wipFiber) {
 `beginWork()`는 두가지를 합니다:
 
 * `stateNode`를 가지고 있지 않다면 생성해줍니다.
-* component children 을 얻고 `reconcileChildrenArray()`에 그것들을 넘겨준다.
+* component children 을 가져와 `reconcileChildrenArray()`에 그것들을 넘겨준다.
 
 두가지 타입의 component 를 우리가 다루기 때문에 우리는 2 가지로 나눠야 한다. `updateHostComponent()` 와 `updateClassComponent()` 이다.
 
@@ -1100,6 +1100,7 @@ function reconcileChildrenArray(wipFiber, newChildElements) {
   let index = 0
   let oldFiber = wipFiber.alternate ? wipFiber.alternate.child : null
   let newFiber = null
+  // 새롭게 들어온 element 또는 oldFiber가 없을때까지 반복
   while (index < elements.length || oldFiber != null) {
     const prevFiber = newFiber
     const element = index < elements.length && elements[index]
@@ -1152,7 +1153,7 @@ function reconcileChildrenArray(wipFiber, newChildElements) {
 
 시작하기 전에 `newChildElements`가 배열인지 확인하십시오. (이전의 reconciliation 알고리즘과 달리 `reconcileChildrenArray`는 항상 자식 배열과 함께 작동합니다. 즉, 이제 component 의 `render()` 함수에서 배열을 반환 할 수 있습니다.)
 
-그 후에 old fiber tree 의 children 들을 새로운 element 와 비교하기 시작합니다. (fiber 와 element 를 비교하는 것이다.) old fiber tree 의 children 들은 wipFiber.alternate 의 children 이다. 새로운 element 들은 `wipFiber.props.children` 에서 얻어 오거나 또는 `wipFiber.stateNode.render()` 호출해서 얻어온 것입니다.
+그 후에 old fiber tree 의 children 들을 새로운 element 와 비교하기 시작합니다. (fiber 와 element 를 비교하는 것이다.) old fiber tree 의 children 들은 `wipFiber.alternate` 의 children 이다. 새로운 element 들은 `wipFiber.props.children` 에서 얻어 오거나 또는 `wipFiber.stateNode.render()` 호출해서 얻어온 것입니다.
 
 reconciliation 알고리즘은 첫번째 old fiber(`wipFiber.alternate.child`)와 첫번째 child element(`element[0]`) 를 일치 시키고, 두번째 old fiber(`wipFiber.alternate.child.sibling`) 두번째 child element(`element[1]`)도 반복합니다. 각각 oldFiber-element 쌍을 이루게 합니다.
 
