@@ -56,6 +56,10 @@
       "path---refactoring-method-cleanup-46236c286e9dee8da3fa.js",
       "path---refactoring-method-cleanup-46236c286e9dee8da3fa.js.map"
     ],
+    "path---try-catch": [
+      "path---try-catch-786de2e0ecb3ac4f72aa.js",
+      "path---try-catch-786de2e0ecb3ac4f72aa.js.map"
+    ],
     "path---hello-oop": [
       "path---hello-oop-8753bd908c30244d5ee3.js",
       "path---hello-oop-8753bd908c30244d5ee3.js.map"
@@ -81,8 +85,8 @@
       "component---src-layouts-index-js-60e98b905b7a1c56256e.js.map"
     ],
     "path---refactoring-simplifying-method-calls": [
-      "path---refactoring-simplifying-method-calls-c866ac8d3d969a186524.js",
-      "path---refactoring-simplifying-method-calls-c866ac8d3d969a186524.js.map"
+      "path---refactoring-simplifying-method-calls-294a8dadb4d3828fd246.js",
+      "path---refactoring-simplifying-method-calls-294a8dadb4d3828fd246.js.map"
     ],
     "path---refactoring": [
       "path---refactoring-5ee2d02ba04bdb575764.js",
@@ -96,6 +100,10 @@
       "path---hello-mobx-01735f8a0f592b5e0358.js",
       "path---hello-mobx-01735f8a0f592b5e0358.js.map"
     ],
+    "path---build-react": [
+      "path---build-react-8fe160cba69ecb4070e4.js",
+      "path---build-react-8fe160cba69ecb4070e4.js.map"
+    ],
     "path---docker-depolyment": [
       "path---docker-depolyment-4012246536442f60159d.js",
       "path---docker-depolyment-4012246536442f60159d.js.map"
@@ -105,8 +113,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-aef79d6192c42f379e95.js",
-      "path---index-aef79d6192c42f379e95.js.map"
+      "path---index-cf2fab70390a644affba.js",
+      "path---index-cf2fab70390a644affba.js.map"
     ],
     "path---hello-webpack": [
       "path---hello-webpack-b0122eda8ae66d76c639.js",
@@ -147,9 +155,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-28e505ed0b587f106780.js",
+      "app-00a132d46dd380b9cb63.js",
       "build-js-styles.css",
-      "app-28e505ed0b587f106780.js.map",
+      "app-00a132d46dd380b9cb63.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
