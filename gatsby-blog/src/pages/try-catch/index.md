@@ -1,6 +1,6 @@
 ---
 title: Using JavaScript’s Try-Catch Statement
-date: "2018-06-07T10:00:03.284Z"
+date: "2019-06-07T10:00:03.284Z"
 ---
 
 이 글은 [https://www.impressivewebs.com/javascript-try-catch/](https://www.impressivewebs.com/javascript-try-catch/) 의 번역 본입니다.
