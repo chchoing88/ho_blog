@@ -1138,11 +1138,11 @@ function performUnitOfWork(wipFiber) {
 
 `performUnitOfWork()`를 여러 번 호출하면 자식(children)이 없는 파이버를 찾을 때까지 각 파이버의 첫번째 자식의 자식들을 생성하면서 계속해서 트리의 하위로 내려갑니다. 그리고 오른쪽으로 옮겨서 siblings 에도 같은 작업을 수행합니다. 그리고 다시 위로 올라와서 같은 작업을 수행합니다.
 
-![fiber-search.png](./fiber-search.png)
+<!-- ![fiber-search.png](./fiber-search.png)
 
 위 처럼 트리구조가 있을때 순서는 다음과 같다.
 
-파란색 순서는 `beginWork()` 가 호출되는 순서이고 빨간색 순서는 `completeWork()` 가 호출되는 순서이다.
+파란색 순서는 `beginWork()` 가 호출되는 순서이고 빨간색 순서는 `completeWork()` 가 호출되는 순서이다. -->
 
 ![fiber07.png](./fiber07.png)
 
@@ -1440,15 +1440,13 @@ childFiber02.parent = rootFiber
 childFiber02.sibling = childFiber03
 ```
 
-그래서 결론적으로는 `beginWork()` 이 작업을 통해서 fiber 트리 구조를 잡아준다.
+그래서 `beginWork()` 이 작업을 통해서 한 부모 fiber 의 자식 fiber 들을 생성해주는 역할을 합니다. 이 역할이 끝나고 나서 fiber.child 가 발견 되면 다시 `beginWork()` 를 수행한다. 끝까지 child 가 나오지 않는다면 그때부턴 fiber 를 `complateWork()`를 실행합니다. 실행도중 fiber.sibling 가 발견되면 다시 `beginWork()`를 수행하게 되어 child fiber 를 만들게 됩니다.
 
-child 가 없을때면 그때부터 해당 fiber 를 `completeWork()`를 수행해줌. sibling 이 있으면 sibling 들도 `complateWork()`를 수행하고 리턴해줍니다.
-더이상의 sibling 이 없으면 부모로 올라가서 `complateWork()`를 수행해 줍니다. 다시 부모의 sibling 이 있으면 sibling 들을 complateWork()를 해주면서 천천히 올라갑니다.
+그래서 결론적으로는 `performUnitOfWork()`의 반복 수행으로 전체 fiber 트리 구조를 잡아준다.
 
-정리하면 트리 구조의 왼쪽 맨 아래쪽으로 내려가 sibling 들을 `complateWork()`를 실행해주고다시 부모로 올라가 부모를 `complateWork()`를 하고 부모의 sibling 을 리턴합니다. 리턴된 sibling 에서 다시 child 를 확인하면서 반복 실행한다.
+정리하면 트리 구조의 왼쪽 맨 아래쪽으로 내려가면서 fiber 를 만들게 됩니다. 이때, 더이상의 child 를 만나지 않으면 `complateWork()` 를 실행하고 부모로 올라가 `complateWork()` 를 실행합니다. 이때, 해당 fiber 에서 sibling 들을 만나게 되면 해당 sibling 을 리턴해서 다시 `beginWork()` 작업을 하게 되고 child 가 없을때 다시 `complateWork()`를 실행해줍니다. 이 작업을 반복해서 실행합니다.
 
-`complateWork()` 이 하는 일은 해당 fiber 에 부모가 존재한지 확인한 후에 자신(fiber)의 자식들 effect 에 자신의 effect 를 만들고 부모가 가진 effect 를 concat(합쳐서)
-부모 fiber 에 effect 로 넘겨줍니다.
+`complateWork()` 이 하는 일은 해당 fiber 에 부모가 존재한지 확인한 후에 자신(fiber)의 자식들 effect 에 자신의 effect 를 만들고 부모가 가진 effect 를 concat(합쳐서) 부모 fiber 에 effect 로 넘겨줍니다.
 이렇게 하면 최종적으로 root fiber 의 effect 에는 배열로 각 fiber 의 정보가 수집되게 됩니다.
 
 마지막으로는 `commitAllWork()` 함수가 root fiber 의 effect 리스트들을 돌면서 `commitWork()`를 수행합니다.
