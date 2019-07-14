@@ -882,7 +882,7 @@ let fiber = {
 다른 중요한 프로퍼티는 `alternate` 이다. 이 `alternate` 가 필요한 이유는 대부분의 시간동안에 두가지의 fiber tree 를 가져야 하기 때문입니다.
 **한가지 tree 는 우리가 이미 render 한 DOM 에 관한 것이고, 이것을 우린 current tree 또는 old tree 라고 부를 것이다. 또 다른 하나는 우리가 `setState()` 또는 `Didact.render()` 호출을 통해서 새로운 update 작업을 할때 생성되는 tree 이다. 이것을 우린 _work-in-progress tree_ 라고 부를 것입니다.**
 
-work-in-progress tree 는 old tree 와 어떤 fiber 를 공유하지 않습니다. 일단 work-in-progress tree 를 완성하고나면 DOM 을 변화 시키고, 다시 이 work-in-progress tree 가 old tree 가됩니다.
+work-in-progress tree 는 old tree 와 어떤 fiber 와도 공유하지 않습니다. 일단 work-in-progress tree 를 완성하고나면 필요한 DOM 을 변화를 만들고, 다시 이 work-in-progress tree 가 old tree 가됩니다.
 
 따라서 `alternate`는 work-in-progress tree fiber 들을 old tree 에 상응하는 fiber 들과 연결하기 위해 사용합니다. fiber 와 그것의 `alternate`는 같은 `tag`, `type` 그리고 `stateNode`를 공유합니다. 때론 새로운 rendering 작업이 있을떈 fiber 들은 `alternate`를 안가지고 있을 수 있다.
 
@@ -900,7 +900,7 @@ work-in-progress tree 는 old tree 와 어떤 fiber 를 공유하지 않습니�
 
 대부분의 코드를 재 작성해야 한다고 이야기 했었었다. 하지만 먼저 수정하지 않을 코드가 있는지 살펴봅시다.
 
-트랜스파일된 JSX 가 사용하는 함수인 createElement 함수를 작성했습니다. 우리가 작성한 `createElement()` 함수는 변할 필요가 없다. 우린 계속 동일한 element 들을 사용할 것이기 때문이다. 여기서 element 는 `type`,`props` 그리고 `children`을 가진 평범한 자바스크립트 객체였다.
+트랜스파일된 JSX 가 사용하는 함수인 `createElement` 함수를 작성했습니다. 우리가 작성한 `createElement()` 함수는 변할 필요가 없다. 우린 계속 동일한 element 들을 사용할 것이기 때문이다. 여기서 element 는 `type`,`props` 그리고 `children`을 가진 평범한 자바스크립트 객체였다.
 
 우린 노드의 DOM 프로퍼티를 갱신 하기 위해 `updateDomProperties()` 도 작성했었다. 또 DOM element 들을 생성하기 위해 `createDomElement()` 함수도 추출했습니다. 이 두 함수 모두 [이곳](https://gist.github.com/pomber/c63bd22dbfa6c4af86ba2cae0a863064)에서 볼수 있습니다.
 
@@ -1017,7 +1017,7 @@ function workLoop(deadline) {
 
 ![fiber05.png](./fiber05.png)
 
-업데이트를 받아서 첫 번째 `nextUnitOfWork`로 변환하는 함수는 `resetNextUnitOfWork()` 입니다.
+업데이트를 받아서 첫 번째 `nextUnitOfWork`로 변환하는 `resetNextUnitOfWork()` 함수 입니다.
 
 ```javascript
 // render 할때나 scheduleUpdate 호출될때 updateQueue에 update를 넣게 되는데
@@ -1025,6 +1025,21 @@ function workLoop(deadline) {
 // update 를 꺼내와서 nextUnitOfWork 의 fiber를 만들어줌.
 function resetNextUnitOfWork() {
   const update = updateQueue.shift()
+
+  // render
+  // {
+  //   from: HOST_ROOT,
+  //   dom: containerDom,
+  //   newProps: { children: elements },
+  // }
+
+  // scheduleUpdate
+  // {
+  //   from: CLASS_COMPONENT,
+  //   instance: instance,
+  //   partialState: partialState,
+  // }
+
   if (!update) {
     return
   }
@@ -1037,6 +1052,7 @@ function resetNextUnitOfWork() {
   }
 
   // 그런 다음 old fiber tree의 root를 찾습니다.
+  // _rootContainerFiber 이것은 한번 그려졌던 dom 이라면 이전 fiber이다.
   const root =
     update.from == HOST_ROOT
       ? update.dom._rootContainerFiber
@@ -1071,9 +1087,9 @@ update 객체에 `partialState`가 있다면 컴포넌트 인스턴스에 속해
 
 그런 다음 `nextUnitOfWork`에 새 fiber 를 할당합니다. **이 fiber 는 새로운 work-in-progress tree 의 root 입니다.**
 
-만약 old root 가 없다면(이미 그려진 DOM 이 없다면), `stateNode`(component instance)는 `render()` 호출할때 매개 변수로 받은 DOM 노드(containerDom)입니다. `props` 는 update 객체의 `newProps`가됩니다 : 여기서 `newProps`는 element(render()의 element 매개변수)들을 가지고있는 children 프로퍼티를 가진 객체이다(위 `render` 함수 참고). `alternate`은 null 이 될 것입니다. 왜냐하면 처음으로 호출되는 `render` 이기 때문에 루트 fiber 가 없다.
+만약 old root 가 없다면(이미 그려진 DOM 이 없다면), `stateNode`(component instance)는 `render()` 호출할때 매개 변수로 받은 DOM 노드(containerDom)입니다. `props` 는 update 객체의 `newProps`가됩니다 : 여기서 `newProps`는 element(render() 함수의 element 매개변수 값)들을 가지고있는 children 프로퍼티를 가진 객체이다(위 `render` 함수 참고 : newProps: { children: elements }). `alternate`은 null 이 될 것입니다. 왜냐하면 처음으로 호출되는 `render` 이기 때문에 이전에 그렸던 루트 fiber 가 없다.
 
-만약 old root 가 있다면 `stateNode`는 이전 루트의 DOM 노드가됩니다. `props`는 다시 newProps 가 null 이 아니면 `newProps`로 할당되고 그렇지 않으면 이전 루트에서 `props` 복사합니다. `alternate`는 이전 루트가됩니다.
+만약 old root 가 있다면 `stateNode`는 이전 루트의 DOM 노드가됩니다. `props`는 다시 newProps 가 null 이 아니면 `newProps`로 할당되고 그렇지 않으면 이전 루트에서 `props` 복사합니다. `alternate`는 이전 루트 fiber 가됩니다.
 
 이제 우리는 work-in-progress tree 의 root 을 가지고 나머지 부분을 만들기 시작합시다.
 
@@ -1121,7 +1137,7 @@ function performUnitOfWork(wipFiber) {
 
 위 처럼 트리구조가 있을때 순서는 다음과 같다.
 
-파란색 순서는 `beginWork()` 가 호출되는 순서이고빨간색 순서는 `completeWork()` 가 호출되는 순서이다.
+파란색 순서는 `beginWork()` 가 호출되는 순서이고 빨간색 순서는 `completeWork()` 가 호출되는 순서이다.
 
 ![fiber07.png](./fiber07.png)
 
@@ -1404,14 +1420,14 @@ fiber root 를 가지고 처음엔 `beginWork(rootFiber)` 를 작업한다.
 
 여기서 `beginWork()` 한다는 것은 `stateNode` 생성해주고 자식들을 `reconcileChildrenArray()` 실행해준다.
 그러면 `reconcileChildrenArray()` 이 하는 일은 여러명의 자식중에 첫번째 자식은
-rootFiber.child 에 childFiber01 로 넣고 나머지는 이전 작업했던 fiber(childFiber01)에 sibling 으로 fiber(childFiber02)를 넣는다.
+rootFiber.child 에 childFiber01 로 넣고 나머지는 이전 작업했던 childFiber01 에 sibling 으로 childFiber02 를 넣는다.
 
 예를 들면 아래 와 같은 구조를 구성한다.
 
 ```javascript
 rootFiber.child = childFiber01
 
-childFiber02.parent = rootFiber
+childFiber01.parent = rootFiber
 childFiber01.sibling = childFiber02
 
 childFiber02.parent = rootFiber
