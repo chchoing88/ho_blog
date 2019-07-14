@@ -867,7 +867,7 @@ let fiber = {
 <br />
 우리는 `parents`, `child` 그리고 `sibling` 프로퍼티를 사용하여 component 의 tree 를 설명 하는 fiber 들의 tree 를 구축합니다.
 <br />
-`stateNode`는 component instance 에 대한 참조 값이다. 이 값으론 DOM element 또는 유저가 정의한 class component 의 instance 를 가질 수 있습니다.
+`stateNode`는 component instance 에 대한 참조 값이다. 이 값으론 DOM element (createDomElement) 또는 유저가 정의한 class component 의 instance (createInstance) 를 가질 수 있습니다.  
 <br />
 예를 들면,
 
@@ -885,6 +885,8 @@ let fiber = {
 work-in-progress tree 는 old tree 와 어떤 fiber 와도 공유하지 않습니다. 일단 work-in-progress tree 를 완성하고나면 필요한 DOM 을 변화를 만들고, 다시 이 work-in-progress tree 가 old tree 가됩니다.
 
 따라서 `alternate`는 work-in-progress tree fiber 들을 old tree 에 상응하는 fiber 들과 연결하기 위해 사용합니다. fiber 와 그것의 `alternate`는 같은 `tag`, `type` 그리고 `stateNode`를 공유합니다. 때론 새로운 rendering 작업이 있을떈 fiber 들은 `alternate`를 안가지고 있을 수 있다.
+
+여기서 `alternate`는 처음에 dom 에 그릴땐 어떤한 값을 안가지고 있다가 dom 을 그리고 나고 다시 render 시에는 \_rootContainerFiber 값을 `alternate`에 할당한다. 그 이후에 `reconcileChildrenArray` (children 돌면서 fiber 를 만들어 줌) 메서드 실행시에 `wipFiber.alternate.child`를 `oldFiber`로 활용한다.
 
 마지막으로, `effects`리스트와 `effectTag`를 갖습니다. work-in-progress tree 안에서 DOM 이 변화할 필요가 있는 fiber 를 찾았을때 `effectTag`를 `PLACEMENT`, `UPDATE` 또는 `DELETION`으로 설정합니다. 모든 DOM 변화를 손쉽게 처리하기 위해 `effectTag`를 가지고 있는 모든 fiber 들의 목록(fiber 하위 트리로부터 나온 fiber 들)을 `effects`에 유지합니다.
 
@@ -1018,6 +1020,9 @@ function workLoop(deadline) {
 ![fiber05.png](./fiber05.png)
 
 업데이트를 받아서 첫 번째 `nextUnitOfWork`로 변환하는 `resetNextUnitOfWork()` 함수 입니다.
+`resetNextUnitOfWork()` 함수는 첫 root fiber 를 만드는 함수라고 생각하면 된다. `render()` 함수 또는 `scheduleUpdate()`함수에서 `performWork() 함수`를 시작할때 `nextUnitOfWork` 가 없다면 root fiber 를 만들어서 `performUnitOfWork(nextUnitOfWork)` 를 수행한다.
+
+`nextUnitOfWork` 이거는 곧 fiber 라고 생각하면 되겠다. 여기서 `performUnitOfWork` 의 매개 변수 명이 `wipFiber` 이다.
 
 ```javascript
 // render 할때나 scheduleUpdate 호출될때 updateQueue에 update를 넣게 되는데
@@ -1189,7 +1194,7 @@ function updateClassComponent(wipFiber) {
 `beginWork()`는 두가지를 합니다:
 
 * `stateNode`를 가지고 있지 않다면 생성해줍니다.
-* component children 을 가져와 `reconcileChildrenArray()`에 그것들을 넘겨준다.
+* component children (fiber.props.children) 을 가져와 `reconcileChildrenArray()`에 그것들을 넘겨준다.
 
 두가지 타입의 component 를 우리가 다루기 때문에 우리는 2 가지로 나눠야 한다. `updateHostComponent()` 와 `updateClassComponent()` 이다.
 
@@ -1261,6 +1266,7 @@ function reconcileChildrenArray(wipFiber, newChildElements) {
       oldFiber = oldFiber.sibling
     }
 
+    // Fiber 연결
     if (index == 0) {
       wipFiber.child = newFiber
     } else if (prevFiber && element) {
@@ -1434,7 +1440,7 @@ childFiber02.parent = rootFiber
 childFiber02.sibling = childFiber03
 ```
 
-이 작업을 통해서 fiber 트리 구조를 잡아준다.
+그래서 결론적으로는 `beginWork()` 이 작업을 통해서 fiber 트리 구조를 잡아준다.
 
 child 가 없을때면 그때부터 해당 fiber 를 `completeWork()`를 수행해줌. sibling 이 있으면 sibling 들도 `complateWork()`를 수행하고 리턴해줍니다.
 더이상의 sibling 이 없으면 부모로 올라가서 `complateWork()`를 수행해 줍니다. 다시 부모의 sibling 이 있으면 sibling 들을 complateWork()를 해주면서 천천히 올라갑니다.
