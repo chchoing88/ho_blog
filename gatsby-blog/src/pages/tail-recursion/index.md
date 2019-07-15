@@ -15,6 +15,14 @@ date: "2019-05-16T10:00:03.284Z"
 1. 피보나치 수열은 재귀 호출을 두겹으로 호출하기 때문에 함수 호출 횟수가 많다.
 2. 단순한 합을 구하는 재귀함수에서는 stack 의 깊이가 너무 깊어진다.
 
+```javascript
+// 단순 합을 재귀로 해결한 예제.
+function sum(n) {
+  if (n < 2) return n
+  return n + sum(n - 1)
+}
+```
+
 첫번 째 문제는 한겹으로 재귀를 호출 할 수 있다면 함수 호출을 줄일 수 있을 것이다.
 두번 째 문제의 해결책은 두가지가 있을 수 있는데 다음과 같다.
 
@@ -55,10 +63,30 @@ a()
 _Tail Call 은 함수를 호출해서 값을 반환 받은 후 아무 일도 하지 않고 바로 반환하게 하기 위해 논리적으로 가장 마지막(꼬리) 위치에서 함수를 호출하는 방식을 말한다._
 _Tail Call 방식을 적용하려면 두 겹인 재귀 호출을 한 겹으로 줄여야만 한다._
 
+즉, 반환 받은 후 아무일도 하지 않게끔 하는 Tail Call 방식으로 짜는 것까지는 프로그래머가 할 수 있는 일이지만, Tail Call 방식으로 짰다고 해도 그런 코드를 돌리는 실행 환경에서는 내부적으로 여전히 Stack 을 새로 만들어 추가하는 비효율적인 방식으로 동작할 수도 있다.
+
 > tail Call 방식으로 짜여지면 Stack 을 새로 만들지 않고 이미 있는 Stack 속의 값만 대체해서 Stack 을 재사용하는 방식으로 동작하도록 최적화 할 수 있다. 이러한 최적화를 Tail Call Optimization(또는 Tail Call Elimination)이라고 하며 언어의 실행 환경에서 지원해줘야 한다.
 
 Tail Recursion 의 경우에는 *Tail Call 의 특별한 경우로서 Tail Call 로 호출하는 함수가 자기 자신인 경우*에 해당한다.
 이제 Tail Recursion 으로 fibonacci 수를 구하는 코드를 짜보자. 앞에서 재귀 호출 방식을 반복 방식으로 바꾸는 작업을 직접 해봤다면 크게 어렵지 않을 것이다.
+
+```javascript
+function fibonacciTailRecursion(n, previousFibo, previousPreviousFibo) {
+  var currentFibo
+  if (n < 2) return n * previousFibo
+
+  // 이번 호출의 피보나치 수를 구하고
+  currentFibo = previousFibo + previousPreviousFibo
+
+  // 다음번 재귀 호출을 위해 앞의 피보나치 수를 앞의앞의 피보나치 수로 한 칸 미루고
+  previousPreviousFibo = previousFibo
+
+  // 다음번 재귀 호출을 위해 현재의 피보나치 수를 앞의 피보나치 수로 한 칸 미룬다.
+  previousFibo = currentFibo
+
+  return fibonacciRecursion(n - 1, previousFibo, previousPreviousFibo)
+}
+```
 
 ```javascript
 function fibonacciTailRecursion(n, previousFibo, previousPreviousFibo) {
@@ -74,12 +102,30 @@ function fibonacciTailRecursion(n, previousFibo, previousPreviousFibo) {
 재귀 호출을 반복이나 Tail Recursion 방식으로 구현하려면 다음의 사항을 꼭 기억하자.
 반복이나 꼬리 호출 단계별 계산 결과를 어딘가에 계속 저장한다.
 
+반복 방식에서는 previousFibo 이 반복문 외부에서 선언되었고, Tail Recursion 방식에서는 previousFibo 이 함수의 파라미터로 사용된다는 점만 다를 뿐, 반복이나 꼬리 호출 단계별 계산 결과를 어딘가에 저장해둔다는 점은 똑같다.
+
 인터프리터 / 컴파일러는 호출 스택에서 과거 함수 호출을 제거하여 재귀를 최적화합니다. 하지만 자바 스크립트에서 꼬리 재귀는 인식되지 않고 여전히 호출 스택에 배치가 되는 문제점을 가지고 있다.
 
 ## Trampoline
 
 일반적인 Tail Recursion 에서는 tail position 에서 함수 스스로를 계속 호출을 하고 그 결과를 바로 다시 자기 자신 함수의 결과로 넘겨서 호출하곤 했었다.
 이때 컴파일러가 tail positon 호출을 위한 optimizations 이 안되어 있다면 스택은 계속 쌓여만 간다.
+
+Tail Recursion 으로 짠 factorial
+
+```javascript
+function factorial(n) {
+  var recur = function(result, n) {
+    if (n === 1) return result
+
+    return recur(result * n, n - 1)
+  }
+  return recur(1, n)
+}
+// So factorial(4) = recur(1, 4) = recur(4 * 1, 3) = recur(4 * 3, 3) = recur(12 * 2, 2) = recur(24 * 1, 1) = 24.
+```
+
+위 코드에서 `factorial(100000000)` 실행시키면 Maximum call stack size exceeded 에러가 발생한다.
 
 그래서 한가지 방법중에 하나가 trampoline 이라고 불리는 패턴이다.
 만약 위에서 말한 계속 호출하는 방식이 아닌 호출할 함수를 리턴해준다면, 우리는 tramploine 을 사용해서 계속적으로 실행할 수 있다.
@@ -114,7 +160,7 @@ function factorial(n) {
 
 위 예에서 `factorical(4)` 를 호출한다고 가정을 해보고 호출을 따라가보자.
 여기서 위에서 설명한 `thunk 함수`는 `recur 함수`이다.
-`recur(1,n)` 을 trampoline 함수에 인자로 넘겼을 때, 우리는 사실 `recur.bind(null,1*4,3)` 을 넘기게 됩니다.
+`recur(1,n)` 을 trampoline 함수에 인자로 넘겼을 때, `recur(1,4)` 를 호출 후에 우리는 사실 `recur.bind(null,1*4,3)` 을 넘기게 됩니다.
 while 반복문은 recur 가 undefined/null 이지 않고, 함수인지를 체크한다. 여기서 recur 이 bounded 되고 나서도 recur 함수는 Function object 의 인스턴스로 여전히 남아있게 된다.
 
 ```javascript
@@ -122,9 +168,13 @@ console.log(recur.bind(null, 1 * 4, 3)) // [Function: bound recur]
 ```
 
 루프에 2 가지 상태를 확인한 후에 fn 을 호출한다. 그리곤 그것의 결과를 다시 fn 에 할당한다.
-그러면 fn 은 `recur.bind(null,4*3,2)` 가 된다. 이 루프는 `recur.bind(null,12*2,1)` 이 될때까지 동작하게 된다. 그리곤 24 를 리턴한다.
+그러면 fn 은 `recur.bind(null,4*3,2)` 가 된다. 이 루프는 `recur.bind(null,12*2,1)` 이 될때까지 동작하게 된다. 그리곤 24 를 리턴한다. 여기서 24 값은 undefined/null 이 아니다, 그래서 while 루프 상태값에서 통과가 되지만 24 값은 function 이 아니기에 while 루프가 중지된다. trampoline 함수는 결국 24 인 fn 을 반환하게 된다.
 
-이 과정에서 우리는 함수 호출을 쌓을 필요가 없습니다. 각 함수가 호출되어 바운드 함수를 반환 한 다음 호출 스택에서 제거됩니다. 그런 다음 trampoline 의 while 루프를 사용하여 바운드 함수를 호출하여 각 재귀 적 단계로 건너 뜁니다.
+이 과정에서 우리는 함수 호출을 쌓을 필요가 없습니다. 각 함수가 호출되어 바운드 함수를 반환 한 다음 호출 스택에서 제거됩니다. 그런 다음 trampoline 의 while 루프를 사용하여 바운드 함수를 호출하여 각 재귀 적 단계로 건너 뛰게 됩니다.
+
+while 문을 돌면서 fn 이 함수가 아닌 값으로 떨어질때까지 호출하고 리턴하고를 반복한다. fn 을 만들때에는 해당 조건이 완성되지 않았을 때는 계속 함수를 리턴하도록 해준다.
+
+결과적으로 같이 `factorial(100000000)`을 실행할 경우에 call stack 에러가 뜨지 않는다.
 
 ## 예시
 
