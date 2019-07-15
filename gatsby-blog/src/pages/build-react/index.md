@@ -1454,3 +1454,50 @@ childFiber02.sibling = childFiber03
 
 최종적으론 fiber tree 구조를 만들면서 순회를 합니다. 이때, 각 필요한 DOM 변이를 최종 root fiber 의 effects 배열로 전달해준다. 이 작업은 재귀 없이 분할작업으로 처리를 한다.
 그렇게 해서 완성된 root fiber effects 를 가지고 실제 DOM 변이를 일으킨다. 이 작업은 나누지 않고 한번에 작업하도록 한다.
+
+
+## 최종 정리 
+
+
+fiber 알고리즘이 적용 되기 전까지는 dom의 재사용성을 위한 `instance`라는 개념을 도입 (`{dom, element, childInstances}`) 했다. 여기서 `instance`는 dom에 그려진 `element`를 나타냅니다. 
+render 또는 setState시 에 발동되는 `reconcile` 라는 "diff" 알고리즘을 사용합니다. 여기서 `reconcile` 함수는 이미 그려진 `instance` 와 새롭게 그려질 element를 비교한다. 이런 비교를 통해서 dom을 업데이트 할지 새로 추가할지, 교체할지를 정한다. dom에 새로 추가 또는 type이 달라서 replace 처리 하게 될 땐 새로 element 받아서 `instance`를 만든다음에 append or replace를 단행한다. 반대로 type이 같다면 dom property를 update 처리 하고 `reconcileChildren` 함수를 통해서 자식들의 reconcile을 진행한다. 
+
+여기서 중요한 문제는 한번 reconcile이 이뤄지면 끊지 않고 화면에 rendering 까지 진행한다는 점이다. 여기서 재귀적으로 함수들이 호출 되기 때문에 더더욱 중간에 끊을 수 없고 계속 진행해야 한다는 점이다. 그래서 이 작업이 오래 걸려서 단일 쓰레드를 점령하고 있으면 다른 작업(ex. css animation 같은 작업)이 멈출 수 있다.
+
+이 문제를 해결하고자 fiber 알고리즘을 적용한다. 
+
+기존에 instance를 대체하는 fiber 구조를 사용한다. fiber 알고리즘에선 이전 재귀적으로 실행했던 reconcile 을 iteration 구조로 바꿨다고 보면 된다. 그래서 재귀 구문이 없을 뿐더러 whild 구문이 많이 보인다. 그래서 `requestIdleCallback`을 이용해서 분할작업을 진행할 수 있고 다음작업에 대해서 `nextUnitOfWork`를 전역으로 보관하고 있다. 작업할 시간이 없다면 중지 했다가 다시 `performUnitOfWork(nextUnitOfWork)`을 수행한다. 
+
+`resetNextUnitOfWork()`를 처음에 수행해서 root의 fiber를 만들고 `performUnitOfWork(nextUnitOfWork)`를 수행한다. 
+`performUnitOfWork()` 에서는 fiber를 받아서 `beginWork()` 와 `completeWork()` 를 수행한다. 
+beginWork() 는 해당 fiber를 받아서 해당 fiber의 children들을 fiber로 만들어준다. 그리고 나서 `performUnitOfWork()` 에선 fiber에 child가 존재하면 리턴시켜서 다음 작업이 child를 root로 진행해야한다는걸 알린다. 
+이런 수행은 child가 없을때 까지 진행되며 child가 없을때 까지 `beginWork()`을 실행시켜서 fiber트리 일부를 구성한다. 
+더이상의 child가 없다면 그때부턴 `completeWork()`를 수행한다. 
+`completeWork()`는 Effect들을 모아서 부모로 넘겨주는 작업을 한다. 모으는 대상은 자신과 자신의 effect와 children의 effect를 모은다.
+그런 다음 sibling이 있는지 확인하는데 있다면 다시 리턴해서 다음 작업이라는걸 알린다. 이때 다시 `beginWork()`를 수행해서 children들을 fiber로 만들어준다. 
+
+위 작업이 복잡하지만 간단히 생각해보면 root와 root의 children들을 한 작업 단위로 beginWork()로 fiber를 만든다. 
+다음 작업땐 그 root의 child (보통 첫번째 child이다.)를 새로운 root로 삼고 children을 fiber를 만든다. 
+
+```javascript
+root = rootFiber
+root.child = childFiber01
+childFiber01.parent = root
+
+childFiber02.parent = root
+childFiber02.sibling = childFiber01
+
+childFiber03.parent = root
+childFiber03.sibling = childFiber02
+```
+
+위와 같은 구조가 되겠다. 
+child가 없는 구조까지 도달하면 마지막 fiber의 Effect와 그의 자식들이 모인 effects를 부모에게 전달한다. 
+그리고 나서 sibling이 있다면 다음 작업을 sibling으로 넘긴다. sibling으로 가서 다시 child를 탐색하고 Effect를 모으고 하는 작업들을 반복해서 진행한다. 
+
+![react-fiber 도식화](./react-fiber.png) 
+
+
+재귀 방식이 아닌 iterator 작업 방식이기 때문에 이렇게 Effect를 모으는 작업을 분할해서 작업할 수 있다. 
+그 후에 root에 모인 Effect를 한번에 화면에 rendering을 진행한다. 
+
