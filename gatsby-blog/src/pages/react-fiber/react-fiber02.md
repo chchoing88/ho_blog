@@ -221,27 +221,32 @@ ReactDOM.render(React.createElement(ClickCounter), domContainer);
 
 React는 각 컨테이너들에 대한 [fiber root](https://github.com/facebook/react/blob/0dc0ddc1ef5f90fe48b58f1a1ba753757961fc74/packages/react-reconciler/src/ReactFiberRoot.js?source=post_page---------------------------#L31) 객체를 만듭니다. DOM 요소에 대한 참조를 사용하여 액세스 할 수 있습니다.
 
+여기서 `fiber root`는 아마 `domContainer(ID #container)`를 가리키는 fiber일 것이다.
+
 ```javascript
 // DOM 레퍼런스에 접근해서 fiberRoot에 접근 할 수있다.
 const fiberRoot = query('#container')._reactRootContainer._internalRoot
 ```
 
 
-이 fiber root는 React가 fiber tree에 대한 참조를 보유하고있는 곳입니다. 그것은 fiber root의 `current` 속성에 저장됩니다 :
+이 fiber root는 React가 fiber tree에 대한 참조를 보유하고있는 곳입니다. 그 fiber tree 참조 값은 fiber root의 `current` 속성에 저장됩니다 :
+여기서 `HostRoot`는 `ClickCounter` 가 될것이다.
 
 ```javascript
 const hostRootFiberNode = fiberRoot.current
 ```
 
 
-fiber 트리는 HostRoot 인 [특별한 타입](https://github.com/facebook/react/blob/cbbc2b6c4d0d8519145560bd8183ecde55168b12/packages/shared/ReactWorkTags.js?source=post_page---------------------------#L34)의 광섬유 노드로 시작합니다. 그것은 내부적으로 생성이 되고 너의 가장 최상위 컴포넌트의 부모 역할을 합니다. 
-이것은 `HostRoot`에서 `stateRode` 속성을 통해 `FiberRoot`로 연결되는 링크가 있습니다.
+fiber 트리는 HostRoot 인 [특별한 타입](https://github.com/facebook/react/blob/cbbc2b6c4d0d8519145560bd8183ecde55168b12/packages/shared/ReactWorkTags.js?source=post_page---------------------------#L34)의 광섬유 노드로 시작합니다. 그것은 내부적으로 생성이 되고 가장 최상위 컴포넌트의 부모 역할을 합니다. 
+이것은 `HostRoot`에서 `stateNode` 속성을 통해 `FiberRoot`로 연결되는 링크가 있습니다.
 
 ```javascript
+// fiberRoot.current === hostRootFiberNode
+// hostRootFiberNode.stateNode === fiberRoot
 fiberRoot.current.stateNode === fiberRoot; // true
 ```
 
-fiber root를 통해 최상위 HostRoot fiber 노드에 액세스하여 파이버 트리를 탐색 할 수 있습니다. 또는 다음과 같이 구성 요소 인스턴스에서 개별 fiber 노드를 가져올 수 있습니다.
+fiber root를 통해 최상위 `HostRoot` fiber 노드에 액세스하여 fiber 트리를 탐색 할 수 있습니다. 또는 다음과 같이 구성 요소 인스턴스에서 개별 fiber 노드를 가져올 수 있습니다.
 
 
 ```javascript
