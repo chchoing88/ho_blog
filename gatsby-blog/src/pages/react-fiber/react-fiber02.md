@@ -298,3 +298,24 @@ fiber node 에 꽤 많은 필드들이 있습니다. 여기서 이전 섹션에�
 #### type
 
 이 fiber 와 관련된 함수나 클래스를 정의한다. 클래스 컴포넌트들의 경우 type 은 생성자 함수를 가리키고 DOM element 들의 경우에는 특별한 HTML 태그를 가리킨다. 이 필드는 fiber 노드가 어떤 엘리먼트와 관련있는지 이해하는데 종종 사용된다.
+
+#### tag
+
+fiber 의 타입을 정의한다. 그것은 어떤 일을 해야하는지를 결정하기 위한 reconciliation 알고리즘으로 사용된다. 이전에 언급했듯이, 작업은 React element 의 타입에따라 달라집니다. 함수 [createFiberFromTypeAndProps](https://github.com/facebook/react/blob/769b1f270e1251d9dbdce0fcbd9e92e502d059b8/packages/react-reconciler/src/ReactFiber.js?source=post_page---------------------------#L414) React element 를 관련된 fiber 노드 타입과 매핑시켜준다.
+우리 어플리케이션 안에서 `ClickCounter` 컴포넌트의 `tag` 프로퍼티는 `1` 이다. 이것은 `ClassComponent`를 뜻하고 `span` 엘리먼트의 `5`의 경우에는 `HostComponent`를 가리킨다.
+
+#### updateQueue
+
+state 업데이트들, 콜백함수들과 DOM update 들의 queue.
+
+#### memoizedState
+
+결과를 만드는데 사용된 fiber 의 State. 업데이트 처리 할 때 현재 화면에 렌더링 된 state 를 반영합니다.
+
+#### memoizedProps
+
+이전 렌더링 동안 출력을 생성하는 데 사용 된 fiber 의 Props.
+
+#### pendingProps
+
+React element 들의 새로운 데이터로 업데이트된 Props 그리고 child components 또는 DOM elements 에 적용해야합니다.
