@@ -324,6 +324,6 @@ function workLoop(isYieldy) {
 
 이 알고리즘은 컴포넌트 트리를 동기적으로 순회하고 트리 (`nextUnitOfWork`)안에 각 fiber 노드에 대한 작업을 수행 할 수 있습니다. 이것은 대게 UI 이벤트 (클릭, 입력 등)로 인한 소위 대화 형 업데이트의 경우가 일반적입니다.
 
-또는 fiber 노드 작업을 수행 한 후 남은 시간이 있는지 여부를 비동기식으로 확인하여 구성 요소 트리를 탐색 할 수 있습니다. 함수 `shouldield` 는 `deadlineDidExpire` 와 React 가 fiber 노드에 대해 작업을 수행함에 따라 지속적으로 업데이트되는 `deadline` 변수를 기반으로 결과를 반환합니다.
+또는 fiber 노드 작업을 수행 한 후 남은 시간이 있는지 여부를 비동기식으로 확인하여 구성 요소 트리를 탐색 할 수 있습니다. 함수 `shouldYield` 는 `deadlineDidExpire` 와 React 가 fiber 노드에 대해 작업을 수행함에 따라 지속적으로 업데이트되는 `deadline` 변수를 기반으로 결과를 반환합니다.
 
 다음 시리즈는 `performUnitOfWork` 함수에 대한 심도있는 설명 글입니다.

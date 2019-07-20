@@ -11,9 +11,7 @@ React 는 유저인터페이스를 만들기 위한 라이브러리 이다. Reac
 
 우리가 setState 메서드를 호출하고 프레임워크가 state 또는 props 가 변했는지 체크하고 UI 에 그려진 component 를 다시 렌더링한다.
 
-React 의 문서에는 이 메커니즘의 좋은 설명을 제공하고있다. React 엘리먼트의 역할, 라이프사이클 메서드 그리고 render 메서드 그리고 children 컴포넌트에 적용된 diffing 알고리즘을 설명하고 있다. render 메서드를 통해 리턴된 immutable 한 React elements 트리들이 공통적으로 "vitual DOM" 으로 알고있다. 이 용어는 초기에 사람들에게 React 을 설명하는 데 도움이되었습니다.
-
-하지만 그것은 혼란을 야기하기도합니다. 그리고 React 문서 어디에도 사용하지 않습니다.
+React 의 문서는 React 엘리먼트, 라이프사이클 메서드 그리고 render 메서드 그리고 children 컴포넌트에 적용된 diffing 알고리즘 역활에 대해 좋은 설명을 제공하고 있습니다. render 메서드를 통해 리턴된 immutable 한 React elements 트리들이 공통적으로 "vitual DOM" 으로 알고있다. 이 용어는 초기에 사람들에게 React 을 설명하는 데 도움이되었습니다. 하지만 그것은 혼란을 야기하기도합니다. 그리고 React 문서 어디에도 사용하지 않습니다.
 
 이 글에서는 "vitual DOM"을 React element 들의 트리 라고 부르겠습니다.
 
@@ -171,7 +169,7 @@ React 는 각 element 에 대한 fiber 를 생성하고 그들의 elements 의 �
 
 첫번째 렌더링 아후에 React 는 UI 렌더링에 필요한 어플리케이션의 state 를 반영한 fiber 트리를 갖게 된다. 이 트리는 대게 **current**라고 불리운다. ( 한번 그려진 녀석들을 반영한 트리를 current 라고 함 ). React 가 current 를 tree 를 update 시작하면 그것은 **workInProgress** 트리 라고 불리운다. 이것은 스크린에 뿌려지게 될 미래의 state 를 반영합니다.
 
-모든 작업은 workInProgress 트리의 fiber 에서 수행됩니다. React 가 `current` 트리를 통과함에 따라 기존의 각 파이버 노드에 대해 workInProgress 트리를 구성하는 대체 노드를 만듭니다. 이런 노드는 render 메서드에서 리턴된 React element 에서 나온 data 를 사용해서 만들게 됩니다. 업데이트가 처리되고 모든 관련 작업이 완료되면, React 는 스크린에 뿌려질 대체 트리를 가지고 있을 것입니다. 이 `workInProgress` 트리가 render 되고나면 그것은 다시 `current` 트리가 됩니다.
+모든 작업은 `workInProgress` 트리의 fiber 에서 수행됩니다. React 가 `current` 트리를 통과함에 따라 기존의 각 fiber 노드에 대해 `workInProgress` 트리를 구성하는 alternate 노드를 만듭니다. 이런 노드는 render 메서드에서 리턴된 React element 에서 나온 data 를 사용해서 만들게 됩니다. 업데이트가 처리되고 모든 관련 작업이 완료되면, React 는 스크린에 뿌려질 alternate 트리를 가지고 있을 것입니다. 이 `workInProgress` 트리가 render 되고나면 그것은 다시 `current` 트리가 됩니다.
 
 React 코어의 원리중 하나는 일관성입니다. [여기참조](https://overreacted.io/ko/react-as-a-ui-runtime/). React 는 항상 한번에 DOM 을 update 합니다. 이것은 결과를 부분적으로 보여주지 않습니다. `workInProgress`트리는 사용자에게 표시되지 않는 "초안"으로 사용되며, 그래서 React 는 맨 먼저 모든 컴포넌트들을 처리한 뒤에 그것들의 변화를 스크린에 반영할 수 있습니다.
 
@@ -186,11 +184,11 @@ function updateHostComponent(current, workInProgress, renderExpirationTime) {...
 
 우리는 React 컴포넌트를 state 와 props 를 사용해서 UI 표현을 계산하는 함수라고 생각 할 수 있습니다. DOM 을 변경하거나 라이프 사이클 메소드를 호출하는 것과 같은 다른 모든 활동은 side-effect 또는 단순히 effect 로 간주되어야합니다. Effect 는 [문서](https://reactjs.org/docs/hooks-overview.html?source=post_page---------------------------#%EF%B8%8F-effect-hook)에도 언급되어 있습니다.
 
-> 이전에 데이터 가져 오기, 구독 또는 수동으로 React 구성 요소에서 DOM 을 변경했을 것입니다. 우리는 이 작업들을 "side effect" 또는 짧게 "effect" 라고 불렀습니다. 왜냐하면 그것들은 다른 컴포넌트에 영향을 미칠수 있고 렌더링 동안에 수행 할 수 없기 때문입니다.
+> 이전에 데이터 가져 오기, 구독 또는 수동으로 React 구성 요소에서 **DOM 을 변경**했을 것입니다. 우리는 이 작업들을 "side effect" 또는 짧게 "effect" 라고 불렀습니다. 왜냐하면 그것들은 다른 컴포넌트에 영향을 미칠수 있고 렌더링 동안에 수행 할 수 없기 때문입니다.
 
-대부분의 state 및 props 업데이트가 side-effects 을 초래하는 방법을 확인할 수 있습니다. effects 를 적용하는 것이 일종의 작업의 타입이기 때문에 fiber 노드는 업데이트 외에도 효과를 추적하는 편리한 메커니즘입니다. 각 fiber 노드는 그것과 연관된 effect 를 가질 수 있습니다. fiber 노드들은 effectTag 필드에 인코딩됩니다.
+대부분의 state 및 props 업데이트가 side-effects 을 초래하는 방법을 확인할 수 있습니다. effects 를 적용하는 것이 일종의 작업의 타입이기 때문에 fiber 노드는 업데이트 외에도 효과를 추적하는 편리한 메커니즘입니다. 각 fiber 노드는 그것과 연관된 effects 를 가질 수 있습니다. 그것들을 effectTag 필드에 인코딩됩니다.
 
-따라서 Fiber 의 effects 는 기본적으로 업데이트가 처리 된 후 인스턴스에 대해 수행해야하는 작업을 정의합니다. host component 들 (DOM 요소)의 경우 작업은 요소 추가, 업데이트 또는 제거로 구성됩니다. 클래스 컴포넌트의 경우 React 는 ref 를 업데이트하고 `componentDidMount` 및 `componentDidUpdate` 라이프 사이클 메소드를 호출해야 할 수 있습니다. 다른 유형의 fiber 들에 해당하는 다른 effects 도 있습니다.
+따라서 Fiber 의 effects 는 기본적으로 업데이트가 처리 된 후 인스턴스에 대해 수행해야하는 [작업](https://github.com/facebook/react/blob/b87aabdfe1b7461e7331abb3601d9e6bb27544bc/packages/shared/ReactSideEffectTags.js?source=post_page---------------------------)을 정의합니다. host component 들 (DOM 요소)의 경우 작업은 요소 추가, 업데이트 또는 제거로 구성됩니다. 클래스 컴포넌트의 경우 React 는 ref 를 업데이트하고 `componentDidMount` 및 `componentDidUpdate` 라이프 사이클 메소드를 호출해야 할 수 있습니다. 다른 유형의 fiber 들에 해당하는 다른 effects 도 있습니다.
 
 ### Effects list
 
@@ -468,7 +466,7 @@ function completeWork(workInProgress) {
 
 이 단계는 [completeRoot](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L2306) 함수로 시작합니다. 여기서 React 는 DOM 을 업데이트하고 사전 및 사후 mutation 라이프 사이클 메소드를 호출합니다.
 
-React 가 이 단계에 이르면 2 개의 tree 와 effects list 가 있습니다. 첫 번째 tree 는 현재 화면에 렌더링 된 상태를 나타냅니다. 그런 다음 `렌더링` 단계 동안 만들어진 alternate 트리가 있습니다. 소스에서 `finishedWork` 또는 `workInProgress` 라고하며 화면에 반영되어야하는 상태를 나타냅니다. 이 alternate 트리는 `child` 및 `sibling` 포인터를 통해 current 트리와 비슷하게 연결됩니다.
+React 가 이 단계에 이르면 2 개의 tree 와 effects list 가 있습니다. 첫 번째 tree 는 현재 화면에 렌더링 된 상태를 나타냅니다. 그런 다음 `렌더링` 단계 동안 만들어진 `alternate` 트리가 있습니다. 소스에서 `finishedWork` 또는 `workInProgress` 라고하며 화면에 반영되어야하는 상태를 나타냅니다. 이 `alternate` 트리는 `child` 및 `sibling` 포인터를 통해 current 트리와 비슷하게 연결됩니다.
 
 그런 다음 effects list - `nextEffect` 포인터를 통해 연결된 `finishedWork` 트리의 노드 하위 집합입니다. effects list 은 `렌더링 단계(render phase)`를 실행 한 결과임을 기억하십시오. 전체 렌더링의 포인트는 삽입, 업데이트 또는 삭제해야 할 노드와 호출되는 라이프 사이클 메소드가 필요한 components 를 결정하는 것이 었습니다. 이것이 effects list 에서 우리에게 알려줍니다. **그리고 그것은 정확히 커밋 단계에서 반복되는 노드 집합입니다.**
 
@@ -549,7 +547,7 @@ function commitAllHostEffects() {
 }
 ```
 
-React 가 `commitDeletion` 함수에서 삭제 프로세스의 일부로 `componentWillUnmount` 메소드를 호출한다는 것은 흥미 롭습니다.
+React 가 `commitDeletion` 함수에서 삭제 프로세스의 일부로 `componentWillUnmount` 메소드를 호출한다는 것은 흥미롭습니다.
 
 ## Post-mutation lifecycle methods
 
