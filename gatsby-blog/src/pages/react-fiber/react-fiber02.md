@@ -373,7 +373,7 @@ React 는 사용 가능한 시간에 따라 하나 이상의 fiber 노드를 처
 
 ## Render phase
 
-reconciliation 알고리즘은 항상 [renderRoot](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L1132) 함수를 사용하여 최상위 `HostRoot` 파이버 노드에서 시작합니다. 그러나, React 는 완료되지 않은 작업이있는 노드를 찾을 때까지 이미 처리 된 fiber 노드에서 벗어납니다 (건너 뜁니다). 예를 들어, 컴퍼넌트 트리의 `setState` 를 깊게 들어가있는 component 에서 호출하면, React 는 위에서부터 시작 합니다만, `setState` 메소드를 호출 한 컴퍼넌트에 도착할 때까지, 부모를 신속하게 스킵합니다.
+reconciliation 알고리즘은 항상 [renderRoot](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L1132) 함수를 사용하여 최상위 `HostRoot` fiber 노드에서 시작합니다. 그러나, React 는 완료되지 않은 작업이있는 노드를 찾을 때까지 이미 처리 된 fiber 노드에서 벗어납니다 (건너 뜁니다). 예를 들어, 컴퍼넌트 트리의 `setState` 를 깊게 들어가있는 component 에서 호출하면, React 는 위에서부터 시작 합니다만, `setState` 메소드를 호출 한 컴퍼넌트에 도착할 때까지, 부모를 신속하게 스킵합니다.
 
 ### Main steps of the work loop
 
@@ -404,7 +404,7 @@ function workLoop(isYieldy) {
 
 > 곧은 수직 연결은 sibling 를 의미하는 반면 구부러진 연결은 children 를 나타냅니다. b1 에는 자식이없고 b2 에는 자식 c1 이 하나 있습니다.
 
-다음은 재생을 일시 중지하고 현재 노드와 기능 상태를 검사 할 수있는 비디오에 대한 [링크](https://vimeo.com/302222454?source=post_page---------------------------)입니다. 개념적으로, 당신은 "시작"을 구성 요소로 "들어가는 것"으로, "완료"는 "단계적으로"수행하는 것으로 생각할 수 있습니다. 이 함수들이하는 일을 설명하면서 [예제](https://stackblitz.com/edit/js-ntqfil?file=index.js&source=post_page---------------------------)와 구현을 가지고 놀 수도 있습니다.
+다음은 재생을 일시 중지하고 현재 노드와 기능 상태를 검사 할 수있는 비디오에 대한 [링크](https://vimeo.com/302222454?source=post_page---------------------------)입니다. 개념적으로, 당신은 "시작"을 구성 요소로 "들어가는 것"으로, "완료"는 "단계적으로" 수행하는 것으로 생각할 수 있습니다. 이 함수들이하는 일을 설명하면서 [예제](https://stackblitz.com/edit/js-ntqfil?file=index.js&source=post_page---------------------------)와 구현을 가지고 놀 수도 있습니다.
 
 `performUnitOfWork`와 `beginWork`의 처음 두 함수를 살펴 보겠습니다.
 
@@ -424,11 +424,15 @@ function beginWork(workInProgress) {
 }
 ```
 
-`performUnitOfWork` 함수는 `workInProgress` 트리에서 fiber 노드를 받고 `beginWork` 함수를 호출하여 작업을 시작합니다. 이 기능은 fiber 대해 수행해야하는 모든 작업을 시작하는 기능입니다. 이 증명을 위해, 우리는 단순히 작업이 완료되었음을 나타내기 위해 fiber 의 이름을 기록합니다. **`beginWork` 함수는 항상 루프에서 처리 할 다음 children 에 대한 포인터 또는 null 을 반환합니다.**
+`performUnitOfWork` 함수는 `workInProgress` 트리에서 fiber 노드를 받고 `beginWork` 함수를 호출하여 작업을 시작합니다. 이 기능은 fiber 대해 수행해야하는 모든 작업을 시작하는 기능입니다. 이 증명을 위해, 우리는 단순히 작업이 완료되었음을 나타내기 위해 fiber 의 이름을 기록합니다. **`beginWork` 함수는 항상 루프에서 처리 할 다음 child 에 대한 포인터 또는 null 을 반환합니다.**
 
 다음 자식이 있으면 `workLoop` 함수의 `nextUnitOfWork` 변수에 할당됩니다. 그러나 자식이 없으면 React 는 분기의 끝에 도달 했으므로 현재 노드를 완료 할 수 있음을 알게됩니다. **노드가 완성되면 siblings 를 위한 작업을 수행 한 후 그 부모에게 역 추적해야합니다.** 이 작업은 `completeUnitOfWork` 함수에서 수행됩니다.
 
 ```javascript
+// 여기서 들어오는 workInProgress는 child가 없어서 들어온것이다.
+// 더 이상의 child가 없다는건 현재 깊이의 끝에 도달했다는 것이고 이 fiber를 completeWork를 수행한다.
+// workInProgress를 받아서 sibling을 찾아보고 찾는다면 다시  performUnitOfWork를 수행한다.
+// child와 sibling이 없다면 부모로 올라가서 completeWork를 수행하게 된다.
 function completeUnitOfWork(workInProgress) {
   while (true) {
     let returnFiber = workInProgress.return
@@ -524,6 +528,8 @@ function commitBeforeMutationLifecycles() {
 [commitAllHostEffects](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L376) 는 React 가 DOM 업데이트를 수행하는 함수입니다. 이 함수는 기본적으로 노드에 대해 수행해야하는 작업 유형을 정의하고 실행합니다.
 
 ```javascript
+let nextEffect: Fiber | null = null;
+
 function commitAllHostEffects() {
     switch (primaryEffectTag) {
         case Placement: {
