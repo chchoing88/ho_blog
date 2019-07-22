@@ -13,7 +13,7 @@ date: "2019-07-22T10:00:03.284Z"
 
 또한 화면에 렌더링 된 숫자를 단순히 증가시키는 버튼을 사용하여 샘플 애플리케이션을 소개했습니다.
 
-[여기](https://stackblitz.com/edit/react-jwqn64?source=post_page---------------------------)에서 해볼 수 있습니다. 이는 render 메소드에서 두 개의 하위 요소 button 및 span을 반환하는 간단한 구성 요소로 구현됩니다. 버튼을 클릭하면 구성 요소의 상태가 핸들러 내부에서 업데이트됩니다. span 요소에 대한 텍스트 업데이트 결과는 다음과 같습니다.
+[여기](https://stackblitz.com/edit/react-jwqn64?source=post_page---------------------------)에서 해볼 수 있습니다. 이는 render 메소드에서 두 개의 하위 요소 button 및 span을 반환하는 간단한 구성 요소로 구현됩니다. 버튼을 클릭하면 구성 요소의 상태가 핸들러 내부에서 업데이트됩니다. `span` 요소에 대한 텍스트 업데이트 결과는 다음과 같습니다.
 
 ```javascript
 class ClickCounter extends React.Component {
@@ -77,7 +77,7 @@ class ClickCounter extends React.Component {
 
 모든 React component에는 component와 React 코어 사이의 다리 역할을하는 연결된 `updater`가 있습니다. 이를 통해 setState가 ReactDOM, React Native, 서버 측 렌더링 및 테스트 유틸리티에 의해 다르게 구현 될 수 있습니다.
 
-이 글에서는 Fiber reconciler를 사용하는 ReactDOM의 updater 객체 구현을 살펴 보겠습니다. `ClickCounter` 구성 요소의 경우 `classComponentUpdater`입니다. 이는 Fiber의 인스턴스를 검색하고, 업데이트를 대기열에 넣어두고, 작업을 예약하는(scheduling) 역할을합니다.
+이 글에서는 Fiber reconciler를 사용하는 ReactDOM의 updater 객체 구현을 살펴 보겠습니다. `ClickCounter` 구성 요소의 경우 [`classComponentUpdater`](https://github.com/facebook/react/blob/6938dcaacbffb901df27782b7821836961a5b68d/packages/react-reconciler/src/ReactFiberClassComponent.js?source=post_page---------------------------#L186)입니다. 이는 Fiber의 인스턴스를 검색하고, 업데이트를 대기열에 넣어두고, 작업을 예약하는(scheduling) 역할을합니다.
 
 업데이트가 대기열에 있으면 기본적으로 업데이트 큐에 추가되어 fiber 노드에서 처리됩니다. 여기서는 `ClickCounter` 구성 요소에 해당하는 Fibre 노드의 구조는 다음과 같습니다.
 
