@@ -18,9 +18,9 @@ Fiber 의 아키텍처는 2 가지의 주요한 단계이 있다. reconcilation/
 * compares them to the previous children,
 * and figures out the DOM updates that need to be performed.
 
-이 모든 행동들을 Fiber 안에서 작동된다.
+**이 모든 행동들을 Fiber 안에서 작동됩니다.**
 
-수행해야 할 작업의 타입은 React Element 에 따라 다르다. 예를들면 클래스 컴포넌트는 인스턴스화 해야하지만 함수 컴포넌트는 그렇지 않는다.
+수행해야 할 작업의 타입은 React Element 에 따라 다릅니다. 예를들면 클래스 컴포넌트는 인스턴스화 해야하지만 함수 컴포넌트는 그렇지 않습니다.
 
 흥미가 있다면 [이글](https://github.com/facebook/react/blob/340bfd9393e8173adca5380e6587e1ea1a23cefa/packages/shared/ReactWorkTags.js#L29-L28)를 읽어봐라 여기서 Fiber 의 작업 타겟의 타입들을 볼수 있다.
 
@@ -67,7 +67,7 @@ requestIdleCallback(deadline => {
 
 > In computer science, a call stack is a stack data structure that stores information about the active subroutines of a computer program… the main reason for having call stack is to keep track of the point to which each active subroutine should return control when it finishes executing… A call stack is composed of stack frames… Each stack frame corresponds to a call to a subroutine which has not yet terminated with a return. For example, if a subroutine named DrawLine is currently running, having been called by a subroutine DrawSquare, the top part of the call stack might be laid out like in the adjacent picture.
 
-![call stack](./callStack.pngtree)
+![call stack](./callStack.png)
 
 ### Why is the stack relevant to React?
 
@@ -149,7 +149,7 @@ React 의 새로운 reconciliation 알고리즘과 관련하여 이 필드가있
 
 다음 다이어그램은 링크드 리스트를 통해 연결된 개체의 계층 구조와 개체 간의 연결 유형을 보여줍니다.
 
-[linked list](./linkedList1.png)
+![linked list](./linkedList1.png)
 
 그럼 첫번째로 우리의 커스텀 노드 생성자를 정의해보자.
 
@@ -191,7 +191,7 @@ function link(parent, elements) {
 이 함수는 노드 배열에서 맨 마지막걸 시작으로 순회하고, 그것들을 단일 링크드 리스트로 연결한다.
 여기서 리스트의 가장 첫번째 sibling 이 리턴된다.
 
-데모를 보자.
+여기 데모를 보자.
 
 ```javascript
 const children = [{ name: 'b1' }, { name: 'b2' }]
@@ -261,7 +261,7 @@ function walk(o) {
 }
 ```
 
-e 구현이 이해하기가 특히 어렵지는 않지만, 그것을 구현하기 위해서는 약간의 노력이 필요할 수 있습니다. 여기서 확인해보자. [https://stackblitz.com/edit/js-tle1wr](https://stackblitz.com/edit/js-tle1wr)
+이 구현이 이해하기가 특히 어렵지는 않지만, 그것을 구현하기 위해서는 약간의 노력이 필요할 수 있습니다. 여기서 확인해보자. [https://stackblitz.com/edit/js-tle1wr](https://stackblitz.com/edit/js-tle1wr)
 
 아이디어는 현재 노드에 대한 참조를 유지하고 트리의 내림차순으로 분기 끝에 도달 할 때까지 다시 할당한다는 것입니다. 그런 다음 리턴 포인터를 사용하여 공통 부모로 리턴합니다.
 
