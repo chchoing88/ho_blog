@@ -77,6 +77,45 @@ class ClickCounter extends React.Component {
 
 모든 React component에는 component와 React 코어 사이의 다리 역할을하는 연결된 `updater`가 있습니다. 이를 통해 setState가 ReactDOM, React Native, 서버 측 렌더링 및 테스트 유틸리티에 의해 다르게 구현 될 수 있습니다.
 
+[여기](https://github.com/facebook/react/blob/b87aabdfe1b7461e7331abb3601d9e6bb27544bc/packages/react/src/ReactBaseClasses.js)참조
+
+```javascript
+Component.prototype.setState = function(partialState, callback) {
+  invariant(
+    typeof partialState === 'object' ||
+      typeof partialState === 'function' ||
+      partialState == null,
+    'setState(...): takes an object of state variables to update or a ' +
+      'function which returns an object of state variables.',
+  );
+  this.updater.enqueueSetState(this, partialState, callback, 'setState');
+};
+```
+
+```javascript
+const classComponentUpdater = {
+  isMounted,
+  enqueueSetState(inst, payload, callback) {
+    const fiber = ReactInstanceMap.get(inst);
+    const currentTime = requestCurrentTime();
+    const expirationTime = computeExpirationForFiber(currentTime, fiber);
+
+    const update = createUpdate(expirationTime);
+    update.payload = payload;
+    if (callback !== undefined && callback !== null) {
+      if (__DEV__) {
+        warnOnInvalidCallback(callback, 'setState');
+      }
+      update.callback = callback;
+    }
+
+    enqueueUpdate(fiber, update);
+    scheduleWork(fiber, expirationTime);
+  },
+  ...
+}
+```
+
 이 글에서는 Fiber reconciler를 사용하는 ReactDOM의 updater 객체 구현을 살펴 보겠습니다. `ClickCounter` 구성 요소의 경우 [`classComponentUpdater`](https://github.com/facebook/react/blob/6938dcaacbffb901df27782b7821836961a5b68d/packages/react-reconciler/src/ReactFiberClassComponent.js?source=post_page---------------------------#L186)입니다. 이는 Fiber의 인스턴스를 검색하고, 업데이트를 대기열에 넣어두고, 작업을 예약하는(scheduling) 역할을합니다.
 
 업데이트가 대기열에 있으면 기본적으로 업데이트 큐에 추가되어 fiber 노드에서 처리됩니다. 여기서는 `ClickCounter` 구성 요소에 해당하는 Fibre 노드의 구조는 다음과 같습니다.
