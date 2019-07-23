@@ -618,3 +618,35 @@ function commitLifeCycles(finishedRoot, current, ...) {
 
 React 가 처음 렌더링 된 구성 요소에 대해 `componentDidMount` 메소드를 호출하는 함수임을 알 수 있습니다.
 그리고 그게 다야!
+
+
+## 정리
+
+### Render Phase
+
+- commit phase 작업을 해야할 effect 목록(선형)을 만들기 위해 fiber node를 작업한다.
+
+```javascript
+function performUnitOfWork(workInProgress) {
+  // children에 대한 포인터 또는 null
+  let next = beginWork(workInProgress)
+  if (next === null) {
+    // 더 이상의 자식이 없을때 completeUnitOfWork -> completeWork를 수행
+    // completeUnitOfWork는 sibling이 있을때 return sibling 후 다시 beginWork 진행
+    // sibling도 없을 시에 부모로 올라가서 completeUnitOfWork 내부에 있는 completeWork를 수행
+    next = completeUnitOfWork(workInProgress)
+  }
+  return next
+}
+```
+
+- 위 `performUnitOfWork` 를 while 하면서 fiber를 순차적으로 적용한다. 
+- `beginWork()` 부터 시작. 여기선 컴포넌트의 타입에 따라 component를 update 진행한다. 
+  - 클래스 컴포넌트의 경우에는 `updateClassComponent()` 다음 메서드 실행, 인스턴스를 create 또는 update를 진행한다. 특히 update시 fiber node를 가지고 instance를 update한다.
+  - `finishClassComponent()` 여기서는 children들의 reconciliation을 진행한다. 즉, 부모의 render 이후 React element와 이전의 fiber node를 비교 후 fiber node를 업데이트 한다. 
+  - `finishClassComponent()` 이후에 `beginWork()` 리턴으로는 child가 있을 경우 첫번째 child 가 리턴 아닐 경우 null 이 리턴
+- 첫번째 child인 button 을 다시 `beginWork()` -> child가 없기 때문에 바로 null 리턴,  `completeUnitOfWork()` 진행 후 completeWork() 진행. 
+- `span` 태그의 sibling 확인 (`completeUnitOfWork()` 메서드에서 수행)
+- `span` 태그의 `beginWork()` 수행 후, null 리턴, `completeUnitOfWork()` 진행 후 `completeWork()` 진행. 
+- `span` 태그의 `completeWork()` 진행 시, `span` fiber의 `effectTag` 와 `updateQueue` 를 업데이트 진행. 
+- effects list를 구성해서 `commit phase`로 넘김 ( root -> span -> ClickCounter )
