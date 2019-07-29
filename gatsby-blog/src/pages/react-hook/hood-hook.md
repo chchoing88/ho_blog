@@ -347,6 +347,8 @@ export function useState<S>(
 
 `useReducer()` 함수는 간단하게 이렇게 작성될 수 있다. [useReducer](https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L346)
 
+아래 함수에서 `useState`호출시 `useReducer`를 호출 후 리턴 배열이 리턴이 되는데 이때 `dispatch`가 `dispatchAction` 함수의 binding 된 함수이다. 이때 바인딩 되는 인자들은 현재 렌더링 될 fiber 를 가지고 있게 되는데 그렇다면 우리가 `dispatch` 함수를 호출 할 때마다 어떤 fiber 와 연관되어있는지 알게 되는 것이다. 그래서 해당 fiber 에서부터 reconcile 을 하는거 같다.
+
 ```javascript
 export function useReducer() {
   currentlyRenderingFiber = resolveCurrentlyRenderingFiber()
