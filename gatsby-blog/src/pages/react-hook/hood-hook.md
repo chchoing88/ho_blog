@@ -1,6 +1,6 @@
 ---
-title: Under the hood of React Hooks
-date: "2019-07-18T10:00:03.284Z"
+title: Under the hood of React Hooks (작성중)
+date: "2019-07-30T10:00:03.284Z"
 ---
 
 [이글](https://medium.com/the-guild/under-the-hood-of-reacts-hooks-system-eb59638c9dba)을 번역 및 분석 한 글입니다. 잘못된 번역이 있을 수 있습니다. 또한 예전 코드들이 많으므로 참고만 해야 합니다. 현재 코드랑 다른점이 많이 있습니다.
