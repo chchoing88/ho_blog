@@ -450,8 +450,11 @@ function Promise(fn) {
 then 함수의 경우에는 연속된 then 호출을 할수있도록 체이닝을 지니고 있으면서 then 에 등록된 함수에서 return 값이 자동으로 그 다음 호출되는 then 핸들러의 인자값으로 전달 될수 있도록 모양새를 갖추고있다.
 
 위에서 then 은 연속된 then 호출을 위해 promise 로 감싸서 리턴을 하고있다.
+then 함수에서 하는일은 앞의 promise가 resolve 또는 reject시 그 결과를 받아 호출될 함수들을 등록할 done 함수를 호출하는 일이다. 이 작업 또한 new Promise()로 감싸서 새로운 promise(약속)으로 만들어 준다. done 함수에서 결과를 받으면 그 결과를 다시 then의 인자로 넘긴 함수의 매개변수로 넘기게 된다. 그리고 나서 그 함수의 결과를 resolve() 시킨다. 
 
-기본적으로 then 에서 리턴된 값은 즉시 다음 핸들러로 전달이 된다. 만약 리턴된 값이 promise 라면 그 값이 귀결될때까지 다음 then 호출은 기다린다. promise 의 결과값이 주어졌을 경우에 다음 then 함수를 호출하게 된다.
+결국 맨 앞의 Promise의 결과를 then에 등록한 함수가 받아서 (이때 then은 새로운 promise를 생성 및 리턴한다.) 그 함수의 호출의 결과를 resolve() 시켜서 then에서 리턴한 Promise 의 그 다음 then에 이어지도록 한다.
+
+기본적으로 then 에서 리턴된 값은 즉시 다음 then 에 등록된 함수로 전달이 된다. 만약 리턴된 값이 promise 라면 그 값이 귀결(resolve 또는 reject)될때까지 기다린 후 귀결이 되면 then에서 만들어뒀던 Promise의 resolve 또는 reject 함수를 실행시켜 다음 then 호출로 이어지게 한다. 
 
 ```javascript
 new Promise(function(resolve, reject) {
