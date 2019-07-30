@@ -1,2 +1,0 @@
-webpackJsonp([0x81b8806e4260],{508:function(e,t){e.exports={data:{site:{siteMetadata:{title:"Merlin Tec Blog"}},allMarkdownRemark:{edges:[{node:{excerpt:"Docker term What is Docker? 소프트웨어를 containerization(컨테이너화) 한 플랫폼. ( 웹서비스 컨테이너 , 디비 컨테이너 따로 담는다고 하면 서로 isolation…",fields:{slug:"/hello-docker/"},frontmatter:{date:"09 January, 2018",title:"Hello Docker"}}}]}},pathContext:{}}}});
-//# sourceMappingURL=path---index-bbbc5c37d25ce308fdc4.js.map
