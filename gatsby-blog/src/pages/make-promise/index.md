@@ -398,11 +398,18 @@ function Promise(fn) {
       return self.done(
         // 여기서 done 함수는 앞서 등록했던 promise가 resolve 되었을시
         // 그 status에 따라 호출될 함수들을 등록시킨다.
+        // 이 함수는 self promise가 resolve 했을 시 그 결과를 result에 넘겨주고 
+        // 그 결과를 다시 then에서 넘어온 onFulfiled 함수의 인자로 넘긴다.
         function(result) {
           if (typeof onFulfilled === 'function') {
             try {
-              resolve(onFulfilled(result)) // 리턴되는 값(then에서 인자로 줬던 함수가 실행되고 난 return 값)을
+              // 리턴되는 값(then에서 인자로 줬던 함수가 실행되고 난 return 값: onFulfilled(result))을
               // 다시 새로운 resolve에 넘겨주어야 그 다음 then에게 전달.
+              // 특히 이 onFulfilled(result) 의 리턴값이 Promise 객체라면
+              // 위 new Promise에서 해야할 resolve와 reject 함수를 onFulfilled(result) 의 리턴값인 Promise 객체가 
+              // resolve 또는 reject 됬을시 실행하도록 만든다.
+              resolve(onFulfilled(result)) 
+              
             } catch (e) {
               reject(e)
             }
@@ -556,12 +563,36 @@ function resolve(result) {
   try {
     var then = getThen(result)
     if (then) {
+      // result가 promise 객체이므로 result에 해당하는 then을 호출하자.
+      // then은 result의 done을 호출하면서 result결과에 따른 resolve, reject 함수를 등록한다.
       doResolve(then.bind(result), resolve, reject)
-      return
+      return // 리턴
     }
     fulfill(result)
   } catch (e) {
     reject(e)
+  }
+}
+
+function doResolve(fn, onFulfilled, onRejected) {
+  let done = false // 중복 호출 방지
+  try {
+    fn(
+      function(value) {
+        if (done) return
+        done = true
+        onFulfilled(value)
+      },
+      function(reason) {
+        if (done) return
+        done = true
+        onRejected(reason)
+      }
+    )
+  } catch (e) {
+    if (done) return
+    done = true
+    onRejected(e)
   }
 }
 ```
