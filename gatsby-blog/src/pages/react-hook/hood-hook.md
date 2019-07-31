@@ -19,7 +19,7 @@ date: "2019-07-30T10:00:03.284Z"
 
 ## The dispatcher
 
-디스패처는 후크 기능을 포함하는 공유 객체입니다. ReactDOM 의 렌더링 단계를 기반으로 동적으로 할당되거나 정리되며 사용자가 React 구성 요소 외부의 후크에 액세스하지 못하게합니다. (see [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberDispatcher.js?source=post_page---------------------------#L24)).
+디스패처는 후크 기능을 포함하는 공유 객체입니다. ReactDOM 의 렌더링 단계를 기반으로 동적으로 할당되거나 정리되며 사용자가 React 구성 요소 외부의 후크에 접근하지 못하게 합니다. (see [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberDispatcher.js?source=post_page---------------------------#L24)).
 
 ```javascript
 // ReactFiberDispatcher.js
@@ -62,16 +62,15 @@ if (enableHooks) {
 }
 ```
 
-렌더링 작업이 끝나면 디스패처를 무효화하여 ReactDOM 렌더링주기 밖에서 후크가 실수로 사용되는 것을 방지합니다. 이것은 사용자가 어리석은 일을하지 않도록 보장하는 메커니즘입니다. (see [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L1376)).
+렌더링 작업(여기서 렌더링 작업이라 하면 fiber를 구성하고 아직 스크린에 반영하지 않은 작업상태를 뜻한다.)이 끝나면 디스패처를 무효화하여 ReactDOM 렌더링주기 밖에서 후크가 실수로 사용되는 것을 방지합니다. 이것은 사용자가 어리석은 일을 하지 않도록 보장하는 메커니즘입니다. (see [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L1376)).
 
 ```javascript
 // 1376줄 ReactFiberScheduler.js
 // We're done performing work. Time to clean up.
-
 ReactCurrentOwner.currentDispatcher = null
 ```
 
-디스패처는 `resolveDispatcher()` 함수를 사용하여 각각의 모든 후크 호출에서 해결됩니다. 앞에서 말했듯이, React 의 렌더링주기 밖에서는 의미가 없어야하고, React 는 경고 메시지를 출력해야합니다 : _"후크는 함수 구성 요소의 본체 내부에서만 호출 할 수 있습니다"_ (see [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react/src/ReactHooks.js?source=post_page---------------------------#L17)).
+dispatcher는 `resolveDispatcher()` 함수를 사용하여 각각의 모든 후크 호출에서 resolve됩니다. 앞에서 말했듯이, React 의 렌더링주기 밖에서는 의미가 없어야하고, React 는 경고 메시지를 출력해야합니다 : _"후크는 함수 구성 요소의 본체 내부에서만 호출 할 수 있습니다"_ (see [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react/src/ReactHooks.js?source=post_page---------------------------#L17)).
 
 Dispatcher 실행을 간단하게 표현하면 아래와 같다.
 
@@ -84,7 +83,7 @@ const dispatcherWithHooks = {
   /* ... */
 }
 
-function resolveDispatcher() {
+function resolveDispatcher() { // 적절한 dispatcher를 리턴해준다.
   if (currentDispatcher) return currentDispatcher
   throw Error("Hooks can't be called")
 }
@@ -95,7 +94,7 @@ function useXXX(...args) {
 }
 
 function renderRoot() {
-  currentDispatcher = enableHooks ? dispatcherWithHooks : dispatcherWithoutHooks
+  currentDispatcher = enableHooks ? dispatcherWithHooks : dispatcherWithoutHooks // root render하기 전에 알맞는 dispatcher 셋팅
   performWork()
   currentDispatcher = null
 }
@@ -123,14 +122,14 @@ export function useState<S>(initialState: (() => S) | S) {
 }
 ```
 
-이제는 간단한 캡슐화 메커니즘을 살펴 보았으므로 이 기사의 핵심 인 후크로 넘어 가고자 한다. 여기서 나는 새로운 개념을 소개하고자 합니다.
+이제는 간단한 `캡슐화 메커니즘`을 살펴 보았으므로 이 기사의 핵심 인 후크로 넘어 가고자 한다. 여기서 나는 새로운 개념을 소개하고자 합니다.
 
 ## The hooks queue
 
-후크는 호출 순서로 함께 연결된 노드로 표시됩니다. 후크가 단순히 만들어지지 않고 남겨지기 때문에 그들은 그렇게 표현됩니다. 그들은 그들이 존재하는 것을 가능하게하는 메커니즘을 가지고 있습니다. 후크(hook)에는 구현에 뛰어 들기 전에 마음에 새겨야 할 필요한 몇 가지 프로퍼티들 있습니다.
+React 뒤에서, hooks는 호출 순서로 함께 연결된 노드로 표시됩니다. 후크는 단순히 만들어지고 혼자 남겨지는 것이 아니기 때문에 그렇게 표현됩니다. 그들은 그들이 있는 그대로가 될 수 있도록 하는 메커니즘을 가지고 있다. 후크(hook)에는 구현에 뛰어 들기 전에 염두해야 할 필요한 몇 가지 프로퍼티들 있습니다.
 
-* 초기 상태값은 초기 렌더링에서 생성됩니다.
-* 상태를 즉시 업데이트 할 수 있습니다.
+* 초기 상태값은 초기 렌더링시에 생성됩니다.
+* 그것의 상태는 즉시 업데이트 할 수 있습니다.
 * React 는 다음번 렌더링에서 hook 의 상태를 기억할 것입니다.
 * React 는 호출 순서에 따라 올바른 상태를 제공합니다.
 * React 는 이 hook 이 어떤 fiber 에 속하는지 알 수 있습니다.
@@ -182,7 +181,7 @@ function createHook(): Hook {
 }
 ```
 
-훅에는 몇 가지 추가 속성이 있지만 훅의 작동 방식을 이해하는 열쇠는`memoizedState` 와 `next` 내에 있습니다. 나머지 프로퍼티들은 `useReducer()` 훅에 의해 특별히 사용되어 `디스패치 된 액션`과 `기본 상태들(base states)`를 캐싱하므로 다양한 경우 fallback 처럼 이런 감소 프로세스가 반복 될 수 있습니다 :
+훅에는 몇 가지 추가 속성이 있지만 훅의 작동 방식을 이해하는 열쇠는 `memoizedState` 와 `next` 내에 있습니다. 나머지 프로퍼티들은 `useReducer()` 훅에 의해 특별히 사용되어 `디스패치 된 액션(dispatched actions)`과 `기본 상태들(base states)`를 캐싱하므로 다양한 경우를 대비하여 reduction process가 반복 될 수 있습니다 :
 
 * `baseState` - reducer 에 주어질 상태 객체.
 * `baseUpdate` -`baseState`를 생성 한 가장 최근의 dispatch 된 액션입니다.
@@ -190,23 +189,33 @@ function createHook(): Hook {
 
 ```javascript
 // https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L367
-do {
-  // Process this render phase update. We don't have to check the
-  // priority because it will always be the same as the current
-  // render's.
-  const action = update.action
-  newState = reducer(newState, action)
-  update = update.next
-} while (update !== null)
+export function useReducer<S, A>(
+  reducer: (S, A) => S,
+  initialState: S,
+  initialAction: A | void | null,): [S, Dispatch<A>] {
+  // ...
+  do {
+    // Process this render phase update. We don't have to check the
+    // priority because it will always be the same as the current
+    // render's.
+    const action = update.action
+    newState = reducer(newState, action)
+    update = update.next
+  } while (update !== null)
+  
+  workInProgressHook.memoizedState = newState;
+
+  return [newState, dispatch];
+}
 ```
 
 > 여기서 reducer 는 action 과 payload state 를 받아서 새로운 state 를 반환하는 순수함수라 할 수 있겠다. baseUpdate 는 액션이라고 보면 될것이다.
 
-불행하게도 저는 거의 모든 경우를 재현 할 수 없었기 때문에 reducer hook 을 잘 이해할 수 없었습니다. 그래서 정교하게 느껴지지 않을 것입니다. 나는 단지 reducer 구현이 너무 일관성이 없기 때문에 [implementation](https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L380) 에서 구현 자체의 주석 중 하나가 "(이것이) 원하는 의미론이 맞는지 확실치 않다(TODO: Not sure if this is the desired semantics, but it's what we do for gDSFP. I can't remember why.)" 라고 말합니다. 그래서 어떻게 확신해야합니까?!
+불행하게도 거의 모든 경우를 재현 할 수 없었기 때문에 reducer hook 을 잘 이해할 수 없었습니다. 그래서 정교하게 느껴지지 않을 것입니다. 나는 단지 reducer 구현이 너무 일관성이 없기 때문에 [implementation](https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L380) 에서 구현 자체의 주석 중 하나조차도 "(이것이) 원하는 의미론이 맞는지 확실치 않다(TODO: Not sure if this is the desired semantics, but it's what we do for gDSFP. I can't remember why.)" 라고 말합니다. 그래서 어떻게 확신해야합니까?!
 
-따라서 각각의 모든 컴포넌트 호출 이전에 후크로 돌아가서, [`prepareHooks()`](https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js#L123)라는 이름의 함수가 호출됩니다. current fiber 와 hooks 큐(대기열) 안에 있는 그것의 첫 번째 후크 노드는 전역 변수에 저장됩니다. 이런 방식으로, 우리가 후크 함수 (`useXXX ()`)를 호출 할 때마다 어떤 컨텍스트에서 실행되는지를 알 수 있습니다.
+따라서 후크로 돌아가서, 각각의 모든 컴포넌트 호출 이전에,  [`prepareHooks()`](https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js#L123)라는 이름의 함수가 호출됩니다. **여기서 current fiber 와 hooks 큐(대기열) 안에 있는 그것의 첫 번째 후크 노드는 전역 변수에 저장됩니다. 이런 방식으로, 우리가 후크 함수 (`useXXX ()`)를 호출 할 때마다 어떤 컨텍스트에서 실행되는지를 알 수 있습니다.**
 
-> prepareHooks() 이 함수가 보이지 않는다. prepareToUseHooks() 이 함수인거 같다.
+> `prepareHooks()` 이 함수가 보이지 않는다. `prepareToUseHooks()` 이 함수인거 같다.
 
 다음은 Hooks 대기열이 실행되는 간단한 코드 형식이다.
 
@@ -245,7 +254,7 @@ let currentHook: Hook | null = null
 // 2. 전역에 셋팅
 function prepareHooks(recentFiber: Fiber | null, workInProgressFiber: Fiber) {
   currentlyRenderingFiber = workInProgressFiber // 현재 작업중인 Fiber
-  currentHook = recentFiber.memoizedState // 이미 render된 Fiber의 memoizedState를 currentHook에 할당.
+  currentHook = recentFiber.memoizedState // 이미 render된 Fiber(current)의 memoizedState를 currentHook에 할당.
 }
 
 // Source: https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/react-reconciler/src/ReactFiberHooks.js:148
@@ -282,12 +291,12 @@ function updateFunctionComponent(
   props
 ) {
   prepareHooks(recentFiber, workInProgressFiber) // 1. 훅 준비
-  Component(props) // 3. 컴포넌트 호출
+  Component(props) // 3. 컴포넌트 호출 - 여기서 useXXX 호출할 것이다.
   finishHooks() // 5. Hooks 마무리
 }
 ```
 
-업데이트가 완료되면, [`finishHooks()`](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/react-reconciler/src/ReactFiberHooks.js:148?source=post_page---------------------------) 이 호출 될 것입니다. 여기서 후크 대기열의 첫 번째 노드에 대한 참조가 `memoizedState` 속성의 렌더링 된 fiber 에 저장됩니다. 즉, 후크 대기열과 그 상태를 외부 적으로 처리 할 수 ​​ 있습니다.
+업데이트가 완료되면, [`finishHooks()`](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/react-reconciler/src/ReactFiberHooks.js:148?source=post_page---------------------------) 이 호출 될 것입니다. 여기서 후크 대기열(hooks queue)의 첫 번째 노드에 대한 참조가 렌더링 된 fiber 의 `memoizedState` 속성에 저장됩니다. 즉, 후크 대기열과 그 상태를 외부 적으로 처리 할 수 ​​있습니다.
 
 컴퍼넌트의 메모 상태의 외부 읽기.
 
@@ -358,7 +367,7 @@ export function useReducer() {
   // ...
   const dispatch: Dispatch<A> = (queue.dispatch = (dispatchAction.bind(
     null,
-    currentlyRenderingFiber,
+    currentlyRenderingFiber, // workInTree Fiber
     queue
   ): any))
   return [workInProgressHook.memoizedState, dispatch]
@@ -394,3 +403,121 @@ const ChildComponent = props => {
 ```
 
 마지막으로, 구성 요소의 라이플 사이클에 중요한 영향을 미치는 effect hooks 작동 방식을 알아보자.
+
+
+## Effect hooks
+
+이펙트 후크는 약간 다르게 동작하고 내가 설명하고 싶은 추가 로직 레이어를 가지고 있습니다. 다시 한 번, 구현에 들어가기 전에 effect hook의 프로퍼티들에 대해 염두에 두어야 할 사항이 있습니다.
+
+- hook은 렌더링 시간 동안 생성되지만 페인팅 후에 실행됩니다.
+- 그렇게되면, 그들은 다음 페인팅 직전에 파괴 될 것입니다.
+- 그들은 정의 순서대로 호출됩니다.
+
+_"페이팅"이라는 용어를 사용하고 "렌더링" 단어는 사용하하지 않았습니다. 이 두 가지가 다른데, 나는 최근의 [_React Conf_](https://conf.reactjs.org/?source=post_page---------------------------)에서 잘못된 용어를 사용하는 것을 많이 바왔다.! 공식 [_React docs_](https://reactjs.org/docs/hooks-reference.html?source=post_page---------------------------#useeffect) "렌더링이 화면에 적용 된 후"라고 말합니다. 이것은 "페인팅"과 비슷합니다. render 메서드는 파이버 노드를 생성하지만 아직 아무것도 그리지 않습니다 ._
+
+따라서 이러한 효과를 유지해야하는 추가 대기열이 있어야하며 페인팅 후에 처리해야합니다. 일반적으로 말하자면, fiber는 effect node들을 포함하는 대기열을 보유하고 있습니다. 각 effect는 다른 유형이므로 적절한 단계에서 다루어야합니다.
+
+-   mutation이 일어나기 전에 `getSnapshotBeforeUpdate()` 인스턴스를 호출한다.  (see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L646)).
+-  all the host 삽입, 업데이트, 삭제 그리고 참조해제를 수행한다.  (see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L687)).
+- 모든 라이프 사이클 및 참조 콜백을 수행하십시오. 라이프 사이클은 별도의 실행으로 발생하므로 전체 트리에서 모든 배치, 업데이트 및 삭제가 이미 호출되었습니다. 이 실행은 또한 렌더러 관련 초기 효과를 트리거합니다. (see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L732)).
+- `useEffect()`  hook에 의해 스케쥴된 Effect - 구현에 기반한 "수동효과" 라고도 합니다. [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L779)  (어쩌면 우리는 React 커뮤니티에서이 용어를 사용해야 할까?).
+
+hook effects에 관해서는 fiber의 `updateQueue` 라는 속성에 저장해야하며 각 효과 노드(effect node)는 다음 스키마를 가져야합니다 ((see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L477)):
+
+```typescript
+function pushEffect(tag, create, destroy, inputs) {
+  const effect: Effect = {
+    tag,
+    create,
+    destroy,
+    inputs,
+    // Circular
+    next: (null: any),
+  }; 
+
+  return effect;
+}
+```
+
+-   `tag`  - 효과의 동작을 지시하는 이진수입니다 (곧 자세히 설명 할 것입니다).
+-   `create`  - painting 이후에 실행해야하는 콜백입니다.
+-   `destroy`  - 초기 렌더링 전에 실행되어야하는`create ()`에서 반환 된 콜백.
+-   `inputs`  - effect를 파괴하고 재생성 해야하는지 여부를 결정하는 값 집합입니다.
+-   `next`  - Component에서 정의 된 다음 효과에 대한 참조입니다.
+
+`tag` 프로퍼티 외에, 다른 프로퍼티는 이해하기 쉽고 간단합니다. 후크를 잘 연구했다면 React가 `useMutationEffect()` 와 `useLayoutEffect()`와 같은 몇 가지 특수 효과 후크를 제공한다는 것을 알 수 있습니다. 이 두 가지 효과는 내부적으로 `useEffect()` 를 사용합니다. 이것은 본질적으로 effect node를 만드는 것을 의미하지만, 다른 태그 값을 사용하여 effect node를 만듭니다.
+
+태그는 이진 값의 조합으로 구성됩니다. (see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactHookEffectTags.js?source=post_page---------------------------)):
+
+```javascript
+const NoEffect = /*             */ 0b00000000;
+const UnmountSnapshot = /*      */ 0b00000010;
+const UnmountMutation = /*      */ 0b00000100;
+const MountMutation = /*        */ 0b00001000;
+const UnmountLayout = /*        */ 0b00010000;
+const MountLayout = /*          */ 0b00100000;
+const MountPassive = /*         */ 0b01000000;
+const UnmountPassive = /*       */ 0b10000000;
+```
+React에 의해 지원되는 후크 효과 유형.
+
+이 이진 값의 가장 일반적인 경우는 파이프 라인 (`|`)을 사용하여 비트를 그대로 단일 값에 추가하는 것입니다. 그런 다음 태그가 특정 동작을 구현하는지 여부를 앰퍼샌드 ( '&`)를 사용하여 확인할 수 있습니다. 결과가 0이 아니면 태그가 지정된 동작을 구현 함을 의미합니다.
+
+```javascript
+const effectTag = MountPassive | UnmountPassive
+assert(effectTag, 0b11000000)
+assert(effectTag & MountPassive, 0b10000000)
+```
+React의 바이너리 디자인 패턴을 사용하는 방법을 보여주는 예제.
+
+다음은 React가 해당 태그와 함께 지원하는 후크 효과 유형입니다. (see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js:520?source=post_page---------------------------)):
+
+-   Default effect —  `UnmountPassive | MountPassive`.
+-   Mutation effect —  `UnmountSnapshot | MountMutation`.
+-   Layout effect —  `UnmountMutation | MountLayout`.
+
+행동 구현을 위한 React 검사 방법은 다음과 같습니다. (see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberCommitWork.js?source=post_page---------------------------#L309)):
+
+```javascript
+if ((effect.tag & unmountTag) !== NoHookEffect) {
+  // Unmount
+}
+if ((effect.tag & mountTag) !== NoHookEffect) {
+  // Mount
+}
+```
+React가 구현 한 실제 스냅 샷.
+
+그래서, 우리가 방금 배운 효과에 따라, 실제로 우리는 특정 fiber에 효과를 외부 적으로 주입 할 수 있습니다 :
+
+```javascript
+function injectEffect(fiber) {
+  const lastEffect = fiber.updateQueue.lastEffect
+
+  const destroyEffect = () => {
+    console.log('on destroy')
+  }
+
+  const createEffect = () => {
+    console.log('on create')
+
+    return destroy
+  }
+
+  const injectedEffect = {
+    tag: 0b11000000,
+    next: lastEffect.next,
+    create: createEffect,
+    destroy: destroyEffect,
+    inputs: [createEffect],
+  }
+
+  lastEffect.next = injectedEffect
+}
+
+const ParentComponent = (
+  <ChildComponent ref={injectEffect} />
+)
+```
+효과 주입의 예.
+
