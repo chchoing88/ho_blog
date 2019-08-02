@@ -580,7 +580,7 @@ observable$.mergeAll().subscribe(num => console.log(num));
 그래서 `mergeMap()`은 단지 `map() + mergeAll()` 이다.
 
 또한 위 코드에서 `observable$` 을 그냥 subscribe를 했다면 num에는 observable 객체가 콘솔에 찍힐것이다. 
-`map()` 코드는 어떠한 이벤트 스트림에서 값을 받아서 즉, 신호로 받아들여서 새로운 값 또는 observable 객체를 생성할 때 사용되고 
+`map()` 코드는 어떠한 이벤트 스트림에서 값을 받아서 즉, 신호로 받아들여서 새로운 값 또는 observable 객체로 맵핑할 때 사용되고 
 `mergeAll()`의 경우에는 모든 이벤트 스트림을 머지해서 observer에게 알려준다고 생각하면 될 것이다.
 
 위 코드를 `mergeMap()`으로 짠다면 아래와 같다.
