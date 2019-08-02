@@ -574,10 +574,23 @@ const observable$ = click$.map(event => {
 observable$.mergeAll().subscribe(num => console.log(num));
 ```
 
-`mergeAll()`의 경우에는 inner observable(interval$)을 받아다가 그것을 구독하고 해당 값을 observer 에게 전달시켜 준다. 즉, inner observable 이 emits 될때 그 값들을 merging 해서 outer observable 에게 알려달라는 뜻이다.
+`mergeAll()`의 경우에는 inner observable(여기서 interval$에 해당함)을 받아다가 그것을 구독하고 해당 값을 observer 에게 전달시켜 준다. 즉, inner observable 이 emits 될때 그 값을 outer observable와 merging 해서 나에게 알려줍니다. 
 
-위의 경우에서는 source observable 은 `click$` observable 이고 inner observable 은 `interval$` 이다.
+위의 경우에서는 source observable(또는 outer observable) 은 `click$` observable 이고 inner observable 은 `interval$` 이다.
 그래서 mergeMap()은 단지 map() + mergeAll() 이다.
+
+위 코드를 mergeMap()으로 짠다면 아래와 같다.
+
+```javascript
+const click$ = Observable.fromEvent(button, ‘click’);
+const interval$ = Observable.interval(1000);
+
+const observable$ = click$.mergeMap(event => { 
+   return interval$;
+});
+
+observable$.subscribe(num => console.log(num));
+```
 
 ### why Higher-Order Observables?
 
@@ -828,3 +841,4 @@ exhaust 는 첫번째로 나오는 inner Observable 을 구독한다.
 * [https://blog.angular-university.io/rxjs-error-handling/](https://blog.angular-university.io/rxjs-error-handling/)
 * [https://blog.angular-university.io/rxjs-higher-order-mapping/](https://blog.angular-university.io/rxjs-higher-order-mapping/)
 * [https://netbasal.com/javascript-observables-under-the-hood-2423f760584](https://netbasal.com/javascript-observables-under-the-hood-2423f760584)
+* [https://netbasal.com/understanding-mergemap-and-switchmap-in-rxjs-13cf9c57c885](https://netbasal.com/understanding-mergemap-and-switchmap-in-rxjs-13cf9c57c885)
