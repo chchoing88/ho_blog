@@ -226,7 +226,9 @@ const MyReact = (function() {
 })()
 ```
 
-여기서는 setStateHookIndex 사용법에 유의하십시오. 아무 것도 보이지 않지만 setState 가 currentHook 변수를 덮지 않도록 방지하는 데 사용됩니다! setStateHookIndex 를 사용하지 않으면 setState 함수가 `newState => (hooks[currentHook] = newState)` 가 되게 되는데 여기서 currentHook 은 실행될때 참조 되므로 `App.type('bar')` 실행시때, currentHook 이 0 일때 실행하게 되어서 엉뚱한 state 변화를 초래하게 된다.
+여기서는 setStateHookIndex 사용법에 유의하십시오. 아무 것도 보이지 않지만 setState 가 currentHook 변수를 덮지 않도록 방지하는 데 사용됩니다! 
+`setState`에서 사용해야 할 인덱스를 가둬둔다고 생각하면 된다. 
+setStateHookIndex 를 사용하지 않으면 setState 함수가 `newState => (hooks[currentHook] = newState)` 가 되게 되는데 여기서 currentHook 은 실행될때 참조 되므로 `App.type('bar')` 실행시때, currentHook 이 0 일때 실행하게 되어서 엉뚱한 state 변화를 초래하게 된다.
 
 hooks 배열에는 useState 때 사용하는 state 값이 , useEffect 때는 디펜던시 값이 존재한다. 특히 useState 에서 나오는 setState 함수에는 변화해야 할 값의 인덱스가 저장되어있는 인덱스를 각 함수마다 지니고 있다.
 
