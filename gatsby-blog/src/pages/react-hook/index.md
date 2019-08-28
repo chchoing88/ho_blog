@@ -232,6 +232,23 @@ setStateHookIndex 를 사용하지 않으면 setState 함수가 `newState => (ho
 
 hooks 배열에는 useState 때 사용하는 state 값이 , useEffect 때는 디펜던시 값이 존재한다. 특히 useState 에서 나오는 setState 함수에는 변화해야 할 값의 인덱스가 저장되어있는 인덱스를 각 함수마다 지니고 있다.
 
+hooks 배열을 들여다 보면 다음과 같다. 
+
+```javascript
+// 만약 component에서 다음과 같이 훅을 실행 했을 때
+const [count, setCount] = React.useState(1)
+const [text, setText] = React.useState('apple')
+
+  // 랜더링 시 최초에 한 번만 실행된다.
+  // 배열 안에 관찰하고자 하는 상태를 전달하면 그 상태에 반응하여 콜백이 실행된다.
+React.useEffect(() => {
+  console.log('side effect')
+}, ['apple'])
+  
+
+// hooks은 다음과 같이 셋팅이 된다. [2, "banana", ['apple']]
+```
+
 ```javascript
 // Example 4 continued - in usage
 function Counter() {
