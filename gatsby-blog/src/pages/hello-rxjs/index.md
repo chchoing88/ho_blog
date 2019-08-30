@@ -27,6 +27,15 @@ date: "2019-01-28T10:00:03.284Z"
   * AsyncSubject : 가장 마지막 emit 한 value 의 값을 complete 한 메서드가 호출 되었을때만 가져오게 된다. 만약 complete() 메서드가 호출 되지 않는다면 아무것도 observer 는 받아오지 않는다.
 * Schedulers : Schedulers 들은 중앙의 dispatcher 들이다. 이 디스패처들은 concurrency 를 컨트롤 하는 녀석들인데 여기서 concurrency 를 컨트롤 한다는 것은 시분할을 조절한다는 뜻이다. 이것은 계산이 언제 일어나는지를 조정할수 있게 합니다. 예를 들면 setTimeout 또는 requestAnimationFrame 그 외의 것들입니다.
 
+**Observables = PodCasts**
+
+- observers subscribe to observables
+- listeners subscribe to podcasts
+
+참고로 PodCasts는 Hot observables 이다. Hot observable 이란 observable 생성과 동시에 이벤트를 방출하기 시작한다. 이후에 subscribe 되는 시점과는 상관없이 중간에 등록된 옵저버들에게는 이벤트가 중간부터 전송을 해주는 방식이다. 
+반대 방식은 Cold observable 이 있다.
+쉽게는 유투브의 실시간 방송과, 일반 VOD 방송 개념으로 이해하면 좋겠다.
+
 아주 간단한 Observable 을 만든다면 아래와 같을 것이다.
 
 ```javascript
