@@ -12,24 +12,33 @@ date: "2018-12-31T10:00:03.284Z"
 
 ### State
 
-* state 란 어플리케이션을 이끄는 데이터이다.
+* state 란 어플리케이션을 이끄는 데이터 입니다.
+* 흔히 todo items의 list 같은 _domain specific state_ 라고 하는 것과 현재 선택된 element를 가리키는 _view state_ 입니다.
+* state는 마치 엑셀 스프레드 시트에서 값을 지닌 cells 들과 같다고 생각하십시요.
 
 ### Derivations ( 파생 )
 
-* state 로 부터 파생되는 값들이다. 다양한 형태로 존재할 수 있다.
-* 파생된 데이터는 todo 리스트에서 남아있는 todo item 갯수라고 할 수 있다.
-* MobX 는 구별되는 두가지의 파생 종류가 있다. 하나는 Computed values 또 다른 하나는 Reactions 이다.
-  * Computed values 는 순수 함수를 이용한 observable state 로 부터 파생된 새로운 값이다. 따라서 side effect 가 없어야 한다.
-  * 만약 지금의 state 를 베이스로 새로운 값을 만들길 원한다면 computed 를 사용하면 된다.
-  * 모든 Computed value 는 순수해야하고 state 를 변화 시키면 안된다.
-  * Reactions 는 state 변화로 인해 자동적으로 발생될 필요가 있는 sied effect 이다. 여기서 side effect 는 호출된 함수 밖에 있는 다른 값들이나 어플리케이션의 상태를 변경되는 것을 뜻한다.
-  * Reactions 은 명령형 프로그래밍과 reactive 프로그래밍 사이를 연결해주는 것으로 필요로 한다.
-* action 은 state 를 변화시키는 한 코드이다. 마치 스프레드 시트에 새로운 값을 입력하는 user 와 같은 것이다.
-* 만약 strict 모드를 사용한다면 액션 밖에서 state 를 강제로 바꾸는 일을 할 수 없게 된다.
+* state 로 부터 파생되는 값들이다. 다양한 형태로 존재할 수 있습니다.
+* 파생된 데이터는 다양한 형태로 존재가능한데 예를 들어 todo 리스트에서 남아있는 todo item 갯수의 값을 파생시킬 수 있다. 
+* MobX 는 구별되는 두가지의 파생 종류가 있다. 하나는 **Computed values** 또 다른 하나는 **Reactions** 이다.
+  * Computed values 는 순수 함수를 이용해서 observable state로 부터 파생된 새로운 값이다. 따라서 side effect 가 없어야 합니다.
+  * 만약 지금의 state 를 베이스로 새로운 값을 만들길 원한다면 computed 를 사용하면 됩니다.
+  * 모든 Computed value는 state 를 변화 시키면 안됩니다.
+  * Reactions 는 state 변화로 인해 자동적으로 발생될 필요가 있는 sied effect 이다. 여기서 side effect 는 호출된 함수 밖에 있는 다른 값들이나 어플리케이션의 상태를 변경되는 것을 뜻합니다.
+  * Reactions 은 명령형 프로그래밍(Imperative programming)과 reactive 프로그래밍 사이를 연결해주는 것으로 필요하고 명확하게는 I/O를 달성하는데 필요합니다.
+
+> 여기서 명령형 프로그래밍은 상태를 어떠한 다른 상태로 명령을 하면서 프로그램을 만들어가는 패러다임중 하나라고 생각하면 됩니다.
+
+### Action
+
+* action 은 state 를 변화시키는 한 코드이다. 마치 스프레드 시트에 새로운 값을 입력하는 user 와 같은 것입니다.
+* Mobx는 코드 구조를 명확하게 도와주기 위해 strict 모드를 사용해서 액션 밖에서 state 를 강제로 바꾸는 일을 할 수 없게 만들 수 있습니다.
 
 #### imperative programing
 
-* imperative 는 명령형 프로그래밍으로 쉽게는 순차적으로 명령을 하듯이 프로그래밍 하는것을 뜻한다. 컴퓨터가 수행할 명령들을 순서대로 적어놓아서 내가 원하는 결과를 얻는것이다. 즉, how 어떻게 할것인가에 포커싱을 맞춘다. 반대로는 선언적인 프로그래밍이 있다. 선언적 프로그래밍에선 데이터에 집중하기 보단 절차에 집중을 해서 만들어 낸다. 즉, what 무엇을 할 것인가에 초점을 맞춘다.
+* imperative 는 명령형 프로그래밍으로 쉽게는 순차적으로 명령을 하듯이 프로그래밍 하는것을 뜻한다. 컴퓨터가 수행할 명령들을 순서대로 적어놓아서 내가 원하는 결과를 얻는것이다. 즉, how 어떻게 할 것인가에 포커싱을 맞춥니다. 반대로는 선언적인 프로그래밍이 있다. 선언적 프로그래밍에선 데이터에 집중하기 보단 절차에 집중을 해서 만들어 낸다. 즉, what 무엇을 할 것인가 또는 목표가 무엇인가에 초점을 맞춥니다.
+
+* 명령형 프로그래밍에서는 어떠한 알고리즘을 사용할지에 대해 나타낸다고 한다면, 선언형 프로그래밍에서는 필요한게 무엇인지 목표가 무엇인지에 대해서 나타내는 프로그래밍 입니다.
 
 * 데이터를 정의하고 그것의 변화 과정을 프로그래밍 할것이냐 행위를 정의하고 거기에 데이터를 집어 넣을 것이냐 방법의 차이. 즉, 생각의 주체를 데이터에 두느냐 function 에 두느냐의 차이.
 
@@ -51,10 +60,10 @@ Action -> State -> Views
 ```
 
 * MobX 는 action 이 상태를 변경하고 그에 따른 views 를 업데이트하는 단방향 데이터 흐름을 지원합니다.
-* 모든 파생들은 자동적으로 state 가 변할때마다 업데이트 된다. 결과적으로 그 중간값들을 관찰할 수 없다.
-* 모든 파생들은 기본 동기적으로 업데이트 된다. 이 의미는 actions 은 state 가 변화된 후 computed 된 value 를 안전하게 확인할 수 있다.
-* Computed value 는 update 가 게으르게 된다. 실제로 사용되지 않는 Computed value 는 side effect 위해 필요로 하지 않는 이상 업데이트 되지 않는다. 만약 view 가 더이상 사용하지 않는다면 가비지 컬렉터가 수거해 간다.
-* 모든 Computed 된 value 들은 pure 하다. 이것들은 state 변화를 지원하지 않는다.
+* 모든 파생들은 state 가 변할때 **자동적(automatically)** 그리고 **따로 분리 되지 않는 행동단위(atomically)** 업데이트 됩니다. 결과적으로는 그 변화하는 값에서 중간값들을 관찰할 수는 없습니다.
+* 모든 파생들은 기본적으로 **동기식(synchronously)** 으로 업데이트 됩니다. 이 의미는 actions이 state 가 변화된 후 computed 된 value 를 안전하게 확인할 수 있다는 의미입니다.
+* Computed value 는 update 가 **lazily** 하게 됩니다. 실제로 사용되지 않는 Computed value 는 side effect 위해 필요로 하지 않는 이상 업데이트 되지 않는다. 만약 view 가 더이상 사용하지 않는다면 자동적으로 가비지 컬렉터가 수거해 갑니다.
+* 모든 Computed 된 value 들은 **pure** 해야 합니다. Compute에서는 state 변화를 지원하지 않습니다.
 
 ### Illustration
 
@@ -94,21 +103,30 @@ todoStore.todos[0].completed = true
 ## observable
 
 ```javascript
+// Usage
 observable(value)
 @observable classProperty = value
 ```
 
 * Observable 이라는건 "MobX! 이 값을 추적해줘, 그러면 observer 들을 업데이트 시킬수 있다."
-* RxJs 에서도 Observable 을 사용하고 있는데 여기서 느낌을 말하자면..[참조글](https://netbasal.com/javascript-observables-under-the-hood-2423f760584)
+* RxJs 에서도 Observable 을 사용하고 있는데 여기서 느낌을 말하자면 동기적이든 비동기적이든 값을 던지는 함수라고 생각하고, 만약 이 값에 흥미가 있다면 observer를 등록해서 받아 볼 수 있습니다. [참조글](https://netbasal.com/javascript-observables-under-the-hood-2423f760584)
 * Observable values 의 값으로는 js 의 원시타입, 참조, 일반객체 , 클래스 인스턴스, array 그리고 map 이 될수 있다.
-* 다음 변환 규칙이 적용되지만 *modifiers*를 이용해서 세부 조정을 할 수 있다. 여기서 _modifiers_ 란 observable 프로퍼티들의 동작방식을 정의 하는데 사용되는 부분이다. ( ex. observable.deep, observable.ref)
-  1. value 가 ES6 의 Map : 새로운 Observable Map 이 리턴된다. 이것은 구체적인 엔트리의 변화에 대한 반응을 하고 싶지 않을때 유용하다. 또한 엔트리 항목의 추가 제거에도 반응하고 싶지 않을때 유용하다.
-  2. value 가 ES6 의 Set : 새로운 Observable Set 이 리턴된다.
-  3. value 가 array : 새로운 Observable Array 가 리턴된다.
-  4. value 가 prototype 이 없는 객체 : 모든 그 객체의 프로퍼티들을 observable 로 만들 수 있다.
-  5. value 가 prototype 을 지닌 object 라면 (원시타입 및 함수) `observable`은 에러를 던질 것이다. 그러한 값에 대한 독립형 관찰 가능 참조를 작성하려는 경우 Boxed Observable 를 사용해야 한다. MobX 는 prototype 를 지닌 object(function 같은) 들을 자동으로 observable 한 객체로 만들어 주지 않는다. 이 객체는 생성자 함수에서 생성자에서 수행하도록 고려되어져야 한다. extendObservable 을 사용하거나 클래스 정의에서 @observable / decorate 를 대신 사용해라.
 
-- 여기서 observable reference 란 객체를 observable 로 바꿀 필요가 없을때 사용하는 것이다. 전형적인 케이스들은 immutable object 들 또는 내가 아닌 외부 라이브러리에 의해 관리되는 object 들이다. 예를 들면 JSX elements, DOM elements, History, window 같은 네이티브 object 들이다. 이런 객체들에 대해서는 observable 로 바꾸지 않고 단지 reference 만 저장 및 추적하면 된다.
+
+다음 변환 규칙이 적용되지만 *modifiers*를 이용해서 세부 조정을 할 수 있다. 여기서 _modifiers_ 란 observable 프로퍼티들의 동작방식을 정의 하는데 사용되는 부분이다. ( ex. observable.deep, observable.ref)
+
+  1. value 가 ES6 의 Map 이면 : 새로운 Observable Map 이 리턴된다. 이것은 구체적인 엔트리의 변화에 대한 반응을 하고 싶지 않을때 유용하다. 또한 엔트리 항목의 추가 제거에도 반응하고 싶지 않을때 유용하다.
+  2. value 가 ES6 의 Set 라면 : 새로운 Observable Set 이 리턴된다.
+  3. value 가 array 라면 : 새로운 Observable Array 가 리턴된다.
+  4. value 가 prototype 이 없는 객체라면 : 모든 그 객체의 프로퍼티들을 observable 로 만들 수 있다.
+  5. value 가 prototype 을 지닌 객체라면 (원시타입 및 함수) `observable`은 에러를 던질 것이다. 그러한 값에 대한 독립형 관찰 가능 참조를 작성하려는 경우 Boxed Observable 를 사용해야 한다. MobX 는 prototype 를 지닌 object(function 같은) 들을 자동으로 observable 한 객체로 만들어 주지 않는다. 이 객체는 생성자 함수에서 생성자에서 수행하도록 고려되어져야 한다. extendObservable 을 사용하거나 클래스 정의에서 @observable / decorate 를 대신 사용해라.
+
+* 여기서 observable reference 란 객체를 observable 로 바꿀 필요가 없을때 사용하는 것이다. 전형적인 케이스들은 immutable object 들 또는 내가 아닌 외부 라이브러리에 의해 관리되는 object 들이다. 예를 들면 JSX elements, DOM elements, History, window 같은 네이티브 object 들이다. 이런 객체들에 대해서는 observable 로 바꾸지 않고 단지 reference 만 저장 및 추적하면 된다.
+
+* observable은 디폴트로 observable한 데이터 구조를 감염적(infective)으로 구성한다. 이 말이 뜻하는 바는 `observable`은 자동적으로 데이터 구조에 포함되어있는 어떤 값이라도 자동적으로 observable 하게 적용한다는 뜻이고 또는 추후에 새롭게 들어 오는 데이터에 대해서도 obserable하게 적용한다는 말이다. 이 행위는 _modifier_ 를 통해서 수정될 수 있습니다.
+
+* [Mobx 4 그리고 그 이 이하 버전] 에서는 다이나믹한 키를 가진 objects를 생성하려면 Observable Map을 사용해야 하고 오직, 초기에 설정했던 object에 존재했던 프로퍼티들에 서만 observable 하게 만들어준다. 물론 프로퍼티를 새롭게 추가하려면 `extendObservable`을 사용하면 된다.
+
 
 ```javascript
 class Message {
@@ -225,6 +243,10 @@ autorun(() => {
   * intercept(interceptor), observe(listener, fireImmediately? = false), clear(), replace(newItems), find(predicate: (item, index, array) => boolean, thisArg?), findIndex(predicate: (item, index, array) => boolean, thisArg?) , remove(value)
 
 ## maps
+
+`observable.map(values?)` 은 dynamic 키를 가진 observable map을 만듭니다. 단지 구체적인 entry 의 변화에만 반응하는걸 원치 않다면 Observable maps는 유용할 것입니다. 또한 entry를 추가하거나 제거의 경우에도 마찬가지 입니다. Optionally 하게 배열의 entry들 또는 초기 값을 가진 ES6 map의 문자열키를 받을 수 있습니다.
+
+`observable(new Map())` 처럼 ES6 Map의 생성자를 통해서 observable map을 초기화 할 수 있고, decorator를 이용해서 `@observable map = new Map().` 클래스 프로퍼티를 위한 observable map을 만들수도 있습니다.
 
 ## boxed values
 
