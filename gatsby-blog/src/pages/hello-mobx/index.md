@@ -19,7 +19,10 @@ date: "2018-12-31T10:00:03.284Z"
 ### Derivations ( 파생 )
 
 * state 로 부터 파생되는 값들이다. 다양한 형태로 존재할 수 있습니다.
-* 파생된 데이터는 다양한 형태로 존재가능한데 예를 들어 todo 리스트에서 남아있는 todo item 갯수의 값을 파생시킬 수 있다. 
+  * 유저 인터페이스
+  * todo 리스트 data에서 남아있는 todo item 갯수의 파생된 데이터
+  * 서버에 변경 사항을 보내는 것과 같은 백엔드 통합
+
 * MobX 는 구별되는 두가지의 파생 종류가 있다. 하나는 **Computed values** 또 다른 하나는 **Reactions** 이다.
   * Computed values 는 순수 함수를 이용해서 observable state로 부터 파생된 새로운 값이다. 따라서 side effect 가 없어야 합니다.
   * 만약 지금의 state 를 베이스로 새로운 값을 만들길 원한다면 computed 를 사용하면 됩니다.
@@ -162,6 +165,17 @@ class OrderLine {
 
 ## objects
 
+* 만약 plain 한 객체가 observable 에 전달된다면 안에있는 모든 프로퍼티들은 복제본에 복사되어 관측할수 있게 된다. ( 여기서 plain 한 객체라 하면 생성자 함수를 사용하여 만들지는 않았고 해당객체의 프로토타입(**proto**)이 `Object`을 가지거나 프로토타입 프로퍼티가 전혀 없는경우이다. )
+* observable 은 디폴트로 재귀적으로 적용이 됩니다. 그래서 만약 값들중 하나가 object 또는 array 라면 그 값들 또한 observable 하게 적용된다.
+* 오직 plain object 만 observable 하게 만들 수 있다. non-plain object 의 경우에는 생성자에서 observable 프로퍼티를 초기화 해줘야 한다. @observable 또는 extendObservable 함수를 이용할 수 있다.
+* getter 프로퍼티는 자동적으로 @computed 처럼 파생 프로퍼티로 전환된다.
+* observable 은 재귀적으로 전체 object 그래프에 적용됩니다. 인스턴스화된 것과 나중에 새롭게 observable 프로퍼티들에 할당될 새로운 값(object 객체)들에 대해서도 적용이 된다.
+* Observable 은 non-plain objects 를 재귀하지 않는다. 즉, 클래스로 인스턴스를 만들어서 observable 한것은 재귀 하지 않는다.
+* 속성 값의 자동 변환을 사용하지 않으려면 {deep : false}를 3 번째 인수로 전달하십시오.
+* 이 객체에 친숙한 디버그 이름을 할당하려면 {name : "my object"}를 전달하십시오.
+
+### example
+
 ```javascript
 observable.object(props, decorators?, options?)
 
@@ -197,15 +211,6 @@ person.setAge(21);
 // etc
 ```
 
-* 만약 plain 한 객체가 observable 에 전달된다면 안에있는 모든 프로퍼티들은 복제본에 복사되어 관측할수 있게 된다. ( 여기서 plain 한 객체라 하면 생성자 함수를 사용하여 만들지는 않았고 해당객체의 프로토타입(**proto**)이 `Object`을 가지거나 프로토타입 프로퍼티가 전혀 없는경우이다. )
-* observable 은 디폴트로 재귀적으로 적용이 됩니다. 그래서 만약 값들중 하나가 object 또는 array 라면 그 값들 또한 observable 하게 적용된다.
-* 오직 plain object 만 observable 하게 만들 수 있다. non-plain object 의 경우에는 생성자에서 observable 프로퍼티를 초기화 해줘야 한다. @observable 또는 extendObservable 함수를 이용할 수 있다.
-* getter 프로퍼티는 자동적으로 @computed 처럼 파생 프로퍼티로 전환된다.
-* observable 은 재귀적으로 전체 object 그래프에 적용됩니다. 인스턴스화된 것과 나중에 새롭게 observable 프로퍼티들에 할당될 새로운 값(object 객체)들에 대해서도 적용이 된다.
-* Observable 은 non-plain objects 를 재귀하지 않는다. 즉, 클래스로 인스턴스를 만들어서 observable 한것은 재귀 하지 않는다.
-* 속성 값의 자동 변환을 사용하지 않으려면 {deep : false}를 3 번째 인수로 전달하십시오.
-* 이 객체에 친숙한 디버그 이름을 할당하려면 {name : "my object"}를 전달하십시오.
-
 ```javascript
 // plain object
 function isPlainObject(value) {
@@ -219,6 +224,13 @@ function isPlainObject(value) {
 ```
 
 ## arrays
+
+* observable 에 array 를 넣어도 똑같다.
+* 이 구문도 재귀적으로 잘 움직이고, 모든 값 ( 미래에 들어올 값 ) 또한 observable 할 수 있다.
+* array 의 빌트인 함수들 뿐만 아니라 observable array 는 다음과 같은 유용한 기능을 사용할 수 있다.
+  * intercept(interceptor), observe(listener, fireImmediately? = false), clear(), replace(newItems), find(predicate: (item, index, array) => boolean, thisArg?), findIndex(predicate: (item, index, array) => boolean, thisArg?) , remove(value)
+
+### example
 
 ```javascript
 observable.array(values?)
@@ -237,10 +249,7 @@ autorun(() => {
 });
 ```
 
-* observable 에 array 를 넣어도 똑같다.
-* 이 구문도 재귀적으로 잘 움직이고, 모든 값 ( 미래에 들어올 값 ) 또한 observable 할 수 있다.
-* array 의 빌트인 함수들 뿐만 아니라 observable array 는 다음과 같은 유용한 기능을 사용할 수 있다.
-  * intercept(interceptor), observe(listener, fireImmediately? = false), clear(), replace(newItems), find(predicate: (item, index, array) => boolean, thisArg?), findIndex(predicate: (item, index, array) => boolean, thisArg?) , remove(value)
+
 
 ## maps
 
@@ -248,10 +257,14 @@ autorun(() => {
 
 `observable(new Map())` 처럼 ES6 Map의 생성자를 통해서 observable map을 초기화 할 수 있고, decorator를 이용해서 `@observable map = new Map().` 클래스 프로퍼티를 위한 observable map을 만들수도 있습니다.
 
+[ES6 Map Spec](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) 에 따르는 method들을 사용할 수 있습니다.
+
 ## boxed values
 
-JavaScript 의 모든 원시객체 값은 변경 가능하지(immutable) 않으므로 정의에 따라 관찰 할 수 없다. 일반적으로 MobX 는 관찰 가능한 값을 포함하는 속성(property)을 만들 수 있기 때문에 괜찮다.
-드문 경우지만 "원시객체를"를 observable 로 만드는 것이 편리 할 수 있을때가 있다. 이러한 경우에는 이러한 프리미티브를 관리하는 관찰 가능한 상자를 만들 수 있다.
+JavaScript 의 모든 원시객체 값은 변경 가능하지(immutable) 않으므로 정의에 따라 관찰(observable) 할 수 없다. 일반적으로 MobX 는 관찰 가능한 값을 포함하는 속성(property)을 만들 수 있습니다.
+드문 경우지만 object에 소유하지 않는 "원시객체를"를 observable 로 만드는 것이 편리 할 수 있을때가 있습니다. 이러한 경우에는 이러한 프리미티브를 관리하는 observable obx를 생성 할 수 있습니다.
+
+
 
 ### example
 
@@ -286,6 +299,11 @@ MobX에는 관찰 가능한 속성의 동작 방식을 정의하는 데코레이
 - action: Creates an action, see action
 - action(name): Creates an action, overrides the name
 - action.bound: Creates an action, and binds this to the instance
+
+데코레이터들은 구체적인 객체 멤머의 작동방식을 위해 다음 `decorate`, `observable.object`, `extendObservable` and `observable` (객체를 생성할 때) api들과 함께 사용이 가능합니다. 
+만약 아무런 데코레이터를 지정하지 않는다면 디폴트로 `observable.deep`을 사용하게 됩니다. 
+
+### example
 
 ```javascript
 import {observable, autorun, action} from "mobx";
@@ -331,6 +349,70 @@ decorate(Person, {
     labelText: computed,
     setAge: action
 })
+```
+
+### Reference observability
+
+때때론 object들이 observable하게 변화하지 않아도 될때가 있다. 대게 이런 케이스들은 immutable object들 이거나 object가 외부 라이브러리에 의해서 관리가 될때 입니다. 예를 들어 JSX 엘리먼트나 DOM element, History나 window 또는 그 외에 native object 들을 말합니다. 이러한 object들을 위해 해당 객체를 observable하게 변화시키지 않고 객체의 참조값만을 저장하길 원할 것입니다. 
+
+이럴때 `ref` modifier를 사용합니다. `ref`는 관찰 가능한 속성이 생성되도록 합니다. 참조 만 추적하지만 값을 변환하지는 않습니다.
+
+예를 들어 아래 `author`를 `observable.ref`로 해두면 `author`의 참조값만을 추적하게 됩니다. 
+immutable 값이 들어온다면 추적하지만 반대로 mutable 하고 observable 한 객체가 들어온다면 추적을 하지 못합니다. 즉, 새로운 객체 또는 primitive 한 값들이 들어와야 한다는 것입니다. 
+
+
+#### example
+
+```javascript
+class Message {
+    @observable message = "Hello world"
+
+    // fictional example, if author is immutable, we just need to store a reference and shouldn't turn it into a mutable, observable object
+    @observable.ref author = null
+}
+
+
+// ES5 syntax:
+
+function Message() {
+    extendObservable(this, {
+        message: "Hello world",
+        author: null
+    }, {
+        author: observable.ref
+    })
+}
+
+// 예
+var person = observable({
+  name: "John",
+  age: 42,
+  showAge: false,
+  author: null,
+  get labelText() {
+      return this.showAge ? `${this.name} (age: ${this.age})` : this.name;
+  },
+
+  // action:
+  setAge(age) {
+      this.age = age;
+  }
+}, {
+  author: observable.ref, // ref 설정
+  setAge: action
+});
+
+reaction(
+  () => person.author && person.author.name,
+  (value, reaction) => {
+    console.log(`author 값이 ${value} 로 바뀌었네요!`);
+  }
+);
+
+person.author = {name: 'merlin'}
+person.author.name = 'ho' // 변화를 감지 못한다. 
+
+// author 값이 merlin 로 바뀌었네요!
 ```
 
 ## (@)Computed
@@ -506,14 +588,21 @@ React.render(<Timer timerData={timerData.secondsPassed} />, document.body)
 
 ## Understanding what MobX reacts to
 
+Mobx는 90% 정도 유저가 기대하는대로 움직이지만 가끔은 기대하는 것 처럼 움직이지 않을 때가 있습니다. 여기서는 Mobx가 react 하는 것을 어떻게 이해하는지 짚어 볼 것입니다.
+
 * MobX 는 observable 프로퍼티에 반응한다. 이 프로퍼티를 추적하는 함수의 실행을 하는동안 읽어짐으로써 반응한다.
-* 'reading' 이라 함은 object 의 프로퍼티에 접근하는 것이다. ( ex. user.name or user['name'])
-* 'trackable functions' 라는건 computed, observer component 의 render 메서드와 첫번째 인자로 when, reaction, 그리고 autorun 을 전달 받는 함수들이다.
-* 'during'의 의미는 함수 실행동안에 읽혀지는 오직 observables 들만 추적한다는것을 뜻한다. 이들의 값들은 추적하는 함수에 의해 직접적으로 또는 간접적으로 사용되는지는 중요하지 않다.
-* MobX 는 이럴때 반응하지 않는다.
-  * observables 로 부터 얻은 값이지만 tracked function 밖에 있는 값.
-  * 비동기적으로 호출되는 코드 블럭에서 읽혀진 Observables 들
-* MobX 는 값이 아닌 프로퍼티의 주소를 추적한다. 즉, 주소가 바뀌면 변화를 감지한다.
+* '_reading_' 이라 함은 object 의 프로퍼티에 접근하는 것이다. 예들 들어 user.name or user['name'] 이러한 경우들이다.
+* '_trackable functions_' 라는건 `computed`의 표현입니다, observer component 의 render 메서드 그리고 `when`, `reaction`, 그리고 `autorun`에 첫번째로 전달되는 함수들입니다.
+* '_during_'의 의미는 함수 실행동안에 읽고있는 오직 observables 들만 추적한다는것을 뜻한다. 이들의 값들은 추적하는 함수에 의해 직접적으로 또는 간접적으로 사용되는지는 중요하지 않습니다.
+
+
+MobX 는 이럴때 반응하지 않습니다.
+
+* observables 로 부터 얻은 값이지만 tracked function 밖에 있는 값.
+* Observables 들이 비동기에 호출되는 코드 블럭에서 읽혀질때. 
+
+
+**MobX 는 값이 아닌 프로퍼티의 주소를 추적한다. 즉, 주소가 바뀌면 변화를 감지하는 것입니다.**
 
 ### Example
 
@@ -527,7 +616,9 @@ let message = observable({
 })
 ```
 
-* tracked function 내의 역참조, .title 프로퍼티가 autorun 에 의해 역참조 당했다. 그 이후에 변화가 생기면 이 변화는 감지가 된다. tracked function 안에 trace() 함수를 호출함으로서 MobX 는 추적한다는걸 알수 있다.
+![./observed-refs.png](./observed-refs.png)
+
+* tracked function 내의 역참조, `.title` 프로퍼티가 autorun 에 의해 역참조 당했다. 그 이후에 변화가 생기면 이 변화는 감지가 된다. tracked function 안에 trace() 함수를 호출함으로서 MobX 는 추적한다는걸 알수 있다.
 
 ```javascript
 autorun(() => {
