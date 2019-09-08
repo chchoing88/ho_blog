@@ -614,6 +614,49 @@ reaction(() => data, (data, reaction) => { sideEffect }, options?)
 - 두번째 인자로 넘겨지는 함수는 effect function 은 2 개의 인자를 받는다. 첫번째 인자는 data function 에서 리턴되는 값이고, 두번째 인자는 현재 반응하는 reaction 이다. 이것은 실행되는 동안에 이 reaction 을 dispose 하는 용도로 사용될 수 있다.
 - side effect 는 data expression 에서 accessed 한 데이터에만 반응한다. 이 data 표현식은 사실 effect 에서 사용되는 data 보다 적을 수 있다. 또한 side effect 는 오직 data expression 에 의해 변경되는 data 가 리턴되었을때 반응한다. 다시말해, reaction 은 side effect 에서 필요한것을 생산하도록 요구하는 것이다.
 
+### example
+
+```javascript
+const todos = observable([
+  {
+    title: 'Make coffee',
+    done: true,
+  },
+  {
+    title: 'Find biscuit',
+    done: false,
+  },
+])
+
+// wrong use of reaction: reacts to length changes, but not to title changes!
+const reaction1 = reaction(
+  () => todos.length,
+  length => console.log('reaction 1:', todos.map(todo => todo.title).join(', '))
+)
+
+// correct use of reaction: reacts to length and title changes
+const reaction2 = reaction(
+  () => todos.map(todo => todo.title),
+  titles => console.log('reaction 2:', titles.join(', '))
+)
+
+// autorun reacts to just everything that is used in its function
+const autorun1 = autorun(() =>
+  console.log('autorun 1:', todos.map(todo => todo.title).join(', '))
+)
+
+todos.push({ title: 'explain reactions', done: false })
+// prints:
+// reaction 1: Make coffee, find biscuit, explain reactions
+// reaction 2: Make coffee, find biscuit, explain reactions
+// autorun 1: Make coffee, find biscuit, explain reactions
+
+todos[0].title = 'Make tea'
+// prints:
+// reaction 2: Make tea, find biscuit, explain reactions
+// autorun 1: Make tea, find biscuit, explain reactions
+```
+
 ## (@)observer
 
 - @observer 라고 데코레이터를 사용하는 것은 MobX 에게 "이 컴포넌트의 rendering 은 observables 관련으로 부터 파생될수 있다." 말하는 것과 같다.
