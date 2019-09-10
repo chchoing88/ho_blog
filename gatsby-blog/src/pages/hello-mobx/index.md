@@ -473,7 +473,7 @@ var disposer = upperCaseName.observe(change => console.log(change.newValue))
 - Computed values 는 다른 computed value 또는 지금 존재하는 state 로 부터 파생된 값입니다.
 - Computed 는 reaction 들이 일어나고 나서 계산이 수행 됩니다.
 - Coumputed는 실제로 수정가능한 state 를 최소화 시킬수 있는 방법중 하나입니다.
-- computed 와 autorun 는 반응적으로 실행되는 표현식(expressions)이지만, `computed` 는 다른 observer 에 의해 사용되는 값을 생성할때 사용되고 `autorun` 은 새로운 값을 만들어 내지 않습니다. 그 대신에 어떠한 효과를 이루기 위해 사용될수 있다. 예를들면 로깅이나 네트워크 요청 같은 것들이 될 수 있습니다.
+- computed 와 autorun 는 반응적(reactively)으로 실행되는 표현식(expressions)이지만, `computed` 는 다른 observer 에 의해 사용되는 값을 생성할때 사용되고 `autorun` 은 새로운 값을 만들어 내지 않습니다. 그 대신에 어떠한 효과를 이루기 위해 사용될수 있다. 예를들면 로깅이나 네트워크 요청 같은 것들이 될 수 있습니다.
 - Compute values 이전 계산에서 사용 된 데이터가 변경되지 않으면 계산 된 속성이 다시 실행되지 않습니다. 뿐만 아니라 다른 computed property 또는 reaction 에서 사용되지 않으면 재 계산되지 않습니다.
 - Computed values가 더이상 관찰되지 않으면 Mobx가 자동으로 가비지를 수거해 갈 수 있습니다. 이는 autorun 과의 차이점 중에 하나입니다. ( autorun 의 경우에는 그들 스스로가 dispose 해주어야 한다. )
 - 만약 항상 computed value 가 계산되길 원한다면 observe 또는 `keepAlive` 또는 `observe` 를 이용해서 변화를 계속 탐지할 수 있습니다.
@@ -554,9 +554,9 @@ class Todos {
 }
 ```
 
-## autorun
+## Autorun
 
-- autorun 은 관찰자 그 자체가 없는 reactive한 함수를 만들 경우 사용됩니다.
+- autorun 은 함수 자체에 관찰자(observers) 없는 reactive한 함수를 만들 경우 사용됩니다.
 - autorun 은 대게 반응형 코드에서 명령형 코드로 이어짐이 필요할 경우 사용됩니다. 예를 들면 로깅이나 ui update code 에서 사용됩니다.
 - autorun 을 사용할때 제공하는 함수(감싸이는 함수)는 항상 그 즉시 `한번은 실행`된다. 그리고 이후에 그것의 디펜던시들이 변화가 일어날때마다 한번씩 실행됩니다.
 - 대조적으로 `computed(function)`는 오직 관찰자(observers)들이 그 값을 관찰할때 재 계산되는 함수를 만듭니다. 그렇지 않으면 그 함수의 값은 관련이 없는 것으로 간주해서 다시 계산하지 않습니다.
@@ -564,8 +564,9 @@ class Todos {
 - autorun 은 다른 효과(작용)를 발생시키지만 새로운 값을 만들어 내지 않습니다.
 - 만약 첫번째 인자로 문자열을 autorun 에 넘긴다면 그것은 디버그 네임으로 사용될 수 있다.
 - autorun 의 리턴 값은 해당 autorun 을 해지하는 disposer function 이다. 이 함수는 더이상 autorun 이 필요 없어질때 사용된다.
-- 반응(reaction) 그 자체는 autorun 에 제공하는 함수에 유일한 인수로 전달되며 이 인수를 autorun 함수 안에서 다룰수 있다. 이 의미는 두가지 방법으로 더이상 autorun 이 필요 없을때 dispose 할 수 있다는것을 뜻한다.
-- observer decorator/function 과 같이, autoron 은 오직 제공된 함수의 실행 동안 사용되는 데이터를 관찰 할 수 있습니다.
+- [@observer decorator/function](https://mobx.js.org/refguide/observer-component.html) 과 같이, autoron 은 오직 제공된 함수의 실행중에 사용되는 데이터를 관찰 할 수 있습니다. 이 말은 autorun 처음 실행에서 사용되는 데이터만 관찰할 수 있다는 말 같습니다.
+
+반응(reaction) 그 자체는 autorun 에 제공하는 함수에 유일한 인수로 전달되며 이 인수를 autorun 함수 안에서 다룰수 있다. 이 의미는 두가지 방법으로 더이상 autorun 이 필요 없을때 dispose 할 수 있다는것을 뜻한다.
 
 ```javascript
 const disposer = autorun(reaction => {
@@ -579,6 +580,21 @@ autorun(reaction => {
   /* do some stuff */
   reaction.dispose()
 })
+```
+
+
+```javascript
+var numbers = observable([1,2,3]);
+var sum = computed(() => numbers.reduce((a, b) => a + b, 0));
+
+var disposer = autorun(() => console.log(sum.get()));
+// prints '6'
+numbers.push(4);
+// prints '10'
+
+disposer();
+numbers.push(5);
+// won't print anything, nor is `sum` re-evaluated
 ```
 
 autorun은 두번째 인자로 option 객체를 받을 수 있습니다. `delay`, `name`, `onError`, `scheduler`
@@ -609,12 +625,12 @@ async function() {
 reaction(() => data, (data, reaction) => { sideEffect }, options?)
 ```
 
-- 관측대상을 추적할수 있는 컨트롤을 보다 정밀제어가 가능한 autorun 의 변형이다.
-- 2 개의 function 을 인자로 받는다. 하나는 data function 으로 추적당하고 data 를 리턴한다. 이 리턴된 값은 두번째 인자로 넘겨지는 것으로 사용된다.
-- autorun 과는 달리 side effect 는 생성과 동시에 실행되지 않고 첫번째 인자인 data 표현식이 처음으로 새로운 값으로 리턴되었을때 실행된다. side effect 가 실행되는 동안 side effect 내에서 접근 가능한 observables 들은 tracked 되지 않는다.
-- reaction 의 return 값으로는 disposer function 이 리턴된다.
-- 두번째 인자로 넘겨지는 함수는 effect function 은 2 개의 인자를 받는다. 첫번째 인자는 data function 에서 리턴되는 값이고, 두번째 인자는 현재 반응하는 reaction 이다. 이것은 실행되는 동안에 이 reaction 을 dispose 하는 용도로 사용될 수 있다.
-- side effect 는 data expression 에서 accessed 한 데이터에만 반응한다. 이 data 표현식은 사실 effect 에서 사용되는 data 보다 적을 수 있다. 또한 side effect 는 오직 data expression 에 의해 변경되는 data 가 리턴되었을때 반응한다. 다시말해, reaction 은 side effect 에서 필요한것을 생산하도록 요구하는 것이다.
+- 관측대상을 추적할수 있는 컨트롤을 보다 정밀제어가 가능한 autorun 의 변형입니다.
+- 2 개의 function 을 인자로 받는다. 하나는 data function 으로 추적당하고 data 를 리턴한다. 이 리턴된 값은 두번째 인자로 넘겨지는 것으로 사용됩니다.
+- autorun 과는 달리 side effect 는 생성과 동시에 실행되지 않고 첫번째 인자인 data 표현식이 처음으로 새로운 값으로 리턴되었을때 실행된다. side effect 가 실행되는 동안 side effect 내에서 접근 가능한 observables 들은 tracked 되지 않습니다.
+- reaction 의 return 값으로는 disposer function 이 리턴됩니다.
+- 두번째 인자로 넘겨지는 함수는 effect function 은 2 개의 인자를 받는다. 첫번째 인자는 data function 에서 리턴되는 값이고, 두번째 인자는 현재 반응하는 reaction 이다. 이것은 실행되는 동안에 이 reaction 을 dispose 하는 용도로 사용될 수 있습니다.
+- side effect 는 data expression 에서 accessed 한 데이터에만 반응한다. 이 data 표현식은 사실 effect 에서 사용되는 data 보다 적을 수 있다. 또한 side effect 는 오직 data expression 에 의해 변경되는 data 가 리턴되었을때 반응한다. 다시말해, reaction 은 side effect 에서 필요한것을 생산하도록 요구하는 것입니다.
 
 ### example
 
@@ -945,14 +961,25 @@ action(name, fn)
 @action.bound classMethod() {}
 ```
 
-- Action 은 state 를 변화시키는 모든것들이다.
-- Action 은 인자로 함수를 받아서 같은 함수이지만 `transaction`, `untracked`, `allowStateChagnes`. 로 감싸진 함수를 반환한다. 사실 transaction 은 자동으로 적용된다.
-- action 은 변화들을 한다발로 묶는다. 그리고나서 computed value 와 reaction 들에게 가장 마지막 action 이 끝난 후에 통지한다. 이렇게 하면 action 이 끝날때 까지 action 실행 중에 나머지 application 은 중간값 또는 아직 끝나지 않은 값은 확인할 수가 없다.
+- Action 은 state 를 변화시키는 모든것들입니다.
+- Action 은 인자로 함수를 받아서 같은 함수이지만 `transaction`, `untracked`, `allowStateChagnes`. 로 감싸진 함수를 반환한다. 사실 transaction 은 자동으로 적용됩니다.
+- action 은 변화들을 한다발로 묶는다. 그리고나서 computed value 와 reaction 들에게 가장 마지막 action 이 끝난 후에 통지한다. 이렇게 하면 action 이 끝날때 까지 action 실행 중에 나머지 application 은 중간값 또는 아직 끝나지 않은 값은 확인할 수가 없습니다.
 - observable 을 변경하는 모든 함수 또는 side effects 를 만드는 함수에는 (@)action 을 사용하는게 좋습니다.
-- @action 데코레이터를 사용하는 setter 는 지원하지 않습니다. 하지만 computed 프로퍼티의 setter 들은 자동으로 action 이 된다.
+- @action 데코레이터를 사용하는 setter 는 지원하지 않습니다. 하지만 computed 프로퍼티의 setter 들은 자동으로 action 이 됩니다.
 - MobX config 에서 state 변화를 반드시 action 을 사용하도록 config 한다면 action 은 필수 적으로 사용되어져야 합니다. (enforceActions 옵션)
-- action decoreator / function 들은 javascript 의 기본적인 binding 룰을 따르게 됩니다. 그러나 `action.bound` 는 자동으로 action 에 대상 객체에 대한 this 를 bind 한다. action 과 다르게 (@)action.bound 는 name 파라미터를 받지 않는다. 대신 action.bound 를 적용하는 프로퍼티 이름에 기반으로 한다. action.bound 와 arrow 함수는 함께 사용하지 말자.
+- action decoreator / function 들은 javascript 의 기본적인 binding 룰을 따르게 됩니다. 그러나 `action.bound` 는 자동으로 action 에 대상 객체에 대한 this 를 bind 한다. action 과 다르게 (@)action.bound 는 name 파라미터를 받지 않는다. 대신 action.bound 를 적용하는 프로퍼티 이름에 기반으로 한다. action.bound 와 arrow 함수는 함께 사용하지 말아야 합니다.
 - `runInAction(name?, thunk)` 는 간단한 유틸리티 이다. 이것은 code block 을 받고 익명의 action 을 실행한다. 이것은 즉석에서 액션을 생성하고 실행하는데 유용하다. 예를 들면 비동기적인 절차 안에서 사용하는 예가 있겠다. 간단하게 말해서 `runInaction(f)`은 `action(f)()` 과 같다.
+
+### action 의 4가지 컨셉
+
+- 액션은 명시적으로나 은연중에 실행될 수 있다.
+- Mobx는 은연중에 state를 바꾸는 사고를 피하기 위해서 제약을 둘 수 있습니다.
+- state를 변화시키고 결과적으로 reaction을 이끕니다.
+- Mobx는 모든 파생물은 동기적으로 동작합니다. ( 한번에 2번의 action, 즉 2개의 state를 한번에 바꾸면 state 바꿀때마다 파생물을 계산한다. 그래서 2번의 계산이 이뤄진다. )
+- transaction을 사용하면서 변화에 대해서 그룹을 지을 수 있다.
+- 이때, transaction은 잊어도 된다 왜냐하면 action에서 자동적으로 그것을 적용해 주기 때문이다.
+- 액션은 이름을 가질수 있다. Mobx dev tool에서 보여줄 수 있다.
+- strict 모드를 사용하면 state의 변화를 정의된 영역 안에서만 수정할 수 있게 해준다.
 
 ## async action & flow
 
