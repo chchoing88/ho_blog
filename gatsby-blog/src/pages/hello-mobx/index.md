@@ -112,9 +112,11 @@ observable(value)
 @observable classProperty = value
 ```
 
-- Observable 이라는건 "MobX! 이 값을 추적해줘, 그러면 observer 들을 업데이트 시킬수 있다."
+- Observable 이라는건 "MobX! 이 값을 추적해줘, 그러면 당신은 observer 들을 업데이트 시킬수 있습니다."
 - RxJs 에서도 Observable 을 사용하고 있는데 여기서 느낌을 말하자면 동기적이든 비동기적이든 값을 던지는 함수라고 생각하고, 만약 이 값에 흥미가 있다면 observer를 등록해서 받아 볼 수 있습니다. [참조글](https://netbasal.com/javascript-observables-under-the-hood-2423f760584)
-- Observable values 의 값으로는 js 의 원시타입, 참조, 일반객체 , 클래스 인스턴스, array 그리고 map 이 될수 있다.
+- Observable values 의 값으로는 js 의 원시타입, 참조, 일반객체 , 클래스 인스턴스, array 그리고 map 이 될수 있습니다.
+- 리턴 값으로는 observable 한 객체가 리턴됩니다. 
+- 리턴된 객체를 observer에서 참조 하고 있다면 리턴된 객체의 변화를 추적할 수가 있습니다. 
 
 다음 변환 규칙이 적용되지만 *modifiers*를 이용해서 세부 조정을 할 수 있다. 여기서 _modifiers_ 란 observable 프로퍼티들의 동작방식을 정의 하는데 사용되는 부분이다. ( ex. observable.deep, observable.ref)
 
@@ -1157,6 +1159,175 @@ class Store {
 - react 는 render 를 호출하는 방법은 2 가지가 있다. setState() 메서드와 forceUpdate() 이다. 여기서 forceUpdate() 메서드를 사용하게 되면 자식 컴포넌트들이 다 다시 render 가 된다.
 - react 에서 render 를 막을수 있는 방법은 shouldComponentUpdate 와 pure component 방법이 있겠다. 여기서 pure component 는 얕은 비교를 통해서 render 를 할지 안할지를 결정한다.
 - react-mobx 는 forceUpdate 메서드를 가지고 화면을 갱신하게 된다. 이때 문제는 불필요한 자식들까지 렌더링이 된다는 것이다. 이때 shouldComponentUpdate 를 오버라이딩 해놓고 얕은 비교를 통해서 업뎃을 할지 안할지를 결정한다. 따라서 prop 에 data 를 넘길때 observable 한 값을 넘기기 보다는 observable 을 포함한 변하지 않은 객체를 넘기는 것이 효율적이다.
+
+### example 
+
+```javascript 
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import { observable, action, computed, configure } from "mobx";
+import { observer, Provider, inject } from "mobx-react"; // MobX 에서 사용하는 Provider
+import DevTools from "mobx-react-devtools";
+
+configure({ enforceActions: "observed" }); // action 밖에서 state를 변경하는걸 막아준다.
+
+const APPID = "등록해서 쓰세욥"
+const temps = observable([]);
+let index = 0;
+
+class Temperature {
+  id = index++;
+  @observable unit = "C";
+  @observable temperatureCelsius = 25;
+  @observable location = "Amsterdam, NL";
+  @observable loading = true;
+  @observable fetchError = false;
+  // constructor(degrees, unit) {
+  //   this.setTemperatureAndUnit(degrees, unit);
+  // }
+  constructor(location) {
+    this.location = location;
+    this.fetch();
+  }
+
+  @action fetch() {
+    window
+      .fetch(
+        `https://api.openweathermap.org/data/2.5/weather?appid=${APPID}&q=${
+          this.location
+        }`
+      )
+      .then(res => res.json(), action(err => (this.fetchError = true)))
+      .then(
+        action(json => {
+          console.log(json);
+          this.temperatureCelsius = json.main.temp - 273.15;
+          this.loading = false;
+        })
+      );
+  }
+  @computed get temperatureKelvin() {
+    console.log("계산 Kelvin");
+    return this.temperatureCelsius * (9 / 5) + 32;
+  }
+
+  @computed get temparatureFahrenheit() {
+    console.log("계산 Fahrenheit");
+    return this.temperatureCelsius + 273.15;
+  }
+
+  @computed get temperature() {
+    console.log("계산 temperature");
+    switch (this.unit) {
+      case "K":
+        return this.temperatureKelvin + "K";
+      case "F":
+        return this.temparatureFahrenheit + "F";
+      case "C":
+        return this.temperatureCelsius + "C";
+      default:
+        return this.temperatureCelsius + "C";
+    }
+  }
+
+  @action setUnit(newUnit) {
+    this.unit = newUnit;
+  }
+
+  @action setCelsius(degrees) {
+    this.temperatureCelsius = degrees;
+  }
+
+  @action("update temperature and unit")
+  setTemperatureAndUnit(degrees, unit) {
+    this.setCelsius(degrees);
+    this.setUnit(unit);
+  }
+
+  @action inc() {
+    this.setCelsius(this.temperatureCelsius + 1);
+  }
+}
+
+
+const App = inject(({temperatures}) => ({
+  temperatures
+}))(observer(({ temperatures }) => (
+  <ul>
+    <TemperatureInput />
+    {temperatures.map(t => (
+      <TView key={t.id} temperature={t} />
+    ))}
+    <DevTools />
+  </ul>
+)))
+
+@inject(({temperatures}) => ({
+  temperatures
+}))
+@observer
+class TemperatureInput extends Component {
+  @observable input = "";
+
+  render() {
+    return (
+      <li>
+        Destination:
+        <input onChange={this.onChange} value={this.input} />
+        <button onClick={this.onSubmit}>Add</button>
+      </li>
+    );
+  }
+
+  @action onChange = e => {
+    this.input = e.target.value;
+  };
+
+  @action onSubmit = e => {
+    this.props.temperatures.push(new Temperature(this.input));
+    this.input = "";
+  };
+}
+
+@observer
+class TView extends Component {
+  render() {
+    const t = this.props.temperature;
+    return t.fetchError ? (
+      "fetch 에러.. "
+    ) : (
+      <li onClick={this.onTemperatureClick}>
+        {t.location}: {t.loading ? "loading.." : t.temperature}
+      </li>
+    );
+  }
+
+  @action onTemperatureClick = () => {
+    this.props.temperature.inc();
+  };
+}
+
+ReactDOM.render(
+  <Provider temperatures={temps}>
+    <App />
+  </Provider>,
+  document.getElementById("root")
+);
+
+
+function isNice(t) {
+  return t.temperatureCelsius > 25
+}
+// 한번만 실행
+when(
+  () => temps.some(isNice),
+  () => {
+    const t = temps.find(isNice)
+    alert(`Book now!! ${t.location}`)
+  }
+)
+
+```
 
 ## 참조
 
