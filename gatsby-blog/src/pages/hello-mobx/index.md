@@ -1356,6 +1356,250 @@ when(
 
 ```
 
+## Defining data stroes
+
+Mobx를 다루며넛 Mendix에서 발견된 최고의 연습들을 이번 섹션에선 포함하고 있습니다. 이 섹션에서는 의견을 제시하는 것일 뿐 강제로 적용하라고 권유 하지 않습니다. Mobx와 React를 다루는 많은 방법 중 하나일 뿐입니다. 
+
+이 섹션에서는 기존 코드 기반 또는 기존 MVC 패턴에서 잘 작동하는 MobX를 사용하여 눈에 거슬리지 않게 작업하는 방법에 중점을 둡니다. store를 구조잡는데 다른 의견은 [mobx-state-tree](https://github.com/mobxjs/mobx-state-tree) 를 이용하는 방법입니다. 이는 구조적으로 공유되는 snapshot, action middlewares, JSON path 등의 멋진 기능들을 제공합니다. 
+
+
+### Store
+
+Store는 Flux 아키텍쳐에서 찾아볼수 있고 MVC 패턴에서 컨트롤러와 약간 비교될 수 있습니다. 스토어의 주된 역할은 _logic_ 과 _state_ 를 component에서 테스트 가능한 독립된 기능 단위로 이동하여 프론트엔드 및 백엔드 javascript 모두에서 사용하는 것입니다. 
+
+#### Store for user interface state
+
+대부분의 어플리케이션이 그렇듯 2개 이상의 store를 갖는게 이득입니다. 하나의 UI state 와 한개 이상의 domain state 입니다. 이 2가지를 분리 시켜놓는 이점은 domain state를 범용적으로 test하고 재사용할 수 있다는 점입니다. 그리고 다른 어플리케이션에서도 재사용할 수 있습니다. 반면 _ui-state-store_ 의 경우에는 대게 어플리케이션 따라 다릅니다. 하지만 대체적으로 심플합니다. 이 ui store에는 복잡한 로직을 가지고 있지 않고, UI에 대해 느슨하게 결합 된 수많은 정보를 저장합니다. 이것은 대부분의 응용 프로그램이 개발 프로세스 중에 UI 상태를 자주 변경하기 때문에 이상적입니다.
+
+UI stores 에서 찾아볼수 있는건 다음과 같습니다. 
+
+- 세션 정보
+- 어플리케이션이 얼마나 로딩 중인지에 대한 정보
+- backend에 저장할 필요 없는 정보
+- UI 전반적으로 영향을 미치는 정보
+  - Window 치수
+  - 접근성 정보
+  - 현재 언어
+  - 현재 활성화 된 테마
+- 관계 없는 다른 컴포넌트들에 영향을 즉시 미치는 User interface
+  - 현재 세션
+  - 툴바의 보여짐, 기타등등
+  - wizard의 상태
+  - 글로벌 overlay 의 상태
+
+이런 구성 요소들은 특별한 컴포넌트 내부에서 시작하는게 좋습니다. (예를 들면 툴바의 visibility 의 경우) 하지만, 곧 어플리케이션 이곳저곳에서 필요하다는걸 느끼게 됩니다. 이러한 순수하게 React를 사용했을때 처럼 정보를 컴포넌트 트리 상위로 전달하는 대신에 _ui-state-store_ 의 state 로 옮겨서 사용하는게 좋습니다. 
+
+isomorphic한 어플리케이션을 위해 모든 컴포넌트가 기대한 대로 렌더링 되기 위한 적절한 기본값을 지닌 store의 스텁구현(stub implementation)을 제공되길 원할 것입니다. 그러면 _ui-state-store_ 를 어플리케이션의 컴포넌트 트리에 props로 전달하거나 `mobx-react` 패키지에 있는 `Provier` 그리고 `inject`를 사용해서 전달 할 수 있습니다. 
+
+
+```javascript
+import {observable, computed, asStructure} from 'mobx';
+import jquery from 'jquery';
+
+export class UiState {
+    @observable language = "en_US";
+    @observable pendingRequestCount = 0;
+
+    // .struct makes sure observer won't be signaled unless the
+    // dimensions object changed in a deepEqual manner
+    @observable.struct windowDimensions = {
+        width: jquery(window).width(),
+        height: jquery(window).height()
+    };
+
+    constructor() {
+        jquery.resize(() => {
+            this.windowDimensions = getWindowDimensions();
+        });
+    }
+
+    @computed get appIsInSync() {
+        return this.pendingRequestCount === 0
+    }
+}
+```
+
+
+### Domain Stores
+
+어플리케이션은 하나 이상의 domain stores를 지니고 있을 것입니다. 이런 스토어들은 어플리케이션의 모든 data에 대해 저장합니다. Todo item, users, books, movies, orders, 이름짓는 모든것이 될 수 있습니다. 어플리케이션은 적어도 한개의 domain store를 가집니다.
+
+한개의 domain store는 어플리케이션의 한가지 컨셉을 책임집니다. 하지만 한가지 컨셉은 다양한 서브 타입들의 형태를 소유할 수 있습니다. 그리고 그것은 종종 (순환) 트리구조가 됩니다. 예를 들면: 한가지 제품에 대한 domain store와 여러 주문과 주문라인들에 대한 한가지 domian store가 있을 수 있습니다. 경험적으로 볼때 만약 두가지 항목사이가 포함관계(HAS-A: 합성과 집합)라면, 그것들은 전형적으로 같은 store에 있는게 좋습니다. 
+
+다음은 store의 책임에 관한 겁니다. 
+
+- 도메인 객체(domain objects)를 인스턴스화 합니다. 또한 해당 도메인 객체가 this(store 자신)을 알고 있는지도 확인하십시요.
+- 각 도메인 객체가 중복되지 않게 하나만 인스턴스화를 하게 만드십시요. 같은 유저나 order 또는 todo가 메모리에 두번 저장되게 두지 마십시요. 이 방법은 안전하게 참조를 사용할수 있는 방법이고 가장 최신의 레퍼런스를 확인 할 수 있는 방법입니다.
+- 백엔드 통합을 제공하십시오. 필요할 때 데이터를 저장하십시오.
+- 만약 백엔드에서 업데이트 데이터를 받는다면 존재하는 인스턴스를 업데이트 하십시요.
+- 독립적이고, 범용적인고, test가능한 어플리케이션의 컴포넌트를 제공하십시요.
+- 테스트가 가능한 store 인지 확인하고 server-side에서도 돌아갈 수 있는지 확인하십시요 아마 websocket/http request 를 분리 하게 될것입니다. 그래서 커뮤니케이션 하는 영역을 추상화 할 수 있습니다. 
+- store는 오직 하나만 인스턴스화 해야합니다. 
+
+#### Domain objects
+
+각 도메인 object는 자신의 class를 사용해서 표현해야 합니다. 해당 클래스는 비정규화 된 형식으로 데이터를 저장하는 것을 추천합니다. 클라이언트 측 애플리케이션 상태를 일종의 데이터베이스로 취급 할 필요는 없습니다.
+실제 참조, 순환 데이터 구조 그리고 인스턴스의 메서드는 Javascript의 매우 강한 컨셉입니다. Domin objects는 직접적으로 다른 스토어에 도메인 오브젝트를 참조 할 수 있습니다. 기억해야하는점은 우리의 액션과 뷰를 가능한 한 단순하게 유지하고, 참조를 관리하고, 가비지 수집을 집적 수행해야 할 수도 있습니다. 많은 Flux 아키텍처와 달리 MobX를 사용하면 데이터를 표준화 할 필요가 없으므로 비즈니스 규칙, 작업 및 사용자 인터페이스와 같이 응용 프로그램의 본질적으로 복잡한 부분을 훨씬 간단하게 구축 할 수 있습니다.
+
+
+도메인 objects는 모든 그들의 로직을 응용 프로그램에 적합한 로직이 속해있는 스토어에게 위임 할 수 있습니다. (ex. this.store.removeTodo(this)) 도메인 객체를 일반 객체로 표현할 수 있지만 클래스는 일반 객체에 비해 몇 가지 중요한 이점이 있습니다.
+
+- 클래스는 메서드를 지닐 수 있습니다. 이것은 도메인 개념을 독립형으로 사용하기가 더 쉬워지고 응용 프로그램에 필요한 상황 인식의 양이 줄어 들게 됩니다. 그냥 objects만 넘기십시요. store를 전달하거나 또는 액션들이 인스턴스의 메서드로만 사용할 수 있다면 이러한 액션들을 object에 적용될 수 있는지 없는지 파악하지 않아도 됩니다. 특히 큰 어플리케이션 환경에서는 그렇습니다.
+- 속성과 메소드의 가시성을 세밀하게 제어 할 수 있습니다.
+- 생성자 함수를 사용하여 생성된 개체는 관측 가능한 특성과 함수, 관측 불가능한 특성과 방법을 자유롭게 혼합할 수 있습니다.
+- 그것들은 쉽게 알아볼 수 있으며 엄격하게 타입을 확인할 수 있습니다.
+
+ 
+```javascript
+import {observable, autorun} from 'mobx';
+import uuid from 'node-uuid';
+
+export class TodoStore {
+    authorStore;
+    transportLayer;
+    @observable todos = [];
+    @observable isLoading = true;
+
+    constructor(transportLayer, authorStore) {
+        this.authorStore = authorStore; // Store that can resolve authors for us
+        this.transportLayer = transportLayer; // Thing that can make server requests for us
+        this.transportLayer.onReceiveTodoUpdate(updatedTodo => this.updateTodoFromServer(updatedTodo));
+        this.loadTodos();
+    }
+
+    /**
+     * Fetches all todos from the server
+     */
+    loadTodos() {
+        this.isLoading = true;
+        this.transportLayer.fetchTodos().then(fetchedTodos => {
+            fetchedTodos.forEach(json => this.updateTodoFromServer(json));
+            this.isLoading = false;
+        });
+    }
+
+    /**
+     * Update a todo with information from the server. Guarantees a todo
+     * only exists once. Might either construct a new todo, update an existing one,
+     * or remove a todo if it has been deleted on the server.
+     */
+    updateTodoFromServer(json) {
+        var todo = this.todos.find(todo => todo.id === json.id);
+        if (!todo) {
+            todo = new Todo(this, json.id);
+            this.todos.push(todo);
+        }
+        if (json.isDeleted) {
+            this.removeTodo(todo);
+        } else {
+            todo.updateFromJson(json);
+        }
+    }
+
+    /**
+     * Creates a fresh todo on the client and server
+     */
+    createTodo() {
+        var todo = new Todo(this);
+        this.todos.push(todo);
+        return todo;
+    }
+
+    /**
+     * A todo was somehow deleted, clean it from the client memory
+     */
+    removeTodo(todo) {
+        this.todos.splice(this.todos.indexOf(todo), 1);
+        todo.dispose();
+    }
+}
+
+export class Todo {
+
+    /**
+     * unique id of this todo, immutable.
+     */
+    id = null;
+
+    @observable completed = false;
+    @observable task = "";
+
+    /**
+     * reference to an Author object (from the authorStore)
+     */
+    @observable author = null;
+
+    store = null;
+
+    /**
+     * Indicates whether changes in this object
+     * should be submitted to the server
+     */
+    autoSave = true;
+
+    /**
+     * Disposer for the side effect that automatically
+     * stores this Todo, see @dispose.
+     */
+    saveHandler = null;
+
+    constructor(store, id=uuid.v4()) {
+        this.store = store;
+        this.id = id;
+
+        this.saveHandler = reaction(
+            // observe everything that is used in the JSON:
+            () => this.asJson,
+            // if autoSave is on, send json to server
+            (json) => {
+                if (this.autoSave) {
+                    this.store.transportLayer.saveTodo(json);
+                }
+            }
+        );
+    }
+
+    /**
+     * Remove this todo from the client and server
+     */
+    delete() {
+        this.store.transportLayer.deleteTodo(this.id);
+        this.store.removeTodo(this);
+    }
+
+    @computed get asJson() {
+        return {
+            id: this.id,
+            completed: this.completed,
+            task: this.task,
+            authorId: this.author ? this.author.id : null
+        };
+    }
+
+    /**
+     * Update this todo with information from the server
+     */
+    updateFromJson(json) {
+        // make sure our changes aren't sent back to the server
+        this.autoSave = false;
+        this.completed = json.completed;
+        this.task = json.task;
+        this.author = this.store.authorStore.resolveAuthor(json.authorId);
+        this.autoSave = true;
+    }
+
+    dispose() {
+        // clean up the observer
+        this.saveHandler();
+    }
+}
+
+```
 ## 참조
 
-[https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be](https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be
+- [https://mobx.js.org/](https://mobx.js.org/)
+- [https://velog.io/@velopert/MobX-1-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-9sjltans3p](https://velog.io/@velopert/MobX-1-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-9sjltans3p)
+- [https://velog.io/@velopert/- MobX-2-%EB%A6%AC%EC%95%A1%ED%8A%B8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%97%90%EC%84%9C-MobX-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-oejltas52z](https://velog.io/@velopert/- MobX-2-%EB%A6%AC%EC%95%A1%ED%8A%B8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%97%90%EC%84%9C-MobX-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-oejltas52z)
+- [https://velog.io/@velopert/MobX-3-%EC%8B%AC%ED%99%94%EC%A0%81%EC%9D%B8-%EC%82%AC%EC%9A%A9-%EB%B0%8F-%EC%B5%9C%EC%A0%81%ED%99%94-%EB%B0%A9%EB%B2%95-tnjltay61n](https://velog.io/@velopert/MobX-3-%EC%8B%AC%ED%99%94%EC%A0%81%EC%9D%B8-%EC%82%AC%EC%9A%A9-%EB%B0%8F-%EC%B5%9C%EC%A0%81%ED%99%94-%EB%B0%A9%EB%B2%95-tnjltay61n)
+- [https://egghead.io/lessons/react-sync-the-ui-with-the-app-state-using-mobx-observable-and-observer-in-react](https://egghead.io/lessons/react-sync-the-ui-with-the-app-state-using-mobx-observable-and-observer-in-react)
+- [https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be](https://www.youtube.com/watch?v=cXi_CmZuBgg&feature=youtu.be
