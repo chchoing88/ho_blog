@@ -3,6 +3,29 @@ title: sop와 cors 그리고 DNS Rebinding
 date: "2019-02-27T10:00:03.284Z"
 ---
 
+## cookie
+
+서버에서 `Set-Cookie` 라고 헤더에 셋팅을 하게 되면 브라우저는 해당 쿠키를 `key=value`로 저장하게 된다. 
+
+쿠키 중에는 2가지 쿠키가 존재한다.
+- 웹브라우저를 끄면 사라지는 휘발성 쿠키를 Session cookie.
+- 웹브라우저를 꺼도 사라지지 않는 쿠키를 Permanent 쿠키
+
+Permanent 쿠키를 셋팅할 때는 `key=value; [expire | Max-Age]` 라고 셋팅을 해준다. expire는 만료되다 라는 뜻이고 쿠키가 언제 죽을것인가 즉, 절대적인것 이다. 
+Max-Age는 현재 시점을 기준으로 상대적으로 얼마간 살아있을것인가 를 나타낸다. 예 `key=value; Max-Age=${60*60*24*30}` 30일 짜리 쿠키를 만드는 것이다.
+
+또한 쿠키 옵션 중에는 Secure, HttpOnly, path, domain 이 존재한다.
+
+- Secure는 웹브라우저와 웹서버가 `https`로 통신하는 경우만 웹브라우저가 쿠키를 서버로 전송하는 옵션이다. (`key=value; Secure`)
+- HttpOnly는 자바스크립트의 document.cookie를 이용해서 쿠키에 접속하는 것을 막는 옵션이다. 웹브라우저와 통신할 때만 전송되는 쿠키 이다. 쿠키를 훔쳐가는 행위를 막기 위한 방법이다. (`key=value; HttpOnly`)
+
+path와 domina 옵션은 쿠키의 유효범위를 정의하는 옵션이다.
+어떤 특정 디렉토리에서만 쿠키가 활성화 되도록 하고 싶을때 path 라는 옵션을 지정한다. `key=value; path=/cookie` path라는 옵션을 주어서 어떤 디렉토리를 지정하면 디렉토리 하위에서만 쿠키가 활성화 되서 웹 브라우저는 거기에만 해당하는 쿠키를 서버에 전송한다.
+
+domain 옵션은 다음과 같이 사용하고  `key=value; Domain=o2.org` 어떤 서브 도메인에서도 살아있는 쿠키를 만드는 것이다. 즉, `test.o2.org` 에서는 해당 key, value 가 살아있는 것이다. 
+
+
+
 ## SOP
 
 영어로 하면 same-origin policy 우리말로 하면 동일 출처 원칙 이라고 한다. 
@@ -293,6 +316,5 @@ Same-origin Policy의 기법을 우회할수 있는 방법중 하나로 XMLHttpR
 - [https://www.netsparker.com/whitepaper-same-origin-policy/#SameOriginPolicyinDetail](https://www.netsparker.com/whitepaper-same-origin-policy/#SameOriginPolicyinDetail)
 - [https://blog.gypsyengineer.com/en/security/examples-of-dns-rebinding-attacks.html](https://blog.gypsyengineer.com/en/security/examples-of-dns-rebinding-attacks.html)
 - [https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/](https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/)
-
-
+- [https://opentutorials.org/course/3387/21744](https://opentutorials.org/course/3387/21744)
 
