@@ -586,8 +586,6 @@ date: "2018-03-29T10:00:03.284Z"
 
       - flow경우 하나의 타입을 다른곳으로 전달할 때 original type을 잃어버린다. 그래서 구체적인 타입을 덜 구체적인 타입으로 전달할때 flow 는 "forget" 된다. 그것은 한때 구체적이였던 것이다.
     
-
-
       ```javascript
       function identity<T>(val: T): T{
         retur val
@@ -595,8 +593,6 @@ date: "2018-03-29T10:00:03.284Z"
 
       let foo: 'foo' = 'foo'; // works
       // identity 호출할때 구체적인 string이 전잘 됬지만 호출 이후에 original type을 잃어버림.. 그래서 작동할 수 있다.
-
-
       let bar: 'bar' = identity('bar'); // works
       ```
 
@@ -636,7 +632,6 @@ date: "2018-03-29T10:00:03.284Z"
       let item1: Item<number> = {prop: 42}
       let item2: Item = {prop: 42}  // error
       ```
-
 
       - interface 버젼
 
