@@ -432,7 +432,7 @@ export function useState<S>(
 
 `useReducer()` 함수는 간단하게 이렇게 작성될 수 있다. [useReducer](https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L346)
 
-함수형 컴포넌트가 실행되고 나면 현재 fiber랑 해당 fiber에 hook을 전역으로 준비해둔다. 그리고 나서 `useState`를 호출이 되면 내부적으로 `useReduce` 함수가 실행이 되고 이 안에서 필요한 `hook` 을 만들어내거나 참조하게 된다. 그리고 나서 hook의 state와 dispatch를 리턴하고 나면 함수형 컴포넌트가 끝날쯤에 `finishHooks` 해당되는 hook의 첫번쨰 참조값을 해당 fiber에 연결해두고 전역변수 들을 정리한다. 
+함수형 컴포넌트가 실행되고 나면 현재 fiber랑 해당 fiber에 hook을 전역으로 준비해둔다. 그리고 나서 `useState`를 호출이 되면 내부적으로 `useReduce` 함수가 실행이 되고 이 안에서 필요한 `hook` 을 만들어내거나 참조하게 된다. 그리고 나서 hook의 state와 dispatch를 리턴하고 나면 함수형 컴포넌트가 끝날쯤에 `finishHooks`을 호출 해당되는 hook의 첫번째 참조값을 해당 fiber의 memoizedState에 연결해두고 전역변수 들을 정리한다. 
 
 아래 함수에서 `useState`호출시 `useReducer`를 호출 후 리턴 배열이 리턴이 되는데 이때 `dispatch`가 `dispatchAction` 함수의 binding 된 함수이다. 이때 바인딩 되는 인자들은 현재 렌더링 될 fiber 를 가지고 있게 되는데 그렇다면 우리가 `dispatch` 함수를 액션을 넣어서 호출 할 때마다 어떤 fiber 와 연관되어있는지 알게 되는 것이다. 그래서 해당 fiber 에서부터 reconcile 을 하는거 같다.
 
