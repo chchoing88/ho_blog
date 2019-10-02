@@ -169,7 +169,7 @@ React 는 각 element 에 대한 fiber 를 생성하고 그들의 elements 의 �
 
 첫번째 렌더링 이후에 React 는 UI 렌더링에 필요한 어플리케이션의 state 를 반영한 fiber 트리를 갖게 된다. 이 트리는 대게 **current**라고 불리운다. ( 한번 그려진 녀석들을 반영한 트리를 current 라고 함 ). React 가 current 를 tree 를 update 시작하면 그것은 **workInProgress** 트리 라고 불리운다. 이것은 스크린에 뿌려지게 될 미래의 state 를 반영합니다.
 
-모든 작업은 `workInProgress` 트리의 fiber 에서 수행됩니다. React 가 `current` 트리를 통과함에 따라 기존의 각 fiber 노드에 대해 `workInProgress` 트리를 구성하는 alternate 노드를 만듭니다. 이 노드는 `render` 메서드에서 리턴된 React element 에서 나온 data 를 사용해서 만들게 됩니다. 업데이트가 처리되고 모든 관련 작업이 완료되면, React 는 스크린에 뿌려질 alternate 트리를 가지고 있을 것입니다. 이 `workInProgress` 트리가 render 되고나면 그것은 다시 `current` 트리가 됩니다.
+모든 작업은 `workInProgress` 트리의 fiber 에서 수행됩니다. React 가 `current` 트리를 살펴보면서 기존의 각 fiber 노드에 대해 `workInProgress` 트리를 구성하는 alternate(대체) 노드를 만듭니다. 이 노드는 `render` 메서드에서 리턴된 React element 에서 나온 data 를 사용해서 만들게 됩니다. 업데이트가 처리되고 모든 관련 작업이 완료되면, React 는 스크린에 뿌려질 alternate 트리를 가지고 있을 것입니다. 이 `workInProgress` 트리가 render 되고나면 그것은 다시 `current` 트리가 됩니다.
 
 React 코어의 원리중 하나는 일관성입니다. [여기참조](https://overreacted.io/ko/react-as-a-ui-runtime/). React 는 항상 DOM 을 한번에 update 합니다. 부분적인 결과는 표시되지 않습니다. `workInProgress`트리는 사용자에게 표시되지 않는 "초안"으로 사용되며, 그래서 React 는 맨 먼저 모든 컴포넌트들을 처리한 뒤에 그것들의 변화를 스크린에 반영할 수 있습니다. 여기 그러한 함수 중 하나의 시그니처 입니다.
 
@@ -178,7 +178,7 @@ React 코어의 원리중 하나는 일관성입니다. [여기참조](https://o
 function updateHostComponent(current, workInProgress, renderExpirationTime) {...}
 ```
 
-각 fiber 노드는 **alternate** 필드의 다른 트리에서 해당 fiber node 의 참조를 보유 하고 있습니다. `current` 트리의 노드는 `workInProgress` 트리의 노드를 가리키고 그 반대의 경우도 마찬가지입니다.
+각 fiber 노드는 **alternate** 필드에 다른 트리에 있는 해당 fiber node에 대응하는 참조값을 보유 하고 있습니다. `current` 트리의 노드는 `workInProgress` 트리의 노드를 가리키고 그 반대의 경우도 마찬가지입니다.
 
 ### Side-effects
 
@@ -186,7 +186,7 @@ function updateHostComponent(current, workInProgress, renderExpirationTime) {...
 
 > 이전에 데이터 가져 오기, 구독 또는 수동으로 React 구성 요소에서 **DOM 을 변경**했을 것입니다. 우리는 이 작업들을 "side effect" 또는 짧게 "effect" 라고 불렀습니다. 왜냐하면 그것들은 다른 컴포넌트에 영향을 미칠수 있고 렌더링 동안에 수행 할 수 없기 때문입니다.
 
-대부분의 state 및 props 업데이트가 side-effects 을 초래하는 방법을 확인할 수 있습니다. effects 를 적용하는 것이 일종의 작업의 타입이기 때문에 fiber 노드는 업데이트 외에도 효과를 추적하는 편리한 메커니즘입니다. 각 fiber 노드는 그것과 연관된 effects 를 가질 수 있습니다. 그것들을 effectTag 필드에 인코딩됩니다.
+대부분의 state 및 props 업데이트가 side-effects 을 일으키는 방법을 확인할 수 있습니다. effects 를 적용하는 것이 일종의 작업의 타입이기 때문에 fiber 노드는 업데이트 외에도 효과를 추적하는 편리한 메커니즘입니다. 각 fiber 노드는 그것과 연관된 effects 를 가질 수 있습니다. 그것들을 effectTag 필드에 인코딩됩니다.
 
 따라서 Fiber 의 effects 는 기본적으로 업데이트가 처리 된 후 인스턴스에 대해 수행해야하는 [작업](https://github.com/facebook/react/blob/b87aabdfe1b7461e7331abb3601d9e6bb27544bc/packages/shared/ReactSideEffectTags.js?source=post_page---------------------------)을 정의합니다. host component 들 (DOM 요소)의 경우 작업은 요소 추가, 업데이트 또는 제거로 구성됩니다. 클래스 컴포넌트의 경우 React 는 ref 를 업데이트하고 `componentDidMount` 및 `componentDidUpdate` 라이프 사이클 메소드를 호출해야 할 수 있습니다. 다른 유형의 fiber 들에 해당하는 다른 effects 도 있습니다.
 
@@ -196,7 +196,7 @@ React 프로세스는 업데이트를 신속하게 처리하고 몇 가지 흥�
 
 이 리스트의 목표는 DOM 업데이트 또는 이와 관련된 다른 effects 가있는 노드를 표시하는 것입니다. 이 목록은 `finishedWork` 트리의 하위 집합이며 `current` 및 `workInProgress` 트리에서 사용되는 `child` 속성 대신 `nextEffect` 속성을 사용하여 연결됩니다.
 
-Dan Abramov 는 effects list 에 대한 비유를 제시했습니다. 그는 크리스마스 트리에 모든 effectful 한 노드를 묶어놓은 "크리스마스 불빛"이 감겨져있는 것으로 생각하는 것을 좋아합니다. 이것을 시각화하기 위해 강조 표시된 노드가 할 일이있는 다음과 같은 fiber 노드 트리를 상상해 봅시다. 예를 들어, 업데이트로 인해 `c2`가 DOM 에 삽입되고, `d2`와 `c1`은 속성을 변경하고, `b2`는 라이프 사이클 메소드를 실행합니다. 이 effect list 는 React 가 나중에 다른 노드를 건너 뛸 수 있도록 그들을 연결합니다 :
+Dan Abramov 는 effects list 에 대한 비유를 제시했습니다. 그는 크리스마스 트리에 모든 effectful 한 노드를 묶어놓은 "크리스마스 불빛"이 감겨져있는 것으로 생각하는 것을 좋아합니다. 이것을 시각화하기 위해 강조 표시된 노드가 할 일이있는 다음과 같은 fiber 노드 트리를 상상해 봅시다. 예를 들어, 우리의 업데이트로 인해 `c2`가 DOM 에 삽입되고, `d2`와 `c1`이 속성을 변경하고, `b2`는 라이프 사이클 메소드를 실행합니다. 이 effect list 는 React 가 나중에 다른 노드를 건너 뛸 수 있도록 그들을 연결합니다 :
 
 ![updateFiberTree](./updateFiberTree.png)
 

@@ -15,7 +15,7 @@ date: "2019-07-30T10:00:03.284Z"
 
 ![https://miro.medium.com/max/684/1*R-oovJm4IQBLDjZy6DvbBg.png](https://miro.medium.com/max/684/1*R-oovJm4IQBLDjZy6DvbBg.png)
 
-우선, React 의 범위 내에서 후크가 호출 되도록하는 메커니즘을 살펴 보겠습니다. 오른쪽 컨텍스트에서 호출되지 않으면 후크가 의미가 없다는 것을 알 수 있기 때문입니다.
+우선, 올바른 컨텍스트에서 호출되지 않으면 후크가 의미가 없다는 것을 알았을 것이므로 React의 범위 내에서 후크가 호출되도록하는 메커니즘을 살펴 보겠습니다.
 
 ## The dispatcher
 
@@ -491,18 +491,18 @@ const ChildComponent = props => {
 
 이펙트 후크는 약간 다르게 동작하고 내가 설명하고 싶은 추가 로직 레이어를 가지고 있습니다. 다시 한 번, 구현에 들어가기 전에 effect hook의 프로퍼티들에 대해 염두에 두어야 할 사항이 있습니다.
 
-- hook은 렌더링 시간 동안 생성되지만 페인팅 후에 실행됩니다.
+- effect hooks는 렌더링 시간 동안 생성되지만 페인팅 후에 실행됩니다.
 - 그렇게되면, 그들은 다음 페인팅 직전에 파괴 될 것입니다.
-- 그들은 정의 순서대로 호출됩니다.
+- 그들은 정의된 순서대로 호출됩니다.
 
-_"페이팅"이라는 용어를 사용하고 "렌더링" 단어는 사용하하지 않았습니다. 이 두 가지가 다른데, 나는 최근의 [_React Conf_](https://conf.reactjs.org/?source=post_page---------------------------)에서 잘못된 용어를 사용하는 것을 많이 바왔다.! 공식 [_React docs_](https://reactjs.org/docs/hooks-reference.html?source=post_page---------------------------#useeffect) "렌더링이 화면에 적용 된 후"라고 말합니다. 이것은 "페인팅"과 비슷합니다. render 메서드는 파이버 노드를 생성하지만 아직 아무것도 그리지 않습니다 ._
+_"페이팅"이라는 용어를 사용하고 "렌더링" 단어는 사용하하지 않았습니다. 이 두 가지가 다른데, 나는 최근의 [_React Conf_](https://conf.reactjs.org/?source=post_page---------------------------)에서 잘못된 용어를 사용하는 것을 많이 바왔다.! 공식 [_React docs_](https://reactjs.org/docs/hooks-reference.html?source=post_page---------------------------#useeffect)에서 "페인팅"과 같은 말을 "렌더링이 화면에 적용 된 후"라고 말합니다. render 메서드는 파이버 노드를 생성하지만 아직 아무것도 그리지 않습니다 ._
 
-따라서 이러한 효과를 유지해야하는 추가 대기열이 있어야하며 페인팅 후에 처리해야합니다. 일반적으로 말하자면, fiber는 effect node들을 포함하는 대기열을 보유하고 있습니다. 각 effect는 다른 유형이므로 적절한 단계에서 다루어야합니다.
+따라서 이러한 효과를 유지해야하는 추가 대기열이 있어야하며 페인팅 후에 처리해야합니다. 일반적으로 말하자면, fiber는 effect node들을 포함하는 대기열을 보유하고 있습니다. 각 effect는 다른 유형이므로 적절한 단계에서 해결해야합니다.
 
 -   mutation이 일어나기 전에 `getSnapshotBeforeUpdate()` 인스턴스를 호출한다.  (see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L646)).
 -  all the host 삽입, 업데이트, 삭제 그리고 참조해제를 수행한다.  (see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L687)).
 - 모든 라이프 사이클 및 참조 콜백을 수행하십시오. 라이프 사이클은 별도의 실행으로 발생하므로 전체 트리에서 모든 배치, 업데이트 및 삭제가 이미 호출되었습니다. 이 실행은 또한 렌더러 관련 초기 효과를 트리거합니다. (see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L732)).
-- `useEffect()`  hook에 의해 스케쥴된 Effect - 구현에 기반한 "수동효과" 라고도 합니다. [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L779)  (어쩌면 우리는 React 커뮤니티에서이 용어를 사용해야 할까?).
+- `useEffect()`  hook에 의해 스케쥴된 Effect - 구현에 기반한 "passive effects" 라고도 합니다. [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L779)  (어쩌면 우리는 React 커뮤니티에서이 용어를 사용해야 할까?).
 
 hook effects에 관해서는 fiber의 `updateQueue` 라는 속성에 저장해야하며 각 효과 노드(effect node)는 다음 스키마를 가져야합니다 ((see  [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L477)):
 
