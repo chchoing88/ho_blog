@@ -308,7 +308,7 @@ state 업데이트들, 콜백함수들과 DOM update 들의 queue.
 
 #### memoizedState
 
-결과를 만드는데 사용된 fiber 의 State. 업데이트 처리 할 때 현재 화면에 렌더링 된 state 를 반영합니다.
+결과를 만드는데 사용된 fiber 의 State. 업데이트 처리 할 때 memoizedState는 현재 화면에 렌더링 된 state 를 반영합니다.
 
 #### memoizedProps
 
