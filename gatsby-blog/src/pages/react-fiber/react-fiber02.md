@@ -7,15 +7,15 @@ date: "2019-07-19T10:00:03.284Z"
 
 # Inside Fiber: in-depth overview of the new reconciliation algorithm in React
 
-React 는 유저인터페이스를 만들기 위한 라이브러리 이다. React 의 코어는 component 의 state 변화를 추적하고 해당 state 를 화면에 갱신해주는 것이다. 우리는 React 안에서 이러한 프로세스를 **reconciliation** 으로 알고있다.
+React 는 유저인터페이스를 만들기 위한 라이브러리 입니다. React 의 코어는 component 의 state 변화를 추적하고 해당 state 를 화면에 갱신해주는 것입니다. 우리는 React 안에서 이러한 프로세스를 **reconciliation** 으로 알고있습니다.
 
-우리가 setState 메서드를 호출하고 프레임워크가 state 또는 props 가 변했는지 체크하고 UI 에 그려진 component 를 다시 렌더링한다.
+우리는 setState 메서드를 호출하고 프레임워크가 state 또는 props 가 변했는지 체크하고 UI 에 그려진 component 를 다시 렌더링 합니다.
 
-React 의 문서는 React 엘리먼트, 라이프사이클 메서드 그리고 render 메서드 그리고 children 컴포넌트에 적용된 diffing 알고리즘 역활에 대해 좋은 설명을 제공하고 있습니다. render 메서드를 통해 리턴된 immutable 한 React elements 트리들이 공통적으로 "vitual DOM" 으로 알고있다. 이 용어는 초기에 사람들에게 React 을 설명하는 데 도움이되었습니다. 하지만 그것은 혼란을 야기하기도합니다. 그리고 React 문서 어디에도 사용하지 않습니다.
+React 의 문서는 React 엘리먼트, 라이프사이클 메서드 그리고 render 메서드 그리고 children 컴포넌트에 적용된 diffing 알고리즘 역활에 대해 좋은 설명을 제공하고 있습니다. render 메서드를 통해 리턴된 immutable 한 React elements 트리들이 공통적으로 "vitual DOM" 으로 알고있습니다. 이 용어는 초기에 사람들에게 React 을 설명하는 데 도움이되었습니다. 하지만 그것은 혼란을 야기하기도합니다. 그리고 React 문서 어디에도 사용하지 않습니다.
 
 이 글에서는 "vitual DOM"을 React element 들의 트리 라고 부르겠습니다.
 
-게다가 React element 들의 트리, 프레임워크에서는 state 를 유지하는 용도로 항상 내부 instance 들의 트리를 가지고 있습니다.(components, DOM nodes, 기타등등..)
+React element 들의 트리외에도 프레임워크 에는 state 를 유지하는 용도로 항상 내부 instance 들의 트리를 가지고 있습니다.(components, DOM nodes, 기타등등..)
 16 버전부터는 React 가 내부 인스턴스 트리와 Fiber 라는 코드 이름을 관리하는 알고리즘을 새로운 구현 했습니다.
 
 ## Setting the background
@@ -24,7 +24,7 @@ React 의 문서는 React 엘리먼트, 라이프사이클 메서드 그리고 r
 
 ![button-example01.gif](./button-example01.gif)
 
-그리고 여기 구현이 있다.
+그리고 여기 구현된 코드가 있습니다.
 
 ```javascript
 class ClickCounter extends React.Component {
@@ -51,18 +51,18 @@ class ClickCounter extends React.Component {
 }
 ```
 
-[여기서](https://stackblitz.com/edit/react-t4rdmh?source=post_page---------------------------) 동작해볼 수 있다. 보는것과 같이 render 메서드에서 2 개의 child elements 인 `button` 과 `span` 을 반환하는 간단한 component 이다.
-`button` 을 클릭하자마자 component 의 state 는 내부 handler 에 의해 업데이트가 된다. 그 결과로 text 가 span element 에 업데이트가 된다.
+[여기서](https://stackblitz.com/edit/react-t4rdmh?source=post_page---------------------------) 동작해볼 수 있습니다. 보는것과 같이 render 메서드에서 2 개의 child elements 인 `button` 과 `span` 을 반환하는 간단한 component 입니다.
+`button` 을 클릭하자마자 component 의 state 는 내부 handler 에 의해 업데이트가 됩니다. 그 결과로 text 가 span element 에 업데이트가 됩니다.
 
-React 는 `reconciliation` 동안 다양한 수행을 한다. 예를 들면 첫 렌더링 과 state 가 update 동안 높은 수준의 React 수행 작업이 있다.
+React 는 `reconciliation` 동안 다양한 수행을 합니다. 예를 들면 첫 렌더링 과 state 가 update 동안 높은 수준의 React 수행 작업이 있습니다.
 
-* ClickCounter 의 state 안 있는 count 프로퍼티가 업데이트가 된다.
-* ClickCounter 의 children 과 그것들의 props 들을 비교, 탐색한다.
-* span element 위해 props 를 update 한다.
+* ClickCounter 의 state 안 있는 count 프로퍼티가 업데이트가 됩니다.
+* ClickCounter 의 children 과 그것들의 props 들을 비교, 탐색합니다.
+* span element 위해 props 를 update 합니다.
 
 라이프 사이클 메소드를 호출하거나 refs 를 업데이트하는 것과 같은 `reconciliation` 중에 수행되는 다른 작업이 있습니다.
-이런 모든 작업들은 Fiber 아키텍쳐에서 일괄적으로 "work" 라고 부른다. 이런 work 타입은 대게 React `element` 의 타입과 관계가 있다. 예를 들면 class component 는 React 가 instance 를 만들게 해주어야 한다. 반면에 함수 컴포넌트 들의 경우에는 그렇지 않아도 된다. 알다싶이 React 안에는 여러 종류의 `element` 들이 있다. 예를 들어, class 컴포넌트 , 함수 컴포넌트, host 컴포넌트 (DOM nodes) , 포탈 등등. 이런 React 타입은 `createElement` 함수의 첫번째 매개변수에 의해 정의 됩니다.
-이 함수는 `render` 메서드안에서 `element` 를 생성하기 위해 사용된다.
+이런 모든 작업들은 Fiber 아키텍쳐에서 일괄적으로 "work" 라고 부릅니다. 이런 work 타입은 대게 React `element` 의 타입과 관계가 있습니다. 예를 들면 class component 는 React 가 instance 를 만들게 해주어야 합니다. 반면에 함수 컴포넌트 들의 경우에는 그렇지 않아도 됩니다. 알다시피 React 안에는 여러 종류의 `element` 들이 있습니다. 예를 들어, class 컴포넌트 , 함수 컴포넌트, host 컴포넌트 (DOM nodes) , 포탈 등등. 이런 React 타입은 `createElement` 함수의 첫번째 매개변수에 의해 정의 됩니다.
+이 함수는 `render` 메서드안에서 `element` 를 생성하기 위해 사용됩니다.
 
 활동의 탐구와 주요 fiber 알고리즘을 탐구하기 전에 먼저 React 에서 내부적으로 사용하는 데이터 구조에 익숙해 지도록합시다.
 
@@ -329,19 +329,20 @@ React 가 어떤 아이템이 변경되었는지, list 에서 추가되었거나
 
 React 는 **렌더링**과 **커밋**의 두 가지 주요 단계로 작업을 수행합니다.
 
-첫 번째 렌더링 단계에서 React 는 `setState` 또는 `React.render`를 통해 예약 된 구성 요소에 업데이트를 적용하고 UI 에서 업데이트해야 하는 항목을 파악합니다.
+첫 번째 `렌더링` 단계에서 React 는 `setState` 또는 `React.render`를 통해 예약 된 구성 요소에 업데이트를 적용하고 UI 에서 업데이트해야 하는 항목을 파악합니다.
 
 초기 렌더링 인 경우 React 는 `render` 메소드에서 반환 된 각 요소에 대해 새 fiber 노드를 만듭니다. 다음 업데이트에서는 기존 React 요소의 fiber 가 다시 사용되고 업데이트됩니다.
 
-**단계의 결과는 side-effects 으로 표시된 fiber 노드의 트리입니다.** effects 는 다음 `커밋` 단계에서 수행해야하는 작업을 설명합니다.
+**단계의 결과는 side-effects 마크를 가진 fiber 노드의 트리입니다.** 이 effects 는 다음 `커밋` 단계에서 수행해야하는 작업을 설명합니다.
 
-이 `커밋` 단계에서 React 는 effects 로 표시된 fiber 트리를 가져 와서 인스턴스에 적용합니다. effects 목록을 검토하고 사용자가 볼 수있는 DOM 업데이트 및 기타 변경 사항을 수행합니다.
+이 `커밋` 단계에서 React 는 effects 로 표시된 fiber 트리를 가져 와서 인스턴스에 적용합니다. effects 목록을 검토하면서 사용자가 볼 수있는 DOM 업데이트 및 기타 변경 사항을 수행합니다.
 
 **첫 번째 `렌더링` 단계에서 작업을 비동기 적으로 수행 할 수 있다는 것을 이해하는 것이 중요합니다.**
 
 React 는 사용 가능한 시간에 따라 하나 이상의 fiber 노드를 처리 할 수 있습니다. 그런 다음 작업을 숨기고 일부 이벤트에 양보합니다. 그런 다음 중단 된 부분부터 계속됩니다.
 
-그러나 때로는 완료된 작업을 무시하고 처음부터 다시 시작해야 할 수도 있습니다. 이러한 일시 중지는 이 단계에서 수행 한 작업으로 인해 DOM 업데이트와 같은 사용자가 볼 수있는 변경 사항이 발생하지 않음으로 인해 가능합니다. **반대로 다음 커밋 단계는 항상 동기식입니다.**
+그러나 때로는 완료된 작업을 무시하고 처음부터 다시 시작해야 할 수도 있습니다. 이러한 일시 중지는 이 단계에서 수행 한 작업으로 인해 DOM 업데이트와 같은 사용자가 볼 수있는 변경 사항이 발생하지 않음으로 인해 가능합니다. 
+**반대로 다음 커밋 단계는 항상 동기식입니다.**
 
 이는 이 단계에서 수행 된 작업이 사용자에게 표시되는 변경 사항 (예 : DOM 업데이트.) 그렇기 때문에 React 가 단일 패스로 이를 수행해야합니다.
 
