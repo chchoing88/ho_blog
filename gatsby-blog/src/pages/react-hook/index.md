@@ -333,3 +333,9 @@ App = MyReact.render(Component)
 ### Conclusion
 
 이 시점에서 우리는 가능한 한 많이 hook 을 작성해봤습니다. [하나의 라이너로 useRef 를 구현](https://www.reddit.com/r/reactjs/comments/aufijk/useref_is_basically_usestatecurrent_initialvalue_0/)하거나 [렌더링 함수가 실제로 JSX 를 사용하여 DOM 에 마운트하거나](https://www.npmjs.com/package/vdom) 또는 28 줄의 React Hooks 복제본에서 생략 한 기타 중요한 세부 사항을 만들 수 있습니다. 그러나 상황에 따라 클로저를 사용하여 경험을 쌓고 React Hooks 가 작동하는 방식을 설명하는 유용한 정신 모델을 얻었기를 바랍니다.
+
+
+## 정리 
+
+지금까지 내가 알았던 훅은 `original A => originA = A; A = function() { console.log('내가하고싶은거...'); originA()}` 이런 식으로 해당 작업을 직접 건드려서 훅을 만드는 것이였다. 
+하지만 그러나 라이브리러나 어떤 시스템에서 해당 함수를 직접 건드리라고 시키겠는가 꼭 필요하다면 사용자로 하여금 훅을 등록시키는 방법을 통해서 내부적으로 호출해주는 방식을 만들 것 같다. 예로 git hook 도 등록 할 수 있는 훅들을 안내해주고 사용자로 하여금 등록하게 만든다. 

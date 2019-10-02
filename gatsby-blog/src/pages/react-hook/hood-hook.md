@@ -1,5 +1,5 @@
 ---
-title: Under the hood of React Hooks (작성중)
+title: Under the hood of React Hooks 
 date: "2019-07-30T10:00:03.284Z"
 ---
 
@@ -72,7 +72,9 @@ ReactCurrentOwner.currentDispatcher = null
 
 dispatcher는 `resolveDispatcher()` 함수를 사용하여 각각의 모든 후크 호출에서 resolve됩니다. 앞에서 말했듯이, React 의 렌더링주기 밖에서는 의미가 없어야하고, React 는 경고 메시지를 출력해야합니다 : _"후크는 함수 구성 요소의 본체 내부에서만 호출 할 수 있습니다"_ (see [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react/src/ReactHooks.js?source=post_page---------------------------#L17)).
 
-Dispatcher 실행을 간단하게 표현하면 아래와 같다.
+Dispatcher 실행을 간단하게 표현하면 아래와 같습니다.
+
+매 `renderRoot` 에서만 `currentDispatcher` 가 할당되며 render가 모두 끝나면 `currentDispatcher` 을 null 처리 해서 외부 에서 `useXXX`를 호출 했을시 error 가 나게 했다.
 
 ```javascript
 let currentDispatcher
@@ -126,10 +128,10 @@ export function useState<S>(initialState: (() => S) | S) {
 
 ## The hooks queue
 
-React 뒤에서, hooks는 호출 순서로 함께 연결된 노드로 표시됩니다. 후크는 단순히 만들어지고 혼자 남겨지는 것이 아니기 때문에 그렇게 표현됩니다. 그들은 그들이 있는 그대로가 될 수 있도록 하는 메커니즘을 가지고 있다. 후크(hook)에는 구현에 뛰어 들기 전에 염두해야 할 필요한 몇 가지 프로퍼티들 있습니다.
+React 뒤에서, hooks는 호출 순서로 함께 연결된 노드로 표시됩니다. 후크는 단순히 생성된 다음 혼자 남겨지는 것이 아니기 때문에 그렇게 표현됩니다. 그들은 그들이 있는 그대로가 될 수 있도록 하는 메커니즘을 가지고 있다. 후크(hook)에는 구현에 뛰어 들기 전에 염두해야 할 필요한 몇 가지 프로퍼티들 있습니다.
 
-* 초기 상태값은 초기 렌더링시에 생성됩니다.
-* 그것의 상태는 즉시 업데이트 할 수 있습니다.
+* hook의 초기 상태값은 초기 렌더링시에 생성됩니다.
+* hook의 상태는 즉시 업데이트 할 수 있습니다.
 * React 는 다음번 렌더링에서 hook 의 상태를 기억할 것입니다.
 * React 는 호출 순서에 따라 올바른 상태를 제공합니다.
 * React 는 이 hook 이 어떤 fiber 에 속하는지 알 수 있습니다.
@@ -151,6 +153,15 @@ React 뒤에서, hooks는 호출 순서로 함께 연결된 노드로 표시됩�
 // React state - the new way
 {
   memoizedState: 'foo',
+  baseUpdate: {
+    expirationTime: '만료시간',
+    action: '업뎃에 필요한 액션',
+    next: '다음 업뎃?'
+  },
+  queue: {
+    last: '마지막에 업데이트 했던 작업',
+    dispatch: ''
+  },
   next: {
     memoizedState: 'bar',
     next: {
@@ -167,6 +178,27 @@ React 뒤에서, hooks는 호출 순서로 함께 연결된 노드로 표시됩�
 단일 훅 노드의 스키마는 [implementation](https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L243).에서 볼 수 있습니다.
 
 ```javascript
+type Update<A> = {
+  expirationTime: ExpirationTime,
+  action: A,
+  next: Update<A> | null,
+};
+
+type UpdateQueue<A> = {
+  last: Update<A> | null,
+  dispatch: any,
+};
+
+export type Hook = {
+  memoizedState: any,
+
+  baseState: any,
+  baseUpdate: Update<any> | null,
+  queue: UpdateQueue<any> | null,
+
+  next: Hook | null,
+};
+
 // ReactFiberHooks.js
 function createHook(): Hook {
   return {
@@ -183,37 +215,69 @@ function createHook(): Hook {
 
 훅에는 몇 가지 추가 속성이 있지만 훅의 작동 방식을 이해하는 열쇠는 `memoizedState` 와 `next` 내에 있습니다. 나머지 프로퍼티들은 `useReducer()` 훅에 의해 특별히 사용되어 `디스패치 된 액션(dispatched actions)`과 `기본 상태들(base states)`를 캐싱하므로 다양한 경우를 대비하여 reduction process가 반복 될 수 있습니다 :
 
-* `baseState` - reducer 에 주어질 상태 객체.
-* `baseUpdate` -`baseState`를 생성 한 가장 최근의 dispatch 된 액션입니다.
+* `baseState` - reducer 에 주어진 상태 객체.
+* `baseUpdate` -`baseState`를 생성 한 가장 최근의 dispatch 된 액션입니다. (ex. [state, setState] = useState(0); setState(액션))
 * `queue` - dispatch 된 액션의 대기열(queue), reducer 를 통해 처리되길 기다리는 액션들이다.
 
+각 함수형 `fiber`마다 memoizedState field 에 `hook`을 지니고 있다.
+
 ```javascript
+
+// Hooks are stored as a linked list on the fiber's memoizedState field. The
+// current hook list is the list that belongs to the current fiber. The
+// work-in-progress hook list is a new list that will be added to the
+// work-in-progress fiber.
+let firstCurrentHook: Hook | null = null;
+let currentHook: Hook | null = null;
+let firstWorkInProgressHook: Hook | null = null;
+let workInProgressHook: Hook | null = null;
+
 // https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L367
 export function useReducer<S, A>(
   reducer: (S, A) => S,
   initialState: S,
   initialAction: A | void | null,): [S, Dispatch<A>] {
-  // ...
-  do {
-    // Process this render phase update. We don't have to check the
-    // priority because it will always be the same as the current
-    // render's.
-    const action = update.action
-    newState = reducer(newState, action)
-    update = update.next
-  } while (update !== null)
   
-  workInProgressHook.memoizedState = newState;
+  currentlyRenderingFiber = resolveCurrentlyRenderingFiber();
+  workInProgressHook = createWorkInProgressHook();
+  let queue: UpdateQueue<A> | null = (workInProgressHook.queue: any);
+  // .. 생략..
 
-  return [newState, dispatch];
+  // 업데이트 시
+  // // 재 렌더시 (isReRender) - workInProgressHook에 next가 존재할 경우 
+  const dispatch: Dispatch<A> = (queue.dispatch: any);
+  // 재 렌더가 아닐 경우
+
+
+  // 첫 렌더시 
+  workInProgressHook.memoizedState = workInProgressHook.baseState = initialState;
+  queue = workInProgressHook.queue = {
+    last: null,
+    dispatch: null,
+  };
+  const dispatch: Dispatch<A> = (queue.dispatch = (dispatchAction.bind(
+    null,
+    currentlyRenderingFiber,
+    queue,
+  ): any)); // action 만 나중에 받게끔 dispatch를 bind 시킴.
+  return [workInProgressHook.memoizedState, dispatch];
+
 }
+
+
+
+// useState에서 사용하는 reducer에는 basicStateReducer 사용
+function basicStateReducer(state, action) {
+  return typeof action === 'function' ? action(state) : action
+}
+
 ```
 
 > 여기서 reducer 는 action 과 payload state 를 받아서 새로운 state 를 반환하는 순수함수라 할 수 있겠다. baseUpdate 는 액션이라고 보면 될것이다.
 
 불행하게도 거의 모든 경우를 재현 할 수 없었기 때문에 reducer hook 을 잘 이해할 수 없었습니다. 그래서 정교하게 느껴지지 않을 것입니다. 나는 단지 reducer 구현이 너무 일관성이 없기 때문에 [implementation](https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js?source=post_page---------------------------#L380) 에서 구현 자체의 주석 중 하나조차도 "(이것이) 원하는 의미론이 맞는지 확실치 않다(TODO: Not sure if this is the desired semantics, but it's what we do for gDSFP. I can't remember why.)" 라고 말합니다. 그래서 어떻게 확신해야합니까?!
 
-따라서 후크로 돌아가서, 각각의 모든 컴포넌트 호출 이전에,  [`prepareHooks()`](https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js#L123)라는 이름의 함수가 호출됩니다. **여기서 current fiber 와 hooks 큐(대기열) 안에 있는 그것의 첫 번째 후크 노드는 전역 변수에 저장됩니다. 이런 방식으로, 우리가 후크 함수 (`useXXX ()`)를 호출 할 때마다 어떤 컨텍스트에서 실행되는지를 알 수 있습니다.**
+후크로 돌아가서, 각각의 모든 컴포넌트 호출 이전에,  [`prepareHooks()`](https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js#L123)라는 이름의 함수가 호출됩니다. **이 함수안에서는 current fiber 와 hooks 큐(대기열) 안에 있는 그것의 첫 번째 hook 노드는 전역 변수에 저장됩니다. 이런 방식으로, 우리가 후크 함수 (`useXXX ()`)를 호출 할 때마다 어떤 컨텍스트에서 실행되는지를 알 수 있습니다.**
 
 > `prepareHooks()` 이 함수가 보이지 않는다. `prepareToUseHooks()` 이 함수인거 같다.
 
@@ -252,17 +316,24 @@ let currentHook: Hook | null = null
 
 // Source: https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js#L123
 // 2. 전역에 셋팅
-function prepareHooks(recentFiber: Fiber | null, workInProgressFiber: Fiber) {
-  currentlyRenderingFiber = workInProgressFiber // 현재 작업중인 Fiber
-  currentHook = recentFiber.memoizedState // 이미 render된 Fiber(current)의 memoizedState를 currentHook에 할당.
+function prepareHooks(current: Fiber | null,
+  workInProgress: Fiber,
+  nextRenderExpirationTime: ExpirationTime,) {
+     
+  renderExpirationTime = nextRenderExpirationTime;
+  currentlyRenderingFiber = workInProgress; // 현재 작업중인 Fiber
+  firstCurrentHook = current !== null ? current.memoizedState : null; // 이미 render된 Fiber(current)의 memoizedState를 firstCurrentHook 할당.
 }
 
 // Source: https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/react-reconciler/src/ReactFiberHooks.js:148
 function finishHooks() {
-  currentlyRenderingFiber.memoizedState = workInProgressHook
-  currentlyRenderingFiber = null
-  workInProgressHook = null
-  currentHook = null
+  currentlyRenderingFiber.memoizedState = firstWorkInProgressHook
+  
+  currentlyRenderingFiber = null;
+  firstCurrentHook = null;
+  currentHook = null;
+  firstWorkInProgressHook = null;
+  workInProgressHook = null;
 }
 
 // Source: https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js#L332
@@ -272,8 +343,12 @@ function resolveCurrentlyRenderingFiber() {
 }
 // Source: https://github.com/facebook/react/blob/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js#L267
 function createWorkInProgressHook() {
+  // workInProgressHook 가 존재하고 next가 존재하지 않으면 hook을 새로 만들어서 workInProgressHook = workInProgressHook.next = hook;
+  // workInProgressHook 가 존재하고 next가 존재하면 workInProgressHook = workInProgressHook.next;
+  // workInProgressHook 가 존재하지 않고 firstWorkInProgressHook가 존재하지 않으면 firstWorkInProgressHook = workInProgressHook;
+  // 기존 fiber에 등록된 훅이 있으면 그 훅을 복사해서 사용하고 그게 아니라면 새로운 훅을 생성한다. 
   workInProgressHook = currentHook ? cloneHook(currentHook) : createNewHook()
-  currentHook = currentHook.next
+  currentHook = currentHook !== null ? currentHook.next : null;
   return workInProgressHook
 }
 
