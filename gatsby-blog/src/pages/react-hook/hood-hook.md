@@ -388,6 +388,7 @@ const ParentComponent = () => {
   const childFiberRef = useRef()
 
   useEffect(() => {
+    // 자식이 mount 된 후에 실행된다.
     let hookNode = childFiberRef.current.memoizedState
 
     assert(hookNode.memoizedState, 'foo')
@@ -401,7 +402,7 @@ const ParentComponent = () => {
 }
 ```
 
-가장 일반적인 것부터 시작하여 개별적인 고리에 대해 더 구체적으로 이야기 해 봅시다.
+가장 일반적인 상태 후크부터 시작하여 개별 후크에 대해 더 구체적으로 설명하고 이야기하겠습니다.
 
 ## State hooks
 
