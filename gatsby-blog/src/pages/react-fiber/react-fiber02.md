@@ -1,6 +1,6 @@
 ---
 title: React Fiber part2
-date: "2019-07-19T10:00:03.284Z"
+date: '2019-07-19T10:00:03.284Z'
 ---
 
 [이글](https://medium.com/react-in-depth/inside-fiber-in-depth-overview-of-the-new-reconciliation-algorithm-in-react-e1c04700ef6e)을 번역 및 분석 한 글입니다. 잘못된 번역 및 생략된 번역이 있을 수 있습니다.
@@ -56,9 +56,9 @@ class ClickCounter extends React.Component {
 
 React 는 `reconciliation` 동안 다양한 수행을 합니다. 예를 들면 첫 렌더링 과 state 가 update 동안 높은 수준의 React 수행 작업이 있습니다.
 
-* ClickCounter 의 state 안 있는 count 프로퍼티가 업데이트가 됩니다.
-* ClickCounter 의 children 과 그것들의 props 들을 비교, 탐색합니다.
-* span element 위해 props 를 update 합니다.
+- ClickCounter 의 state 안 있는 count 프로퍼티가 업데이트가 됩니다.
+- ClickCounter 의 children 과 그것들의 props 들을 비교, 탐색합니다.
+- span element 위해 props 를 update 합니다.
 
 라이프 사이클 메소드를 호출하거나 refs 를 업데이트하는 것과 같은 `reconciliation` 중에 수행되는 다른 작업이 있습니다.
 이런 모든 작업들은 Fiber 아키텍쳐에서 일괄적으로 "work" 라고 부릅니다. 이런 work 타입은 대게 React `element` 의 타입과 관계가 있습니다. 예를 들면 class component 는 React 가 instance 를 만들게 해주어야 합니다. 반면에 함수 컴포넌트 들의 경우에는 그렇지 않아도 됩니다. 알다시피 React 안에는 여러 종류의 `element` 들이 있습니다. 예를 들어, class 컴포넌트 , 함수 컴포넌트, host 컴포넌트 (DOM nodes) , 포탈 등등. 이런 React 타입은 `createElement` 함수의 첫번째 매개변수에 의해 정의 됩니다.
@@ -71,7 +71,7 @@ React 는 `reconciliation` 동안 다양한 수행을 합니다. 예를 들면 �
 React 의 모든 컴포넌트들은 우리가 render 메서드에서 리턴되는 view 라고 불리우거나 또는 템플릿이라고 UI 표현을 가지고 있습니다. 여기 우리의 `ClickCounter` 컴포넌트를 위한 템플릿이 있습니다.
 
 ```html
-<button key="1" onClick={this.onClick}>Update counter</button>
+<button key="1" onClick="{this.onClick}">Update counter</button>
 <span key="2">{this.state.count}</span>
 ```
 
@@ -218,17 +218,15 @@ ReactDOM.render(React.createElement(ClickCounter), domContainer)
 
 React 는 각 컨테이너들에 대한 [fiber root](https://github.com/facebook/react/blob/0dc0ddc1ef5f90fe48b58f1a1ba753757961fc74/packages/react-reconciler/src/ReactFiberRoot.js?source=post_page---------------------------#L31) 객체를 만듭니다. DOM 요소에 대한 참조를 사용하여 액세스 할 수 있습니다.
 
-여기서 `fiber root`는 아마 `domContainer(ID #container)`를 가리키는 fiber 일 것이다.
-
 ```javascript
 // DOM 레퍼런스에 접근해서 fiberRoot에 접근 할 수있다.
 const fiberRoot = query('#container')._reactRootContainer._internalRoot
 ```
 
 이 fiber root 는 React 가 fiber tree 에 대한 참조를 보유하고있는 곳입니다. 그 fiber tree 참조 값은 fiber root 의 `current` 속성에 저장됩니다.
-여기서 `HostRoot`는 `ClickCounter` 가 될것이다.
 
 ```javascript
+// #container 의 Fiber node 이다.
 const hostRootFiberNode = fiberRoot.current
 ```
 
@@ -236,7 +234,7 @@ fiber 트리는 `HostRoot` 인 [특별한 타입](https://github.com/facebook/re
 이것은 `HostRoot`에서 `stateNode` 속성을 통해 `FiberRoot`로 연결되는 링크가 있습니다.
 
 ```javascript
-// fiberRoot.current === hostRootFiberNode
+// fiberRoot.current === hostRootFiberNode, #container 의 Fiber node
 // hostRootFiberNode.stateNode === fiberRoot
 fiberRoot.current.stateNode === fiberRoot // true
 ```
@@ -251,10 +249,11 @@ compInstance._reactInternalFiber
 ### Fiber node structure
 
 그렇다면 `ClickCounter` 컴포넌트에서 생성된 fiber nodes 의 구조를 살펴보자.
+이 fiber node에 `child`, `sibling`, `return` 속성을 지니고 있다.
 
 ```javascript
 {
-    stateNode: new ClickCounter,
+    stateNode: new ClickCounter, // 함수형 컴포넌트는 null이 들어간다.
     type: ClickCounter,
     alternate: null,
     key: null,
@@ -286,7 +285,7 @@ compInstance._reactInternalFiber
 }
 ```
 
-fiber node 에 꽤 많은 필드들이 있습니다. 여기서 이전 섹션에서 봤던 필드 `alternate`, `effetTag` 그리고 `nextEffects` 의 목적을 설명했었다. 그렇다면 나머지들은 왜 이것들이 필요한지 보자.
+fiber node 에 꽤 많은 필드들이 있습니다. 여기서 이전 섹션에서 봤던 필드 `alternate`, `effetTag` 그리고 `nextEffects` 의 목적을 설명했었다. 그렇다면 나머지들은 왜 이것들이 필요한지 봅시다.
 
 #### stateNode
 
@@ -299,7 +298,7 @@ fiber node 에 꽤 많은 필드들이 있습니다. 여기서 이전 섹션에�
 
 #### tag
 
-fiber 의 타입을 정의한다. 그것은 어떤 일을 해야하는지를 결정하기 위한 reconciliation 알고리즘으로 사용된다. 이전에 언급했듯이, 작업은 React element 의 타입에따라 달라집니다. 함수 [createFiberFromTypeAndProps](https://github.com/facebook/react/blob/769b1f270e1251d9dbdce0fcbd9e92e502d059b8/packages/react-reconciler/src/ReactFiber.js?source=post_page---------------------------#L414) React element 를 관련된 fiber 노드 타입과 매핑시켜준다.
+[fiber 의 타입](https://github.com/facebook/react/blob/769b1f270e1251d9dbdce0fcbd9e92e502d059b8/packages/shared/ReactWorkTags.js)을 정의한다. 그것은 어떤 일을 해야하는지를 결정하기 위한 reconciliation 알고리즘으로 사용된다. 이전에 언급했듯이, 작업은 React element 의 타입에따라 달라집니다. 함수 [createFiberFromTypeAndProps](https://github.com/facebook/react/blob/769b1f270e1251d9dbdce0fcbd9e92e502d059b8/packages/react-reconciler/src/ReactFiber.js?source=post_page---------------------------#L414) React element 를 관련된 fiber 노드 타입과 매핑시켜준다.
 우리 어플리케이션 안에서 `ClickCounter` 컴포넌트의 `tag` 프로퍼티는 `1` 이다. 이것은 `ClassComponent`를 뜻하고 `span` 엘리먼트의 `5`의 경우에는 `HostComponent`를 가리킨다.
 
 #### updateQueue
@@ -329,45 +328,45 @@ React 가 어떤 아이템이 변경되었는지, list 에서 추가되었거나
 
 React 는 **렌더링**과 **커밋**의 두 가지 주요 단계로 작업을 수행합니다.
 
-첫 번째 `렌더링` 단계에서 React 는 `setState` 또는 `React.render`를 통해 예약 된 구성 요소에 업데이트를 적용하고 UI 에서 업데이트해야 하는 항목을 파악합니다.
+첫 번째 `렌더링` 단계에서 React 는 `setState` 또는 `React.render`를 통해 예약 된 component들에 업데이트를 적용하고 UI 에서 업데이트해야 하는 항목을 파악합니다.
 
 초기 렌더링 인 경우 React 는 `render` 메소드에서 반환 된 각 요소에 대해 새 fiber 노드를 만듭니다. 다음 업데이트에서는 기존 React 요소의 fiber 가 다시 사용되고 업데이트됩니다.
 
 **단계의 결과는 side-effects 마크를 가진 fiber 노드의 트리입니다.** 이 effects 는 다음 `커밋` 단계에서 수행해야하는 작업을 설명합니다.
 
-이 `커밋` 단계에서 React 는 effects 로 표시된 fiber 트리를 가져 와서 인스턴스에 적용합니다. effects 목록을 검토하면서 사용자가 볼 수있는 DOM 업데이트 및 기타 변경 사항을 수행합니다.
+이 `커밋` 단계에서 React 는 effects 로 표시된 fiber 트리를 가져 와서 인스턴스에 적용합니다. effects 목록을 검토하면서 DOM 업데이트 및 사용자가 볼 수있는 기타 변경 사항을 수행합니다.
 
 **첫 번째 `렌더링` 단계에서 작업을 비동기 적으로 수행 할 수 있다는 것을 이해하는 것이 중요합니다.**
 
 React 는 사용 가능한 시간에 따라 하나 이상의 fiber 노드를 처리 할 수 있습니다. 그런 다음 작업을 숨기고 일부 이벤트에 양보합니다. 그런 다음 중단 된 부분부터 계속됩니다.
 
-그러나 때로는 완료된 작업을 무시하고 처음부터 다시 시작해야 할 수도 있습니다. 이러한 일시 중지는 이 단계에서 수행 한 작업으로 인해 DOM 업데이트와 같은 사용자가 볼 수있는 변경 사항이 발생하지 않음으로 인해 가능합니다. 
+그러나 때로는 완료된 작업을 무시하고 처음부터 다시 시작해야 할 수도 있습니다. 이러한 일시 중지는 이 단계에서 수행 한 작업으로 인해 DOM 업데이트와 같은 사용자가 볼 수있는 변경 사항이 발생하지 않음으로 인해 가능합니다.
 **반대로 다음 커밋 단계는 항상 동기식입니다.**
 
-이는 이 단계에서 수행 된 작업이 사용자에게 표시되는 변경 사항 (예 : DOM 업데이트.) 그렇기 때문에 React 가 단일 패스로 이를 수행해야합니다.
+이는 이 단계에서 수행 된 작업이 사용자에게 표시되는 변경 사항 (예 : DOM 업데이트.) 이기 때문에 React 가 단일 패스로 이를 수행해야합니다.
 
 라이프 사이클 메소드 호출은 React 가 수행하는 작업의 한 유형입니다.
 일부 메서드는 `렌더링` 단계에서 호출되고 다른 메서드는 `커밋` 단계에서 호출됩니다. 첫 번째 `렌더링` 단계를 수행 할 때 호출되는 라이프 사이클 목록은 다음과 같습니다.
 
-* [UNSAFE_]componentWillMount (deprecated)
-* [UNSAFE_]componentWillReceiveProps (deprecated)
-* getDerivedStateFromProps
-* shouldComponentUpdate
-* [UNSAFE_]componentWillUpdate (deprecated)
-* render
+- [UNSAFE_]componentWillMount (deprecated)
+- [UNSAFE_]componentWillReceiveProps (deprecated)
+- getDerivedStateFromProps
+- shouldComponentUpdate
+- [UNSAFE_]componentWillUpdate (deprecated)
+- render
 
 보는 것과 같이 `렌더링` 단계에서 실행되는 일부 몇몇 레거시 라이프 사이클 메서드는 버젼 16.3 에서 `UNSAFE`라고 표시됩니다. 그것들은 문서에서 레거시 라이프 사이클이라고 불리워집니다. 그것들은 미래에 16.x 에서 지원이 중단되며 UNSAFE 접두사가 없는 해당 항목은 17.0 에서 제거됩니다. 이 변경 사항과 제안 된 마이그레이션 경로에 대한 자세한 내용은 [여기](https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html?source=post_page---------------------------)를 참조하십시오.
 
-이 이유가 궁금 하신가요?
+이것에 대한 이유가 궁금하십니까?
 
-`렌더링` 단계에서는 DOM 업데이트와 같은 부작용이 발생하지 않으므로 React 는 구성 요소를 비동기 적으로 업데이트를 처리할 수 있음을 알았습니다. (잠재적으로 여러 스레드에서 업데이트를 처리 할 수도 있습니다.) 그러나 UNSAFE 로 표시된 라이프 사이클은 종종 오해되고 미묘하게 오용되었습니다. 개발자는 새로운 비동기 렌더링 방식에 문제를 일으킬 수있는 부작용이있는 코드를 이러한 메서드에 넣는 경향이 있었습니다. UNSAFE 접두사가 없는 항목만 제거되지만 곧 나오는 동시 모드 (선택 해제 할 수 있음)에 여전히 문제가 발생할 수 있습니다.
+`렌더링` 단계에서는 DOM 업데이트와 같은 부작용이 발생하지 않으므로 React 는 구성 요소를 비동기 적으로 업데이트를 처리할 수 있음을 알았습니다. (잠재적으로 여러 스레드에서 업데이트를 처리 할 수도 있습니다.) 그러나 `UNSAFE` 로 표시된 라이프 사이클은 종종 오해되고 미묘하게 오용되었습니다. 개발자는 새로운 비동기 렌더링 방식에 문제를 일으킬 수있는 부작용이있는 코드를 이러한 메서드에 넣는 경향이 있었습니다. UNSAFE 접두사가 없는 항목만 제거되지만 곧 나오는 동시 모드 (선택 해제 할 수 있음)에 여전히 문제가 발생할 수 있습니다.
 
 두 번째 `커밋 단계`에서 실행 된 라이프 사이클 메소드 목록은 다음과 같습니다.
 
-* getSnapshotBeforeUpdate
-* componentDidMount
-* componentDidUpdate
-* componentWillUnmount
+- getSnapshotBeforeUpdate
+- componentDidMount
+- componentDidUpdate
+- componentWillUnmount
 
 이러한 메소드는 동기적인 `커밋` 단계에서 실행되기 때문에 부작용이 포함되어 DOM 에 접할 수 있습니다.
 자 이제 우리는 tree 를 탐색하고 작업을 수행하는 데 사용되는 일반화 된 알고리즘을 살펴볼 배경을 가지고 있습니다.
@@ -394,10 +393,10 @@ function workLoop(isYieldy) {
 
 트리를 탐색하고 작업을 시작하거나 완료하는 데 사용되는 4 가지 주요 기능이 있습니다.
 
-* [performUnitOfWork](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L1056)
-* [beginWork](https://github.com/facebook/react/blob/cbbc2b6c4d0d8519145560bd8183ecde55168b12/packages/react-reconciler/src/ReactFiberBeginWork.js?source=post_page---------------------------#L1489)
-* [completeUnitOfWork](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L879)
-* [completeWork](https://github.com/facebook/react/blob/cbbc2b6c4d0d8519145560bd8183ecde55168b12/packages/react-reconciler/src/ReactFiberCompleteWork.js?source=post_page---------------------------#L532)
+- [performUnitOfWork](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L1056)
+- [beginWork](https://github.com/facebook/react/blob/cbbc2b6c4d0d8519145560bd8183ecde55168b12/packages/react-reconciler/src/ReactFiberBeginWork.js?source=post_page---------------------------#L1489)
+- [completeUnitOfWork](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js?source=post_page---------------------------#L879)
+- [completeWork](https://github.com/facebook/react/blob/cbbc2b6c4d0d8519145560bd8183ecde55168b12/packages/react-reconciler/src/ReactFiberCompleteWork.js?source=post_page---------------------------#L532)
 
 그들이 어떻게 사용되는지를 보여주기 위해 다음과 같은 fiber 트리 탐색 애니메이션을 살펴보십시오. 데모 용으로 이러한 함수의 단순화 된 구현을 사용했습니다. 각 기능은 fiber 노드를 처리하고 React 가 트리 아래로 가면서 현재 활성화 된 fiber 노드가 변경된 것을 볼 수 있습니다. 비디오에서 알고리즘이 한 브랜치에서 다른 브랜치로 어떻게 이동하는지 명확하게 볼 수 있습니다. parents 에 가기 전에 먼저 children 위한 일을 마칩니다.
 
@@ -410,6 +409,7 @@ function workLoop(isYieldy) {
 `performUnitOfWork`와 `beginWork`의 처음 두 함수를 살펴 보겠습니다.
 
 ```javascript
+// while 문에서 계속 반복하는 함수
 function performUnitOfWork(workInProgress) {
   // children에 대한 포인터 또는 null
   let next = beginWork(workInProgress)
@@ -447,10 +447,12 @@ function completeUnitOfWork(workInProgress) {
     if (siblingFiber !== null) {
       // If there is a sibling, return it
       // to perform work for this sibling
+      // 형제가 있으면 형제를 리턴한다.
       return siblingFiber
     } else if (returnFiber !== null) {
       // If there's no more work in this returnFiber,
       // continue the loop to complete the parent.
+      // 부모가 있으면 작업 트리를 부모로 할당해서 completeWork를 유도한다.
       workInProgress = returnFiber
       continue
     } else {
@@ -476,23 +478,23 @@ function completeWork(workInProgress) {
 
 React 가 이 단계에 이르면 2 개의 tree 와 effects list 가 있습니다. 첫 번째 tree 는 현재 화면에 렌더링 된 상태를 나타냅니다. 그런 다음 `렌더링` 단계 동안 만들어진 `alternate` 트리가 있습니다. 소스에서 `finishedWork` 또는 `workInProgress` 라고하며 화면에 반영 되어야하는 상태를 나타냅니다. 이 `alternate` 트리는 `child` 및 `sibling` 포인터를 통해 current 트리와 비슷하게 연결됩니다.
 
-그런 다음 effects list - `nextEffect` 포인터를 통해 연결된 `finishedWork` 트리의 노드 하위 집합입니다. effects list 은 `렌더링 단계(render phase)`를 실행 한 결과임을 기억하십시오. 전체 렌더링의 포인트는 삽입, 업데이트 또는 삭제해야 할 노드와 호출되는 라이프 사이클 메소드가 필요한 components 를 결정하는 것이 었습니다. 이것이 effects list 에서 우리에게 알려줍니다. **그리고 그것은 정확히 커밋 단계에서 반복되는 노드 집합입니다.**
+그런 다음 effects list - `nextEffect` 포인터를 통해 연결된 `finishedWork` 트리의 노드 하위 집합입니다. effects list 은 `렌더링 단계(render phase)`를 실행 한 결과임을 기억하십시오. 렌더링의 전체 포인트는 삽입, 업데이트 또는 삭제해야 할 노드와 어느 components가 라이프 사이클 메소드 호출이 필요한지를 결정하는 것이 었습니다. 이것이 effects list 에서 우리에게 알려줍니다. **그리고 그것은 정확히 커밋 단계에서 반복되는 노드 집합입니다.**
 
 > 디버깅을 위해 `current` 트리는 fiber 루트의 `current` 속성을 통해 액세스 할 수 있습니다. `finishedWork` 트리는 `current` 트리의 `HostFiber` 노드의 `alternate` 프로퍼티를 통해 엑세스 할 수 있습니다.
 
 커밋 단계에서 실행되는 주요 기능은 `commitRoot`입니다. 기본적으로 다음과 같은 작업을 수행합니다.
 
-* `Snapshot` effect 태그가 지정된 노드에서 `getSnapshotBeforeUpdate` 라이프 사이클 메소드를 호출합니다.
-* `Deletion` effect 태그가 지정된 노드에서 `componentWillUnmount` 라이프 사이클 메소드를 호출합니다.
-* 모든 DOM 삽입, 업데이트 및 삭제를 수행합니다.
-* 완성 된 `작업 트리(finishedWork)`를 현재로 설정합니다.
-* `Placement` effect 태그가 지정된 노드에서 `componentDidMount` 라이프 사이클 메소드 호출
-* `Update` effect 태그가 지정된 노드에서 `componentDidUpdate` 라이프 사이클 메서드를 호출합니다.
+- `Snapshot` effect 태그가 지정된 노드에서 `getSnapshotBeforeUpdate` 라이프 사이클 메소드를 호출합니다.
+- `Deletion` effect 태그가 지정된 노드에서 `componentWillUnmount` 라이프 사이클 메소드를 호출합니다.
+- 모든 DOM 삽입, 업데이트 및 삭제를 수행합니다.
+- 완성 된 `작업 트리(finishedWork)`를 현재로 설정합니다.
+- `Placement` effect 태그가 지정된 노드에서 `componentDidMount` 라이프 사이클 메소드 호출
+- `Update` effect 태그가 지정된 노드에서 `componentDidUpdate` 라이프 사이클 메서드를 호출합니다.
 
-pre-mutation 메소드인 `getSnapshotBeforeUpdate` 를 호출 한 후, React 는 트리 내의 모든 side-effects 커밋합니다. 두 번에 걸쳐 그것을 합니다. 첫 번째 단계는 모든 DOM (host) 삽입, 업데이트, 삭제 및 참조 해제를 수행합니다.
-그런 다음 React 는 `finishedWork` 트리를 `workInProgress` 트리를 `current` 트리로 표시하는 `FiberRoot` 에 지정합니다.
+pre-mutation 메소드인 `getSnapshotBeforeUpdate` 를 호출 한 후, React 는 트리 내의 모든 side-effects 커밋합니다. 두 단계에 걸쳐 `커밋`을 진행합니다. 첫 번째 단계는 모든 DOM (host) 삽입, 업데이트, 삭제 및 참조 해제를 수행합니다.
+그런 다음 React 는 `workInProgress` 트리를 `current` 트리로 표시하기 위해 `finishedWork` 트리를 `FiberRoot` 에 할당합니다.
 
-이 작업은 커밋 단계의 첫 번째 단계 이후에 수행되며, 따라서 이전 트리는 `componentWillUnmount` 중에는 current 이지만 두 번째 단계 이전에는 finished work 는 `componentDidMount / Update` 동안 current 상태가 됩니다.
+이 작업은 커밋 단계의 첫 번째 단계 이후에 완료되며, 따라서 `componentWillUnmount` 동안에는 이전 트리는 current 이지만 두 번째 단계 이전에는 finished work 트리가 `componentDidMount / Update` 동안 current 상태가 됩니다.
 두 번째 단계에서는 React 가 다른 모든 라이프 사이클 메소드 및 ref 콜백을 호출합니다. 이러한 메소드는 별도의 단계로 실행되므로 전체 트리에서 모든 배치, 업데이트 및 삭제는 이미 호출되었습니다.
 
 위에서 설명한 단계를 실행하는 함수의 요지는 다음과 같습니다.
@@ -518,7 +520,7 @@ function commitBeforeMutationLifecycles() {
     const effectTag = nextEffect.effectTag
     if (effectTag & Snapshot) {
       const current = nextEffect.alternate
-      commitBeforeMutationLifeCycles(current, nextEffect)
+      commitBeforeMutationLifeCycles(current, nextEffect) // C 대문자?
     }
     nextEffect = nextEffect.nextEffect
   }
