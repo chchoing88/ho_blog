@@ -51,8 +51,8 @@ class ClickCounter extends React.Component {
 }
 ```
 
-[여기서](https://stackblitz.com/edit/react-t4rdmh?source=post_page---------------------------) 동작해볼 수 있습니다. 보는것과 같이 render 메서드에서 2 개의 child elements 인 `button` 과 `span` 을 반환하는 간단한 component 입니다.
-`button` 을 클릭하자마자 component 의 state 는 내부 handler 에 의해 업데이트가 됩니다. 그 결과로 text 가 span element 에 업데이트가 됩니다.
+[여기서](https://stackblitz.com/edit/react-t4rdmh?source=post_page---------------------------) 동작해볼 수 있습니다. 보는것과 같이 `render` 메서드에서 2 개의 child elements 인 `button` 과 `span` 을 반환하는 간단한 component 입니다.
+`button` 을 클릭하자마자 component 의 state 는 내부 handler 에 의해 업데이트가 됩니다. 그 결과로 `span` elemen에 text 가 업데이트가 됩니다.
 
 React 는 `reconciliation` 동안 다양한 수행을 합니다. 예를 들면 첫 렌더링 과 state 가 update 동안 높은 수준의 React 수행 작업이 있습니다.
 
@@ -62,7 +62,7 @@ React 는 `reconciliation` 동안 다양한 수행을 합니다. 예를 들면 �
 
 라이프 사이클 메소드를 호출하거나 refs 를 업데이트하는 것과 같은 `reconciliation` 중에 수행되는 다른 작업이 있습니다.
 이런 모든 작업들은 Fiber 아키텍쳐에서 일괄적으로 "work" 라고 부릅니다. 이런 work 타입은 대게 React `element` 의 타입과 관계가 있습니다. 예를 들면 class component 는 React 가 instance 를 만들게 해주어야 합니다. 반면에 함수 컴포넌트 들의 경우에는 그렇지 않아도 됩니다. 알다시피 React 안에는 여러 종류의 `element` 들이 있습니다. 예를 들어, class 컴포넌트 , 함수 컴포넌트, host 컴포넌트 (DOM nodes) , 포탈 등등. 이런 React 타입은 `createElement` 함수의 첫번째 매개변수에 의해 정의 됩니다.
-이 함수는 `render` 메서드안에서 `element` 를 생성하기 위해 사용됩니다.
+이 `createElement` 함수는 `render` 메서드안에서 `element` 를 생성하기 위해 사용됩니다.
 
 활동의 탐구와 주요 fiber 알고리즘을 탐구하기 전에 먼저 React 에서 내부적으로 사용하는 데이터 구조에 익숙해 지도록합시다.
 
@@ -104,7 +104,7 @@ class ClickCounter {
 }
 ```
 
-render 메서드 안에서 React.createElement 를 호출하는 것은 2 개의 데이터 구조를 생성할 것입니다.
+`render` 메서드 안에서 `React.createElement` 를 호출하는 것은 2 개의 데이터 구조를 생성할 것입니다.
 
 ```javascript
 [
@@ -145,15 +145,15 @@ render 메서드 안에서 React.createElement 를 호출하는 것은 2 개의 
 
 ### Fiber nodes
 
-모든 render 메서드에서 리턴된 React element 들로 부터 나온 data 를 **reconciliation** 하는 동안에 fiber node 들의 트리들이 합쳐지게 됩니다. 그래서 모든 React element 들은 해당하는 fiber node 를 지니게 됩니다. React element 들과 다르게, fibers 은 매 render 마다 재 생성되지 않는다. 이것은 변할 수 있는 components 와 DOM 을 가지고 있는 data 구조이다.
+**reconciliation** 하는 동안에 render 메서드에서 리턴된 React element 들로 부터 나온 data를 fiber node 트리들에 합쳐지게 됩니다. 그래서 모든 React element 들은 해당하는 fiber node 를 지니게 됩니다. fibers 은 React element 들과 다르게 매 render 마다 재 생성되지 않습니다. 이것은 변할 수 있는 components 와 DOM 을 가지고 있는 data 구조입니다.
 
 우리는 이전에 React element 타입이 프레임워크의 다른 수행을 요한다고 했었다. 우리의 샘플 어플리케이션에서 `ClickCounter` 클래스 컴포넌트는 라이프 사이클 메서드 과 `render` 메서드를 호출한다. 반면에 `span` host 컴포넌트(DOM node)는 DOM 변화를 수행하게 됩니다. 따라서 각 React element 는 수행해야 할 작업을 설명하는 해당 타입에 맞게 Fiber node 로 변환됩니다.
 
-**Fiber 는 작업을 수행하는 작업, 즉 작업 단위를 나타내는 데이터 구조로 생각할 수 있습니다. Fiber 의 아키텍쳐 또한 작업을 추적, 스케쥴, 일지정지, 중단 할수 있는 편리한 방법을 제공합니다.**
+**Fiber 는 해야 할 작업을 나타내는 데이터 구조로 생각할 수 있습니다. 즉 작업 단위입니다. Fiber 의 아키텍쳐는 작업을 추적, 스케쥴, 일지정지, 중단 할수 있는 편리한 방법을 제공합니다.**
 
-첫 타임에 React element 가 fiber node 로 변환되면, React 는 element 부터 나온 data 를 [createFiberFromTypeAndProps](https://github.com/facebook/react/blob/769b1f270e1251d9dbdce0fcbd9e92e502d059b8/packages/react-reconciler/src/ReactFiber.js?source=post_page---------------------------#L414) 에서 사용해서 fiber 를 생성하게 됩니다.
+React element 가 fiber node 로 처음 변환되면, React 는 element 부터 나온 data 를 [createFiberFromTypeAndProps](https://github.com/facebook/react/blob/769b1f270e1251d9dbdce0fcbd9e92e502d059b8/packages/react-reconciler/src/ReactFiber.js?source=post_page---------------------------#L414) 에서 사용해서 fiber 를 생성하게 됩니다.
 
-순서대로 React 가 업데이트 진행중일때 fiber node 를 재사용하고 해당 React element 데이터를 사용해서 필요한 프로퍼티들만 업데이트 합니다.
+결과 업데이트에서 React는 fiber 노드를 재사용하고 해당 React element 의 데이터를 사용하여 필요한 프로퍼티들을 업데이트 합니다.
 React 는 또한 node 를 key props 를 기반으로 계층안에서 움직이거나 만약 관련 React element 가 render 메서드를 통해 더이상 리턴되지 않는다면 node 를 삭제할 필요가 있을것이다.
 
 > [ChildReconciler](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactChildFiber.js?source=post_page---------------------------#L239) 함수를 통해서 모든 활성화된 모든 리스트들과 React 동작을 위한 fiber nodes 들에 관련한 함수들을 확인할 수 있습니다.
@@ -162,7 +162,7 @@ React 는 각 element 에 대한 fiber 를 생성하고 그들의 elements 의 �
 
 ![fiber tree](./fiberNode01.png)
 
-모든 fiber 노드들은 linked list 로 연결이 되어있습니다. fiber node 에 child, sibling 그리고 return 이라는 프로퍼티를 사용해서 연결이 되어있습니다.
+모든 fiber 노드들은 linked list 로 연결이 되어있습니다. fiber node 에 `child`, `sibling` 그리고 `return` 이라는 프로퍼티를 사용해서 연결이 되어있습니다.
 왜 이런 방식으로 작업이 되었는지 좀 더 설명을 원한다면 다음 글을 먼저 읽어 보십시요 [The how and why on React’s usage of linked list in Fiber](https://medium.com/react-in-depth/the-how-and-why-on-reacts-usage-of-linked-list-in-fiber-67f1014d0eb7?source=post_page---------------------------)
 
 ### Current and work in progress trees
@@ -178,21 +178,21 @@ React 코어의 원리중 하나는 일관성입니다. [여기참조](https://o
 function updateHostComponent(current, workInProgress, renderExpirationTime) {...}
 ```
 
-각 fiber 노드는 **alternate** 필드에 다른 트리에 있는 해당 fiber node에 대응하는 참조값을 보유 하고 있습니다. `current` 트리의 노드는 `workInProgress` 트리의 노드를 가리키고 그 반대의 경우도 마찬가지입니다.
+각 fiber 노드는 **alternate** 필드에 있는 다른 트리로 부터 나온 해당 fiber node에 대응하는 fiber 참조값을 보유 하고 있습니다. `current` 트리의 노드는 `workInProgress` 트리의 노드를 가리키고 그 반대의 경우도 마찬가지입니다.
 
 ### Side-effects
 
 우리는 React 컴포넌트를 state 와 props 를 사용해서 UI 표현을 계산하는 함수라고 생각 할 수 있습니다. DOM 을 변경하거나 라이프 사이클 메소드를 호출하는 것과 같은 다른 모든 활동은 side-effect 또는 단순히 effect 로 간주되어야합니다. Effect 는 [문서](https://reactjs.org/docs/hooks-overview.html?source=post_page---------------------------#%EF%B8%8F-effect-hook)에도 언급되어 있습니다.
 
-> 이전에 데이터 가져 오기, 구독 또는 수동으로 React 구성 요소에서 **DOM 을 변경**했을 것입니다. 우리는 이 작업들을 "side effect" 또는 짧게 "effect" 라고 불렀습니다. 왜냐하면 그것들은 다른 컴포넌트에 영향을 미칠수 있고 렌더링 동안에 수행 할 수 없기 때문입니다.
+> 우리는 데이터 가져 오기, 구독 또는 수동으로 이전 React component 에서 나온 **DOM 을 변경** 했을 것입니다. 우리는 이 작업들을 "side effect" 또는 짧게 "effect" 라고 불렀습니다. 왜냐하면 그것들은 다른 컴포넌트에 영향을 미칠수 있고 렌더링 동안에 수행 할 수 없기 때문입니다.
 
 대부분의 state 및 props 업데이트가 side-effects 을 일으키는 방법을 확인할 수 있습니다. effects 를 적용하는 것이 일종의 작업의 타입이기 때문에 fiber 노드는 업데이트 외에도 효과를 추적하는 편리한 메커니즘입니다. 각 fiber 노드는 그것과 연관된 effects 를 가질 수 있습니다. 그것들을 effectTag 필드에 인코딩됩니다.
 
-따라서 Fiber 의 effects 는 기본적으로 업데이트가 처리 된 후 인스턴스에 대해 수행해야하는 [작업](https://github.com/facebook/react/blob/b87aabdfe1b7461e7331abb3601d9e6bb27544bc/packages/shared/ReactSideEffectTags.js?source=post_page---------------------------)을 정의합니다. host component 들 (DOM 요소)의 경우 작업은 요소 추가, 업데이트 또는 제거로 구성됩니다. 클래스 컴포넌트의 경우 React 는 ref 를 업데이트하고 `componentDidMount` 및 `componentDidUpdate` 라이프 사이클 메소드를 호출해야 할 수 있습니다. 다른 유형의 fiber 들에 해당하는 다른 effects 도 있습니다.
+따라서 Fiber 에 있는 effects 는 기본적으로 업데이트가 처리 된 후 인스턴스에 대해 수행해야하는 [작업](https://github.com/facebook/react/blob/b87aabdfe1b7461e7331abb3601d9e6bb27544bc/packages/shared/ReactSideEffectTags.js?source=post_page---------------------------)을 정의합니다. host component 들 (DOM 요소)의 경우 작업은 요소 추가, 업데이트 또는 제거로 구성됩니다. 클래스 컴포넌트의 경우 React 는 ref 를 업데이트하고 `componentDidMount` 및 `componentDidUpdate` 라이프 사이클 메소드를 호출해야 할 수 있습니다. 다른 유형의 fiber 들에 해당하는 다른 effects 도 있습니다.
 
 ### Effects list
 
-React 프로세스는 업데이트를 신속하게 처리하고 몇 가지 흥미로운 기술을 사용하여 그 수준의 성능을 달성합니다. **그 중 하나는 신속한 반복을 위해 효과가있는 fiber 노드의 선형 목록을 작성하는 것입니다.** 선형 목록 반복은 트리보다 훨씬 빠르며 side-effects 없는 노드에 시간을 할애 할 필요가 없습니다.
+React 프로세스는 업데이트를 신속하게 처리하고 몇 가지 흥미로운 기술을 사용하여 그 수준의 성능을 달성합니다. **그 중 하나는 신속한 반복을 위해 effect 가 있는 fiber 노드의 선형 목록을 작성하는 것입니다.** 선형 목록 반복은 트리보다 훨씬 빠르며 side-effects 없는 노드에 시간을 할애 할 필요가 없습니다.
 
 이 리스트의 목표는 DOM 업데이트 또는 이와 관련된 다른 effects 가있는 노드를 표시하는 것입니다. 이 목록은 `finishedWork` 트리의 하위 집합이며 `current` 및 `workInProgress` 트리에서 사용되는 `child` 속성 대신 `nextEffect` 속성을 사용하여 연결됩니다.
 
@@ -232,7 +232,7 @@ const fiberRoot = query('#container')._reactRootContainer._internalRoot
 const hostRootFiberNode = fiberRoot.current
 ```
 
-fiber 트리는 HostRoot 인 [특별한 타입](https://github.com/facebook/react/blob/cbbc2b6c4d0d8519145560bd8183ecde55168b12/packages/shared/ReactWorkTags.js?source=post_page---------------------------#L34)의 fiber 노드로 시작합니다. 그것은 내부적으로 생성이 되고 가장 최상위 컴포넌트의 부모 역할을 합니다.
+fiber 트리는 `HostRoot` 인 [특별한 타입](https://github.com/facebook/react/blob/cbbc2b6c4d0d8519145560bd8183ecde55168b12/packages/shared/ReactWorkTags.js?source=post_page---------------------------#L34)의 fiber 노드로 시작합니다. 그것은 내부적으로 생성이 되고 가장 최상위 컴포넌트의 부모 역할을 합니다.
 이것은 `HostRoot`에서 `stateNode` 속성을 통해 `FiberRoot`로 연결되는 링크가 있습니다.
 
 ```javascript

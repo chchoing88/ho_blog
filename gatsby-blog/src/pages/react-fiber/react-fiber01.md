@@ -1,6 +1,6 @@
 ---
 title: React Fiber part1
-date: "2019-07-18T10:00:03.284Z"
+date: '2019-07-18T10:00:03.284Z'
 ---
 
 [이글](https://medium.com/react-in-depth/the-how-and-why-on-reacts-usage-of-linked-list-in-fiber-67f1014d0eb7)을 번역 및 분석 한 글입니다. 잘못된 번역 및 생략된 번역이 있을 수 있습니다.
@@ -10,21 +10,31 @@ date: "2019-07-18T10:00:03.284Z"
 Fiber 의 아키텍처는 2 가지의 주요한 단계이 있다. reconcilation/render 와 commit 이다.
 소스코드 안에 있는 reconciliation 단계를 "render pahse" 라고 한다.
 
-이 단계에는 React 가 컴포넌트 트리를 탐색할때 이다.
+이 단계에는 React 가 컴포넌트 트리를 탐색하면서 다음과 같은 일을 한다.
 
-* updates state and props,
-* calls lifecycle hooks,
-* retrieves the children from the component,
-* compares them to the previous children,
-* and figures out the DOM updates that need to be performed.
+- updates state and props, (state 와 props를 업데이트)
+- calls lifecycle hooks, (라이프 사이클 훅 호출)
+- retrieves the children from the component, (컴포넌트 자식을 탐색한다.)
+- compares them to the previous children, (이전 자식들과 비교한다.)
+- and figures out the DOM updates that need to be performed. (그리고 DOM update가 필요한지 확인한다.)
 
-**이 모든 행동들을 Fiber 안에서 작동됩니다.**
+**이 모든 행동들을 Fiber 안에서 작업이라고 합니다.**
 
 수행해야 할 작업의 타입은 React Element 에 따라 다릅니다. 예를들면 클래스 컴포넌트는 인스턴스화 해야하지만 함수 컴포넌트는 그렇지 않습니다.
 
 흥미가 있다면 [이글](https://github.com/facebook/react/blob/340bfd9393e8173adca5380e6587e1ea1a23cefa/packages/shared/ReactWorkTags.js#L29-L28)를 읽어봐라 여기서 Fiber 의 작업 타겟의 타입들을 볼수 있다.
 
-리액트는 동기적으로 순회하고 각 컴포넌트에서 작업을 처리한다고 했을때 로직이 16ms 초 이상이 될 수 있다. 그로 인해 프레임이 망가져 시각적 효과가 끊길수 있다.
+```javascript
+export type WorkTag = 0 | 1 | 2 //....
+
+export const FunctionalComponent = 0
+export const ClassComponent = 2
+export const HostRoot = 5 // Root of a host tree. Could be nested inside another node.
+```
+
+> UI를 다룰 때 문제는 한 번에 너무 많은 작업이 실행되면 애니메이션이 프레임을 떨어 뜨릴 수 있다는 것입니다.
+
+리액트는 컴포넌트를 동기적으로 순회하면서 각 컴포넌트에서 작업을 처리한다고 했을때 어플리케이션 로직은 16ms 초 이상이 될 수 있다. 그로 인해 프레임이 망가져 시각적 효과가 끊길수 있다.
 
 그래서 여기선 `requestIdleCallback` 이라는 글로벌 함수를 사용할 것이다. 브라우저가 idle 기간에 함수를 호출하게끔 큐를 사용하는 함수이다.
 
@@ -34,9 +44,9 @@ requestIdleCallback(deadline => {
 })
 ```
 
-이 코드를 실행 했을 때, 크롬 로그에서 `49.9 false` 가 나왔다면 그것은 나에게 이렇게 말하는 것과 같다. `49.9ms` 동안 필요하면 뭐든 할수 있고 나는 할당 된 시간을 모두 다 사용하지 않았다.
+이 코드를 실행 했을 때, 크롬 로그에서 `49.9 false` 가 나왔다면 그것은 나에게 이렇게 말하는 것과 같다. 내가 필요한 작업이 무엇이든 할수 있는 `49.9ms` 가 있고 나는 할당 된 시간을 모두 다 사용하지 않았다.
 
-반대는 `deadline.didTimeout` 이 true 일 것이다. 시간 경과는 브라우저가 어떤 작업을 수행하자마자 바뀔 수 있으므로 항상 확인해야합니다.
+반대는 `deadline.didTimeout` 이 true 일 것이다. `timeRemaining`는 브라우저가 어떤 작업을 수행하자마자 바뀔 수 있으므로 항상 확인해야합니다.
 
 만약 우리가 모든 컴포넌트의 수행을 `performWork` 함수에 넣고 작업 스케쥴을 위해 `requestIdleCallback` 을 사용할 수 있다면 다음과 같은 코드가 될것이다.
 
@@ -52,7 +62,7 @@ requestIdleCallback(deadline => {
 })
 ```
 
-한 컴포넌트 작업을 수행한후 다음 컴포넌트 수행을 위한 참조값을 리턴할것이다.
+한 컴포넌트 작업을 수행한 후 다음 컴포넌트 수행을 위한 참조값을 리턴할것이다.
 우리는 모든 컴포넌트 트리의 절차를 동기적으로 수행할 수 없다. 이전 `reconciliation` 알고리즘 수행 처럼 그리고 그것의 문제를 앤드류는 이렇게 말하고 있습니다.
 
 > 이러한 API 를 사용하려면 우리는 증분 단위로 렌더링 작업을 나눠야 한다.
@@ -75,7 +85,7 @@ requestIdleCallback(deadline => {
 
 우리는 기사의 첫파트에 정의했었다. 리액트는 컴포넌트 트리를 reconciliation/render 단계동안 순회하고 몇몇 작업들을 수행한다. 이전에 동기적인 재귀 모델로 동작했던 reconciler 사용은 트리를 순회하기 위해서 빌트인된 stack 에 의존했었다.
 
-이것에 대해서 생각해보자. 각 재귀 호출이 frame 을 스택에 쌓게 되고 그것이 동기적이라는 것을 말이다.
+이것에 대해서 생각해보자. 각 재귀 호출이 frame 을 스택에 쌓게 되고 그것이 동기으로 동작한다는 것이다.
 
 다음과 같은 트리 구조가 있다고 가정해보자.
 
@@ -108,6 +118,7 @@ d2.render = () => []
 ### Recursive traversal
 
 재귀를 사용하는 방법을 보자.
+트리를 반복하는 주요 기능을 아래 구현에서 `walk` 라고합니다.
 
 ```javascript
 walk(a1)
@@ -141,32 +152,31 @@ a1, b1, b2, c1, d1, d2, b3, c2
 
 이 알고리즘을 수행하려면 우리는 3 가지 필드를 가진 데이터 구조가 필요합니다.
 
-* child — reference to the first child
-* sibling — reference to the first sibling
-* return — reference to the parent
+- child — reference to the first child
+- sibling — reference to the first sibling
+- return — reference to the parent
 
-React 의 새로운 reconciliation 알고리즘과 관련하여 이 필드가있는 데이터 구조를 Fiber 라고합니다. 후드 아래에서 해야 할 일의 대기열을 유지하는 것은 반응 요소의 표현입니다.
+React 의 새로운 reconciliation 알고리즘과 관련하여 이 필드가있는 데이터 구조를 Fiber 라고합니다. Fiber는 queue에 작업을 구성하고 있는 React Element를 대표하는 것입니다.
 
 다음 다이어그램은 링크드 리스트를 통해 연결된 개체의 계층 구조와 개체 간의 연결 유형을 보여줍니다.
 
 ![linked list](./linkedList1.png)
 
-그럼 첫번째로 우리의 커스텀 노드 생성자를 정의해보자.
+그럼 첫번째로 우리의 커스텀 노드 생성자를 정의해 봅시다.
 
 ```javascript
 class Node {
   constructor(instance) {
     this.instance = instance
-    this.child = null
-    this.sibling = null
-    this.return = null
+    this.child = null // 가장 첫번째 자식만 가지고 있는다.
+    this.sibling = null // 두번째 자식을 접근하려고 하면 자식의 sibling으로 접근해야 한다.
+    this.return = null // 부모를 참조해둔다.
   }
 }
 ```
 
-그리곤 노드들의 배열을 받는 함수와 그것들을 함께 엮어보자.
-
-우리는 함수를 사용해서 `render` 메서드에서 반환된 children 을 연결할 것이다.
+그리곤 노드들의 배열을 받아서 그것들을 함께 엮는 함수를 봅시다.
+우리는 함수를 사용해서 `render` 메서드에서 반환된 children 을 연결할 것입니다.
 
 ```javascript
 // 부모에다가 children[] 을 연결한다.
@@ -176,7 +186,7 @@ function link(parent, elements) {
   // node 하나를 리턴 받을 건데
   // 이 node에는 sibling으로 쭈욱 연결된 리스트 들이 있다.
   // 단일로 연결한다.
-  // 부모 - 자식 - 자식친구 - 자식친구 - 자식친구
+  // 부모 - 자식 - 자식형제 - 자식형제 - 자식형제
   parent.child = elements.reduceRight((previous, current) => {
     const node = new Node(current)
     node.return = parent
@@ -203,13 +213,13 @@ console.log(child.instance.name === 'b1')
 console.log(child.sibling.instance === children[1])
 ```
 
-또한 노드에 대한 작업을 수행하는 도우미 함수를 구현합니다. 여기서는 구성 요소의 이름을 기록합니다. 그러나 그 외에도 구성 요소의 하위 항목을 검색하고 함께 연결합니다.
+또한 노드에 대한 작업을 수행하는 도우미 함수를 구현합니다. 여기서는 component의 이름을 기록합니다. 그러나 그 외에도 구성 요소의 하위 항목을 검색하고 함께 연결합니다.
 
 ```javascript
 function doWork(node) {
   console.log(node.instance.name)
-  const children = node.instance.render()
-  return link(node, children)
+  const children = node.instance.render() // children 배열
+  return link(node, children) // children 배열을 선형적으로 부모 노드에 연결 후 첫번째 자식 반환
 }
 ```
 
@@ -225,7 +235,8 @@ function walk(o) {
   while (true) {
     // perform work for a node, retrieve & link the children
     // node에 대한 작업 수행, children을 탐색 및 연결한다.
-    let child = doWork(current)
+    // current의 render 작업 후 current의 children을 선형적으로 current에 연결
+    let child = doWork(current) // current의 첫번째 자식을 반환
 
     // if there's a child, set it as the current active node
     // 만약 child 가 있으면 그것을 현재 활성 node로 설정한다.
@@ -243,6 +254,7 @@ function walk(o) {
     // keep going up until we find the sibling
     // sibling을 찾을때까지 수행한다.
     while (!current.sibling) {
+      // 형제가 없다면
       // if we've returned to the top, exit the function
       // 만약 return이 top이면 종료한다.
       if (!current.return || current.return === root) {
@@ -298,11 +310,11 @@ function walk(o) {
 }
 ```
 
-우리는 어떤 시간에도 탐색을 멈췄다가 다시 재개 할 수 있습니다. 이것이 바로 새로운 requestIdleCallback API 를 사용하기 위해 달성하고 싶은 조건입니다.
+우리는 어떤 시간에도 탐색을 멈췄다가 다시 재개 할 수 있습니다. 이것이 바로 새로운 `requestIdleCallback` API 를 사용하기 위해 달성하고 싶은 조건입니다.
 
 ### Work loop in React
 
-실제 리액트 안에서의 실행 코드이다. [https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js#L1118](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js#L1118)
+실제 리액트 안에서의 실행 코드이다. [여기 코드](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js#L1118)
 
 ```javascript
 function workLoop(isYieldy) {
@@ -322,8 +334,8 @@ function workLoop(isYieldy) {
 
 보시다시피, 위의 알고리즘과 잘 일치합니다. 상단 프레임으로 작동하는 `nextUnitOfWork` 변수에 현재 fiber 노드에 대한 참조를 유지합니다.
 
-이 알고리즘은 컴포넌트 트리를 동기적으로 순회하고 트리 (`nextUnitOfWork`)안에 각 fiber 노드에 대한 작업을 수행 할 수 있습니다. 이것은 대게 UI 이벤트 (클릭, 입력 등)로 인한 소위 대화 형 업데이트의 경우가 일반적입니다.
+이 알고리즘은 컴포넌트 트리를 **동기적**으로 순회하고 트리 (`nextUnitOfWork`)안에 각 fiber 노드에 대한 작업을 수행 할 수 있습니다. 이것은 대게 UI 이벤트 (클릭, 입력 등)로 인한 소위 대화 형 업데이트의 경우가 일반적입니다.
 
-또는 fiber 노드 작업을 수행 한 후 남은 시간이 있는지 여부를 비동기식으로 확인하여 구성 요소 트리를 탐색 할 수 있습니다. 함수 `shouldYield` 는 `deadlineDidExpire` 와 React 가 fiber 노드에 대해 작업을 수행함에 따라 지속적으로 업데이트되는 `deadline` 변수를 기반으로 결과를 반환합니다.
+또는 fiber 노드 작업을 수행 한 후 남은 시간이 있는지 여부를 **비동기식**으로 확인하여 구성 요소 트리를 탐색 할 수 있습니다. 함수 `shouldYield` 는 [`deadlineDidExpire`](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js#L1806) 와 React 가 fiber 노드에 대해 작업을 수행함에 따라 지속적으로 업데이트되는 [`deadline`](https://github.com/facebook/react/blob/95a313ec0b957f71798a69d8e83408f40e76765b/packages/react-reconciler/src/ReactFiberScheduler.js#L1809) 변수를 기반으로 결과를 반환합니다.
 
 다음 시리즈는 `performUnitOfWork` 함수에 대한 심도있는 설명 글입니다.
