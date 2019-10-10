@@ -921,3 +921,79 @@ d3.csv("movies.csv", data => data).then(arrData => areaChart(arrData))
     }    
   }
 ```
+
+- 위 차트를 누적 차트로 만들면 다음과 같다. 각 영역의 높이는 영화 한 편이 그날 벌어들인 매출액을 나타내며, 각 영역의 밑은 그날 다른 영화들이 벌어들인 매출액의 합계를 나타낸다.
+
+```javascript
+d3.csv("movies.csv", data => data).then(arrData => areaChart(arrData))
+  
+  function areaChart(data) {
+    xScale = d3.scaleLinear().domain([0,11]).range([20,480]);
+    yScale = d3.scaleLinear().domain([-100,100]).range([480,20]);
+
+    xAxis = d3.axisBottom()
+    .scale(xScale)
+    .tickSize(480)
+    .tickValues([1,2,3,4,5,6,7,8,9,10]);
+    
+    d3.select("svg").append("g").attr("id", "xAxisG").call(xAxis);
+        
+    yAxis = d3.axisRight()
+    .scale(yScale)
+    .ticks(10)
+    .tickSize(480)
+          
+    d3.select("svg").append("g").attr("id", "yAxisG").call(yAxis);
+    
+    fillScale = d3.scaleLinear()
+        .domain([0,5])
+        .range(["lightgray","black"]);
+
+    var n = 0;
+    for (x in data[0]) {
+      if (x != "day") {
+        
+        const movieArea = d3.area()
+                      .x(function(d) {
+                        return xScale(d.day)
+                      })
+                      .y0(function(d) {
+                        console.log(simpleStacking(d,x)) // 매번 다른 객체, movie1
+                        return yScale(simpleStacking(d,x)-d[x])
+                      })
+                      .y1(function(d) {
+                        // return yScale(simpleStacking(d,x) - d[x]);
+                        return yScale(simpleStacking(d,x))
+                      })
+                      .curve(d3.curveCardinal.tension(0))
+
+        d3.select("svg")
+          .append("path")
+          .attr("id", x + "Area")
+          .attr("d", movieArea(data)) // data는 배열. 배열을 순회하면서 movie1 을 먼저 그리고
+          .attr("fill", fillScale(n))
+          .attr("stroke", 'lightgray')
+          .attr("stroke-width", 2)
+          .style("opacity", .5)
+          
+        n++;
+      }
+    }
+
+    function simpleStacking(incomingData, incomingAttribute) {
+      var newHeight = 0;
+      for (x in incomingData) {
+        if (x != "day") {
+          newHeight += parseInt(incomingData[x]);
+          if (x == incomingAttribute) {
+            break;
+          }
+        }
+      }
+      return newHeight;
+    }
+    
+  }
+```
+
+- 누적 차트를 스트림 그래프로 만들려면 누적된 영역이 교차 해야한다.
