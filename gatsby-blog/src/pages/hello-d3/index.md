@@ -653,3 +653,271 @@ function loadSVG(svgData) {
   })
 }
 ```
+
+
+### 예제 
+
+```javascript
+d3.csv("worldcup.csv", data => data).then(arrData => overallTeamViz(arrData))
+    
+function overallTeamViz(incomingData) {
+  d3.select("svg")
+    .append("g")
+    .attr("id", "teamsG")
+    .attr("transform", "translate(50,300)")
+    .selectAll("g")
+    .data(incomingData)
+    .enter()
+    .append("g")
+    .attr("class", "overallG")
+    .attr("transform", function (d,i) {return "translate(" + (i * 50) + ", 0)"});
+      
+  const teamG = d3.selectAll("g.overallG");
+        
+  teamG
+    .append("circle")
+    .attr('r', 0)
+    .transition()
+    .delay((d,i) => i * 100)
+    .duration(500)
+    .attr('r', 40)
+    .transition()
+    .duration(500)
+    .attr("r", 20)
+    // .style("fill", "pink") css 로 처리
+    // .style("stroke", "black")
+    // .style("stroke-width", "1px")
+  
+  teamG
+    .append("text")
+    .style("text-anchor", "middle")
+    .attr("y", 30)
+    // .style("font-size", "10px") css 로 처리
+    .text(function(d) {return d.team})
+
+  // incomingData[0] 은 객체 
+  const dataKeys = d3.keys(incomingData[0]).filter(el => el !== 'team' && el !== 'region')
+
+  // 문자형 team과 region을 제외한 모든 속성을 가져온다.
+  d3.select('#controls').selectAll('button.teams')
+    .data(dataKeys).enter()
+    .append('button')
+    .on('click', buttonClick) // on 메서드는 바인딩 된 데이터를 함수에 자동으로 전달한다. 
+    .html(d => d)
+
+  function buttonClick(datapoint) {
+    
+    const maxValue = d3.max(incomingData, d => parseFloat(d[datapoint]))
+    
+    // const tenColorScale = d3.schemeCategory10(['UEFA', 'CONMEBOL', 'CAF', 'AFC']) //
+    const tenColorScale = d3.scaleOrdinal(d3.schemeCategory10)
+    const radiusScale = d3.scaleLinear().domain([0, maxValue]).range([2,20])
+
+    d3.selectAll('g.overallG').select('circle').transition().duration(1000)
+      .style('fill', d => tenColorScale(d.region))
+      .attr('r', d => radiusScale(d[datapoint]))
+  }
+
+
+
+  teamG.on('mouseover', highlightRegion3) 
+  teamG.on('mouseout', unHighlight) 
+  function highlightRegion(targetData) {
+    d3.selectAll('g.overallG').select('circle')
+      .style('fill', d => d.region === targetData.region ? 'red' : 'gray' )
+  }
+
+  function highlightRegion2(targetData, i) {
+    d3.select(this).select('text').classed('active', true).attr('y', 10)
+    d3.selectAll('g.overallG').select('circle').each(function (d,i) { // 안에서 this는 해당 DOM을 위해 사용해야 하니 화살표 함수를 지양하자.
+      d.region === targetData.region ? d3.select(this).classed('active', true) : d3.select(this).classed('inactive', true)
+    })
+  }
+
+  function highlightRegion3(targetData, i) {
+    const teamColor = d3.rgb('pink')
+
+    d3.select(this).select('text').classed('highlight', true).attr('y', 10)
+    // d3.selectAll('g.overallG').select('circle').each(function (d,i) { // 안에서 this는 해당 DOM을 위해 사용해야 하니 화살표 함수를 지양하자.
+    //   d.region === targetData.region ? d3.select(this).classed('active', true) : d3.select(this).classed('inactive', true)
+    // })
+    d3.selectAll('g.overallG').select('circle')
+      .style('fill', d => {
+        return d.region === targetData.region ? teamColor.darker(.75) : teamColor.brighter(0.5)
+      })
+    this.parentElement.appendChild(this) // 다시 부모의 마지막에 추가해준다.
+  }
+
+  function unHighlight() {
+    d3.selectAll('g.overallG').select('circle').attr('class', '')
+    d3.selectAll('g.overallG').select('text').classed('highlight', false).attr('y', 30)
+  }
+
+}
+
+// 색상 보간법
+const ybRamp = d3.scaleLinear().interpolate(d3.interpolateHsl).domain([0,4]).range(['yellow', 'blue'])
+const testData = [0,1,2,3]
+
+d3.select('svg').selectAll('circle').data(testData).enter().append('circle')
+  .attr('r', 20)
+  .attr('cy', 50)
+  .attr('cx', (d,i) => (60*i)+30)
+  .style('fill', d => ybRamp(d))
+```
+
+# 차트
+
+## 축 생성
+
+- 축 생성에는 다음과 같은 메서드가 제공된다. x축 : d3.axisTop(), d3.axisBottom(), y축 : d3.axisLeft(), d3.axisRight()가 존재한다.
+- x축에 해당하는 d3.axisTop(), d3.axisBottom()는 기본적으로 svg 영역의 상단에 x축이 생성이 되고 Top과 Bottom의 차이는 tick의 방향이라고 생각 하면 되겠다 Top은 tick이 아래에서 위로 향하고 Bottom은 위에서 아래로 향하게 된다. 
+- x축을 d3.axisTop() 으로 생성하게 되면 레이블과 눈금을 볼 수 없다. 이 요소들이 그림 영역 밖에 그려지기 때문이다. 그래서 x축을 아래로 이동하려면 translate 를 사용해야한다.
+
+```javascript
+const yAxis = d3.axisRight().scale(yScale)
+const xAxis = d3.axisBottom().scale(xScale)
+d3.select('svg').append('g').attr('id', 'yAxisG').call(yAxis)
+d3.select('svg').append('g').attr('id', 'xAxisG').call(xAxis)
+```
+
+x축을 바닥으로 옮기고 y축을 오른쪽으로 옮겼을 때의 코드는 아래와 같다.
+
+```javascript
+const scatterData = [{friends: 5, salary: 22000}, {friends: 3, salary: 18000}, {friends: 10, salary: 88000}, {friends: 0, salary: 180000}, {friends: 27, salary: 56000}, {friends: 8, salary: 74000}]
+
+xExtent = d3.extent(scatterData, function(d) {return d.salary});
+yExtent = d3.extent(scatterData, function(d) {return d.friends});
+xScale = d3.scaleLinear().domain(xExtent).range([20,480]);
+yScale = d3.scaleLinear().domain(yExtent).range([480,20]);
+
+// 축 생성
+// const yAxis = d3.svg.axis().scale(yScale).orient('right')// y축
+const yAxis = d3.axisRight().scale(yScale).tickSize(-460).tickPadding(7)
+const xAxis = d3.axisBottom().scale(xScale).tickSize(-460).tickPadding(7)
+// const xAxis = d3.axisTop().scale(xScale)
+d3.select('svg').append('g').attr('id', 'yAxisG').call(yAxis)
+d3.select('svg').append('g').attr('id', 'xAxisG').call(xAxis)
+
+
+d3.select('#xAxisG').attr('transform', 'translate(0, 480)')
+d3.select('#yAxisG').attr('transform', 'translate(480, 0)')
+
+d3.select("svg")
+  .selectAll("circle")
+  .data(scatterData)
+  .enter()
+  .append("circle")
+  .attr("r", 5)
+  .attr("cx", function(d) {return xScale(d.salary)})
+  .attr("cy", function(d) {return yScale(d.friends)})
+```
+
+## 점으로 선 그리기
+
+- 기본적으로 선 생성기는 x값 배열과 y값 배열, 두개를 인자로 받는다.
+- 선 생성기는 점 배열을 입력 받으므로 각 점의 좌표로 구성된 값을 생성기에 전달해야 한다.
+- 선 생성기의 x() 접근자 메서드를 사용해서 x값을 셋팅할수 있고 y() 접근자 메서드를 사용해서 y값을 셋팅할 수 있다.
+
+```javascript
+const tweetLine = d3.line() // tweetLine 이 선 생성기
+  // 데이터에 대한 접근자를 정의한다.
+  // 여기에서는 날짜 속성을 가져와 xScale()에 전달한다.
+  .x(d => xScale(d.day))
+  .y(d => yScale(y.tweets))
+
+// tweetdata로 로딩된 생성기가 추가한 경로를 그린다.
+d3.select('svg')
+  .append('path')
+  .attr('d', tweetLine(data))
+  .attr('fill', 'none')
+  .attr('stroke', 'darkred')
+  .attr('stroke-width', 2)
+```
+
+## 채워진 영역
+
+- SVG에서 선(line)과 채워진 영역(filled areas)는 거의 동일합니다. 단지 그리는 코드 제일 뒤에 'Z'를 추가하거나 도형에 'fill' 스타일이 있으면 닫힌 도형이 됩니다. 
+- D3는 d3.line() 생성기로 선을 그리고, d3.area() 생성기로 영역을 그립니다. 두 생성기 모두 <path> 요소를 생성하지만 d3.area()는 경로의 아래 영역을 막아 영역을 만드는 헬퍼 함수를 제공한다. 
+- y() 접근자만 셋팅 했을 때 y0에 y를 넣고 y1은 null 셋팅(null을 셋팅한다는 것은 이전에 계산되었던 y0 값을 재사용하겠다는 뜻이다.)한다. 
+- x축으로 채워지는 모양을 만들기 위해선 y0, y1 또는 y, y1을 셋팅해주어야 한다. 
+
+```javascript
+// y0 접근자 default
+function y() {
+  return 0
+}
+
+// y1 접근자 default
+function y(d) {
+  return d[1]
+}
+```
+
+- `path` 의 경로를 닫든 닫지 않든, 영역을 채우든 채우지 않든, 도형과 선을 그릴 때는 대부분 `d3.line()` 을 사용한다. (d 속성의 끝에 Z를 넣거나, fill 속성을 채워준다.) 그러나 `다른 도형의 꼭대기를 바닥`으로 삼아 누적된 도형을 그릴 때는 `d3.area()` 를 사용해야 한다. `d3.area()`는 누적 영역 차트나 스트림 그래프처럼 데이터의 대역을 그리기에 적절하다.
+
+```javascript
+d3.csv("movies.csv", data => data).then(arrData => areaChart(arrData))
+  
+  function areaChart(data) {
+    // xScale = d3.scaleLinear().domain([1,10.5]).range([20,480]);
+    // yScale = d3.scaleLinear().domain([0,50]).range([480,20]);
+
+    // xScale = d3.scaleLinear().domain([0,11]).range([20,480]);
+    // yScale = d3.scaleLinear().domain([-100,100]).range([480,20]);
+
+    xScale = d3.scaleLinear().domain([1,10.5]).range([20,480]);
+    yScale = d3.scaleLinear().domain([0,35]).range([240,20]);
+
+
+    xAxis = d3.axisBottom()
+    .scale(xScale)
+    .tickSize(480)
+    .tickValues([1,2,3,4,5,6,7,8,9,10]);
+    
+    d3.select("svg").append("g").attr("id", "xAxisG").call(xAxis);
+        
+    yAxis = d3.axisRight()
+    .scale(yScale)
+    .ticks(10)
+    .tickSize(480)
+    //.tickSubdivide(true);
+      
+    d3.select("svg").append("g").attr("id", "yAxisG").call(yAxis);
+    
+    // fillScale = d3.scaleLinear()
+    //     .domain([0,5])
+    //     .range(["lightgray","black"]);
+
+    var n = 0;
+    for (x in data[0]) {
+      if (x != "day") {
+        
+        const movieArea = d3.area()
+                      .x(function(d) {
+                        return xScale(d.day)
+                      })
+                      .y0(function(d) {
+                        
+                        return yScale(-d[x])
+                      })
+                      .y1(function(d) {
+                        // return yScale(simpleStacking(d,x) - d[x]);
+                        return yScale(d[x])
+                      })
+                      .curve(d3.curveCardinal.tension(0))
+
+        d3.select("svg")
+          .append("path")
+          .attr("id", x + "Area")
+          .attr("d", movieArea(data))
+          .attr("fill", 'darkgray')
+          .attr("stroke", 'lightgray')
+          .attr("stroke-width", 2)
+          .style("opacity", .5)
+          
+        n++;
+      }
+    }    
+  }
+```
