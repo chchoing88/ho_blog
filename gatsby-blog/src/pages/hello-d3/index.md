@@ -768,6 +768,13 @@ d3.select('svg').selectAll('circle').data(testData).enter().append('circle')
 
 # 차트
 
+- 생성기 : 데이터를 입력받고 이 데이터에 기초한 화면 객체를 생성하는데 필요한 SVG 그림 코드를 반환한다.(SVG의 속성 문자열 값) 생성기들은 <path> 요소의 d 속성을 작성하는데 필요한 과정을 추상화함으로써 복잡한 <path> 요소의 생성 과정을 단순하게 만들어줍니다.
+d3.line(), d3.area(), d3.arc() 와 같은게 있습니다.
+
+- 컴포넌트 : 컴포넌트는 특정 차트 컴포넌트를 그리는데 필요한 일련의 화면 객체를 생성합니다. d3에서 가장 많이 사용하는 컴포넌트는 `d3.axisRight`와 같은 종류들입니다. 이것은 함수에 사용한 스케일과 설정에 기초해 축을 그리는데 필요한 수 많은 <line>, <path>, <g>, <text> 요소를 생성한다.
+
+- 레이아웃 : 레이아웃은 일련의 데이터, 그리고 생성기로 구성된 배열을 입력받아 특정 위치와 크기로 그리는데 필요한 데이터 속성을 동적 혹은 정적으로 추가한다. 레이아웃을 생성하고 데이터를 넣어주면 해당 차트를 그리는데 필요한 값들을 자동으로 생성해준다. 
+
 ## 축 생성
 
 - 축 생성에는 다음과 같은 메서드가 제공된다. x축 : d3.axisTop(), d3.axisBottom(), y축 : d3.axisLeft(), d3.axisRight()가 존재한다.
@@ -860,11 +867,6 @@ function y(d) {
 d3.csv("movies.csv", data => data).then(arrData => areaChart(arrData))
   
   function areaChart(data) {
-    // xScale = d3.scaleLinear().domain([1,10.5]).range([20,480]);
-    // yScale = d3.scaleLinear().domain([0,50]).range([480,20]);
-
-    // xScale = d3.scaleLinear().domain([0,11]).range([20,480]);
-    // yScale = d3.scaleLinear().domain([-100,100]).range([480,20]);
 
     xScale = d3.scaleLinear().domain([1,10.5]).range([20,480]);
     yScale = d3.scaleLinear().domain([0,35]).range([240,20]);
@@ -1003,7 +1005,94 @@ d3.csv("movies.csv", data => data).then(arrData => areaChart(arrData))
 D3에는 일반적인 차트 기법으로 표현할 수 있도록 데이터 포맷 작업을 도와주는 레이아웃(layout) 함수가 여럿 있습니다.
 또한 원호를 애니메이션 하는 트위닝(tweening) 이라는 기술도 있다.
 
+- 레이아웃은 데이터를 출력할 수 있도록 포맷한다.
+- 레이아웃의 도움을 받지 않고 원시 데이터에서 막대 그래프를 생성할 때 사용한 스케일과 컴포넌트는 레이아웃을 사용할 때도 필요하다.
+- 히스토그램은 자연수뿐만 아니라 스케일에 들어가는 범윗값도 자동으로 저장한다.
+- 다른 차원의 데이터로 차트를 동적으로 변경하더라도 원래 차트를 제가할 필요는 없다. 레이아웃으로 데이터를 다시 포맷하고 원래 요소에 다시 바인딩하면 된다.
+
 ## 파이 차트
+
+```javascript
+const pieChart = d3.pie().value(d => d.numTweets).sort(null) // 레이아웃
+const newArc = d3.arc() // 생성기
+                  .innerRadius(20)
+                  .outerRadius(100)
+const tenColorScale = d3.scaleOrdinal(d3.schemeCategory10)
+
+
+d3.json('tweets.json').then(data => makeRingChart(data.tweets))
+
+function makeRingChart(arrIncomingData) {
+  const nestedTweets = d3.nest().key(el => el.user).entries(arrIncomingData)
+  console.log('nestedTweets',nestedTweets)
+
+  nestedTweets.forEach(el => {
+    el.numTweets = el.values.length
+    el.numFavorites = d3.sum(el.values, d => d.favorites.length)
+    el.numRetweets = d3.sum(el.values, d => d.retweets.length)
+  })
+
+  const yourPie = pieChart(nestedTweets)
+  
+  d3.select('svg')
+  .append('g')
+  .attr('transform', 'translate(250,250)')
+  .selectAll('path')
+  .data(yourPie, d => d.data.key)
+  .enter()
+  .append('path')
+  .attr('d', newArc)
+  .style('fill', d => tenColorScale(d.data.key))
+  .style('opacity', .5)
+  .style('stroke', 'black')
+  .style('stroke-width', '2px')
+  .each(function(d) { this._current = d; });
+
+  setTimeout(() => {
+    pieChart.value(d => d.numFavorites)
+    d3.selectAll('path').data(pieChart(nestedTweets), d => d.data.key)
+    // transition 메서드가 원호를 잘 처리하지 못한다. 
+    // 원호의 각을 전환하는 것이 아니라 각각의 부채꼴을 하나의 기하학적 도형으로 간주해 처리한다.
+    .transition() 
+    .duration(1000)
+    .attrTween('d', arcTween) // attr('d', newArc)
+    .style('fill', d => tenColorScale(d.data.key))
+  },2000)
+  
+
+
+  setTimeout(() => {
+    pieChart.value(d => d.numRetweets)
+    d3.selectAll('path').data(pieChart(nestedTweets.filter(d => d.numRetweets > 0)), d => d.data.key)
+      .exit()
+      .remove()
+
+    
+    d3.selectAll('path').data(pieChart(nestedTweets.filter(d => d.numRetweets > 0)), d => d.data.key)
+      .transition()
+      .duration(1000)
+      .attrTween('d', arcTween)
+      .style('fill', d => tenColorScale(d.data.key))
+      
+  }, 4000)
+  
+  
+  // 트위닝(tweening) 
+  // 사전적 의미 ~사이에, ~중간에
+  // 키 프레임 사이를 자동으로 채워주는 기능
+  function arcTween(a) {
+    const i = d3.interpolate(this._current, a) // 이전 그려졌던 데이터와 바뀌어야 하는 데이터를 보간한다.
+    // this는 현재 DOM을 가리킨다.
+    this._current = i(0) // 바뀌어야 할 데이터를 다시 _current에 셋팅한다.
+    return function(t) {
+      // 원호의 모양을 계산해 원호를 트위닝 하는 원호 생성기를 사용한다.
+      // t 값이 0 에서 1로 세밀하게 증가한다.
+      return newArc(i(t))
+    }
+  }
+
+}
+```
 
 ## 서클 팩
 
