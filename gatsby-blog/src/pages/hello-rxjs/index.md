@@ -281,7 +281,7 @@ map 연산자를 사용하면 input stream 의 값들을 가져올 수 있으며
 
 그래서 map operator 는 input observable 의 값들을 매핑해주는 것이다.
 
-[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-map.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-map.png)
+![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-map.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-map.png)
 
 map 연산자를 사용하면 입력 스트림 (값 1, 2, 3)을 가져 와서 파생 매핑 된 출력 스트림 (값 10, 20, 30)을 만들 수 있습니다.
 
@@ -456,7 +456,7 @@ result$.subscribe(console.log)
 
 여기서 `of()` 함수는 `of()`로 전달된 값을 방출하고 그 이후에 값을 모두 방출하면 complete 되는 Observable 을 생성합니다.
 
-[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-concat.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-concat.png)
+![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-concat.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-concat.png)
 
 `concat()` 은 처음인자로 들어온 `series1$` 을 처음으로 구독하고 두번째 인자인 `series2$`는 구독하지 않습니다. ( 이것이 중요한 이해 입니다. )
 `series1$`이 값을 방출하면 바로 `result$` Observable output 에 반영된다고 이때 `series2$`는 값을 방출하지 않습니다. 왜냐하면 아직 구독하지 않기 때문입니다. 이후에 `series1$` 이 complete 가 되면 `series2$`를 구독하기 시작합니다. 그럼 `series2$` 값이 output 으로 반영되고 `series2$`가 complete 되면 `result$` Observable 도 끝나게 됩니다.
@@ -522,7 +522,7 @@ result$.subscribe(console.log)
 // 300
 ```
 
-[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-merge.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-merge.png)
+![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-merge.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-merge.png)
 
 여기서 보면 혼합된 source Observable 의 값이 result Observable 에 즉시 나타난것을 볼수 있습니다. 만약 머지당한 source Observable 중 하나가 complete 된다면, merge operator 는 계속 다른 Observable 의 값을 방출할 것입니다.
 
@@ -532,7 +532,7 @@ result$.subscribe(console.log)
 
 mergeMap operator 작동방법은 다음과 같습니다.
 
-[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-mergeMap-2.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-mergeMap-2.png)
+![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-mergeMap-2.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-mergeMap-2.png)
 
 각 source Observable 의 값은 concatMap 과 같이 inner Observable 로 mapping 됩니다. 이 inner Observable 은 mergeMap 에 의해서 구독됩니다.
 inner Observable 이 새로운 값을 방출할때, 그것들은 즉시 output Observable 에 반영됩니다.
@@ -577,7 +577,7 @@ Observable.prototype.myMergeMap = myMergeMap
 
 ### Observable Switching
 
-[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/05-switch.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/05-switch.png)
+![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/05-switch.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/05-switch.png)
 
 switching 은 merging 과 비슷하다. 그말인 즉슨, 어떤 Observable 이라도 끝날때 까지 기다려 주지 않는다는 말입니다.
 
@@ -591,7 +591,7 @@ switching Marble Diagram 을 보면 맨 위의 higher-order Observable 에서 �
 
 ### The RxJs switchMap Operator
 
-[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/06-switchMap-2.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/06-switchMap-2.png)
+![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/06-switchMap-2.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/06-switchMap-2.png)
 
 이제 switch 전략과 그것을 higer order mapping 을 적용시켜보자. 여기서 input stream 이 1,3 그리고 5 를 방출할 계획을 가지고 있다고 해봅시다.
 
@@ -621,7 +621,7 @@ Observable.prototype.mySwitchMap = mySwitchMap
 
 ### The Exhaust Strategy
 
-[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/07-exhaust.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/07-exhaust.png)
+![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/07-exhaust.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/07-exhaust.png)
 
 만약 source observable 에서 나오는 새로운 값을 이전 값 처리가 완료 될때까지 무시하고 싶다면 어떻게 해야할까?? 예를들어, save 버튼을 눌러 backend 에 save request 요청을 보낸다고 해보자. 우리는 concatMap operator 를 사용해서 실행할것입니다. 왜냐하면 save operation 이 순차적으로 저장되길 원하기 때문입니다.
 
@@ -631,7 +631,7 @@ fromEvent(this.saveButton.nativeElement, 'click')
   .subscribe()
 ```
 
-[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/08-exhaustMap.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/08-exhaustMap.png)
+![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/08-exhaustMap.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/08-exhaustMap.png)
 
 하지만 만약 사용자가 버튼을 여러번 눌렀다고 했을땐 어떤일이 일어날까? 20 번을 눌렀다고 한다면 20 번이 저장이 될것입니다.
 우리는 이미 save 가 진행중인게 있다면 나머지 클릭들이 무시되길 원한다. 이때 exhaust Observable 전략을 사용할 수있습니다.
