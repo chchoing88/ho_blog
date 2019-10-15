@@ -1100,9 +1100,52 @@ function makeRingChart(arrIncomingData) {
 
 - 다른 모든 레이아웃과 마찬가지로 팩 레이아웃은 데이터가 어떤 기본적인 틀에 맞춰 구성돼 있다고 가정한다.
 - 구체적으로 팩 레이아웃은 자식 요소들이 children 속성에 배열로 저장된 JSON 객체를 받는다.
-- 레이아웃의 접근자 메서드를 우리 데이터에 맞춰 조정하는 방법에 익숙해지는 편이 좋다. 
+- 팩 레이아웃은 다음과 같은 계층 root객체가 필요하다.
+  - node.x : 원 객체의 중심 x 축
+  - node.y : 원 객체의 중심 y 축
+  - node.r : 원 객체의 반지름
+- 이 root 객체는 `d3.hierarchy(data[, children])` 또는 `d3.stratify()` 로 만들 수 있다.
+- root 객체를 만들고 나서는 `root.sum` 메서드를 호출해서 pack layout에 넘거야 합니다. 또한 `root.sort`로 계층의 순서도 조절할 수 있다.
+- `root.sum()`의 매개변수로 접근자 함수를 넣으면 각 node 별로 value 값이 생긴다. 
+- `data()` 메서드로 넘길 때에는 레이아웃에 데이터를 넘긴 값의 `descendants()` 메서드를 호출해 계층별로 되어있는 구조를 선형구조인 배열로 바꿔준다.
 
 ```javascript
+d3.json("tweets.json").then(data => dataViz(data.tweets))
+
+function dataViz(incData) {
+
+  const nestedTweets = d3.nest()
+  .key(function (el) {return el.user})
+  .entries(incData);
+
+  const packableTweets = {id: "root", values: nestedTweets}
+  const depthScale = d3.scaleOrdinal(d3.schemeCategory10) // ordinal : 서수
+  const packChart = d3.pack().size([500,500])
+    .radius(d => {
+      // console.log(d)
+      return d.value * 10
+    }) // radius는 pack 원의 반지름, default null일 경우 node.value 값으로 셋팅한다. , d 값은 말단 leaf node 객체이다.
+    .padding(5);
+  const rootData = d3.hierarchy(packableTweets, d => d.values)
+    .sum(d => {
+      return d.favorites && d.retweets ? d.favorites.length + d.retweets.length + 1 : 0
+    }) // 각 노드의 value를 셋팅해줌. 내부 값이 있는 leaf node만 셋팅해주고 싶다면 나머지는 0 으로 셋팅한다.
+  
+ 
+  d3.select("svg")
+  .append("g")
+  .attr("transform", "translate(0,0)")
+  .selectAll("circle")
+  .data(packChart(rootData).descendants())
+  .enter()
+  .append("circle")
+  .attr("r", function(d) {return d.r}) // 노드의 반지름을 depth 값에 따라 계산해 줄인다.
+  .attr("cx", function(d) {return d.x})
+  .attr("cy", function(d) {return d.y})
+  .style("fill", function(d) {return depthScale(d.depth)})
+  .style("stroke", "black")
+  .style("stroke", "2px")
+}
 ```
 
 ## 트리
