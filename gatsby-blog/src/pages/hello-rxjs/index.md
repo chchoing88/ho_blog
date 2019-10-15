@@ -377,7 +377,7 @@ observable$.mergeAll().subscribe(num => console.log(num));
 그래서 `mergeMap()`은 단지 `map() + mergeAll()` 입니다.
 
 또한 위 코드에서 `observable$` 을 그냥 subscribe를 했다면 num에는 observable 객체가 콘솔에 찍힐것입니다. 
-`map()` 코드는 어떠한 이벤트 스트림에서 값을 받아서 즉, 신호로 받아들여서 새로운 값 또는 observable 객체로 맵핑할 때 사용되고 
+`map()` 코드는 어떠한 이벤트 스트림에서 값을 받아서 즉, 신호로 받아들여서 새로운 값 또는 observable 객체로 맵핑할 때 사용되고 매 값이 나올때마다 output으로 observable 이 나올 것입니다. 이 모두를 한대 모아서 새로운 observable로 만드는 작업을 `mergeAll()`이 진행합니다.
 `mergeAll()`의 경우에는 모든 이벤트 스트림을 머지해서 observer에게 알려준다고 생각하면 될 것입니다.
 
 위 코드를 `mergeMap()`으로 짠다면 아래와 같습니다.
@@ -555,7 +555,7 @@ this.form.valueChanges
 
 위와 같이 mergeMap 을 사용했을 경우 우린 여러번 save request 가 병렬로 동작하는 모습을 크롬의 네트워크 탭에서 볼 수 있습니다. 그래서 이 경우는 error 입니다. 이런 로드가 많은 경우 이러한 요청이 순서없이 처리 될 수 있기 때문입니다.
 
-아래는 가장 기본적인 mergeMap()의 실행문 입니다.
+아래는 가장 기본적인 `mergeMap()`의 실행문 입니다.
 
 ```javascript
 function myMergeMap(innerObservable) {
