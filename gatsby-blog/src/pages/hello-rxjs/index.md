@@ -495,7 +495,7 @@ Error Observable 에서 들어오는 각각의 error 값에 delay 를 적용하�
 
 ### RxJs Map Operator
 
-이름에서 알수 있듯이 그것은 무엇인가를 mapping 하고 있는 것이다. 하지만 정확히 무엇을 mapping 하고 있는 것인까?
+이름에서 알수 있듯이 그것은 무엇인가를 mapping 하고 있는 것이다. 하지만 정확히 무엇을 mapping 하고 있는 것일까?
 map 연산자를 사용하면 input stream 의 값들을 가져올 수 있으며 그 값에 파생하는 output stream 을 만들 수 있습니다.
 
 그래서 map operator 는 input observable 의 값들을 매핑해주는 것이다.
