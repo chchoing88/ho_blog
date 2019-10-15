@@ -500,6 +500,13 @@ map 연산자를 사용하면 input stream 의 값들을 가져올 수 있으며
 
 그래서 map operator 는 input observable 의 값들을 매핑해주는 것이다.
 
+[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-map.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-map.png)
+
+map 연산자를 사용하면 입력 스트림 (값 1, 2, 3)을 가져 와서 파생 매핑 된 출력 스트림 (값 10, 20, 30)을 만들 수 있습니다.
+
+맨 아래의 출력 스트림 값은 입력 스트림의 값을 가져 와서 함수를 적용하여 얻습니다. 이 함수는 단순히 값에 10을 곱합니다.
+따라서 map 연산자는 입력 관측 값의 값을 매핑하는 것입니다. 
+
 ```javascript
 const http$: Observable<Course[]> = this.http.get('/api/courses')
 
@@ -511,11 +518,11 @@ http$
   .subscribe(courses => console.log('courses', courses))
 ```
 
-위 예제를 보자. 우리는 하나의 HTTP observable 을 만들었다. 이것은 backend 에 요청을 보내고 그 답을 구독하게 된다. 이 observable 은 backend 의 응답이 오면 값을 방출하게 된다.
+위 예제를 봅시다. 우리는 하나의 HTTP observable 을 만들었습니다. 이것은 backend 에 요청을 보내고 그 답을 구독하게 됩니다. 이 observable 은 backend 의 응답이 오면 값을 방출하게 됩니다.
 
-이 경우, 응답은 data 의 payload 프로퍼티에 감싸여져서 내려온다. 이 값을 얻기 위해서 우린 RxJs map operator 를 사용한다. mapping function 은 JSON response payload 에 매핑하고 그 값을 추출한다.
+이 경우, 응답은 data 의 payload 프로퍼티에 감싸여져서 내려옵니다. 이 값을 얻기 위해서 우린 RxJs map operator 를 사용합니다. mapping function 은 JSON response payload 에 매핑하고 그 값을 추출합니다.
 
-아래는 간단한 map 함수의 매커니즘이다.
+아래는 간단한 map 함수의 매커니즘입니다.
 
 ```javascript
 fakeAsyncData$.map(val => `New value ${val}`).subscribe({
@@ -539,7 +546,7 @@ map(projectionFunction) {
 
 ### What is Higher-Order Observable Mappping?
 
-higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 대신에 값을 Observable 로 mapping 한다. 그 observable 을 higher-order Observable 이라고 한다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것이 방출하는 값들은 일반 plain 값이 아닌 우리가 별도로 구독할 수 있는 Observable 들이라는 점이다.
+higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 대신에 값을 Observable 로 mapping 합니다. 그 observable 을 higher-order Observable 이라고 합니다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것이 방출하는 값들은 일반 plain 값이 아닌 우리가 별도로 구독할 수 있는 Observable 들이라는 점이다.
 
 쉽게 말해 아래와 같은 코드가 있다.
 
@@ -556,9 +563,9 @@ clicksToInterval$.subscribe(intervalObservable =>
 )
 ```
 
-여기서 `clicksToInterval$`은 higher-order Observable 이다. 우리가 이 Observable 을 구독하는 순간 `click$` Observable 은 `interval$` observable 과 함께 next()를 호출 할것이다. 그렇게 되면 클릭시 일반적인 map 에서 보였던 plain 한 값이 보이지 않고 실행되지 않은 interval observable 객체가 보일것이다.
+여기서 `clicksToInterval$`은 higher-order Observable 입니다. 우리가 이 Observable 을 구독하는 순간 `click$` Observable 은 `interval$` observable 과 함께 next()를 호출 할것입니다. 그렇게 되면 클릭시 일반적인 map 에서 보였던 plain 한 값이 보이지 않고 실행되지 않은 interval observable 객체가 보일것입니다.
 
-그것은 `interval$` observable 을 구독하지 않았기 때문이다. observable 들은 lazy 이다. 만약 observable 이 지닌 값들을 가져오고 싶다면 반듯이 `subscribe()` 해야한다.
+그것은 `interval$` observable 을 구독하지 않았기 때문입니다. observable 들은 lazy 입니다. 만약 observable 이 지닌 값들을 가져오고 싶다면 반듯이 `subscribe()` 해야합니다.
 
 ```javascript
 clicksToInterval$.subscribe(intervalObservable$ => {
@@ -583,16 +590,16 @@ const observable$ = click$.map(event => {
 observable$.mergeAll().subscribe(num => console.log(num));
 ```
 
-`mergeAll()`의 경우에는 inner observable(여기서 interval$에 해당함)을 받아다가 그것을 구독하고 해당 값을 observer 에게 전달시켜 준다. 즉, inner observable 이 emits 될때 그 값을 outer observable와 merging 해서 나에게 알려줍니다. 
+`mergeAll()`의 경우에는 inner observable(여기서 interval$에 해당함)을 받아다가 그것을 구독하고 해당 값을 observer 에게 전달시켜 줍니다. 즉, inner observable 이 emits 될때 그 값을 outer observable와 merging 해서 나에게 알려줍니다. 
 
-위의 경우에서는 source observable(또는 outer observable) 은 `click$` observable 이고 inner observable 은 `interval$` 이다.
-그래서 `mergeMap()`은 단지 `map() + mergeAll()` 이다.
+위의 경우에서는 source observable(또는 outer observable) 은 `click$` observable 이고 inner observable 은 `interval$` 입니다.
+그래서 `mergeMap()`은 단지 `map() + mergeAll()` 입니다.
 
-또한 위 코드에서 `observable$` 을 그냥 subscribe를 했다면 num에는 observable 객체가 콘솔에 찍힐것이다. 
+또한 위 코드에서 `observable$` 을 그냥 subscribe를 했다면 num에는 observable 객체가 콘솔에 찍힐것입니다. 
 `map()` 코드는 어떠한 이벤트 스트림에서 값을 받아서 즉, 신호로 받아들여서 새로운 값 또는 observable 객체로 맵핑할 때 사용되고 
-`mergeAll()`의 경우에는 모든 이벤트 스트림을 머지해서 observer에게 알려준다고 생각하면 될 것이다.
+`mergeAll()`의 경우에는 모든 이벤트 스트림을 머지해서 observer에게 알려준다고 생각하면 될 것입니다.
 
-위 코드를 `mergeMap()`으로 짠다면 아래와 같다.
+위 코드를 `mergeMap()`으로 짠다면 아래와 같습니다.
 
 ```javascript
 const click$ = Observable.fromEvent(button, ‘click’);
@@ -607,12 +614,12 @@ observable$.subscribe(num => console.log(num));
 
 ### why Higher-Order Observables?
 
-만약 폼 데이터를 중간에 조금씩 저장해서 만일에 잘못된 새로고침에 전체 양식의 손실을 방지하기 위한 작업이 필요하다고 생각해보자.
-폼의 value 들이 변화가 생기고 일정시간 가장 마지막 변화를 감지하면 그 값들을 가지고 백엔드에다가 저장시킨다고 해보자.
+만약 폼 데이터를 중간에 조금씩 저장해서 만일에 잘못된 새로고침에 전체 양식의 손실을 방지하기 위한 작업이 필요하다고 생각해봅시다.
+폼의 value 들이 변화가 생기고 일정시간 가장 마지막 변화를 감지하면 그 값들을 가지고 백엔드에다가 저장시킨다고 해봅시다.
 
-폼 값들을 저장하는 수행을 함수형으로 짜기 위해선 값을 받고 그 이후에 HTTP observable 을 생성해야한다. 그리고 그 결과 값을 구독해야한다.
+폼 값들을 저장하는 수행을 함수형으로 짜기 위해선 값을 받고 그 이후에 HTTP observable 을 생성해야한다. 그리고 그 결과 값을 구독해야 합니다.
 
-이 수행을 매뉴얼하게 짠다고 하면 아래와 같은 그림이 될 것이다.
+이 수행을 매뉴얼하게 짠다고 하면 아래와 같은 그림이 될 것입니다.
 
 ```javascript
 this.form.valueChanges
@@ -667,6 +674,8 @@ result$.subscribe(console.log)
 ```
 
 여기서 `of()` 함수는 `of()`로 전달된 값을 방출하고 그 이후에 값을 모두 방출하면 complete 되는 Observable 을 생성한다.
+
+[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-concat.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-concat.png)
 
 `concat()` 은 처음인자로 들어온 `series1$` 을 처음으로 구독하고 두번째 인자인 `series2$`는 구독하지 않는다. ( 이것이 중요한 이해이다. )
 `series1$`이 값을 방출하면 바로 `result$` Observable output 에 반영된다고 이때 `series2$`는 값을 방출하지 않는다. 왜냐하면 아직 구독하지 않기 때문이다. 이후에 `series1$` 이 complete 가 되면 `series2$`를 구독하기 시작한다. 그럼 `series2$` 값이 output 으로 반영되고 `series2$`가 complete 되면 `result$` Observable 도 끝나게 된다.
@@ -732,6 +741,8 @@ result$.subscribe(console.log)
 // 300
 ```
 
+[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-merge.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-merge.png)
+
 여기서 보면 혼합된 source Observable 의 값이 result Observable 에 즉시 나타난것을 볼수 있다. 만약 머지당한 source Observable 중 하나가 complete 된다면, merge operator 는 계속 다른 Observable 의 값을 방출할 것이다.
 
 ### The RxJs mergeMap Operator
@@ -739,6 +750,8 @@ result$.subscribe(console.log)
 만약 우리가 merge 전략과 higher-order Observable mapping 을 혼합한다면 우린 RxJs mergeMap Operation 을 얻을 수 있다.
 
 mergeMap operator 작동방법은 다음과 같다.
+
+[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-mergeMap-2.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-mergeMap-2.png)
 
 각 source Observable 의 값은 concatMap 과 같이 inner Observable 로 mapping 된다. 이 inner Observable 은 mergeMap 에 의해서 구독된다.
 inner Observable 이 새로운 값을 방출할때, 그것들은 즉시 output Observable 에 반영된다.
@@ -783,6 +796,8 @@ Observable.prototype.myMergeMap = myMergeMap
 
 ### Observable Switching
 
+[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/05-switch.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/05-switch.png)
+
 switching 은 merging 과 비슷하다. 그말인 즉슨, 어떤 Observable 이라도 끝날때 까지 기다려 주지 않는다는 말이다.
 
 하지만 merging 과 다르게 만약 새로운 Observable 의 값이 방출이 된다면 이전 Observable 의 구독을 취소해 버린다.
@@ -794,6 +809,8 @@ switching Marble Diagram 을 보면 맨 위의 higher-order Observable 에서 �
 여기서 중요한건 이런 그림들이 higher-order Observable 로 부터 fork 된 diagonal lint 의 그 시점 일때 각 inner Observable 이 구독이 되던지 또는 구독이 취소되던지 하는 그림이 필요하기 때문에 갈라지는 선을 표현하게 된다.
 
 ### The RxJs switchMap Operator
+
+[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/06-switchMap-2.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/06-switchMap-2.png)
 
 이제 switch 전략과 그것을 higer order mapping 을 적용시켜보자. 여기서 input stream 이 1,3 그리고 5 를 방출할 계획을 가지고 있다고 해보자.
 
@@ -823,6 +840,8 @@ Observable.prototype.mySwitchMap = mySwitchMap
 
 ### The Exhaust Strategy
 
+[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/07-exhaust.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/07-exhaust.png)
+
 만약 source observable 에서 나오는 새로운 값을 이전 값 처리가 완료 될때까지 무시하고 싶다면 어떻게 해야할까?? 예를들어, save 버튼을 눌러 backend 에 save request 요청을 보낸다고 해보자. 우리는 concatMap operator 를 사용해서 실행할것이다. 왜냐하면 save operation 이 순차적으로 저장되길 원하기 때문이다.
 
 ```javascript
@@ -830,6 +849,8 @@ fromEvent(this.saveButton.nativeElement, 'click')
   .pipe(concatMap(() => this.saveCourse(this.form.value)))
   .subscribe()
 ```
+
+[https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/08-exhaustMap.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/08-exhaustMap.png)
 
 하지만 만약 사용자가 버튼을 여러번 눌렀다고 했을땐 어떤일이 일어날까? 20 번을 눌렀다고 한다면 20 번이 저장이 될것이다.
 우리는 이미 save 가 진행중인게 있다면 나머지 클릭들이 무시되길 원한다. 이때 exhaust Observable 전략을 사용할 수있다.
