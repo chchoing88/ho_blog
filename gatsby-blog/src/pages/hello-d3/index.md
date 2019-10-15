@@ -654,170 +654,247 @@ function loadSVG(svgData) {
 }
 ```
 
-
-### 예제 
+### 예제
 
 ```javascript
-d3.csv("worldcup.csv", data => data).then(arrData => overallTeamViz(arrData))
-    
+d3.csv('worldcup.csv', data => data).then(arrData => overallTeamViz(arrData))
+
 function overallTeamViz(incomingData) {
-  d3.select("svg")
-    .append("g")
-    .attr("id", "teamsG")
-    .attr("transform", "translate(50,300)")
-    .selectAll("g")
+  d3.select('svg')
+    .append('g')
+    .attr('id', 'teamsG')
+    .attr('transform', 'translate(50,300)')
+    .selectAll('g')
     .data(incomingData)
     .enter()
-    .append("g")
-    .attr("class", "overallG")
-    .attr("transform", function (d,i) {return "translate(" + (i * 50) + ", 0)"});
-      
-  const teamG = d3.selectAll("g.overallG");
-        
+    .append('g')
+    .attr('class', 'overallG')
+    .attr('transform', function(d, i) {
+      return 'translate(' + i * 50 + ', 0)'
+    })
+
+  const teamG = d3.selectAll('g.overallG')
+
   teamG
-    .append("circle")
+    .append('circle')
     .attr('r', 0)
     .transition()
-    .delay((d,i) => i * 100)
+    .delay((d, i) => i * 100)
     .duration(500)
     .attr('r', 40)
     .transition()
     .duration(500)
-    .attr("r", 20)
-    // .style("fill", "pink") css 로 처리
-    // .style("stroke", "black")
-    // .style("stroke-width", "1px")
-  
-  teamG
-    .append("text")
-    .style("text-anchor", "middle")
-    .attr("y", 30)
-    // .style("font-size", "10px") css 로 처리
-    .text(function(d) {return d.team})
+    .attr('r', 20)
+  // .style("fill", "pink") css 로 처리
+  // .style("stroke", "black")
+  // .style("stroke-width", "1px")
 
-  // incomingData[0] 은 객체 
-  const dataKeys = d3.keys(incomingData[0]).filter(el => el !== 'team' && el !== 'region')
+  teamG
+    .append('text')
+    .style('text-anchor', 'middle')
+    .attr('y', 30)
+    // .style("font-size", "10px") css 로 처리
+    .text(function(d) {
+      return d.team
+    })
+
+  // incomingData[0] 은 객체
+  const dataKeys = d3
+    .keys(incomingData[0])
+    .filter(el => el !== 'team' && el !== 'region')
 
   // 문자형 team과 region을 제외한 모든 속성을 가져온다.
-  d3.select('#controls').selectAll('button.teams')
-    .data(dataKeys).enter()
+  d3.select('#controls')
+    .selectAll('button.teams')
+    .data(dataKeys)
+    .enter()
     .append('button')
-    .on('click', buttonClick) // on 메서드는 바인딩 된 데이터를 함수에 자동으로 전달한다. 
+    .on('click', buttonClick) // on 메서드는 바인딩 된 데이터를 함수에 자동으로 전달한다.
     .html(d => d)
 
   function buttonClick(datapoint) {
-    
     const maxValue = d3.max(incomingData, d => parseFloat(d[datapoint]))
-    
+
     // const tenColorScale = d3.schemeCategory10(['UEFA', 'CONMEBOL', 'CAF', 'AFC']) //
     const tenColorScale = d3.scaleOrdinal(d3.schemeCategory10)
-    const radiusScale = d3.scaleLinear().domain([0, maxValue]).range([2,20])
+    const radiusScale = d3
+      .scaleLinear()
+      .domain([0, maxValue])
+      .range([2, 20])
 
-    d3.selectAll('g.overallG').select('circle').transition().duration(1000)
+    d3.selectAll('g.overallG')
+      .select('circle')
+      .transition()
+      .duration(1000)
       .style('fill', d => tenColorScale(d.region))
       .attr('r', d => radiusScale(d[datapoint]))
   }
 
-
-
-  teamG.on('mouseover', highlightRegion3) 
-  teamG.on('mouseout', unHighlight) 
+  teamG.on('mouseover', highlightRegion3)
+  teamG.on('mouseout', unHighlight)
   function highlightRegion(targetData) {
-    d3.selectAll('g.overallG').select('circle')
-      .style('fill', d => d.region === targetData.region ? 'red' : 'gray' )
+    d3.selectAll('g.overallG')
+      .select('circle')
+      .style('fill', d => (d.region === targetData.region ? 'red' : 'gray'))
   }
 
   function highlightRegion2(targetData, i) {
-    d3.select(this).select('text').classed('active', true).attr('y', 10)
-    d3.selectAll('g.overallG').select('circle').each(function (d,i) { // 안에서 this는 해당 DOM을 위해 사용해야 하니 화살표 함수를 지양하자.
-      d.region === targetData.region ? d3.select(this).classed('active', true) : d3.select(this).classed('inactive', true)
-    })
+    d3.select(this)
+      .select('text')
+      .classed('active', true)
+      .attr('y', 10)
+    d3.selectAll('g.overallG')
+      .select('circle')
+      .each(function(d, i) {
+        // 안에서 this는 해당 DOM을 위해 사용해야 하니 화살표 함수를 지양하자.
+        d.region === targetData.region
+          ? d3.select(this).classed('active', true)
+          : d3.select(this).classed('inactive', true)
+      })
   }
 
   function highlightRegion3(targetData, i) {
     const teamColor = d3.rgb('pink')
 
-    d3.select(this).select('text').classed('highlight', true).attr('y', 10)
+    d3.select(this)
+      .select('text')
+      .classed('highlight', true)
+      .attr('y', 10)
     // d3.selectAll('g.overallG').select('circle').each(function (d,i) { // 안에서 this는 해당 DOM을 위해 사용해야 하니 화살표 함수를 지양하자.
     //   d.region === targetData.region ? d3.select(this).classed('active', true) : d3.select(this).classed('inactive', true)
     // })
-    d3.selectAll('g.overallG').select('circle')
+    d3.selectAll('g.overallG')
+      .select('circle')
       .style('fill', d => {
-        return d.region === targetData.region ? teamColor.darker(.75) : teamColor.brighter(0.5)
+        return d.region === targetData.region
+          ? teamColor.darker(0.75)
+          : teamColor.brighter(0.5)
       })
     this.parentElement.appendChild(this) // 다시 부모의 마지막에 추가해준다.
   }
 
   function unHighlight() {
-    d3.selectAll('g.overallG').select('circle').attr('class', '')
-    d3.selectAll('g.overallG').select('text').classed('highlight', false).attr('y', 30)
+    d3.selectAll('g.overallG')
+      .select('circle')
+      .attr('class', '')
+    d3.selectAll('g.overallG')
+      .select('text')
+      .classed('highlight', false)
+      .attr('y', 30)
   }
-
 }
 
 // 색상 보간법
-const ybRamp = d3.scaleLinear().interpolate(d3.interpolateHsl).domain([0,4]).range(['yellow', 'blue'])
-const testData = [0,1,2,3]
+const ybRamp = d3
+  .scaleLinear()
+  .interpolate(d3.interpolateHsl)
+  .domain([0, 4])
+  .range(['yellow', 'blue'])
+const testData = [0, 1, 2, 3]
 
-d3.select('svg').selectAll('circle').data(testData).enter().append('circle')
+d3.select('svg')
+  .selectAll('circle')
+  .data(testData)
+  .enter()
+  .append('circle')
   .attr('r', 20)
   .attr('cy', 50)
-  .attr('cx', (d,i) => (60*i)+30)
+  .attr('cx', (d, i) => 60 * i + 30)
   .style('fill', d => ybRamp(d))
 ```
 
 # 차트
 
 - 생성기 : 데이터를 입력받고 이 데이터에 기초한 화면 객체를 생성하는데 필요한 SVG 그림 코드를 반환한다.(SVG의 속성 문자열 값) 생성기들은 <path> 요소의 d 속성을 작성하는데 필요한 과정을 추상화함으로써 복잡한 <path> 요소의 생성 과정을 단순하게 만들어줍니다.
-d3.line(), d3.area(), d3.arc() 와 같은게 있습니다.
+  d3.line(), d3.area(), d3.arc() 와 같은게 있습니다.
 
 - 컴포넌트 : 컴포넌트는 특정 차트 컴포넌트를 그리는데 필요한 일련의 화면 객체를 생성합니다. d3에서 가장 많이 사용하는 컴포넌트는 `d3.axisRight`와 같은 종류들입니다. 이것은 함수에 사용한 스케일과 설정에 기초해 축을 그리는데 필요한 수 많은 <line>, <path>, <g>, <text> 요소를 생성한다.
 
-- 레이아웃 : 레이아웃은 일련의 데이터, 그리고 생성기로 구성된 배열을 입력받아 특정 위치와 크기로 그리는데 필요한 데이터 속성을 동적 혹은 정적으로 추가한다. 레이아웃을 생성하고 데이터를 넣어주면 해당 차트를 그리는데 필요한 값들을 자동으로 생성해준다. 
+- 레이아웃 : 레이아웃은 일련의 데이터, 그리고 생성기로 구성된 배열을 입력받아 특정 위치와 크기로 그리는데 필요한 데이터 속성을 동적 혹은 정적으로 추가한다. 레이아웃을 생성하고 데이터를 넣어주면 해당 차트를 그리는데 필요한 값들을 자동으로 생성해준다.
 
 ## 축 생성
 
 - 축 생성에는 다음과 같은 메서드가 제공된다. x축 : d3.axisTop(), d3.axisBottom(), y축 : d3.axisLeft(), d3.axisRight()가 존재한다.
-- x축에 해당하는 d3.axisTop(), d3.axisBottom()는 기본적으로 svg 영역의 상단에 x축이 생성이 되고 Top과 Bottom의 차이는 tick의 방향이라고 생각 하면 되겠다 Top은 tick이 아래에서 위로 향하고 Bottom은 위에서 아래로 향하게 된다. 
+- x축에 해당하는 d3.axisTop(), d3.axisBottom()는 기본적으로 svg 영역의 상단에 x축이 생성이 되고 Top과 Bottom의 차이는 tick의 방향이라고 생각 하면 되겠다 Top은 tick이 아래에서 위로 향하고 Bottom은 위에서 아래로 향하게 된다.
 - x축을 d3.axisTop() 으로 생성하게 되면 레이블과 눈금을 볼 수 없다. 이 요소들이 그림 영역 밖에 그려지기 때문이다. 그래서 x축을 아래로 이동하려면 translate 를 사용해야한다.
 
 ```javascript
 const yAxis = d3.axisRight().scale(yScale)
 const xAxis = d3.axisBottom().scale(xScale)
-d3.select('svg').append('g').attr('id', 'yAxisG').call(yAxis)
-d3.select('svg').append('g').attr('id', 'xAxisG').call(xAxis)
+d3.select('svg')
+  .append('g')
+  .attr('id', 'yAxisG')
+  .call(yAxis)
+d3.select('svg')
+  .append('g')
+  .attr('id', 'xAxisG')
+  .call(xAxis)
 ```
 
 x축을 바닥으로 옮기고 y축을 오른쪽으로 옮겼을 때의 코드는 아래와 같다.
 
 ```javascript
-const scatterData = [{friends: 5, salary: 22000}, {friends: 3, salary: 18000}, {friends: 10, salary: 88000}, {friends: 0, salary: 180000}, {friends: 27, salary: 56000}, {friends: 8, salary: 74000}]
+const scatterData = [
+  { friends: 5, salary: 22000 },
+  { friends: 3, salary: 18000 },
+  { friends: 10, salary: 88000 },
+  { friends: 0, salary: 180000 },
+  { friends: 27, salary: 56000 },
+  { friends: 8, salary: 74000 },
+]
 
-xExtent = d3.extent(scatterData, function(d) {return d.salary});
-yExtent = d3.extent(scatterData, function(d) {return d.friends});
-xScale = d3.scaleLinear().domain(xExtent).range([20,480]);
-yScale = d3.scaleLinear().domain(yExtent).range([480,20]);
+xExtent = d3.extent(scatterData, function(d) {
+  return d.salary
+})
+yExtent = d3.extent(scatterData, function(d) {
+  return d.friends
+})
+xScale = d3
+  .scaleLinear()
+  .domain(xExtent)
+  .range([20, 480])
+yScale = d3
+  .scaleLinear()
+  .domain(yExtent)
+  .range([480, 20])
 
 // 축 생성
 // const yAxis = d3.svg.axis().scale(yScale).orient('right')// y축
-const yAxis = d3.axisRight().scale(yScale).tickSize(-460).tickPadding(7)
-const xAxis = d3.axisBottom().scale(xScale).tickSize(-460).tickPadding(7)
+const yAxis = d3
+  .axisRight()
+  .scale(yScale)
+  .tickSize(-460)
+  .tickPadding(7)
+const xAxis = d3
+  .axisBottom()
+  .scale(xScale)
+  .tickSize(-460)
+  .tickPadding(7)
 // const xAxis = d3.axisTop().scale(xScale)
-d3.select('svg').append('g').attr('id', 'yAxisG').call(yAxis)
-d3.select('svg').append('g').attr('id', 'xAxisG').call(xAxis)
-
+d3.select('svg')
+  .append('g')
+  .attr('id', 'yAxisG')
+  .call(yAxis)
+d3.select('svg')
+  .append('g')
+  .attr('id', 'xAxisG')
+  .call(xAxis)
 
 d3.select('#xAxisG').attr('transform', 'translate(0, 480)')
 d3.select('#yAxisG').attr('transform', 'translate(480, 0)')
 
-d3.select("svg")
-  .selectAll("circle")
+d3.select('svg')
+  .selectAll('circle')
   .data(scatterData)
   .enter()
-  .append("circle")
-  .attr("r", 5)
-  .attr("cx", function(d) {return xScale(d.salary)})
-  .attr("cy", function(d) {return yScale(d.friends)})
+  .append('circle')
+  .attr('r', 5)
+  .attr('cx', function(d) {
+    return xScale(d.salary)
+  })
+  .attr('cy', function(d) {
+    return yScale(d.friends)
+  })
 ```
 
 ## 점으로 선 그리기
@@ -827,7 +904,8 @@ d3.select("svg")
 - 선 생성기의 x() 접근자 메서드를 사용해서 x값을 셋팅할수 있고 y() 접근자 메서드를 사용해서 y값을 셋팅할 수 있다.
 
 ```javascript
-const tweetLine = d3.line() // tweetLine 이 선 생성기
+const tweetLine = d3
+  .line() // tweetLine 이 선 생성기
   // 데이터에 대한 접근자를 정의한다.
   // 여기에서는 날짜 속성을 가져와 xScale()에 전달한다.
   .x(d => xScale(d.day))
@@ -844,10 +922,10 @@ d3.select('svg')
 
 ## 채워진 영역
 
-- SVG에서 선(line)과 채워진 영역(filled areas)는 거의 동일합니다. 단지 그리는 코드 제일 뒤에 'Z'를 추가하거나 도형에 'fill' 스타일이 있으면 닫힌 도형이 됩니다. 
-- D3는 d3.line() 생성기로 선을 그리고, d3.area() 생성기로 영역을 그립니다. 두 생성기 모두 <path> 요소를 생성하지만 d3.area()는 경로의 아래 영역을 막아 영역을 만드는 헬퍼 함수를 제공한다. 
-- y() 접근자만 셋팅 했을 때 y0에 y를 넣고 y1은 null 셋팅(null을 셋팅한다는 것은 이전에 계산되었던 y0 값을 재사용하겠다는 뜻이다.)한다. 
-- x축으로 채워지는 모양을 만들기 위해선 y0, y1 또는 y, y1을 셋팅해주어야 한다. 
+- SVG에서 선(line)과 채워진 영역(filled areas)는 거의 동일합니다. 단지 그리는 코드 제일 뒤에 'Z'를 추가하거나 도형에 'fill' 스타일이 있으면 닫힌 도형이 됩니다.
+- D3는 d3.line() 생성기로 선을 그리고, d3.area() 생성기로 영역을 그립니다. 두 생성기 모두 <path> 요소를 생성하지만 d3.area()는 경로의 아래 영역을 막아 영역을 만드는 헬퍼 함수를 제공한다.
+- y() 접근자만 셋팅 했을 때 y0에 y를 넣고 y1은 null 셋팅(null을 셋팅한다는 것은 이전에 계산되었던 y0 값을 재사용하겠다는 뜻이다.)한다.
+- x축으로 채워지는 모양을 만들기 위해선 y0, y1 또는 y, y1을 셋팅해주어야 한다.
 
 ```javascript
 // y0 접근자 default
@@ -864,138 +942,163 @@ function y(d) {
 - `path` 의 경로를 닫든 닫지 않든, 영역을 채우든 채우지 않든, 도형과 선을 그릴 때는 대부분 `d3.line()` 을 사용한다. (d 속성의 끝에 Z를 넣거나, fill 속성을 채워준다.) 그러나 `다른 도형의 꼭대기를 바닥`으로 삼아 누적된 도형을 그릴 때는 `d3.area()` 를 사용해야 한다. `d3.area()`는 누적 영역 차트나 스트림 그래프처럼 데이터의 대역을 그리기에 적절하다.
 
 ```javascript
-d3.csv("movies.csv", data => data).then(arrData => areaChart(arrData))
-  
-  function areaChart(data) {
+d3.csv('movies.csv', data => data).then(arrData => areaChart(arrData))
 
-    xScale = d3.scaleLinear().domain([1,10.5]).range([20,480]);
-    yScale = d3.scaleLinear().domain([0,35]).range([240,20]);
+function areaChart(data) {
+  xScale = d3
+    .scaleLinear()
+    .domain([1, 10.5])
+    .range([20, 480])
+  yScale = d3
+    .scaleLinear()
+    .domain([0, 35])
+    .range([240, 20])
 
-
-    xAxis = d3.axisBottom()
+  xAxis = d3
+    .axisBottom()
     .scale(xScale)
     .tickSize(480)
-    .tickValues([1,2,3,4,5,6,7,8,9,10]);
-    
-    d3.select("svg").append("g").attr("id", "xAxisG").call(xAxis);
-        
-    yAxis = d3.axisRight()
+    .tickValues([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+  d3.select('svg')
+    .append('g')
+    .attr('id', 'xAxisG')
+    .call(xAxis)
+
+  yAxis = d3
+    .axisRight()
     .scale(yScale)
     .ticks(10)
     .tickSize(480)
-    //.tickSubdivide(true);
-      
-    d3.select("svg").append("g").attr("id", "yAxisG").call(yAxis);
-    
-    // fillScale = d3.scaleLinear()
-    //     .domain([0,5])
-    //     .range(["lightgray","black"]);
+  //.tickSubdivide(true);
 
-    var n = 0;
-    for (x in data[0]) {
-      if (x != "day") {
-        
-        const movieArea = d3.area()
-                      .x(function(d) {
-                        return xScale(d.day)
-                      })
-                      .y0(function(d) {
-                        
-                        return yScale(-d[x])
-                      })
-                      .y1(function(d) {
-                        // return yScale(simpleStacking(d,x) - d[x]);
-                        return yScale(d[x])
-                      })
-                      .curve(d3.curveCardinal.tension(0))
+  d3.select('svg')
+    .append('g')
+    .attr('id', 'yAxisG')
+    .call(yAxis)
 
-        d3.select("svg")
-          .append("path")
-          .attr("id", x + "Area")
-          .attr("d", movieArea(data))
-          .attr("fill", 'darkgray')
-          .attr("stroke", 'lightgray')
-          .attr("stroke-width", 2)
-          .style("opacity", .5)
-          
-        n++;
-      }
-    }    
+  // fillScale = d3.scaleLinear()
+  //     .domain([0,5])
+  //     .range(["lightgray","black"]);
+
+  var n = 0
+  for (x in data[0]) {
+    if (x != 'day') {
+      const movieArea = d3
+        .area()
+        .x(function(d) {
+          return xScale(d.day)
+        })
+        .y0(function(d) {
+          return yScale(-d[x])
+        })
+        .y1(function(d) {
+          // return yScale(simpleStacking(d,x) - d[x]);
+          return yScale(d[x])
+        })
+        .curve(d3.curveCardinal.tension(0))
+
+      d3.select('svg')
+        .append('path')
+        .attr('id', x + 'Area')
+        .attr('d', movieArea(data))
+        .attr('fill', 'darkgray')
+        .attr('stroke', 'lightgray')
+        .attr('stroke-width', 2)
+        .style('opacity', 0.5)
+
+      n++
+    }
   }
+}
 ```
 
 - 위 차트를 누적 차트로 만들면 다음과 같다. 각 영역의 높이는 영화 한 편이 그날 벌어들인 매출액을 나타내며, 각 영역의 밑은 그날 다른 영화들이 벌어들인 매출액의 합계를 나타낸다.
 
 ```javascript
-d3.csv("movies.csv", data => data).then(arrData => areaChart(arrData))
-  
-  function areaChart(data) {
-    xScale = d3.scaleLinear().domain([0,11]).range([20,480]);
-    yScale = d3.scaleLinear().domain([-100,100]).range([480,20]);
+d3.csv('movies.csv', data => data).then(arrData => areaChart(arrData))
 
-    xAxis = d3.axisBottom()
+function areaChart(data) {
+  xScale = d3
+    .scaleLinear()
+    .domain([0, 11])
+    .range([20, 480])
+  yScale = d3
+    .scaleLinear()
+    .domain([-100, 100])
+    .range([480, 20])
+
+  xAxis = d3
+    .axisBottom()
     .scale(xScale)
     .tickSize(480)
-    .tickValues([1,2,3,4,5,6,7,8,9,10]);
-    
-    d3.select("svg").append("g").attr("id", "xAxisG").call(xAxis);
-        
-    yAxis = d3.axisRight()
+    .tickValues([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+  d3.select('svg')
+    .append('g')
+    .attr('id', 'xAxisG')
+    .call(xAxis)
+
+  yAxis = d3
+    .axisRight()
     .scale(yScale)
     .ticks(10)
     .tickSize(480)
-          
-    d3.select("svg").append("g").attr("id", "yAxisG").call(yAxis);
-    
-    fillScale = d3.scaleLinear()
-        .domain([0,5])
-        .range(["lightgray","black"]);
 
-    var n = 0;
-    for (x in data[0]) {
-      if (x != "day") {
-        
-        const movieArea = d3.area()
-                      .x(function(d) {
-                        return xScale(d.day)
-                      })
-                      .y0(function(d) {
-                        console.log(simpleStacking(d,x)) // 매번 다른 객체, movie1
-                        return yScale(simpleStacking(d,x)-d[x])
-                      })
-                      .y1(function(d) {
-                        // return yScale(simpleStacking(d,x) - d[x]);
-                        return yScale(simpleStacking(d,x))
-                      })
-                      .curve(d3.curveCardinal.tension(0))
+  d3.select('svg')
+    .append('g')
+    .attr('id', 'yAxisG')
+    .call(yAxis)
 
-        d3.select("svg")
-          .append("path")
-          .attr("id", x + "Area")
-          .attr("d", movieArea(data)) // data는 배열. 배열을 순회하면서 movie1 을 먼저 그리고
-          .attr("fill", fillScale(n))
-          .attr("stroke", 'lightgray')
-          .attr("stroke-width", 2)
-          .style("opacity", .5)
-          
-        n++;
-      }
+  fillScale = d3
+    .scaleLinear()
+    .domain([0, 5])
+    .range(['lightgray', 'black'])
+
+  var n = 0
+  for (x in data[0]) {
+    if (x != 'day') {
+      const movieArea = d3
+        .area()
+        .x(function(d) {
+          return xScale(d.day)
+        })
+        .y0(function(d) {
+          console.log(simpleStacking(d, x)) // 매번 다른 객체, movie1
+          return yScale(simpleStacking(d, x) - d[x])
+        })
+        .y1(function(d) {
+          // return yScale(simpleStacking(d,x) - d[x]);
+          return yScale(simpleStacking(d, x))
+        })
+        .curve(d3.curveCardinal.tension(0))
+
+      d3.select('svg')
+        .append('path')
+        .attr('id', x + 'Area')
+        .attr('d', movieArea(data)) // data는 배열. 배열을 순회하면서 movie1 을 먼저 그리고
+        .attr('fill', fillScale(n))
+        .attr('stroke', 'lightgray')
+        .attr('stroke-width', 2)
+        .style('opacity', 0.5)
+
+      n++
     }
+  }
 
-    function simpleStacking(incomingData, incomingAttribute) {
-      var newHeight = 0;
-      for (x in incomingData) {
-        if (x != "day") {
-          newHeight += parseInt(incomingData[x]);
-          if (x == incomingAttribute) {
-            break;
-          }
+  function simpleStacking(incomingData, incomingAttribute) {
+    var newHeight = 0
+    for (x in incomingData) {
+      if (x != 'day') {
+        newHeight += parseInt(incomingData[x])
+        if (x == incomingAttribute) {
+          break
         }
       }
-      return newHeight;
     }
-    
+    return newHeight
   }
+}
 ```
 
 - 누적 차트를 스트림 그래프로 만들려면 누적된 영역이 교차 해야한다.
@@ -1015,18 +1118,24 @@ D3에는 일반적인 차트 기법으로 표현할 수 있도록 데이터 포�
 ## 파이 차트
 
 ```javascript
-const pieChart = d3.pie().value(d => d.numTweets).sort(null) // 레이아웃
-const newArc = d3.arc() // 생성기
-                  .innerRadius(20)
-                  .outerRadius(100)
+const pieChart = d3
+  .pie()
+  .value(d => d.numTweets)
+  .sort(null) // 레이아웃
+const newArc = d3
+  .arc() // 생성기
+  .innerRadius(20)
+  .outerRadius(100)
 const tenColorScale = d3.scaleOrdinal(d3.schemeCategory10)
-
 
 d3.json('tweets.json').then(data => makeRingChart(data.tweets))
 
 function makeRingChart(arrIncomingData) {
-  const nestedTweets = d3.nest().key(el => el.user).entries(arrIncomingData)
-  console.log('nestedTweets',nestedTweets)
+  const nestedTweets = d3
+    .nest()
+    .key(el => el.user)
+    .entries(arrIncomingData)
+  console.log('nestedTweets', nestedTweets)
 
   nestedTweets.forEach(el => {
     el.numTweets = el.values.length
@@ -1035,51 +1144,57 @@ function makeRingChart(arrIncomingData) {
   })
 
   const yourPie = pieChart(nestedTweets)
-  
+
   d3.select('svg')
-  .append('g')
-  .attr('transform', 'translate(250,250)')
-  .selectAll('path')
-  .data(yourPie, d => d.data.key)
-  .enter()
-  .append('path')
-  .attr('d', newArc)
-  .style('fill', d => tenColorScale(d.data.key))
-  .style('opacity', .5)
-  .style('stroke', 'black')
-  .style('stroke-width', '2px')
-  .each(function(d) { this._current = d; });
+    .append('g')
+    .attr('transform', 'translate(250,250)')
+    .selectAll('path')
+    .data(yourPie, d => d.data.key)
+    .enter()
+    .append('path')
+    .attr('d', newArc)
+    .style('fill', d => tenColorScale(d.data.key))
+    .style('opacity', 0.5)
+    .style('stroke', 'black')
+    .style('stroke-width', '2px')
+    .each(function(d) {
+      this._current = d
+    })
 
   setTimeout(() => {
     pieChart.value(d => d.numFavorites)
-    d3.selectAll('path').data(pieChart(nestedTweets), d => d.data.key)
-    // transition 메서드가 원호를 잘 처리하지 못한다. 
-    // 원호의 각을 전환하는 것이 아니라 각각의 부채꼴을 하나의 기하학적 도형으로 간주해 처리한다.
-    .transition() 
-    .duration(1000)
-    .attrTween('d', arcTween) // attr('d', newArc)
-    .style('fill', d => tenColorScale(d.data.key))
-  },2000)
-  
-
+    d3.selectAll('path')
+      .data(pieChart(nestedTweets), d => d.data.key)
+      // transition 메서드가 원호를 잘 처리하지 못한다.
+      // 원호의 각을 전환하는 것이 아니라 각각의 부채꼴을 하나의 기하학적 도형으로 간주해 처리한다.
+      .transition()
+      .duration(1000)
+      .attrTween('d', arcTween) // attr('d', newArc)
+      .style('fill', d => tenColorScale(d.data.key))
+  }, 2000)
 
   setTimeout(() => {
     pieChart.value(d => d.numRetweets)
-    d3.selectAll('path').data(pieChart(nestedTweets.filter(d => d.numRetweets > 0)), d => d.data.key)
+    d3.selectAll('path')
+      .data(
+        pieChart(nestedTweets.filter(d => d.numRetweets > 0)),
+        d => d.data.key
+      )
       .exit()
       .remove()
 
-    
-    d3.selectAll('path').data(pieChart(nestedTweets.filter(d => d.numRetweets > 0)), d => d.data.key)
+    d3.selectAll('path')
+      .data(
+        pieChart(nestedTweets.filter(d => d.numRetweets > 0)),
+        d => d.data.key
+      )
       .transition()
       .duration(1000)
       .attrTween('d', arcTween)
       .style('fill', d => tenColorScale(d.data.key))
-      
   }, 4000)
-  
-  
-  // 트위닝(tweening) 
+
+  // 트위닝(tweening)
   // 사전적 의미 ~사이에, ~중간에
   // 키 프레임 사이를 자동으로 채워주는 기능
   function arcTween(a) {
@@ -1092,7 +1207,6 @@ function makeRingChart(arrIncomingData) {
       return newArc(i(t))
     }
   }
-
 }
 ```
 
@@ -1106,49 +1220,145 @@ function makeRingChart(arrIncomingData) {
   - node.r : 원 객체의 반지름
 - 이 root 객체는 `d3.hierarchy(data[, children])` 또는 `d3.stratify()` 로 만들 수 있다.
 - root 객체를 만들고 나서는 `root.sum` 메서드를 호출해서 pack layout에 넘거야 합니다. 또한 `root.sort`로 계층의 순서도 조절할 수 있다.
-- `root.sum()`의 매개변수로 접근자 함수를 넣으면 각 node 별로 value 값이 생긴다. 
+- `root.sum()`의 매개변수로 접근자 함수를 넣으면 각 node 별로 value 값이 생긴다.
 - `data()` 메서드로 넘길 때에는 레이아웃에 데이터를 넘긴 값의 `descendants()` 메서드를 호출해 계층별로 되어있는 구조를 선형구조인 배열로 바꿔준다.
 
 ```javascript
-d3.json("tweets.json").then(data => dataViz(data.tweets))
+d3.json('tweets.json').then(data => dataViz(data.tweets))
 
 function dataViz(incData) {
+  const nestedTweets = d3
+    .nest()
+    .key(function(el) {
+      return el.user
+    })
+    .entries(incData)
 
-  const nestedTweets = d3.nest()
-  .key(function (el) {return el.user})
-  .entries(incData);
-
-  const packableTweets = {id: "root", values: nestedTweets}
+  const packableTweets = { id: 'root', values: nestedTweets }
   const depthScale = d3.scaleOrdinal(d3.schemeCategory10) // ordinal : 서수
-  const packChart = d3.pack().size([500,500])
+  const packChart = d3
+    .pack()
+    .size([500, 500])
     .radius(d => {
       // console.log(d)
       return d.value * 10
     }) // radius는 pack 원의 반지름, default null일 경우 node.value 값으로 셋팅한다. , d 값은 말단 leaf node 객체이다.
-    .padding(5);
-  const rootData = d3.hierarchy(packableTweets, d => d.values)
+    .padding(5)
+  const rootData = d3
+    .hierarchy(packableTweets, d => d.values)
     .sum(d => {
-      return d.favorites && d.retweets ? d.favorites.length + d.retweets.length + 1 : 0
+      return d.favorites && d.retweets
+        ? d.favorites.length + d.retweets.length + 1
+        : 0
     }) // 각 노드의 value를 셋팅해줌. 내부 값이 있는 leaf node만 셋팅해주고 싶다면 나머지는 0 으로 셋팅한다.
-  
- 
-  d3.select("svg")
-  .append("g")
-  .attr("transform", "translate(0,0)")
-  .selectAll("circle")
-  .data(packChart(rootData).descendants())
-  .enter()
-  .append("circle")
-  .attr("r", function(d) {return d.r}) // 노드의 반지름을 depth 값에 따라 계산해 줄인다.
-  .attr("cx", function(d) {return d.x})
-  .attr("cy", function(d) {return d.y})
-  .style("fill", function(d) {return depthScale(d.depth)})
-  .style("stroke", "black")
-  .style("stroke", "2px")
+
+  d3.select('svg')
+    .append('g')
+    .attr('transform', 'translate(0,0)')
+    .selectAll('circle')
+    .data(packChart(rootData).descendants())
+    .enter()
+    .append('circle')
+    .attr('r', function(d) {
+      return d.r
+    }) // 노드의 반지름을 depth 값에 따라 계산해 줄인다.
+    .attr('cx', function(d) {
+      return d.x
+    })
+    .attr('cy', function(d) {
+      return d.y
+    })
+    .style('fill', function(d) {
+      return depthScale(d.depth)
+    })
+    .style('stroke', 'black')
+    .style('stroke', '2px')
 }
 ```
 
 ## 트리
+
+- 트리 레이아웃은 다음과 같은 계층 root객체가 필요하다.
+  - node.x : 노드의 x 좌표
+  - node.y : 노드의 y 좌표
+- 노드와 노드를 연결 하기 위해선 `d3.hierarchy`의 리턴인 node 객체의 `links` 메서드를 사용한다. `links` 메서드를 사용하면 source 와 target 객체로 노드를 연결해 놓은 배열이 리턴된다.
+
+```javascript
+d3.json('tweets.json').then(data => dataViz(data.tweets))
+
+function dataViz(incData) {
+  // 데이터를 만드는 곳
+  const nestedTweets = d3
+    .nest()
+    .key(function(el) {
+      return el.user
+    })
+    .entries(incData)
+  const packableTweets = { id: 'root', values: nestedTweets }
+  const rootData = d3.hierarchy(packableTweets, d => d.values)
+
+  // 색 스케일
+  const depthScale = d3.scaleOrdinal(d3.schemeCategory10) // ordinal : 서수
+
+  const treeChart = d3.tree().size([500, 500]) // 레이아웃
+  const linkGenerator = d3
+    .linkHorizontal() // 가로로 링크를 생성하는 생성기
+    .x(d => d.y + 20) // 화면에 너무 붙지않게 하기 위해서
+    .y(d => d.x)
+
+  d3.select('svg')
+    .append('g')
+    .attr('class', 'treeG')
+    .selectAll('g')
+    .data(treeChart(rootData).descendants()) // treeChart(rootData) : node
+    .enter()
+    .append('g')
+    .attr('class', 'node')
+    .attr('transform', function(d) {
+      return 'translate(' + (d.y + 20) + ',' + d.x + ')' // 화면에 너무 붙지 않게 하기 위해서
+    })
+
+  d3.selectAll('g.node')
+    .append('circle')
+    .attr('r', 10)
+    .style('fill', function(d) {
+      return depthScale(d.depth)
+    })
+    .style('stroke', 'white')
+    .style('stroke-width', '2px')
+
+  d3.selectAll('g.node')
+    .append('text')
+    .text(function(d) {
+      return d.data.id || d.data.key || d.data.content
+    })
+  console.log(treeChart(rootData).links())
+  d3.select('g.treeG')
+    .selectAll('path')
+    .data(treeChart(rootData).links())
+    .enter()
+    .insert('path', 'g')
+    .attr('d', linkGenerator)
+    .style('fill', 'none')
+    .style('stroke', 'black')
+    .style('stroke-width', '2px')
+
+  treeZoom = d3.zoom()
+  treeZoom.on('zoom', zoomed)
+  d3.select('svg').call(treeZoom)
+
+  function zoomed() {
+    // 지정된 노드의 현재 transform이 리턴된다. 여기서 노드는 selection이 아닌 DOM Element 이다.
+    // element 내부에 __zoom이라는 속성으로 정보가 저장되지만 직접 접근하는 것보다 메서드를 통해서 접근하는게 좋다.
+    // transform.x : x축으로 이동한 양 tx
+    // transform.y : y축으로 이동한 양 ty
+    // transform.k : 스케일 지수 k
+    const { x, y } = d3.zoomTransform(this)
+
+    d3.select('g.treeG').attr('transform', 'translate(' + x + ',' + y + ')')
+  }
+}
+```
 
 ## 스택
 
