@@ -3,7 +3,7 @@ title: Virtual DOM is pure overhead
 date: '2019-10-12T10:00:03.284Z'
 ---
 
-[이글](https://svelte.dev/blog/virtual-dom-is-pure-overhead)은 다음글을 보고 해석한 것입니다.
+[이글](https://svelte.dev/blog/virtual-dom-is-pure-overhead)은 다음글을 보고 번역한 것입니다.
 
 만약 지난 몇년 동안 자바스크립트 프레임워크를 사용했다면 아마 'virtual DOM은 빠르다'는 말을 들었을 것입니다. 또한 종종 _real DOM_ 보다 더 빠르다는 의미로 사용되어져 왔습니다. 이런 생각들은 놀랍게도 인터넷을 통해 사람에서 사람 사이에 전파 되었습니다. 예를 들면 사람들은 어떻게 Selte가 virtual DOM 을 사용하지 않고도 빠를 수 있냐고 물어오곤 합니다.
 
