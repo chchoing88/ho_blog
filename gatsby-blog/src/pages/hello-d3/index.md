@@ -1115,13 +1115,16 @@ D3에는 일반적인 차트 기법으로 표현할 수 있도록 데이터 포�
 
 레이아웃에 데이터 셋을 넣어주면 원래 데이터뿐만 아니라 그래프 요소나 생성기에 전달할 새로운 속성을 가진 데이터 셋을 반환한다.
 
+5버젼에서 layout은 `Chords`, `Fouces`, `Hierarchies` 만 남아있다.
+
 ## 파이 차트
 
 ```javascript
 const pieChart = d3
-  .pie()
+  .pie() // 생성자
   .value(d => d.numTweets)
-  .sort(null) // 레이아웃
+  .sort(null) 
+
 const newArc = d3
   .arc() // 생성기
   .innerRadius(20)
@@ -1237,7 +1240,7 @@ function dataViz(incData) {
   const packableTweets = { id: 'root', values: nestedTweets }
   const depthScale = d3.scaleOrdinal(d3.schemeCategory10) // ordinal : 서수
   const packChart = d3
-    .pack()
+    .pack() // 계층형 layout
     .size([500, 500])
     .radius(d => {
       // console.log(d)
@@ -1307,7 +1310,7 @@ function dataViz(incData) {
   // 색 스케일
   const depthScale = d3.scaleOrdinal(d3.schemeCategory10) // ordinal : 서수
 
-  const treeChart = d3.tree().size([500, 500]) // 레이아웃
+  const treeChart = d3.tree().size([500, 500]) // 계층형 레이아웃
   const linkGenerator = d3
     .linkHorizontal() // 가로로 링크를 생성하는 생성기
     .x(d => d.y + 20) // 화면에 너무 붙지않게 하기 위해서
@@ -1339,7 +1342,7 @@ function dataViz(incData) {
     .text(function(d) {
       return d.data.id || d.data.key || d.data.content
     })
-  console.log(treeChart(rootData).links())
+  
   d3.select('g.treeG')
     .selectAll('path')
     .data(treeChart(rootData).links())
@@ -1369,4 +1372,98 @@ function dataViz(incData) {
 
 ## 스택
 
+- `d3.area()`에 전달해 누적 차트나 스트림 그래프를 쉽게 그릴 수 있도록 데이터를 포맷하는 스택 레이아웃을 제공한다.
+- 스트림 그래프는 적어도 차트의 영역이 시각적으로 각 영화의 이익 합계를 제대로 보여줄수 있다.
+- 스트림 그래프를 구현하려면 스택 레이아웃과 함께 영역 생성기를 사용해야 한다. 
+  - 레이아웃의 요구에 맞도록 데이터를 처리한다.
+  - 데이터셋에 맞춰 레이아웃의 접근자 메서드를 설정한다.
+  - 레이아웃으로 데이터를 출력할 수 있게 포맷한다.
+  - 수정된 데이터를 직접 SVG 요소에 전달하거나 `d3.linkHorizontal()`, `d3.arc()`, `d3.area()` 등의 생성기와 결합시킨다.
+- `stack()` 생성기는 배열 데이터를 받아서 각 시리즈를 가지고있는 배열을 리턴한다. 
+- 시리즈들은 key 접근자에 의해 결정된다.
+- 리턴된 배열은 2차원 배열로 구성이 되며 `result[i][j]`로 생각했을때, _i_ 는 key의 _i_ 번째 관한 데이터이고, _j_ 와 관련 되어있는 시리즈의 point는 입력된 배열 데이터의 _j_ 번째 요소에 해당한다.
+- 각 시리즈의 key 값은 `series.key`, index 값은 `series.index`, 각 포인트에 해당하는 input data는 `point.data`로 이용가능하다.
+
+```javascript
+
+var data = [
+  {month: new Date(2015, 0, 1), apples: 3840, bananas: 1920, cherries: 960, dates: 400},
+  {month: new Date(2015, 1, 1), apples: 1600, bananas: 1440, cherries: 960, dates: 400},
+  {month: new Date(2015, 2, 1), apples:  640, bananas:  960, cherries: 640, dates: 400},
+  {month: new Date(2015, 3, 1), apples:  320, bananas:  480, cherries: 640, dates: 400}
+];
+
+var stack = d3.stack()
+    .keys(["apples", "bananas", "cherries", "dates"])
+    .order(d3.stackOrderNone)
+    .offset(d3.stackOffsetNone);
+
+var series = stack(data);
+
+// stack() 의 결과물
+const result = [
+  [[   0, 3840], // point : 입력된 data 배열의 첫번째 데이터에 해당한다.
+   [   0, 1600], [   0,  640], [   0,  320]], // apples (series)
+  [[3840, 5760], [1600, 3040], [ 640, 1600], [ 320,  800]], // bananas
+  [[5760, 6720], [3040, 4000], [1600, 2240], [ 800, 1440]], // cherries
+  [[6720, 7120], [4000, 4400], [2240, 2640], [1440, 1840]], // dates
+]
+```
+
+```javascript
+d3.csv("movies.csv").then(data => dataViz(data))
+
+function dataViz(incData) {
+  expData = incData;
+  const stackData = [];
+  
+  const xScale = d3.scaleLinear()
+  .domain([0, 11])
+  .range([0, 500]);
+
+  const yScale = d3.scaleLinear()
+  .domain([-30, 30])
+  .range([500, 0]);
+
+  const movieColors = d3.scaleOrdinal(d3.schemeCategory10) // ordinal : 서수
+
+  const stackArea = d3.area() 
+  .x(function(d) { return xScale(d.data.day); })
+  .y0(function(d, i) { return yScale(d[0]); })
+  .y1(function(d, i) { return yScale(d[1]); })
+  .curve(d3.curveCardinal.tension(0))
+  
+ 
+  const stackLayout = d3.stack() // 생성자 (generate)
+  .keys(['movie1', 'movie2', 'movie3', 'movie4', 'movie5', 'movie6'])
+  .offset(d3.stackOffsetSilhouette) // 'silhouette' 수평선을 중심으로 누적된 영역을 그린다.
+  .order(d3.stackOrderInsideOut) 
+  
+
+  d3.select("svg").selectAll("path")
+  .data(stackLayout(incData))
+  .enter().append("path")
+  .style("fill", function(d) {return movieColors(d.key)})
+  .attr("d", function(d) { return stackArea(d); }) 
+}
+```
+
 ## 생키 레이아웃
+
+- 생키 레이아웃은 플러그인이다. 기본적으로 d3에서 제공하는 api에 있지 않고 스크립트를 추가 해야 한다.[https://github.com/d3/d3-sankey](https://github.com/d3/d3-sankey)
+- 생키 다이어그램은 어떤 범주에서 다른 범주로 흘러가는 것을 보여줄 수 있다.
+- 생키 다이어그램은 구글 웹로그 분ㅅ헉에서 사용하는 다이어그램으로서, 웹 사이트의 한 페이지에서 다른 페이지로 이동한 사용자의 흐름을 보여준다.
+- 생키 다이어그램은 노드와 엣지(링크) 라는 두 종류의 객체로 구성된다. 
+- 웹로그 분석에서 노드는 웹 페이지나 이벤트를, 엣지는 웹 페이지 간의 이동을 나타낸다. 
+- 엣지는 웹 페이지 간의 이동을 나타낸다. 여러 노드를 다른 여러 노드에 연결할 수 있으므로 생키 다이어그램이 계층 구조를 표현하는 것은 아니다.
+
+### 데이터 시각화
+
+- 데이터 시각화는 데이터를 처리하는데 사용한 기법을
+
+## 워드 클라우드 
+
+- 워드 클라우드는 텍스트를 중요도나 빈도에 따라 다른 크기로 표현한다.
+- 단어는 상당히 효율적인 그래픽 객체이다. 어떤 단어의 중요성을 나타내는 수치형 속성을 찾아낼 수 있다면 워드 클라우드 안에서 그 단어의 크기를 키워 사용자에게 중요성을 전달하면 된다.
+- 여타 레이아웃과 달리 cloud()는 워드 클라우드를 생성하는데 효율적인 공간의 계산을 완료 했을때, 이를 알려주려 end 이벤트를 발생한다. 이때 단어의 위치, 회전, 크기 등을 계산한 데이터셋을 함께 전달한다. 그러고 나면 레이아웃을 다시 언급하거나 변수에 할당할 필요 없이 바로 클라우드 레이아웃을 실행할 수 있다. 
+- 클라우드 레이아웃을 다시 사용하거나 설정을 조정할 때는 다른 레이아웃과 마찬가지로 레이아웃을 변수에 할당해야 한다.
