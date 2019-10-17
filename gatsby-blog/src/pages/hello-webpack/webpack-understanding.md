@@ -1,5 +1,5 @@
 ---
-title: webpackunderstanding
+title: webpack-understanding
 date: "2019-10-17 T10:00:03.284Z"
 ---
 
