@@ -213,8 +213,6 @@ function createMap(countries, cities) {
 - 공간 단위 문제가 발생할 수 있으므로 주의해야 한다. 공간 단위 문제는 통계 데이터를 왜곡해서 보여주려 기존 지형에 경계를 그릴 때 발생한다. 자기 당에 유리하도록 선거구를 정하는 게리맨더링은 이런 문제의 대표적인 예다.
 
 
-
-
 ### 상호작용성
 
 - D3는 지역을 색칠하려고 영역을 계산하는 것 외에도 유용한 기능이 많다. 
@@ -223,5 +221,337 @@ function createMap(countries, cities) {
 - D3는 가중치로 중심을 계산하므로 경계 상자가 아니라 지형의 중심을 계산한다. 
 
 ```javascript
+// projection 이 도법
+  Promise.all([d3.json("world.geojson"), d3.csv('cities.csv')])
+  .then(dataList => {
+    const [countries, cities] = dataList
+    createMap(countries, cities)
+  });
+
+
+  const width = 500
+  const height = 500
+  
+  function createMap(countries, cities) {
+    const aProjection = d3.geoMercator()
+                          .scale(80)
+                          .translate([width / 2, height / 2]);
+
+    const mProjection = d3.geoMollweide()
+                          .scale(120)
+                          .translate([width / 2, height / 2]);
+
+    // const geoPath = d3.geoPath().projection(aProjection);
+    const geoPath = d3.geoPath().projection(mProjection);
+    // 영역의 최소값과 최대값을 구할 수 있다.
+    const featureSize = d3.extent(countries.features, d => geoPath.area(d)) 
+    // 지형을 측정해 색상 그레이디언트에 정의된 색상을 할당한다. 
+    // scaleQuantize : 연속적인 range 대신에 불연속적인걸 사용한다는걸 제외하고는 linear scales 와 유사
+    // colorbrewer : 색상 배열로 정보 시각화에 지도 제작에 유용한 라이브러리
+    
+    const countryColor = d3.scaleQuantize().domain(featureSize).range(colorbrewer.Reds[7])
+
+    d3.select("svg").selectAll("path").data(countries.features)
+    	.enter()
+      .append("path")
+      .attr("d", geoPath)
+      .attr("class", "countries")
+      // 면적에 따라 나라의 색상을 칠한다.
+      .style('fill', d => countryColor(geoPath.area(d)))
+      
+    
+    d3.selectAll('path.countries').on('mouseover', centerBounds).on('mouseout', clearCenterBounds)
+
+    function centerBounds(d, i) {
+      const thisBounds = geoPath.bounds(d)
+      const thisCenter = geoPath.centroid(d)
+
+      d3.select('svg')
+        .append('rect')
+        .attr('class','bbox')
+        .attr('x',thisBounds[0][0])
+        .attr('y',thisBounds[0][1])
+        .attr('width',thisBounds[1][0] - thisBounds[0][0])
+        .attr('height',thisBounds[1][1] - thisBounds[0][1])
+
+      d3.select('svg')
+        .append('circle')
+        .attr('class', 'centroid')
+        .attr('r', 5)  
+        .attr('cx', thisCenter[0])  
+        .attr('cy', thisCenter[1])  
+    }
+
+    function clearCenterBounds() {
+      d3.selectAll('circle.centroid').remove()
+      d3.selectAll('rect.bbox').remove()
+    }
+
+}
+```
+
+## 더 나은 지도 제작 기법
+
+- 경위선망은 지도를 더 읽기 좋게 격자를 만든다.
+- zoom 객체는 지도를 이동하거나 확대할 수 있게 해준다. 
+- 이 두 기능 모두 D3에서 제공하는 여타 작동이나 생성기와 같은 형식과 기능을 따르며 특히 지도에 도움이 된다.
+
+### 경위선망 
+
+- 경위선망(graticule)은 지도 위에 나타난 격자선을 말한다. 선, 영역, 원호 생성기가 있듯이 경위선망도 생성기가 있다. 
+- 경위선망 생성기는 격자선(위치와 개수를 지정하거나 기본값을 사용할 수 있다.)을 만들 수 있으며 경계선으로 사용할 수 있는 윤곽선도 만들 수 있다.
+- data() 대신 datum() 이라는 메서드를 사용하는데, datum()은 하나의 데이터점을 배열에 넣을 필요 없이 바로 바인딩하므로 더 편리하다. 즉, datum(yourDatapoint) 는 data([yourDatapoint]) 와 동일하다.
+- 데이터점 하나로 많은 경위선망을 그릴 수 있는 이유는 `geoGraticule`은 다중 선 스트링(multilinestring)이라는 지형을 생성하기 때문이다. 이 다중 선 스트링은 좌표 배열의 배열로서, 배열 안에 있는 각각의 배열은 하나의 개별적인 지형을 나타낸다. 다중 선 스트링과 다중 폴리곤은 GIS에서 늘 사용된다.
+- `d3.geoPath()`은 다중 선 스트링이나 다중 폴리곤을 입력 받으면 여러 개의 분리된 조각으로 구성된 <path> 요소를 그린다.
+- `d3.geoGraticule()`의 리턴 값을 실행(`graticule()`)시키면 GeoJSON MultiLineString geometry 객체가 리턴된다. 이 객체 안에는 경위선망을 위한 모든 자오선과 그에 해당하는 평행선을 가지고 있다.
+
+```javascript
+// 경위선망 추가
+// projection 이 도법
+  Promise.all([d3.json("world.geojson"), d3.csv('cities.csv')])
+  .then(dataList => {
+    const [countries, cities] = dataList
+    createMap(countries, cities)
+  });
+
+
+  const width = 500
+  const height = 500
+  
+  function createMap(countries, cities) {
+    const aProjection = d3.geoMercator()
+                          .scale(80)
+                          .translate([width / 2, height / 2]);
+
+    const mProjection = d3.geoMollweide()
+                          .scale(120)
+                          .translate([width / 2, height / 2]);
+
+    // const geoPath = d3.geoPath().projection(aProjection);
+    const geoPath = d3.geoPath().projection(mProjection);
+    // 영역의 최소값과 최대값을 구할 수 있다.
+    const featureSize = d3.extent(countries.features, d => geoPath.area(d)) 
+    // 지형을 측정해 색상 그레이디언트에 정의된 색상을 할당한다. 
+    // scaleQuantize : 연속적인 range 대신에 불연속적인걸 사용한다는걸 제외하고는 linear scales 와 유사
+    // colorbrewer : 색상 배열로 정보 시각화에 지도 제작에 유용한 라이브러리
+    
+    const countryColor = d3.scaleQuantize().domain(featureSize).range(colorbrewer.Reds[7])
+
+
+    // 경위선망 추가
+    const graticule = d3.geoGraticule()
+    console.log(graticule)
+    d3.select('svg').append('path')
+      .datum(graticule)
+      // .datum({
+      //   type:"MultiLineString",
+      //   coordinates: [
+      //     [
+      //       [-180, -89.999999],
+      //       [-180, 9.999999974752427e-7],
+      //       [-180, 89.999999]
+      //     ]
+      //   ]
+      // })
+      .attr('class', 'graticule line')
+      .attr('d', geoPath)
+      .style('fill', 'none')
+      .style('stroke', 'lightgray')
+      .style('stroke-width','1px')
+
+    d3.select('svg').append('path')
+      .datum(graticule.outline)
+      .attr('class', 'graticule outline')
+      .attr('d', geoPath)
+      .style('fill', 'none')
+      .style('stroke', 'black')
+      .style('stroke-width','1px')
+
+
+    // 경위선망 추가
+
+    d3.select("svg").selectAll("path").data(countries.features)
+    	.enter()
+      .append("path")
+      .attr("d", geoPath)
+      .attr("class", "countries")
+      // 면적에 따라 나라의 색상을 칠한다.
+      .style('fill', d => countryColor(geoPath.area(d)))
+      
+    
+    d3.selectAll('path.countries').on('mouseover', centerBounds).on('mouseout', clearCenterBounds)
+
+    function centerBounds(d, i) {
+      const thisBounds = geoPath.bounds(d)
+      const thisCenter = geoPath.centroid(d)
+
+      d3.select('svg')
+        .append('rect')
+        .attr('class','bbox')
+        .attr('x',thisBounds[0][0])
+        .attr('y',thisBounds[0][1])
+        .attr('width',thisBounds[1][0] - thisBounds[0][0])
+        .attr('height',thisBounds[1][1] - thisBounds[0][1])
+
+      d3.select('svg')
+        .append('circle')
+        .attr('class', 'centroid')
+        .attr('r', 5)  
+        .attr('cx', thisCenter[0])  
+        .attr('cy', thisCenter[1])  
+    }
+
+    function clearCenterBounds() {
+      d3.selectAll('circle.centroid').remove()
+      d3.selectAll('rect.bbox').remove()
+    }
+
+}
+
+```
+
+### 확대 
+
+- 화면에서 zoom 객체로 차트를 이동 할 수 있음을 알았다. 이제 zoom 객체로 확대 기능을 사용해보자.
+- 차트를 이동했을 경우에는 <g> 요소의 transfrom 속성을 조절했다. 이제 zoom 객체의 scale값과 translate값을 조절해 투영 설정을 변경함으로써 지도를 확대하고 패닝 시킨다.
+- 이번에는 zoom.scale()로, 더블클릭이나 마우스 휠을 앞으로 이동한 경우에는 확대하고 마우스 횔을 뒤로 이동한 경우에는 축소하도록 설정한다. 
+- projection 객체에 zoom을 사용하는 경우에는 projection의 초기 scale 값을 zoom.sacle() 값으로 덮어써야 한다. translate도 이와 동일하게 처리한다. 그런 후 zoom을 발생하는 이벤트가 발생하면 언제든 새로운 값으로 projection 객체를 갱신한다.
+- zoom 에서 선택된 엘리먼트란 zoom 이벤트 핸들러에서 this 값으로 참조하는 엘리먼트 이다.
+- zoom 이벤트 핸들러에서 `d3.zoomTransform(this)` 리턴 값으로 translate와 scale 값을 알아 낼 수 있다.
+- zoom의 translateBy(selection, x, y)는 선택된 엘리먼트의 현재 zoom transform 의 translate 값이 주어진 x, y로 셋팅 되는 것이고 tanslateTo(selection, x, y, [,p])는 선택된 엘리먼트의 현재 zoom transform 의 translate 값이 주어진 p 포인트에 x , y 값이 보여지도록 셋팅 하는 것이다. 
+
+```javascript
+
+// projection 이 도법
+  Promise.all([d3.json("world.geojson"), d3.csv('cities.csv')])
+  .then(dataList => {
+    const [countries, cities] = dataList
+    createMap(countries, cities)
+  });
+
+
+  const width = 700
+  const height = 700
+  
+  function createMap(countries, cities) {
+    const aProjection = d3.geoMercator()
+                          .scale(80)
+                          .translate([width / 2, height / 2]);
+
+    const mProjection = d3.geoMollweide()
+                          .scale(120)
+                          .translate([width / 2, height / 2]);
+
+    // const geoPath = d3.geoPath().projection(aProjection);
+    const geoPath = d3.geoPath().projection(mProjection);
+    // 영역의 최소값과 최대값을 구할 수 있다.
+    const featureSize = d3.extent(countries.features, d => geoPath.area(d)) 
+    // 지형을 측정해 색상 그레이디언트에 정의된 색상을 할당한다. 
+    // scaleQuantize : 연속적인 range 대신에 불연속적인걸 사용한다는걸 제외하고는 linear scales 와 유사
+    // colorbrewer : 색상 배열로 정보 시각화에 지도 제작에 유용한 라이브러리
+    
+    const countryColor = d3.scaleQuantize().domain(featureSize).range(colorbrewer.Reds[7])
+
+    d3.select("svg").selectAll("path").data(countries.features)
+    	.enter()
+      .append("path")
+      .attr("d", geoPath)
+      .attr("class", "countries")
+      // 면적에 따라 나라의 색상을 칠한다.
+      .style('fill', d => countryColor(geoPath.area(d)))
+
+
+    // 경위선망 추가
+    const graticule = d3.geoGraticule()
+    
+    d3.select('svg').append('path')
+      .datum(graticule)
+      .attr('class', 'graticule line')
+      .attr('d', geoPath)
+      .style('fill', 'none')
+      .style('stroke', 'lightgray')
+      .style('stroke-width','1px')
+
+    d3.select('svg').append('path')
+      .datum(graticule.outline)
+      .attr('class', 'graticule outline')
+      .attr('d', geoPath)
+      .style('fill', 'none')
+      .style('stroke', 'black')
+      .style('stroke-width','1px')
+    // 경위선망 추가
+
+    // 인터렉션 
+    d3.selectAll('path.countries').on('mouseover', centerBounds).on('mouseout', clearCenterBounds)
+
+    function centerBounds(d, i) {
+      const thisBounds = geoPath.bounds(d)
+      const thisCenter = geoPath.centroid(d)
+
+      d3.select('svg')
+        .append('rect')
+        .attr('class','bbox')
+        .attr('x',thisBounds[0][0])
+        .attr('y',thisBounds[0][1])
+        .attr('width',thisBounds[1][0] - thisBounds[0][0])
+        .attr('height',thisBounds[1][1] - thisBounds[0][1])
+
+      d3.select('svg')
+        .append('circle')
+        .attr('class', 'centroid')
+        .attr('r', 5)  
+        .attr('cx', thisCenter[0])  
+        .attr('cy', thisCenter[1])  
+    }
+
+    function clearCenterBounds() {
+      d3.selectAll('circle.centroid').remove()
+      d3.selectAll('rect.bbox').remove()
+    }
+    // 인터렉션 
+
+    
+    // zoom
+    const [translateX, translateY] = mProjection.translate()
+    const scaleK = mProjection.scale()
+    const mapZoom = d3.zoom()
+      .on('zoom', zoomed)
+
+    // d3.selectAll("div").call(name, "John", "Snow");
+    // name(d3.selectAll("div"), "John", "Snow");
+    
+    // zoom.transform(selection, transform[, point])
+    // transfrom 설정시 선택된 요소의  current zoom transform 값이 셋팅되고, 시작 즉시 이벤트가 발생된다. 
+    // zoom 영역을 설정시에 d3.interpolateZoom 를 사용해서 지정된 transform을 설정한다. 
+    // zoom.transfrom 인자의 transfrom 은 Hb의 인스턴스인 transform 객체 또는 transfrom을 리턴하는 함수를 넣어준다.
+    // zoom.transform 인자의 point 로는 두개의 엘리먼트를 갖는 [x,y] 배열 또는 그런 배열을 리턴하는 함수를 넣어준다. 
+    d3.select('svg')
+        .call(mapZoom)
+        .call(mapZoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scaleK))
+
+    // zoom 이벤트 처리기를 호출할 때마다 
+    // projection translate와 scale() 값을 zoom 객체의 값으로 갱신한다.
+    function zoomed() {
+      
+      // 선택된 엘리먼트의 zoom transform 객체가 리턴
+      // x는 x축, y는 y축, k는 scale
+      const {x, y, k} = d3.zoomTransform(this)
+      console.log(d3.zoomTransform(this))
+
+      mProjection.translate([x,y]).scale(k)
+
+      d3.selectAll('path.countries')
+        .attr('d', geoPath)
+      
+      d3.selectAll('path.line')
+        .datum(graticule)
+        .attr('d', geoPath)
+
+      d3.selectAll('path.outline')
+        .datum(graticule.outline)
+        .attr('d', geoPath)
+      
+    }
+}
 
 ```

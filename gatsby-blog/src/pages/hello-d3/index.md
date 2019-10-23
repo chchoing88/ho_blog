@@ -1360,7 +1360,7 @@ function dataViz(incData) {
   d3.select('svg').call(treeZoom)
 
   function zoomed() {
-    // 지정된 노드의 현재 transform이 리턴된다. 여기서 노드는 selection이 아닌 DOM Element 이다.
+    // 주어진 노드의 현재 transform이 리턴된다. 여기서 노드는 selection이 아닌 svg DOM Element 이다. 
     // element 내부에 __zoom이라는 속성으로 정보가 저장되지만 직접 접근하는 것보다 메서드를 통해서 접근하는게 좋다.
     // transform.x : x축으로 이동한 양 tx
     // transform.y : y축으로 이동한 양 ty
