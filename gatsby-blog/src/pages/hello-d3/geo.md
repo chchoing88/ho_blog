@@ -419,6 +419,7 @@ function createMap(countries, cities) {
 - zoom 에서 선택된 엘리먼트란 zoom 이벤트 핸들러에서 this 값으로 참조하는 엘리먼트 이다.
 - zoom 이벤트 핸들러에서 `d3.zoomTransform(this)` 리턴 값으로 translate와 scale 값을 알아 낼 수 있다.
 - zoom의 translateBy(selection, x, y)는 선택된 엘리먼트의 현재 zoom transform 의 translate 값이 주어진 x, y로 셋팅 되는 것이고 tanslateTo(selection, x, y, [,p])는 선택된 엘리먼트의 현재 zoom transform 의 translate 값이 주어진 p 포인트에 x , y 값이 보여지도록 셋팅 하는 것이다. 
+- `d3.select('svg').call(d3.zoom())` 이 코드는 svg 엘리먼트에 scale, translate 변화에 따라서 `__zoom` 프로퍼티를 만들어서 업데이트 하겠다. 라는 뜻이 되겠다. 또한 `__on` 프로퍼티도 생성되어서 어떤 이벤트에 반응할 것인가도 정의해 둔다.
 
 ```javascript
 
@@ -555,3 +556,7 @@ function createMap(countries, cities) {
 }
 
 ```
+
+### 시멘틱 줌
+
+화면 위의 요소를 확대한다고 할 때는 크기를 확대하는 것이 자연스럽게 떠오른다. 그렇지만 지도로 작업하다 보면 화면을 확대할 때 크기나 해상도만 느는 것이 아니라 화면에 보여줄 데이터의 종류도 변경한다는 것을 알게 된다. 단순한 그래픽 줌과 대비되는 이런 작동 특성을 시멘틱 줌이라고 한다. 예를 들어 축소된 지도에서는 국경과 몇몇 주요 도시만 보이지만, 지도를 확대하면 도로, 중소 도시, 공원 등을 볼 수 있다. 축소됐을 때는 전략이나 전반적인 정보를 보여주고, 확대됐을 때는 상세한 데이터를 보여줄 수 있어야 한다. 
