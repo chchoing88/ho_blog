@@ -15,7 +15,7 @@ date: '2019-10-16T10:00:03.284Z'
 - GIS(Geographic Information System) 란 인간생활에 필요한 지리정보를 컴퓨터 데이터로 변환하여 효율적으로 활용하기 위한 정보시스템이다.
 - 도형이나 선 등 복잡한 지리 데이터를 다룰 때는 복잡한 데이터 포맷도 다루어야 한다. 그럴때는 GeoJSON을 이용하게 되는데, GeoJSON은 웹 지도 데이터의 표준이다.
 - GeoJSON은 이름에서도 알 수 있듯이 지리 데이터를 JSON 포멧으로 인코딩하는 방법이다.
-- GeoJSON의 featureCollection은 feature라는 JSON 객체들을 담고 있으며, feature 객체는 지형의 경계를 coordinates 속성에 저장하고, 지형에 대한 메타데이터를 `properties` 속성에 저장한다.
+- GeoJSON의 featureCollection은 feature라는 JSON 객체들을 담고 있으며, feature 객체는 지형의 경계를 `coordinates` 속성에 저장([경도, 위도])하고, 지형에 대한 메타데이터를 `properties` 속성에 저장한다.
 - 데스트톱 GIS(Geographic Information System) 애플리케이션 [http://qgis.org](http://qgis.org)
 - Postgres에서 실행되는 공간 데이터베이스 [http://postgis.net](http://postgis.net)
 - 지리 공간 데이터를 조작하는 라이브러리 [http://gdal.org](http://gdal.org)
@@ -622,11 +622,9 @@ function createMap(countries, cities) {
 
     d3.selectAll('path.countries').attr('d', geoPath)
 
-    d3.selectAll('path.line')
-      .attr('d', geoPath)
+    d3.selectAll('path.line').attr('d', geoPath)
 
-    d3.selectAll('path.outline')
-      .attr('d', geoPath)
+    d3.selectAll('path.outline').attr('d', geoPath)
   }
 }
 ```
@@ -765,11 +763,9 @@ function createMap(countries, cities) {
 
     d3.selectAll('path.countries').attr('d', geoPath)
 
-    d3.selectAll('path.line')
-      .attr('d', geoPath)
+    d3.selectAll('path.line').attr('d', geoPath)
 
-    d3.selectAll('path.outline')
-      .attr('d', geoPath)
+    d3.selectAll('path.outline').attr('d', geoPath)
   }
 
   function zoomButton(zoomDirection) {
@@ -800,11 +796,208 @@ function createMap(countries, cities) {
 - 만약 zoom의 행동을 가진 element가 뒤늣게 mousedown 이벤트를 등록한다면 mousedown 이벤트는 동작하지 않는다. 왜냐하면 zoom 이벤트에서 해당 이벤트를 소비하기 때문이다. 하지만 이벤트 propagation 룰에 의해 zoom 행동을 등록하기 전에 mousedown 이벤트를 등록하거나 이벤트 리스너에 capturing을 사용하거나 자손 element에 non-capturing 으로 등록한다면 mousedown 이벤트가 zoom 이벤트 발생 전에 볼수 있을 것이다. 그리고 event.stopImmediatePropagation 으로 zoom의 행동을 막을 수도 있다. 또한 zoom.filter를 사용해서 zoom의 행동을 컨트롤 할 수 있다.
 - continuous scale에서 `clamp`는 enable, disable로 설정할 수 있는데 이를 false로 설정할 시 domain에 벗어난 값은 range에서도 벗어난 값을 리턴한다. 그 반대로 true 값을 설정하면 domain에 벗어난 값은 range의 최소 또는 최대 값으로 매핑이 된다.
 - projection 객체의 clipAngle 속성은 중심에서 일정한 각도 이상을 벗어나는 경로를 제거(clipping) 한다.
-- 지구본을 초기화 할 때 나라를 모두 그리지만 그들 중 상당수는 잘려나간다. 그러므로 도형을 그릴때 영역을 계산하는 `geoPath.area(d)` 메서드는 메르카토르 도법에서보다 문제가 더 심하다. 예를 들어 호주가 마다가스카르와 비슷한 크기인 것처럼 색상이 칠해져 있는걸 볼 수 있다. 
+- 지구본을 초기화 할 때 나라를 모두 그리지만 그들 중 상당수는 잘려나간다. 그러므로 도형을 그릴때 영역을 계산하는 `geoPath.area(d)` 메서드는 메르카토르 도법에서보다 문제가 더 심하다. 예를 들어 호주가 마다가스카르와 비슷한 크기인 것처럼 색상이 칠해져 있는걸 볼 수 있다.
 - D3는 실제 지형 면적을 계산하는 `d3.geoArea()` 가 있다.
 
 ### geoOrthographic 도법으로 지구본 만들기
 
-- projection에 [longitude, latitude] 값을 넣어서 실행하면 그려지는 2D 좌표 값(typically in pixels)을 리턴해준다. 
+- projection에 [longitude, latitude] 값을 넣어서 실행하면 그려지는 2D 좌표 값(typically in pixels)을 리턴해준다.
 - 반대로 projection.invert 메서드에 평면 x,y 좌표값 배열(typically in pixels)을 넣어서 실행시키면 도법에 적용된 좌표를 다시 리턴해준다. 예를 들어 geoOrthographic 에선 [longitude, latitude] in degress 값을 리턴해준다.
-- Spherical Math 의 d3.geoCentroid 메서드는 GeoJSON 객체를 받으면 구 지형의 중심 좌표를 리턴해준다.
+- Spherical Math 의 d3.geoCentroid 메서드는 한 국가의 GeoJSON 객체를 받으면 구 지형의 중심 좌표([경도 , 위도])값을 리턴해준다.
+- 지구본을 회전에 대해 알아두어야 하는 것은 위치는 [경도, 위도]로 표현을 해낼 수 있고 방향은 [lambda, phi, gamma] 로 표현해야 한다는 것이다.
+- 특히 이 방향 표현은 오일러를 사용해서 표현을 하고 있다. 오일러는 3개의 축에 대한 각도를 회전 정보로 사용한다. 예를 들어서 현재 지점의 좌표와 방향을 그리고 다음 지점의 좌표를 안다면 다음 지점의 방향을 구할 수있고 projection.rotate에 다음 지점의 방향을 넣어서 회전 시킬 수 있을 것이다.
+- 오일러각은 직각좌표계(Cartesian coordinate system)에서 X, Y, Z 축을 따라 오른손 좌표계 방향으로 각을 정의하고 정해진 순서에 따라 3번 회전 운동을 수행하며 회전 운동을 표현한다. 따라서 미리 회전 순서를 정해주지 않으면 오일러각은 매우 다양하게 정의될 수 있습니다.
+- 오일러는 직관적이라 사용자의 입력을 받을 수 있는 장점이 있지만 짐벌 락이라는 단점을 지니고 있다. 그래서 쿼터니온이라는 다른 표현을 사용한다. 이때, 사용자에게는 오일러 각을 입력받고 쿼터니온으로 연산을 진행해서 다시 오릴러 각으로 리턴을 받는 식으로 계산한다. 쿼터니온은 오일러 연산에서 발생하는 짐벌락 문제를 말끔히 해결하며 연산속도도 빠르다.
+
+```html
+<html>
+  <head>
+    <title>D3 in Action Chapter 5 - Example 7</title>
+    <meta charset="utf-8" />
+    <!-- <script src="d3.v3.min.js" type="text/JavaScript"></script>
+<script src="colorbrewer.js" type="text/JavaScript"></script> -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <script src="http://colorbrewer2.org/export/colorbrewer.js"></script>
+    <script src="https://unpkg.com/versor"></script>
+  </head>
+  <style>
+    svg {
+      height: 700px;
+      width: 700px;
+      border: 1px solid gray;
+    }
+    path.countries {
+      stroke-width: 1;
+      stroke: black;
+      opacity: 0.5;
+      fill: red;
+    }
+
+    circle.cities {
+      stroke-width: 1;
+      stroke: black;
+      fill: blue;
+    }
+
+    circle.centroid {
+      fill: red;
+      pointer-events: none;
+    }
+
+    rect.bbox {
+      fill: none;
+      stroke-dasharray: 5 5;
+      stroke: black;
+      stroke-width: 2;
+      pointer-events: none;
+    }
+
+    path.graticule {
+      fill: none;
+      stroke-width: 1;
+      stroke: black;
+    }
+  </style>
+  <body>
+    <div id="viz">
+      <svg></svg>
+    </div>
+    <div id="controls"></div>
+
+    <footer></footer>
+
+    <script>
+      Promise.all([d3.json('world.geojson'), d3.csv('cities.csv')]).then(
+        dataList => {
+          const [countries, cities] = dataList
+          createMap(countries, cities)
+        }
+      )
+
+      const width = 700
+      const height = 700
+
+      function createMap(countries, cities) {
+        // 정사 도법으로 설정하는 코드
+        const oProjection = d3
+          .geoOrthographic()
+          .scale(200)
+          .translate([width / 2, height / 2])
+          //.center([46.72940870961725, -19.301666904193652]) // longitude(경도) and latitude(위도) in degrees
+          // .angle(90);
+          .clipAngle(90) // 둥근 구를 세로로 자르는데 경도 각도를 기준으로 자르는거 같다.
+          // .clipExtent([0,0], [1700,1700])
+          .rotate([0, -20, 0])
+          .precision(0.1)
+        // .fitExtent([[0, 0], [width, height]], countries);
+
+        o = oProjection
+        const geoPath = d3.geoPath().projection(oProjection)
+
+        // 나라 그리는 코드
+        d3.select('svg')
+          .selectAll('path')
+          .data(countries.features)
+          .enter()
+          .append('path')
+          .attr('d', geoPath)
+          .attr('class', 'countries')
+        // // 면적에 따라 나라의 색상을 칠한다.
+        // .style("fill", d => newFeatureColor(d3.geoArea(d)));
+
+        // 나라 색상 칠하기
+        const featureData = d3.selectAll('path.countries').data()
+        const realFeatureSize = d3.extent(featureData, d => d3.geoArea(d))
+        const newFeatureColor = d3
+          .scaleQuantize()
+          .domain(realFeatureSize)
+          .range(colorbrewer.Reds[7])
+        d3.selectAll('path.countries').style('fill', d =>
+          newFeatureColor(d3.geoArea(d))
+        )
+
+        // 경위선망 추가
+        const graticule = d3.geoGraticule()
+        d3.select('svg')
+          .append('path')
+          .datum(graticule)
+          .attr('class', 'graticule line')
+          .attr('d', geoPath)
+          .style('fill', 'none')
+          .style('stroke', 'lightgray')
+          .style('stroke-width', '1px')
+
+        d3.select('svg')
+          .append('path')
+          .datum(graticule.outline)
+          .attr('class', 'graticule outline')
+          .attr('d', geoPath)
+          .style('fill', 'none')
+          .style('stroke', 'black')
+          .style('stroke-width', '1px')
+        // 경위선망 추가
+
+        // zoom
+        const [translateX, translateY] = oProjection.translate()
+        const scaleK = oProjection.scale()
+        // let projectionXY = [null, null];
+        // let interpolator = null;
+        // let count = 0;
+        let v0, q0, r0
+        const mapZoom = d3
+          .zoom()
+          .on('start', () => {
+            console.log('start')
+            console.log(event)
+            v0 = versor.cartesian(oProjection.invert([event.x, event.y]))
+            q0 = versor((r0 = oProjection.rotate()))
+          })
+          .on('zoom', zoomed)
+          .on('end', () => {
+            console.log('end')
+            projectionXY = [null, null]
+            interpolator = null
+            count = 0
+          })
+
+        d3.select('svg')
+          .call(mapZoom)
+          .call(
+            mapZoom.transform,
+            d3.zoomIdentity.translate(translateX, translateY).scale(scaleK)
+          )
+
+        // zoom 이벤트 처리기를 호출할 때마다
+        // projection translate와 scale() 값을 zoom 객체의 값으로 갱신한다.
+        function zoomed() {
+          const v1 = versor.cartesian(
+            oProjection.rotate(r0).invert([event.x, event.y])
+          )
+          const q1 = versor.multiply(q0, versor.delta(v0, v1))
+          oProjection.rotate(versor.rotation(q1))
+
+          reDrawSvg()
+        }
+
+        function reDrawSvg() {
+          const currentRotate = oProjection.rotate()[0]
+          d3.selectAll('path.countries').attr('d', geoPath)
+          d3.selectAll('path.line').attr('d', geoPath)
+          d3.selectAll('path.outline').attr('d', geoPath)
+
+          d3.selectAll('circle.cities')
+            .attr('cx', d => oProjection([d.x, d.y])[0])
+            .attr('cy', d => oProjection([d.x, d.y])[1])
+            .style('display', d => {
+              return parseInt(d.y) + currentRotate < 90 &&
+                parseInt(d.y) + currentRotate > -90
+                ? 'block'
+                : 'none'
+            })
+        }
+      }
+    </script>
+  </body>
+</html>
+```
