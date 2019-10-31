@@ -805,6 +805,6 @@ function createMap(countries, cities) {
 
 ### geoOrthographic 도법으로 지구본 만들기
 
-- projection에 평면 x,y 좌표값 배열(typically in pixels)을 넣어서 실행시키면 도법에 적용된 좌표를 다시 리턴해준다. 예를 들어 geoOrthographic 에선 [longitude, latitude] in degress 값을 리턴해준다.
-- 반대로 projection.invert 메서드에다가는 [longitude, latitude] 값을 넣어서 실행하면 그려지는 2D 좌표 값을 리턴해준다. 
+- projection에 [longitude, latitude] 값을 넣어서 실행하면 그려지는 2D 좌표 값(typically in pixels)을 리턴해준다. 
+- 반대로 projection.invert 메서드에 평면 x,y 좌표값 배열(typically in pixels)을 넣어서 실행시키면 도법에 적용된 좌표를 다시 리턴해준다. 예를 들어 geoOrthographic 에선 [longitude, latitude] in degress 값을 리턴해준다.
 - Spherical Math 의 d3.geoCentroid 메서드는 GeoJSON 객체를 받으면 구 지형의 중심 좌표를 리턴해준다.
