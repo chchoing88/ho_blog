@@ -107,7 +107,11 @@ function createMap(countries) {
 
 - 도시를 아주 크게 표현할 때는 도형으로 표현할 수도 있지만, 일반적으로 도시나 사람은 지도 위에 점으로 표현된다.
 - 인구 수에 비례해 점의 크기를 설정할 수도 있다.
-- D3의 projections은 geoPath()에 사용할 뿐만 아니라 그 자체를 하나의 함수로서 사용할 수도 있다. 위도와 경도 쌍을 담은 배열을 전달해 호출하면 점을 찍을 화면 좌표를 반환한다.
+- D3의 projections은 geoPath()에 사용할 뿐만 아니라 그 자체를 하나의 함수로서 사용할 수도 있다. 경도와 위도 쌍을 담은 배열을 전달해 호출하면 점을 찍을 화면 좌표를 반환한다. 예를 들어 샌프란시스코 ( 대략 경도 37, 위도 -122) 를 찍을 화면 위치를 알고 싶으면 그 값을 projection에 전달해 호출한다.
+
+```javascript
+aProjection([37, -122])
+```
 
 ```css
 svg {
@@ -619,11 +623,9 @@ function createMap(countries, cities) {
     d3.selectAll('path.countries').attr('d', geoPath)
 
     d3.selectAll('path.line')
-      .datum(graticule)
       .attr('d', geoPath)
 
     d3.selectAll('path.outline')
-      .datum(graticule.outline)
       .attr('d', geoPath)
   }
 }
@@ -744,7 +746,6 @@ function createMap(countries, cities) {
   // zoom 영역을 설정시에 d3.interpolateZoom 를 사용해서 지정된 transform을 설정한다.
   // zoom.transfrom 인자의 transfrom 은 Hb의 인스턴스인 transform 객체 또는 transfrom을 리턴하는 함수를 넣어준다.
   // zoom.transform 인자의 point 로는 두개의 엘리먼트를 갖는 [x,y] 배열 또는 그런 배열을 리턴하는 함수를 넣어준다.
-  let test = 2
   d3.select('svg')
     .call(mapZoom)
     .call(
@@ -765,11 +766,9 @@ function createMap(countries, cities) {
     d3.selectAll('path.countries').attr('d', geoPath)
 
     d3.selectAll('path.line')
-      .datum(graticule)
       .attr('d', geoPath)
 
     d3.selectAll('path.outline')
-      .datum(graticule.outline)
       .attr('d', geoPath)
   }
 
@@ -793,3 +792,19 @@ function createMap(countries, cities) {
     .html('Zoom out')
 }
 ```
+
+## 고급 지도 제작
+
+- 위 작성된 코드에서 인구에 기초해 <circle> 요소의 크기를 정하거나 <g> 요소로 레이블을 붙일 수도 있을 것이다.
+- 지도를 만들고 있다면 폴리곤과 점으로 경계 상자나 중심을 이용하고 zoom 객체에 연동시킬 것이다.
+- 만약 zoom의 행동을 가진 element가 뒤늣게 mousedown 이벤트를 등록한다면 mousedown 이벤트는 동작하지 않는다. 왜냐하면 zoom 이벤트에서 해당 이벤트를 소비하기 때문이다. 하지만 이벤트 propagation 룰에 의해 zoom 행동을 등록하기 전에 mousedown 이벤트를 등록하거나 이벤트 리스너에 capturing을 사용하거나 자손 element에 non-capturing 으로 등록한다면 mousedown 이벤트가 zoom 이벤트 발생 전에 볼수 있을 것이다. 그리고 event.stopImmediatePropagation 으로 zoom의 행동을 막을 수도 있다. 또한 zoom.filter를 사용해서 zoom의 행동을 컨트롤 할 수 있다.
+- continuous scale에서 `clamp`는 enable, disable로 설정할 수 있는데 이를 false로 설정할 시 domain에 벗어난 값은 range에서도 벗어난 값을 리턴한다. 그 반대로 true 값을 설정하면 domain에 벗어난 값은 range의 최소 또는 최대 값으로 매핑이 된다.
+- projection 객체의 clipAngle 속성은 중심에서 일정한 각도 이상을 벗어나는 경로를 제거(clipping) 한다.
+- 지구본을 초기화 할 때 나라를 모두 그리지만 그들 중 상당수는 잘려나간다. 그러므로 도형을 그릴때 영역을 계산하는 `geoPath.area(d)` 메서드는 메르카토르 도법에서보다 문제가 더 심하다. 예를 들어 호주가 마다가스카르와 비슷한 크기인 것처럼 색상이 칠해져 있는걸 볼 수 있다. 
+- D3는 실제 지형 면적을 계산하는 `d3.geoArea()` 가 있다.
+
+### geoOrthographic 도법으로 지구본 만들기
+
+- projection에 평면 x,y 좌표값 배열(typically in pixels)을 넣어서 실행시키면 도법에 적용된 좌표를 다시 리턴해준다. 예를 들어 geoOrthographic 에선 [longitude, latitude] in degress 값을 리턴해준다.
+- 반대로 projection.invert 메서드에다가는 [longitude, latitude] 값을 넣어서 실행하면 그려지는 2D 좌표 값을 리턴해준다. 
+- Spherical Math 의 d3.geoCentroid 메서드는 GeoJSON 객체를 받으면 구 지형의 중심 좌표를 리턴해준다.

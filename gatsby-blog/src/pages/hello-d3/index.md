@@ -90,10 +90,11 @@ HTML 요소의 D3 셀렉션을 이용하거나 선택적으로 데이터를 바�
   - **Quantize Scales** : 연속적인 range 대신에 불연속적인걸 사용한다는걸 제외하고는 linear scales 와 유사하다. 연속 입력 domain은 출력 range에서의 값의 수 (즉, 카디널리티)에 기초하여 균일 한 세그먼트로 분할된다.
 
 ```javascript
-const newRamp = d3.scale
-  .linear()
+const newRamp = d3
+  .scaleLinear()
   .domain([500000, 13000000])
   .range([0, 500])
+
 newRamp(1000000) // 20
 newRamp(9000000) // 340
 
@@ -105,8 +106,8 @@ newRamp.invert(313) // 8,325,000
 
 ```javascript
 const sampleArray = [423, 124, 66, 424, 58, 10, 900, 44, 1]
-const qScale = d3.scale
-  .quantile()
+const qScale = d3
+  .scaleQuantile()
   .domain(sampleArray)
   .range([0, 1, 2])
 qScale(423) // 2
