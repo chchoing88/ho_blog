@@ -1177,9 +1177,7 @@ class Store {
 
 - flow 는 취소가능하다. 이 의미는 리턴되는 promise 에 있는 `cancel()` 함수를 호출할 수 있다는 뜻이다. 이 함수는 generator 를 즉시 중지 시킬수 있지만 finally 절은 실행이 됩니다. 반환된 promise 그 자체는 FLOW_CANCELLED 로 reject 로 귀결된다.
 
-## Object api
 
-## 기타
 
 ## react-mobx
 
@@ -1187,12 +1185,421 @@ class Store {
 - react 에서 render 를 막을수 있는 방법은 shouldComponentUpdate 와 pure component 방법이 있겠다. 여기서 pure component 는 얕은 비교를 통해서 render 를 할지 안할지를 결정한다.
 - react-mobx 는 forceUpdate 메서드를 가지고 화면을 갱신하게 된다. 이때 문제는 불필요한 자식들까지 렌더링이 된다는 것이다. 이때 shouldComponentUpdate 를 오버라이딩 해놓고 얕은 비교를 통해서 업뎃을 할지 안할지를 결정한다. 따라서 prop 에 data 를 넘길때 observable 한 값을 넘기기 보다는 observable 을 포함한 변하지 않은 객체를 넘기는 것이 효율적이다.
 
-### example 
+### Example 
+
+ex) [https://codesandbox.io/s/zq52xy34z4](https://codesandbox.io/s/zq52xy34z4) ( 코드 샌드박스에서 사용할 시 : mobx 셋팅이 이미 되어있다. mobx-dev-tools 설치, tsconfig 의 experimentalDecorators 셋팅만 해주면 된다.  ) 
+
+#### 예제 1 ) computed , action 
+
+```javascript
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import { observable, action, computed } from "mobx";
+import { observer } from "mobx-react"; // MobX 에서 사용하는 Provider
+import DevTools from "mobx-react-devtools";
+ 
+mobx.configure({ enforceActions: "observed" }) // action 밖에서 state를 변경하는걸 막아준다.
+ 
+const t = new class Temperature {
+  @observable unit = "C"
+  @observable temperatureCelsius = 25
+   
+  @computed get temperatureKelvin() {
+      console.log("계산 Kelvin")
+      return this.temperatureCelsius * (9/5) + 32
+  }
+    
+  @computed get temparatureFahrenheit() {
+      console.log("계산 Fahrenheit")
+      return this.temperatureCelsius + 273.15
+  }
+ 
+   
+  @computed get temperature() {
+     console.log("계산 temperature")
+     switch(this.unit) {
+       case "K": return this.temperatureKelvin + "K"
+       case "F": return this.temparatureFahrenheit + "F"
+       case "C": return this.temperatureCelsius + "C"
+     }
+  }
+ 
+  @action setUnit(newUnit) {
+    this.unit = newUnit
+  }
+    
+  @action setCelsius(degrees) {
+    this.temperatureCelsius = degrees
+  }
+    
+  @action('update temperature and unit') // 액션에 문자열을 넣어서 액션이름을 설정 할 수 있다. dev tools에서 확인할 수 있다.
+  setTemperatureAndUnit(degrees, unit) {
+    this.setCelsius(degrees)
+    this.setUnit(unit)
+  }
+}
+ 
+const App = observer(({temperature}) => (
+  <div>
+    {temperature.temperature}
+  </div>
+))
+   
+ReactDOM.render(
+  <App temperature={t} />,
+  document.getElementById("root")
+)
+```
+
+
+#### 예제 2) pass observable data through props in Mobx
+
+##### 1) 아래 처럼 하면 App 컴포넌트에서 자식 li 들을 렌더링 클릭시 마다 App 컴포넌트를 render 하므로 성능이 떨어진다. 
+
+```javascript
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import { observable, action, computed } from "mobx";
+import { observer } from "mobx-react"; // MobX 에서 사용하는 Provider
+import DevTools from "mobx-react-devtools";
+ 
+let index = 0
+ 
+mobx.configure({ enforceActions: "observed" })
+ 
+class Temperature {
+  @observable id = index++
+  @observable unit = "C"
+  @observable temperatureCelsius = 25
+   
+  constructor(degrees, unit) {
+    console.log('con')
+    this.setTemperatureAndUnit(degrees, unit)
+ 
+  }
+   
+  @computed get temperatureKelvin() {
+      console.log("계산 Kelvin")
+      return this.temperatureCelsius * (9/5) + 32
+  }
+    
+  @computed get temparatureFahrenheit() {
+      console.log("계산 Fahrenheit")
+      return this.temperatureCelsius + 273.15
+  }
+ 
+   
+  @computed get temperature() {
+     console.log("계산 temperature")
+     switch(this.unit) {
+       case "K": return this.temperatureKelvin + "K"
+       case "F": return this.temparatureFahrenheit + "F"
+       case "C": return this.temperatureCelsius + "C"
+     }
+  }
+ 
+  @action setUnit(newUnit) {
+    this.unit = newUnit
+  }
+    
+  @action setCelsius(degrees) {
+    this.temperatureCelsius = degrees
+  }
+    
+  @action('update temperature and unit')
+  setTemperatureAndUnit(degrees, unit) {
+    this.setCelsius(degrees)
+    this.setUnit(unit)
+  }
+ 
+  @action inc() {
+    this.setCelsius(this.temperatureCelsius + 1)
+  }
+}
+ 
+const temps = observable([])
+temps.push(new Temperature(20, "K"))
+temps.push(new Temperature(25, "F"))
+temps.push(new Temperature(20, "C"))
+ 
+ 
+const App = observer(({temperature}) => (
+  <ul>
+    {temperature.map(t =>
+        <li key={t.id}
+            onClick={() => t.inc()}
+        >
+        {t.temperature}    
+        </li>
+     )
+    }
+    <DevTools />
+  </ul>
+))
+ 
+ 
+   
+ 
+ReactDOM.render(
+  <App temperature={temps} />,
+  document.getElementById("root")
+)
+```
+
+##### 2) App 컴포넌트에서 TView 컴포넌트를 따로 분리시켜서 클릭시 전체 렌더링 하는 방식을 막는다. 
+
+```javascript
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import { observable, action, computed } from "mobx";
+import { observer } from "mobx-react"; // MobX 에서 사용하는 Provider
+import DevTools from "mobx-react-devtools";
+ 
+let index = 0;
+ 
+class Temperature {
+  id = index++;
+  @observable unit = "C";
+  @observable temperatureCelsius = 25;
+ 
+  constructor(degrees, unit) {
+    this.setTemperatureAndUnit(degrees, unit);
+  }
+ 
+  @computed get temperatureKelvin() {
+    console.log("계산 Kelvin");
+    return this.temperatureCelsius * (9 / 5) + 32;
+  }
+ 
+  @computed get temparatureFahrenheit() {
+    console.log("계산 Fahrenheit");
+    return this.temperatureCelsius + 273.15;
+  }
+ 
+  @computed get temperature() {
+    console.log("계산 temperature");
+    switch (this.unit) {
+      case "K":
+        return this.temperatureKelvin + "K";
+      case "F":
+        return this.temparatureFahrenheit + "F";
+      case "C":
+        return this.temperatureCelsius + "C";
+      default:
+        return this.temperatureCelsius + "C";
+    }
+  }
+ 
+  @action setUnit(newUnit) {
+    this.unit = newUnit;
+  }
+ 
+  @action setCelsius(degrees) {
+    this.temperatureCelsius = degrees;
+  }
+ 
+  @action("update temperature and unit")
+  setTemperatureAndUnit(degrees, unit) {
+    this.setCelsius(degrees);
+    this.setUnit(unit);
+  }
+ 
+  @action inc() {
+    this.setCelsius(this.temperatureCelsius + 1);
+  }
+}
+ 
+const temps = observable([]);
+temps.push(new Temperature(20, "K"));
+temps.push(new Temperature(25, "F"));
+temps.push(new Temperature(20, "C"));
+ 
+const App = observer(({ temperatures }) => (
+  <ul>
+    {temperatures.map(t => (
+      <TView key={t.id} temperature={t} />
+    ))}
+    <DevTools />
+  </ul>
+));
+ 
+@observer
+class TView extends Component {
+  render() {
+    const t = this.props.temperature;
+    return <li onClick={this.onTemperatureClick}>{t.temperature}</li>;
+  }
+ 
+  @action onTemperatureClick = () => {
+    this.props.temperature.inc();
+  };
+}
+ 
+ReactDOM.render(<App temperatures={temps} />, document.getElementById("root"));
+```
+
+#### 예제 3) 비동기시 처리 
+
+- configure({ enforceActions: "observed" }) 의 설정이 있을시에 action 밖에서 state를 변경하는걸 막아준다.
+- 비동기 처리 하는 함수를 @action 으로 감싼다 해도 then에 등록된 callback 들의 컨텍스트는 action 밖에서 실행하게 된다. 따라서 action으로 한번 더 감싸줘야 한다. 
+- 참고 : https://mobx.js.org/best/actions.html ( 비동기시 action을 처리하는 다양한 방법 ) 
+
+```javascript
+
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import { observable, action, computed, configure } from "mobx";
+import { observer } from "mobx-react"; // MobX 에서 사용하는 Provider
+import DevTools from "mobx-react-devtools";
+ 
+ 
+configure({ enforceActions: "observed" }) // action 밖에서 state를 변경하는걸 막아준다.
+ 
+const APPID = "AppKey를 등록해서 쓰세요 ~";
+const temps = observable([]);
+let index = 0;
+ 
+class Temperature {
+  id = index++;
+  @observable unit = "C";
+  @observable temperatureCelsius = 25;
+  @observable location = "Amsterdam, NL";
+  @observable loading = true;
+  @observable fetchError = false;
+  // constructor(degrees, unit) {
+  //   this.setTemperatureAndUnit(degrees, unit);
+  // }
+  constructor(location) {
+    this.location = location;
+    this.fetch();
+  }
+ 
+  @action fetch() {
+    window
+      .fetch(
+        `https://api.openweathermap.org/data/2.5/weather?appid=${APPID}&q=${
+          this.location
+        }`
+      )
+      .then(res => res.json(), action(err => (this.fetchError = true)))
+      .then(
+        action(json => {
+           console.log(json)
+          this.temperatureCelsius = json.main.temp - 273.15;
+          this.loading = false;
+        })
+      );
+  }
+  @computed get temperatureKelvin() {
+    console.log("계산 Kelvin");
+    return this.temperatureCelsius * (9 / 5) + 32;
+  }
+ 
+  @computed get temparatureFahrenheit() {
+    console.log("계산 Fahrenheit");
+    return this.temperatureCelsius + 273.15;
+  }
+ 
+  @computed get temperature() {
+    console.log("계산 temperature");
+    switch (this.unit) {
+      case "K":
+        return this.temperatureKelvin + "K";
+      case "F":
+        return this.temparatureFahrenheit + "F";
+      case "C":
+        return this.temperatureCelsius + "C";
+      default:
+        return this.temperatureCelsius + "C";
+    }
+  }
+ 
+  @action setUnit(newUnit) {
+    this.unit = newUnit;
+  }
+ 
+  @action setCelsius(degrees) {
+    this.temperatureCelsius = degrees;
+  }
+ 
+  @action("update temperature and unit")
+  setTemperatureAndUnit(degrees, unit) {
+    this.setCelsius(degrees);
+    this.setUnit(unit);
+  }
+ 
+  @action inc() {
+    this.setCelsius(this.temperatureCelsius + 1);
+  }
+}
+ 
+ 
+ 
+const App = observer(({ temperatures }) => (
+  <ul>
+    <TemperatureInput temperatures={temperatures} />
+    {temperatures.map(t => (
+      <TView key={t.id} temperature={t} />
+    ))}
+    <DevTools />
+  </ul>
+));
+ 
+@observer
+class TemperatureInput extends Component {
+  @observable input = "";
+ 
+  render() {
+    return (
+      <li>
+        Destination:
+        <input onChange={this.onChange} value={this.input} />
+        <button onClick={this.onSubmit}>Add</button>
+      </li>
+    );
+  }
+ 
+  @action onChange = e => {
+    this.input = e.target.value;
+  };
+ 
+  @action onSubmit = e => {
+    this.props.temperatures.push(new Temperature(this.input));
+    this.input = "";
+  };
+}
+ 
+@observer
+class TView extends Component {
+  render() {
+    const t = this.props.temperature;
+    return t.fetchError ? (
+      "fetch 에러.. "
+    ) : (
+      <li onClick={this.onTemperatureClick}>
+        {t.location}: {t.loading ? "loading.." : t.temperature}
+      </li>
+    );
+  }
+ 
+  @action onTemperatureClick = () => {
+    this.props.temperature.inc();
+  };
+}
+ 
+ReactDOM.render(<App temperatures={temps} />, document.getElementById("root"));
+
+```
+
+
+
+#### 예제 4) mobx-react 의 provider와 inject 를 사용해서 depth가 깊은 컴포넌트에 props로 전달하는 번거로움을 제거하자. 
+
 
 ```javascript 
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import { observable, action, computed, configure } from "mobx";
+import { observable, action, computed, configure, when } from "mobx";
 import { observer, Provider, inject } from "mobx-react"; // MobX 에서 사용하는 Provider
 import DevTools from "mobx-react-devtools";
 
