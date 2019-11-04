@@ -271,7 +271,7 @@ function createMap(countries, cities) {
 
 - 코로플레스 지도는 색상으로 데이터를 인코딩하는 지도를 말한다. 예를 들어 색상으로 나라별 GDP, 인구, 주요 언어 등 통계 데이터를 보여줄 수 있다.
 - D3 에서는 `properties` 필드에 정보를 가진 지리 데이터를 사용하거나 지리 데이터와 통계 데이터 테이블 두 개를 연결해 만들 수 있다.
-- 공간 단위 문제가 발생할 수 있으므로 주의해야 한다. 공간 단위 문제는 통계 데이터를 왜곡해서 보여주려 기존 지형에 경계를 그릴 때 발생한다. 자기 당에 유리하도록 선거구를 정하는 게리맨더링은 이런 문제의 대표적인 예다.
+- 코로플레스 지도 공간 단위 문제가 발생할 수 있으므로 주의해야 한다. 공간 단위 문제는 통계 데이터를 왜곡해서 보여주려 기존 지형에 경계를 그릴 때 발생한다. 자기 당에 유리하도록 선거구를 정하는 게리맨더링은 이런 문제의 대표적인 예다.
 
 ### 상호작용성
 
@@ -793,21 +793,22 @@ function createMap(countries, cities) {
 
 - 위 작성된 코드에서 인구에 기초해 <circle> 요소의 크기를 정하거나 <g> 요소로 레이블을 붙일 수도 있을 것이다.
 - 지도를 만들고 있다면 폴리곤과 점으로 경계 상자나 중심을 이용하고 zoom 객체에 연동시킬 것이다.
-- 만약 zoom의 행동을 가진 element가 뒤늣게 mousedown 이벤트를 등록한다면 mousedown 이벤트는 동작하지 않는다. 왜냐하면 zoom 이벤트에서 해당 이벤트를 소비하기 때문이다. 하지만 이벤트 propagation 룰에 의해 zoom 행동을 등록하기 전에 mousedown 이벤트를 등록하거나 이벤트 리스너에 capturing을 사용하거나 자손 element에 non-capturing 으로 등록한다면 mousedown 이벤트가 zoom 이벤트 발생 전에 볼수 있을 것이다. 그리고 event.stopImmediatePropagation 으로 zoom의 행동을 막을 수도 있다. 또한 zoom.filter를 사용해서 zoom의 행동을 컨트롤 할 수 있다.
+- 만약 zoom의 행동을 가진 element가 뒤늣게 mousedown 이벤트를 등록한다면 mousedown 이벤트는 동작하지 않는다. 왜냐하면 zoom 이벤트에서 해당 이벤트를 소비하기 때문이다. 하지만 이벤트 propagation 룰에 의해 zoom 행동을 등록하기 전에 mousedown 이벤트를 등록하거나 이벤트 리스너에 capturing을 사용하거나 자손 element에 non-capturing 으로 등록한다면 mousedown 이벤트가 zoom 이벤트 발생 전에 볼수 있을 것이다. 그리고 `event.stopImmediatePropagation` 으로 zoom의 행동을 막을 수도 있다. 또한 `zoom.filter`를 사용해서 zoom의 행동을 컨트롤 할 수 있다.
 - continuous scale에서 `clamp`는 enable, disable로 설정할 수 있는데 이를 false로 설정할 시 domain에 벗어난 값은 range에서도 벗어난 값을 리턴한다. 그 반대로 true 값을 설정하면 domain에 벗어난 값은 range의 최소 또는 최대 값으로 매핑이 된다.
-- projection 객체의 clipAngle 속성은 중심에서 일정한 각도 이상을 벗어나는 경로를 제거(clipping) 한다.
+- `projection` 객체의 `clipAngle` 속성은 중심에서 일정한 각도 이상을 벗어나는 경로를 `제거(clipping)` 한다.
 - 지구본을 초기화 할 때 나라를 모두 그리지만 그들 중 상당수는 잘려나간다. 그러므로 도형을 그릴때 영역을 계산하는 `geoPath.area(d)` 메서드는 메르카토르 도법에서보다 문제가 더 심하다. 예를 들어 호주가 마다가스카르와 비슷한 크기인 것처럼 색상이 칠해져 있는걸 볼 수 있다.
 - D3는 실제 지형 면적을 계산하는 `d3.geoArea()` 가 있다.
 
 ### geoOrthographic 도법으로 지구본 만들기
 
-- projection에 [longitude, latitude] 값을 넣어서 실행하면 그려지는 2D 좌표 값(typically in pixels)을 리턴해준다.
-- 반대로 projection.invert 메서드에 평면 x,y 좌표값 배열(typically in pixels)을 넣어서 실행시키면 도법에 적용된 좌표를 다시 리턴해준다. 예를 들어 geoOrthographic 에선 [longitude, latitude] in degress 값을 리턴해준다.
-- Spherical Math 의 d3.geoCentroid 메서드는 한 국가의 GeoJSON 객체를 받으면 구 지형의 중심 좌표([경도 , 위도])값을 리턴해준다.
+- `projection에 [longitude, latitude]` 값을 넣어서 실행하면 그려지는 `2D 좌표 값`(typically in pixels)을 리턴해준다.
+- 반대로 `projection.invert` 메서드에 평면 x,y 좌표값 배열(typically in pixels)을 넣어서 실행시키면 도법에 적용된 좌표를 다시 리턴해준다. 예를 들어 `geoOrthographic` 에선 [longitude, latitude] in degress 값을 리턴해준다.
+- Spherical Math 의 `d3.geoCentroid` 메서드는 한 국가의 GeoJSON 객체를 받으면 구 지형의 중심 좌표([경도 , 위도])값을 리턴해준다.
 - 지구본을 회전에 대해 알아두어야 하는 것은 위치는 [경도, 위도]로 표현을 해낼 수 있고 방향은 [lambda, phi, gamma] 로 표현해야 한다는 것이다.
-- 특히 이 방향 표현은 오일러를 사용해서 표현을 하고 있다. 오일러는 3개의 축에 대한 각도를 회전 정보로 사용한다. 예를 들어서 현재 지점의 좌표와 방향을 그리고 다음 지점의 좌표를 안다면 다음 지점의 방향을 구할 수있고 projection.rotate에 다음 지점의 방향을 넣어서 회전 시킬 수 있을 것이다.
-- 오일러각은 직각좌표계(Cartesian coordinate system)에서 X, Y, Z 축을 따라 오른손 좌표계 방향으로 각을 정의하고 정해진 순서에 따라 3번 회전 운동을 수행하며 회전 운동을 표현한다. 따라서 미리 회전 순서를 정해주지 않으면 오일러각은 매우 다양하게 정의될 수 있습니다.
+- 특히 이 방향 표현은 오일러를 사용해서 표현을 하고 있다. 오일러는 3개의 축에 대한 각도를 회전 정보로 사용한다. 예를 들어서 현재 지점의 좌표와 방향을 그리고 다음 지점의 좌표를 안다면 다음 지점의 방향을 구할 수있고 `projection.rotate`에 다음 지점의 방향을 넣어서 회전 시킬 수 있을 것이다.
+- 오일러각은 직각좌표계(Cartesian coordinate system)에서 X, Y, Z 축을 따라 오른손 좌표계 방향으로 각을 정의하고 정해진 순서에 따라 3번 회전 운동을 수행하며 회전 운동을 표현한다. 따라서 미리 회전 순서를 정해주지 않으면 오일러각은 매우 다양하게 정의될 수 있다.
 - 오일러는 직관적이라 사용자의 입력을 받을 수 있는 장점이 있지만 짐벌 락이라는 단점을 지니고 있다. 그래서 쿼터니온이라는 다른 표현을 사용한다. 이때, 사용자에게는 오일러 각을 입력받고 쿼터니온으로 연산을 진행해서 다시 오릴러 각으로 리턴을 받는 식으로 계산한다. 쿼터니온은 오일러 연산에서 발생하는 짐벌락 문제를 말끔히 해결하며 연산속도도 빠르다.
+
 
 ```html
 <html>
@@ -1001,3 +1002,151 @@ function createMap(countries, cities) {
   </body>
 </html>
 ```
+
+### 위성 도법
+
+- 위성 도법의 각도를 지정하는데 tilt() 와 distance() 라는 새로운 설정이 있다. titl는 데이터를 바라보는 각도이며, distance는 지구 반지름에 대한 비율이다. (1.119는 지구 반지름의 11.9% 높이의 상공을 의미한다.)
+- 정확한 설정 값을 알아내는 법은 2가지가 있다. 하나는 수학이나 지리학을 전공했다면 계산하는 방법을 설명한 참고서를 살펴보거나 두번째는 코드로 회전, 기울임, 거리 척도를 대화형으로 설정하는 방법이 있다. [참고](http://bl.ocks.org/emeeks/10173187)
+
+
+```javascript
+// 중동이 유럽을 바라보는 시각의 변화
+Promise.all([d3.json("world.geojson"), d3.csv("cities.csv")]).then(
+    dataList => {
+      const [countries, cities] = dataList;
+      createMap(countries, cities);
+    }
+  );
+
+  const width = 700;
+  const height = 700;
+
+  function createMap(countries, cities) {
+    projection = d3.geoSatellite()
+      .translate([width / 2, height / 2])
+      .scale(1330)
+      .rotate([-30.24, -31, -56])
+      .tilt(30) // 지형을 내려다보는 각도
+      .distance(1.199) // 지구 반지름에 대한 비율이다.(1.119는 지구 반지름의 11.9% 높이의 상공을 의미한다.)
+      .clipAngle(35) // 중심에서 일정한 각도 이상을 벗어나는 경로를 제거
+      // .center([-2, -1])
+      
+    
+    const geoPath = d3.geoPath().projection(projection);
+
+    // 나라 그리는 코드
+    d3.select("svg")
+      .selectAll("path")
+      .data(countries.features)
+      .enter()
+      .append("path")
+      .attr("d", geoPath)
+      .attr("class", "countries");
+
+    const featureData = d3.selectAll("path.countries").data();
+    const realFeatureSize = d3.extent(featureData, d => d3.geoArea(d));
+    const newFeatureColor = d3
+      .scaleQuantize()
+      .domain(realFeatureSize)
+      .range(colorbrewer.Reds[7]);
+    d3.selectAll("path.countries").style("fill", d =>
+      newFeatureColor(d3.geoArea(d))
+    );
+  }
+```
+
+
+
+## TopoJSON 데이터와 기능
+
+TopoJSON 이라는 용어는 다음과 같은 세 가지 형태를 말한다. 
+
+- 지리 데이터에 대한 데이터 표준이며 GeoJSON의 확장 버전
+- GeoJSON 파일에서 TopoJSON 포맷의 파일을 생성하려 node.js에서 돌아가는 라이브러리
+- TopoJSON 포맷의 파일을 처리해 D3 등의 라이브러리로 렌더링하는데 필요한 객체를 생성하는 자바스크립트 라이브러리
+
+GeoJSON 파일은 각 지형을 점, 선, 폴리곤을 나타내는 위도와 경도 좌표의 배열로 저장하는 반면, TopoJSON은 각 지형을 원호의 배열로 저장한다. 원호는 데이터 셋 안에 있는 하나 이상의 지형이 공유하는 선분이다. 미국과 멕시코가 공유하는 국경은 하나의 원호로서 미국 지형의 원호 배열에서 참조하고 멕시코 지형의 원호 배열에서 참조한다. 
+
+TopoJSON 데이터 셋의 크기가 훨씬 더 작은 경우가 많고 어느 선분을 공유하는지 알고 있으면 이웃하는 지형이나 공유하는 국경을 쉽게 계산할 수 있고 지형을 쉽게 병합할 수 있다. 
+
+D3가 도형을 생성하는데 읽고 생성할 수 있는 포맷으로 TopoJSON 포맷을 변경하려면 TopoJSON으로 지도를 만드는데 사용하는 웹사이트에 Topojson.js를 추가해야 한다. 
+
+```javascript
+Promise.all([d3.json("world.topojson"), d3.csv("cities.csv")]).then(
+        dataList => {
+          const [countries, cities] = dataList;
+          createMap(countries, cities);
+        }
+      );
+
+      const width = 700;
+      const height = 700;
+
+      function createMap(countries, cities) {
+        // topo => geo 변환
+        const topoCountries = topojson.feature(countries, countries.objects.countries)
+        // console.log(topoCountries)
+        
+        const projection = d3.geoMollweide()
+          .scale(120)
+          .translate([width / 2, height / 2 ])
+          .center([20,0])
+
+        const geoPath = d3.geoPath().projection(projection);
+
+
+        // 나라 그리는 코드
+        d3.select("svg")
+          .selectAll("path")
+          .data(topoCountries.features)
+          .enter()
+          .append("path")
+          .attr("d", geoPath)
+          .attr("class", "countries")
+          .style('stroke-width', 1)
+          .style('stroke', 'black')
+          .style('opacity', 0.5)
+
+        
+        const featureData = d3.selectAll("path.countries").data();
+        const realFeatureSize = d3.extent(featureData, d => d3.geoArea(d));
+        const newFeatureColor = d3
+          .scaleQuantize()
+          .domain(realFeatureSize)
+          .range(colorbrewer.Reds[7]);
+        d3.selectAll("path.countries").style("fill", d =>
+          newFeatureColor(d3.geoArea(d))
+        );
+
+        // 병합
+        mergetAt(0)
+
+        function mergetAt(mergePoint) {
+          const filteredCountries = countries.objects.countries.geometries
+            .filter(d => {
+              const thisCenter = d3.geoCentroid(topojson.feature(countries, d))
+              return thisCenter[1] > mergePoint? true : null
+            })
+
+          d3.select('svg').insert('g')
+            .datum(topojson.merge(countries, filteredCountries))
+            .insert('path')
+            .style('fill', 'gray')
+            .style('stroke', 'black')
+            .style('stroke-width', '2px')
+            .attr('d', geoPath)
+
+          console.log(topojson.merge(countries, filteredCountries))
+        }   
+      }
+```
+
+## d3.geo tile을 이용한 타일 맵핑
+
+- 지금까지 그린것은 코로플레스 지도를 만든 것이다. 터레인(terrain), 즉 위성 사진을 사용하지는 않았다. 
+- 래스터 데이터는 백터 데이터 만큼 가볍지 않다. 스마트폰에서 찍은 사진을 떠올려보자. 파일의 크기가 크다. 
+- 엄청나게 큰 그림을 사용해야 하는 문제를 해결하려 웹 지도에서는 타일(tile)로 위성 사진을 보여준다. 예를 들어 도시의 고해상도 사진을 다양한 확대 수준에서 256px x 256px 크기로 나눈 후 서버에 확대 수준과 위치에 맞게 해당 사진들을 저장한다. 
+- [Mapbox](http://mapbox.com) 같은 곳에서 타일을 제공하며, 이 타일을 커스터마이즈할 TileMill 같은 도구를 제공해준다. 
+- 각 타일은 PNG 포맷인 래스터 이미지로서 지구 어딘가의 정사각형을 나타낸다. 파일명을 보면 그림 파일의 지리적 위치와 확대 수준을 알 수 있다. 
+- d3.geoTile 객체가 파일명과 디렉터리 구조를 분석해주므로 지도에 해당 타일을 사용하기만 하면 된다. 
+
