@@ -1150,3 +1150,180 @@ Promise.all([d3.json("world.topojson"), d3.csv("cities.csv")]).then(
 - 각 타일은 PNG 포맷인 래스터 이미지로서 지구 어딘가의 정사각형을 나타낸다. 파일명을 보면 그림 파일의 지리적 위치와 확대 수준을 알 수 있다. 
 - d3.geoTile 객체가 파일명과 디렉터리 구조를 분석해주므로 지도에 해당 타일을 사용하기만 하면 된다. 
 
+```html
+ <html>
+  <head>
+    <title>D3 in Action Chapter 5 - Example 7</title>
+    <meta charset="utf-8" />
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-tile@1"></script>
+    <script src="http://colorbrewer2.org/export/colorbrewer.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <script src="https://unpkg.com/versor"></script>
+  </head>
+  <style>
+    svg {
+      height: 700px;
+      width: 700px;
+      border: 1px solid gray;
+    }
+    path.countries {
+      stroke-width: 1;
+      stroke: black;
+      opacity: 0.5;
+      fill: red;
+    }
+
+    circle.cities {
+      stroke-width: 1;
+      stroke: black;
+      fill: blue;
+    }
+
+    circle.centroid {
+      fill: red;
+      pointer-events: none;
+    }
+
+    rect.bbox {
+      fill: none;
+      stroke-dasharray: 5 5;
+      stroke: black;
+      stroke-width: 2;
+      pointer-events: none;
+    }
+
+    path.graticule {
+      fill: none;
+      stroke-width: 1;
+      stroke: black;
+    }
+  </style>
+  <body>
+    <div id="viz">
+      <svg></svg>
+    </div>
+    <div id="controls"></div>
+
+    <footer></footer>
+
+    <script>
+      Promise.all([d3.json("world.topojson"), d3.csv("cities.csv")]).then(
+        dataList => {
+          const [countries, cities] = dataList;
+          createMap(countries, cities);
+        }
+      );
+
+      const width = 700;
+      const height = 700;
+      d3.select("svg")
+        .append("g")
+        .attr("id", "tiles");
+
+      function createMap(countries, cities) {
+        // topo => geo 변환
+        const topoCountries = topojson.feature(
+          countries,
+          countries.objects.countries
+        );
+
+        const tile = d3.tile().size([width, height]);
+
+        const projection = d3
+          .geoMercator()
+          .scale(120)
+          .translate([width / 2, height / 2]);
+
+        const center = projection([0, 0]);
+        const geoPath = d3.geoPath().projection(projection);
+        const zoom = d3.zoom().on("zoom", redraw);
+
+        const translateX = width - center[0];
+        const translateY = height - center[1];
+        const scaleK = projection.scale() * 2 * Math.PI;
+
+        d3.select("svg")
+          .call(zoom)
+          .call(
+            zoom.transform,
+            d3.zoomIdentity.translate(translateX, translateY).scale(scaleK)
+          );
+
+        d3.select("svg")
+          .selectAll("path")
+          .data(topoCountries.features)
+          .enter()
+          .append("path")
+          .attr("d", geoPath)
+          .attr("class", "countries");  
+
+        function redraw() {
+          
+          const transform = d3.zoomTransform(this);
+          const tiles = tile
+            .scale(transform.k)
+            .translate([transform.x, transform.y])();
+          console.log("tiles", tiles);
+          const image = d3
+            .select("#tiles")
+            .attr(
+              "transform",
+              `scale(${tiles.scale}) translate(${tiles.translate})`
+            )
+            .selectAll("image")
+            .data(tile, d => d);
+
+          image.exit().remove(); // 화면 밖으로 나간 것을 모두 제거한다.
+          image
+            .enter()
+            .append("image") // 새로운 이미지를 추가한다.
+            .attr("xlink:href", d => {
+              return `https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/${
+                d[2]
+              }/${d[0]}/${
+                d[1]
+              }?access_token=pk.eyJ1IjoiY2hjaG9pbmciLCJhIjoiY2syazU1OWs0MHdqYzNtb2h6a2FtdXppZCJ9.nMTjqotAdJuGNYhCvLTOGA
+`;
+            })
+            .attr("width", 1)
+            .attr("height", 1)
+            .attr("x", d => d[0])
+            .attr("y", d => d[1]);
+
+          // 현재의 메르카토르 도법에 맞게 스케일을 계산한다. 
+          projection.scale(transform.k / 2 / Math.PI).translate([transform.x, transform.y])
+          d3.selectAll('path.countries')
+            .attr('d',geoPath)
+            
+        }
+        
+        // 나라 색상
+        const featureData = d3.selectAll("path.countries").data();
+        const realFeatureSize = d3.extent(featureData, d => d3.geoArea(d));
+        const newFeatureColor = d3
+          .scaleQuantize()
+          .domain(realFeatureSize)
+          .range(colorbrewer.Reds[7]);
+        d3.selectAll("path.countries").style("fill", d =>
+          newFeatureColor(d3.geoArea(d))
+        );
+       
+      }
+    </script>
+  </body>
+</html>
+```
+
+## 웹 지도 제작 관련 추가 자료
+
+- 위에서 사용했던 확대하는데 사용한 기법은 투영 확대 (projection zoom) 라고 하며 scale 과 translate 의 변화에 따라 지형의 모습을 수학적으로 다시 계산한다. 메르카토르 도법처럼 수평 투영 (flat projection) 기법을 사용하는 경우에는 zoom 객체의 scale과 translate 변화를 SVG 변환 기능에 연결해 성능을 향상 시킬 수 있다. 이때 SVG 변환에 의해 폰트와 스트로크의 두께가 변하므로 이에 대한 설정은 직접 조정해야 한다. 
+
+- `d3.geoPath`의 context() 메서드를 사용하면 <canvas> 요소에 벡터 데이터를 쉽게 그릴 수 있으며, 경우에 따라 속도가 향상된다. canvas의 `toDataURL()` 메서드를 사용하면 화면을 PNG 파일로 만들어 저장할 수 있다.
+
+- `d3.hexbin` 플러그인을 사용하면 지도위에 헥스빈(hexbin)을 쉽게 만들 수 있다. [Hexbin](https://observablehq.com/@d3/hexbin-map)
+
+- 헥스빈과 마찬가지로, 점 데이터만 갖는 데이터에서 영역을 생성하고 싶을 때는 보로노이 다이어그램인 `d3.voronoi()`로 해당 점에서 폴리곤을 생성할 수 있다. [voronoi](https://www.jasondavies.com/maps/voronoi/us-capitals/)
+
+- 통계지도(cartogram)은 지리 객체의 영역이나 길이를 왜곡해 다른 정보를 준다. 예를 들어 주행 시간에 따라 도로의 길이를 왜곡하거나 인구에 기초해 나라의 크기를 크거나 작게 만들 수 있다. [제이슨 데이비스 예제](https://www.jasondavies.com/maps/dorling-world/), [마이크 보스톡 예제](https://bl.ocks.org/mbostock/4055908), [비용 통계 지도](http://orbis.stanford.edu/)
