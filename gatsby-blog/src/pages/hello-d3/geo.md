@@ -54,6 +54,7 @@ const GeoJson = {
 - 메르카토르 도법을 사용하려면 D3 확장인 d3.geo.projection.js를 추가 해야한다. (v5 버젼에서는 기본 API이다.) 도법을 정의하면 `d3.geoPath`를 이용해서 선택한 도법(projection)에 기초해 지리 데이터를 화면에 그린다.
 - 메르카토르 도법(projection)이 기본적으로 미국을 중심으로 한 일부 세계만 SVG 영역에 투영하도록 설정돼 있기 때문이다.
 - 모든 projection은 SVG에서 사용하는 표준적인 translate()와 scale() 메서드를 지원하지만 도법에 따라 효과가 다르다.
+- projection 이라는 어떤 매개체를 통해서 하나의 데이터와 다른 스페이스의 데이터를 2개를 연결해주는 것이다. 
 
 ```javascript
 // projection 이 도법
