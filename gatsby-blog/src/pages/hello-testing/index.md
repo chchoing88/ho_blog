@@ -348,6 +348,8 @@ Functional tests 는 브라우저를 컨트롤 합니다. 그리고 유저의 �
 
 # List of General Prominent Testing Tools
 
+거기에는 수십 가지 훌륭한 도구가 있습니다. 여기에 모든 것을 포함시킬 수는 없었지만 다음 목록에 알아야 할 가장 중요하고 가장 잘 관리되는 도구와 가장 채택 된 도구를 포함 시키려고 했습니다.
+
 ### jsdom
 
 ### Electron
