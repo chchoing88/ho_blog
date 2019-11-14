@@ -145,8 +145,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-5dea2a7ff77969fe7674.js",
-      "path---index-5dea2a7ff77969fe7674.js.map"
+      "path---index-7c00de3f7148d202466a.js",
+      "path---index-7c00de3f7148d202466a.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -178,6 +178,10 @@
       "path---webpack-config-d646c3ec578c78b12b66.js",
       "path---webpack-config-d646c3ec578c78b12b66.js.map"
     ],
+    "path---hello-testing": [
+      "path---hello-testing-2626ec3be8d67f1feb92.js",
+      "path---hello-testing-2626ec3be8d67f1feb92.js.map"
+    ],
     "path---refactoring-organization-data-2": [
       "path---refactoring-organization-data-2-6725e1fa3585396087cf.js",
       "path---refactoring-organization-data-2-6725e1fa3585396087cf.js.map"
@@ -195,9 +199,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-15cac69bfdd80bae607a.js",
+      "app-bd346322a989f17eb21f.js",
       "build-js-styles.css",
-      "app-15cac69bfdd80bae607a.js.map",
+      "app-bd346322a989f17eb21f.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
