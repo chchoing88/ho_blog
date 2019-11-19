@@ -223,6 +223,8 @@ Shallow Rendering은 컴포넌트를 단위 테스트하는데 제약을 가하�
 
 Enzyme v3부터 얕은 API는 componentDidMount 및 componentDidUpdate와 같은 React 라이프 사이클 메소드를 호출합니다. 이에 대한 자세한 내용은 버전 3 마이그레이션 안내서를 참조하십시오.
 
+리엑트 컴포넌트를 Shallow Rendering 하고 나면 해당 컴포넌트 자체가 아닌 컴포넌트가 render 하는 children을 감싼 wrapper 객체가 리턴됩니다. 이때, children안에 있는 컴포넌트는 별도로 render 되지 않은 형태로 나옵니다.
+
 ```javascript
 import { shallow } from 'enzyme';
 
@@ -277,6 +279,8 @@ Full DOM rendering은 DOM API와 상호 작용할 수 있는 components가 있�
 Full DOM rendering을 위해서는 전체 범위에서 전체 DOM API를 사용할 수 있어야합니다. 이는 최소한 브라우저 환경과 유사한 환경에서 실행되어야 함을 의미합니다. 브라우저 내에서 테스트를 실행하지 않으려면 mount를 사용하는 데 권장되는 방법은 jsdom이라는 라이브러리에 의존하는 것입니다. 이 라이브러리는 본질적으로 JS에서 완전히 구현 된 헤드리스 브라우저입니다.
 
 참고 : 얕은 렌더링 또는 정적 렌더링과 달리 전체 렌더링은 실제로 구성 요소를 DOM에 마운트하므로 테스트가 모두 동일한 DOM을 사용하는 경우 서로 영향을 줄 수 있습니다. 테스트를 작성하는 동안이를 명심하고 필요한 경우 .unmount () 또는 정리와 유사한 것을 사용하십시오.
+
+리엑트 컴포넌트를 Full Rendering 하고 나면 해당 컴포넌트의 인스턴스를 wrapper 한 객체가 리턴된다. 또한 컴포넌트 인스턴스의 children 에 또다른 리엑트 컴포넌트가 있다면 그것 또한 render 해준 결과가 나온다.
 
 ```javascript
 import { mount } from 'enzyme';
