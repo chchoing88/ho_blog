@@ -1,7 +1,9 @@
 ---
-title: Hello Enzyme (작성중..)
+title: Hello Enzyme
 date: '2019-11-18T10:00:03.284Z'
 ---
+
+# Enzyme
 
 이 글은 아래 링크에 있는 글을 의역 했습니다.
 [참조](https://airbnb.io/enzyme/)
