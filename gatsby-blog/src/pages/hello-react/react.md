@@ -179,14 +179,95 @@ this.setState({
 - useState는 함수형 컴포넌트에서도 가변적인 상태를 지닐 수 있게 해줍니다.
 - useEffect는 리액트 컴포넌트가 렌더링될 때마다 특정 작업을 수행하도록 설정할 수 있는 Hook이다. 
 클래스형 컴포넌트의 componentDidMount와 componentDidUpdate를 합친 형태로 보아도 무방하다.
-- useEffect는 기본적으로 렌더링되고 난 직후마다 실행되며, 두 번째 파라미터 배열에 무엇을 넣는지에 따라 실행되는 조건이 달라진다.
+- useEffect는 기본적으로 DOM 렌더링되고 난 직후마다 실행되며, 두 번째 파라미터 배열에 무엇을 넣는지에 따라 실행되는 조건이 달라진다.
 - 컴포넌트가 언마운트되기 전이나 업데이트 되기 직전에 어떠한 작업을 수행하고 싶다면 useEffect에서 cleanup 함수를 반환해 주어야 합니다.
-- useEffect 사용할시 관계 없는 로직일때는 분리해서 넣어라. Hooks은 무엇을 하는지에 따라 코드를 분리 시켜줄수 있다.
-- useEffect 는 왜 매 업데이트 시 마다 호출이 될까? 우리 컴포넌트에서 this.props에서 친구의 온라인 유무 상태를 받아온다고 생각해보자. componentDidMount와 componentWillMount시에 친구 ID를 사용해서 로직을 구현할것이다. 근데 만약 props가 변경되어 친구가 변경 되었다면..WillMount시에 없는 친구 ID를 사용하기에 에러가 나기 충분하다. 그래서 사용자는 componentDidUpdate 에 추가 로직을 또 넣어주어야 한다.
-훅을 사용하면 이런 류의 버그 걱정을 덜어준다. effect는 다음 effect가 발생할때 마다 default로 이전 effect를 clean up 해줄 수 있다. 
+- useEffect 사용할시 관계 없는 로직일때는 분리해서 넣으십쇼. Hooks은 무엇을 하는지에 따라 코드를 분리 시켜줄수 있습니다.
+- effect는 다음 effect가 발생할때 마다 default로 이전 effect를 clean up 해줄 수 있다. effect 의 return 으로 함수를 적어둔다면 리엑트는 자동으로 정리를 해야할때(다음 effect 함수가 실행되기 이전에) 이 함수를 실행 시킵니다.
+- useEffect가 발동되면 해당되는 함수 컴포넌트는 무조건 다시 호출이 됩니다.
+- useEffect의 두번째 인자로 빈 배열(`[]`)을 넣는다면 mount시와 unmount시에만 호출이 됩니다. 그래서 update시에 effect 함수 호출을 건너뛸 수 있습니다.
+- 만약 useEffect의 두번째 인자로 빈 배열(`[]`)을 넣는다면 effect 안에 있는 state와 props는 항상 초기값을 가리킬 것입니다. 
 
-- useEffect가 발동되면 해당되는 함수 컴포넌트는 무조건 다시 호출이 된다.
-- useEffect 밖에 선언된 함수를 호출할때, dependency list에 해당 함수를 생략해도 되는가??? (ex. [] )일반적으로는 안된다. 특히 해당 함수가 props를 참조하고 있다면 bug가 일어날 수 있다. 왜냐하면 props가 바뀌면 해당 함수를 호출하지 않기 때문이다. 해당 함수를 생략하려면 오직 그 함수가 props나 state 그것에 파생된 값을 참조하고 있지 않을때만 안전하다.
+
+### useEffect 는 왜 매 업데이트 시 마다 호출이 될까?
+
+우리 컴포넌트에서 this.props에서 친구의 온라인 유무 상태를 받아온다고 생각해보자. componentDidMount와 componentWillMount시에 친구 ID를 사용해서 로직을 구현할 것이다. 근데 만약 props가 변경되어 친구가 변경 되었다면, 다른 친구의 온라인 상태를 표현해 줄것입니다. 
+
+또한 unMount시에 없는 친구 ID를 사용하기에 에러가 나기 충분하다. 그래서 사용자는 componentDidUpdate 에 추가 로직을 잊지 않고 넣어주어야 합니다.
+
+훅을 사용하면 이런 류의 버그 걱정을 덜어줄 수 있습니다.
+
+```javascript
+function FriendStatus(props) {
+  // ...
+  useEffect(() => {
+    // ...
+    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+    };
+  });
+```
+
+```javascript
+// Mount with { friend: { id: 100 } } props
+ChatAPI.subscribeToFriendStatus(100, handleStatusChange);     // Run first effect
+
+// Update with { friend: { id: 200 } } props
+ChatAPI.unsubscribeFromFriendStatus(100, handleStatusChange); // Clean up previous effect
+ChatAPI.subscribeToFriendStatus(200, handleStatusChange);     // Run next effect
+
+// Update with { friend: { id: 300 } } props
+ChatAPI.unsubscribeFromFriendStatus(200, handleStatusChange); // Clean up previous effect
+ChatAPI.subscribeToFriendStatus(300, handleStatusChange);     // Run next effect
+
+// Unmount
+ChatAPI.unsubscribeFromFriendStatus(300, handleStatusChange); // Clean up last effect
+```
+
+### 디펀던시 리스트에서 함수를 생략해도 안전한가요?
+
+일반적으로는 안전하지 못합니다.
+
+특히 해당 함수가 props를 참조하고 있다면 bug가 일어날 수 있습니다.
+왜냐하면 props가 바뀌면 해당 함수를 호출하지 않기 때문입니다. 
+해당 함수를 생략하려면 오직 그 함수가 props나 state 그것에 파생된 값을 참조하고 있지 않을때만 안전합니다.
+
+```javascript
+function Example({ someProp }) {
+  function doSomething() {
+    console.log(someProp);
+  }
+
+  useEffect(() => {
+    doSomething();
+  }, []); // 🔴 This is not safe (it calls `doSomething` which uses `someProp`)
+}
+
+```
+effect 함수 밖 함수에 의해 사용되는 state나 props를 인지하긴 힘듭니다. 그렇기 때문에 보통 effect가 필요한 함수를 안쪽에 선언할 것입니다. 그러면 컴포넌트 스코프의 어떤 값들이 effect에 의존적인지 알아보기 쉬울 것입니다.
+
+```javascript
+function Example({ someProp }) {
+  useEffect(() => {
+    function doSomething() {
+      console.log(someProp);
+    }
+
+    doSomething();
+  }, [someProp]); // ✅ OK (our effect only uses `someProp`)
+}
+```
+
+만약에 컴포넌트 스코프에 있는 어떠한 값도 사용하지 않는다면 빈배열로 넣는것은 안전할 것입니다. 
+
+만약에 몇몇 이유로 effect 안에 함수를 이동시키기 없다면 몇몇 선택지가 있습니다.
+
+- **해당 함수를 컴포넌트 밖으로 빼려고 노력을 하십시요.** 이런 경우에는 컴포넌트의 props, state 를 참조하고 있지 않다는 보장이 생기기 때문에 디펜던시 리스트에 있을 필요가 없습니다.
+
+- 만약 함수가 순수함수이고 렌더링 도중에 불려도 안전하다면 **effect 밖에서 호출 하십시요.** 그리고 effect에 리턴 된 값을 의존하게 하십시요.
+
+- 마지막은, `useCallback` 로 감싼 정의된 **함수를 effect 디펜던시에 추가** 하십시요. 이것은 useCallback에 걸어둔 디펜던시가 변경되지 않는다면 매 render 시 마다 변경되지 않음을 보장할 수 있습니다.
+
 
 ### Hooks 규칙
 
