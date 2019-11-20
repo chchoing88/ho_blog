@@ -268,6 +268,25 @@ function Example({ someProp }) {
 
 - 마지막은, `useCallback` 로 감싼 정의된 **함수를 effect 디펜던시에 추가** 하십시요. 이것은 useCallback에 걸어둔 디펜던시가 변경되지 않는다면 매 render 시 마다 변경되지 않음을 보장할 수 있습니다.
 
+```javascript
+function ProductPage({ productId }) {
+  // ✅ Wrap with useCallback to avoid change on every render
+  const fetchProduct = useCallback(() => {
+    // ... Does something with productId ...
+  }, [productId]); // ✅ All useCallback dependencies are specified
+
+  return <ProductDetails fetchProduct={fetchProduct} />;
+}
+
+function ProductDetails({ fetchProduct }) {
+  useEffect(() => {
+    fetchProduct();
+  }, [fetchProduct]); // ✅ All useEffect dependencies are specified
+  // ...
+}
+```
+
+위 예제는 `ProductPage`의 `productId` prop의 변화가 `ProductDetails` 컴포넌트의 refetch를 발동 시킨다는 것을 보장합니다.
 
 ### Hooks 규칙
 
