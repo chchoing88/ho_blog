@@ -145,8 +145,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-7c00de3f7148d202466a.js",
-      "path---index-7c00de3f7148d202466a.js.map"
+      "path---index-b7ceef3f03d89b883c70.js",
+      "path---index-b7ceef3f03d89b883c70.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -194,14 +194,18 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js",
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
+    "path---hello-enzyme": [
+      "path---hello-enzyme-20c1ec114c4f8773af3a.js",
+      "path---hello-enzyme-20c1ec114c4f8773af3a.js.map"
+    ],
     "path---refactoring-complex-refactoring": [
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js",
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-bd346322a989f17eb21f.js",
+      "app-d9ce69d49f644ac424f2.js",
       "build-js-styles.css",
-      "app-bd346322a989f17eb21f.js.map",
+      "app-d9ce69d49f644ac424f2.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
