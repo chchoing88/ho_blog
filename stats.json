@@ -68,6 +68,10 @@
       "path---react-fiber-react-fiber-01-de4b57b558db4cda0d1b.js",
       "path---react-fiber-react-fiber-01-de4b57b558db4cda0d1b.js.map"
     ],
+    "path---hello-react-react": [
+      "path---hello-react-react-9dde0a852ade465d7131.js",
+      "path---hello-react-react-9dde0a852ade465d7131.js.map"
+    ],
     "path---maintainable-javascript-user-error-throwing": [
       "path---maintainable-javascript-user-error-throwing-2f9594d962f6c72f1e44.js",
       "path---maintainable-javascript-user-error-throwing-2f9594d962f6c72f1e44.js.map"
@@ -145,8 +149,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-b7ceef3f03d89b883c70.js",
-      "path---index-b7ceef3f03d89b883c70.js.map"
+      "path---index-9f526cbd2c2b94d82fbe.js",
+      "path---index-9f526cbd2c2b94d82fbe.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -203,9 +207,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-d9ce69d49f644ac424f2.js",
+      "app-0285b2f5ef855fd3af4b.js",
       "build-js-styles.css",
-      "app-d9ce69d49f644ac424f2.js.map",
+      "app-0285b2f5ef855fd3af4b.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
