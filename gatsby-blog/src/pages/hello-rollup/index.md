@@ -102,10 +102,14 @@ npm install --save-dev @babel/preset-env
 
 ```
 
+`@babel/preset-env`는 지정한 대상 환경을 가져 와서 매핑 목록과 비교하여 플러그인 목록을 컴파일하고 그것을 Babel에 전달합니다.
+
+### useBuiltIns
+
 여러가지 옵션중에 `useBuiltIns` 이란 옵션은 polyfills을 다루기 위한 옵션 입니다.
 
 
-### useBuiltIns: 'entry'
+#### useBuiltIns: 'entry'
 
 코드 시작시 `import "core-js";` 라고 선언하게 되면 환경에 따라 필요한 polyfills들을 전부 불러오게 치환 해줍니다.
 또한 `core-js@3`을 사용하게 될시 `@babel/preset-env` 는 `core-js`를 최적화 시킬 수 있습니다. 
@@ -116,7 +120,7 @@ import "core-js/es/array";
 import "core-js/proposals/math-extensions";
 ```
 
-### useBuiltIns: 'usage'
+#### useBuiltIns: 'usage'
 
 각 파일에서 사용되는 대상 환경에서 지원되지 않는 기능에 대해 polyfill을 넣어줍니다. 번들러는 동일한 폴리필에 대해선 한번만 가져오는 이점이 있습니다. 
 
