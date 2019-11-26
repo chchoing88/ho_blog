@@ -169,7 +169,8 @@ var array = Array.of(1, 2, 3);
     {
       "targets": {
         "ie" : "10"
-      }
+      },
+      "useBuiltIns": "entry"
     }
   ]]
 }
