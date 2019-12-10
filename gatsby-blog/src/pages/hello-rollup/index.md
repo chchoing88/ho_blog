@@ -5,7 +5,7 @@ date: "2019-11-25T10:00:03.284Z"
 
 # Rollup Setting & babel Setting
 
-간단한 스크립트 개발 셋팅을 위한 rollup 과 babel 셋팅을 정리해둡니다.
+간단한 스크립트 개발 셋팅을 위한 rollup 과 babel 셋팅 및 crawling을 위한 proxy 서버 셋팅을 정리해둡니다.
 
 ## Rollup production setting
 
@@ -176,3 +176,269 @@ var array = Array.of(1, 2, 3);
   ]]
 }
 ```
+
+## proxy 서버 셋팅
+
+기존의 마크업된 페이지에서 내가 개발한 코드가 제대로 동작하는지 확인하기 위해서 마크업 페이지를 crawling 해 `css, js, image 경로 변경 후 bundle된 javascript 삽입`된 HTML 응답하는 서버 필요가 생겼었다. 
+
+### rollup setting 변경
+
+기존에 `rollup-plugin-serve`를 쓰던 개발 서버에서 `proxy` 설정을 하기 위해  `rollup-plugin-serve-proxy` 모듈로 교체한다. 
+
+여기서 `proxy` 셋팅은 **적절하게 셋팅해둔 url로 요청이 들어왔을 시 대신 응답(proxy 서버) 해줄 서버를 가리킵니다.** 
+
+```javascript
+import common from "./rollup.config";
+import serve from "rollup-plugin-serve-proxy";
+import livereload from "rollup-plugin-livereload";
+import htmlTemplate from "rollup-plugin-generate-html-template";
+import * as path from "path";
+
+import setting from "./setting.json";
+import Proxy from "./proxy/Proxy";
+
+const proxy = new Proxy({
+  targetHost: setting.target_host,
+  port: setting.port,
+  bundleJs: setting.bundle_js
+});
+proxy.listen(); // proxy 서버를 띄웁니다.
+
+export default {
+  input: common.input,
+  output: {
+    file: "dist/bundle.dev.js",
+    format: "iife"
+  },
+  plugins: [
+    ...common.plugins,
+    htmlTemplate({
+      template: "index.html",
+      target: "dist/index.html"
+    }),
+    serve({
+      open: true,
+      contentBase: path.join(process.cwd(), "/dist"),
+      host: "localhost",
+      port: 9000,
+      proxy: {
+        dev: "http://localhost:1234" // /dev url로 들어오는 요청은 localhost:1234 서버가 대신 응답해 줍니다.
+      }
+    }),
+    livereload("dist")
+  ]
+};
+
+```
+
+### proxy 서버 개발
+
+proxy 서버가 하는 일은 다음과 같습니다.
+
+- 사용자가 설정한 주소의 마크업을 크롤링 해옵니다. 
+- 크롤링해온 HTML 파일에서 외부 링크나 내부 상대 경로를 이용하는 링크를 절대 경로로 교체 해줍니다. 이는, css, image, js 파일은 해당 마컵 서버에 있는걸 가져다 쓰겠다는 의미 입니다.
+- 마지막으로 body 에 개발 서버에 적제되어있는 bundle.js 파일을 삽입해줍니다.
+
+`target_host` 설정 후 `/dev` 이후 요청 받은 url에 따라서 마크업 서버에서 크롤링 해오는 페이지가 다르게 하기 위해서 다음과 같은 작업을 합니다.
+(예. `localhost:3000/dev/ho1/ho2?search` 로 접속하면 다음과 같은 주소에서 크롤링 해옵니다. `http://merlin.com/test/ho1/ho2?search`)
+
+
+```javascript
+
+const getHtml = async (host, path) => {
+  try {
+    return await axios.get(`${host}${path}`);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const url = req.url
+getHtml(this._targetHost, url).then(... )
+
+```
+
+
+### 코드 예제
+
+
+```javascript
+{
+  "target_host" : "http://merlin.com/test",
+  "bundle_js" : "bundle.dev.js",
+  "port" : 1234
+}
+```
+
+```javascript
+// DevController.js
+const axios = require("axios");
+const cheerio = require("cheerio");
+
+const HTTP_REG = /^((http(s?))\:\/\/)/;
+const ROOT_REG = /^(\/)/;
+const REL_REG = /^(\.(\.?))/;
+const isHttpUrl = url => {
+  return HTTP_REG.test(url);
+};
+
+const isRootUrl = url => {
+  return ROOT_REG.test(url);
+};
+
+const isRelativeUrl = url => {
+  return REL_REG.test(url);
+};
+
+const getHtml = async (host, path) => {
+  try {
+    return await axios.get(`${host}${path}`);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const stringifyScriptTag = src => {
+  return `<script type="text/javascript" src="${src}"></script>`;
+};
+
+// ./css/path/aaa
+// ../css/path/ccc
+// /insure-2019/apt/css/path/bbb
+// css/path/aaa => ./css/path/aaa
+
+const convertAbsolutePath = (hostUrl, pathname, attrPath) => {
+  if (isRootUrl(attrPath)) {
+    return `${hostUrl.substring(0, hostUrl.lastIndexOf("/"))}${attrPath}`;
+  }
+
+  if (isRelativeUrl(attrPath)) {
+    return `${hostUrl}${pathname}/${attrPath}`;
+  }
+
+  return `${hostUrl}/${attrPath}`;
+};
+
+const convertCssPath = ($, host, pathname) => {
+  const $link = $("link");
+
+  $link.each((index, cssLink) => {
+    const $cssLink = $(cssLink);
+    const cssHref = $cssLink.attr("href");
+
+    if (cssHref && !isHttpUrl(cssHref)) {
+      // 경로가 있고 http로 시작하지 않는 경로만 바꿔준다.
+      const absolutePath = convertAbsolutePath(host, pathname, cssHref);
+      $cssLink.attr("href", absolutePath);
+    }
+  });
+};
+
+const convertScriptPath = ($, host, pathname) => {
+  const $script = $("script");
+  const scriptSrc = $script.attr("src");
+
+  if (scriptSrc && !isHttpUrl(scriptSrc)) {
+    $script.each((index, scriptLink) => {
+      const $scriptLink = $(scriptLink);
+      const absolutePath = convertAbsolutePath(host, pathname, scriptSrc);
+      $scriptLink.attr("src", absolutePath);
+    });
+  }
+};
+
+const convertImagePath = ($, host, pathname) => {
+  const $img = $("img");
+  const imgSrc = $img.attr("src");
+
+  if (imgSrc && !isHttpUrl(imgSrc)) {
+    $img.each((index, imgLink) => {
+      const $imgLink = $(imgLink);
+      const absolutePath = convertAbsolutePath(host, pathname, imgSrc);
+      $imgLink.attr("src", absolutePath);
+    });
+  }
+};
+
+const appendBundleScript = ($, jsfile) => {
+  $("body").append(stringifyScriptTag(`/${jsfile}`));
+};
+
+class DevController {
+  constructor({ targetHost, bundleJs }) {
+    this._targetHost = targetHost;
+    this._bundleJs = bundleJs;
+  }
+
+  getCrawlingHtml(req, res) {
+    const url = req.url;
+    const pathname = url.substring(0, url.lastIndexOf("/"));
+
+    getHtml(this._targetHost, url)
+      .then(html => {
+        const $ = cheerio.load(html.data);
+        convertCssPath($, this._targetHost, pathname);
+        convertScriptPath($, this._targetHost, pathname);
+        convertImagePath($, this._targetHost, pathname);
+        appendBundleScript($, this._bundleJs);
+
+        return $.html();
+      })
+      .then(data => res.send(data));
+  }
+}
+
+export default DevController;
+
+```
+
+```javascript
+// devRouter.js
+const express = require("express");
+const devRouter = express.Router();
+
+export function devRouting(app, controller) {
+  app.use("/dev", devRouter);
+
+  devRouter.get("/*", (req, res, nex) => {
+    controller.getCrawlingHtml(req, res);
+  });
+}
+
+```
+
+```javascript
+// Proxy.js
+// require
+const express = require("express");
+const app = express();
+import DevController from "./DevController";
+import { devRouting } from "./devRouter";
+
+class Proxy {
+  constructor({ targetHost, port = 1234, bundleJs }) {
+    this._targetHost = targetHost;
+    this._port = port;
+    this._bundleJs = bundleJs;
+    this._devController = new DevController({ targetHost, bundleJs });
+    this.routing();
+  }
+
+  routing() {
+    devRouting(app, this._devController);
+  }
+
+  listen() {
+    app.listen(this._port, () => {
+      console.log(`${this._port}번 port에 proxy server를 띄웠습니다.`);
+    });
+  }
+}
+
+export default Proxy;
+
+```
+
+
+
+
