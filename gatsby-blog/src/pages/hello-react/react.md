@@ -114,8 +114,6 @@ Mouse.propTypes = {
 
 ## State
 
-
-
 - 동적 데이터와 함께 작업할때 만들어지는 데이터, 변하는 데이터 즉, 다이나믹한 데이터들의 종류를 말한다.
 - state는 class component에 존재한다.
 - react는 자동적으로 모든 class component의 render 메서드를 실행 하고자 한다.
@@ -148,18 +146,25 @@ this.setState({
 - component가 생성될 때, render 전에 호출되는 몇가지 function 이 있다.
 - mount, update, unmount 때에 따라 호출되는 method가 있다.
 - mount
-    - contstructor()
-    - static getDerivedStateFromProps() : 컴포넌트가 인스턴스화 된 후, 새 props를 받았을 때 호출된다.
-    - render()
-    - componentDidMount()
+    - `contstructor()` : 컴포넌트를 새로 만들 때마다 호출되는 클래스 생성자 메서드 입니다.
+    - `static getDerivedStateFromProps()` : 컴포넌트가 인스턴스화 된 후, 새 props를 받았을 때 호출된다. props에 있는 값을 state에 넣을 때 사용하는 메서드 입니다.
+    - `render()` : 우리가 준비한 UI를 렌더링하는 메서드 입니다. 
+    - `componentDidMount()` : 컴포넌트가 웹 브라우저상에 나타난 후 호출하는 메서드입니다.
 - update
-    - static getDerivedStateFromProps()
-    - shouldComponentUpdate() : 업데이트를 할지 말지를 결정하는 메서드.
-    - render()
-    - getSnapshotBeforeUpdate() : DOM이 업데이트 직전에 호출된다. (이 라이프 사이클은 많이 필요하지 않지만, 렌더링되는 동안 수동으로 스크롤 위치를 유지해야할 때와 같은 경우에는 유용할 수 있다)
-    - componentDidUpdate()
+    - `static getDerivedStateFromProps()` : 이 메서드는 마운트 과정에서도 호출되며, 업데이트가 시작하기 전에도 호출됩니다. props의 변화에 따라 state 값에도 변화를 주고 싶을 때 사용합니다.
+    - `shouldComponentUpdate()` : 컴포넌트가 리렌더링을 해야 할지 말아야 할지를 결정하는 메서드 입니다. 이 메서드에서는 true 혹은 false 값을 반환하며, true을 반환하면 다음 라이프사이클 메서드를 계속 실행하고, false를 반환하면 작업을 중지합니다. 즉, 컴포넌트가 리렌더링 되지 않습니다. 만약 특정 함수에서 this.forceUpdate() 함수를 호출하면 이 과정을 생략하고 바로 render 함수를 호출합니다.
+    - `render()` : 컴포넌트를 리렌더링 합니다.
+    - `getSnapshotBeforeUpdate()` : DOM이 업데이트 직전에 호출된다. (이 라이프 사이클은 많이 필요하지 않지만, 렌더링되는 동안 수동으로 스크롤 위치를 유지해야할 때와 같은 경우에는 유용할 수 있다)
+    - `componentDidUpdate()` : 컴포넌트의 업데이트 작업이 끝난 후 호출하는 메서드 입니다.
 - unmount
-    - componentWillUnmount()
+    - `componentWillUnmount()` : 컴포넌트가 웹 브라우저상에서 사라지기 전에 호출하는 메서드 입니다.
+
+
+## Composition
+
+- 컴포넌트에서 다른 컴포넌트를 `children` 이나 `props` 로 받아서 구성할 수 있다.
+- 일반적인 컴포넌트에서 특수한 경우인 경우를 고려해야하는 경우 더 "구체적인" 컴포넌트가 "일반적인" 컴포넌트를 렌더링하고 구체적인 내용은 `props` 를 통해 내용을 구성한다.
+- 가끔은 상위 컴포넌트에서 하위 컴포넌트에 필요한 데이터를 `props` 로 해당 하위컴포넌트에 전달할때 depth가 너무 깊으면 힘들어지니 상위 컴포넌트에서 데이터를 포함한 해당 하위 컴포넌트를 품고 `props` 로 전달해서 render 하면 더 편할 때가 있다. 다 편한건 아니다.
 
 
 ## Context API

@@ -77,11 +77,26 @@ class ClickCounter extends React.Component {
 }
 ```
 
-모든 React component 에는 component 와 React 코어 사이의 다리 역할을하는 연결된 `updater`가 있습니다. 이를 통해 setState 가 ReactDOM, React Native, 서버 측 렌더링 및 테스트 유틸리티에 의해 다르게 구현 될 수 있습니다.
+모든 React component 에는 component 와 React 코어 사이의 다리 역할을 하는 연결된 `updater`가 있습니다. 이를 통해 setState 가 ReactDOM, React Native, 서버 측 렌더링 및 테스트 유틸리티에 의해 다르게 구현 될 수 있습니다.
 
-[여기](https://github.com/facebook/react/blob/b87aabdfe1b7461e7331abb3601d9e6bb27544bc/packages/react/src/ReactBaseClasses.js)참조
+[setState 여기 참조](https://github.com/facebook/react/blob/b87aabdfe1b7461e7331abb3601d9e6bb27544bc/packages/react/src/ReactBaseClasses.js)
 
 ```javascript
+
+/**
+ * Base class helpers for the updating state of a component.
+ */
+function Component(props, context, updater) { // 적절한 updater를 받게 되어 있음.
+  this.props = props;
+  this.context = context;
+  // If a component has string refs, we will assign a different object later.
+  this.refs = emptyObject;
+  // We initialize the default updater but the real one gets injected by the
+  // renderer.
+  this.updater = updater || ReactNoopUpdateQueue;
+}
+
+
 Component.prototype.setState = function(partialState, callback) {
   invariant(
     typeof partialState === 'object' ||
@@ -93,6 +108,9 @@ Component.prototype.setState = function(partialState, callback) {
   this.updater.enqueueSetState(this, partialState, callback, 'setState')
 }
 ```
+
+[classComponentUpdater 여기 참조](https://github.com/facebook/react/blob/0f3838a01b0fda0ac5fd054c6be13166697a113c/packages/react-reconciler/src/ReactFiberClassComponent.js#L180)
+
 
 ```javascript
 const classComponentUpdater = {
@@ -207,13 +225,13 @@ function updateClassComponent(current, workInProgress, Component, ...) {
 * `UNSAFE_componentWillUpdate` 호출 (더 이상 사용되지 않음)
 * `componentDidUpdate` 라이프 사이클 hook 트리거를 effect 에 추가합니다.
 
-> `componentDidUpdate`를 호출하는 효과는 `렌더링 단계`에서 추가되지만 메서드는 다음 `커밋 단계`에서 실행됩니다.
+  * `componentDidUpdate`를 호출하는 효과는 `렌더링 단계`에서 추가되지만 메서드는 다음 `커밋 단계`에서 실행됩니다.
 
 * component 인스턴스에서 `state` 및 `props` 을 업데이트합니다.
 
-> `render` 메서드 output 은 대개 `state` 및 `props`에 따라 다르기 때문에 `state` 및 `props` 는 `render` 메서드가 호출되기 전에 component 인스턴스에서 업데이트해야합니다. 우리가 그렇게하지 않으면, 매번 동일한 출력을 반환 할 것입니다.
+  * `render` 메서드 output 은 대개 `state` 및 `props`에 따라 다르기 때문에 `state` 및 `props` 는 `render` 메서드가 호출되기 전에 component 인스턴스에서 업데이트해야합니다. 우리가 그렇게하지 않으면, 매번 동일한 출력을 반환 할 것입니다.
 
-다음은 함수의 단순화 된 버전입니다.
+다음은 함수로 단순화 시킨 버전입니다.
 
 ```javascript
 function updateClassInstance(current, workInProgress, ctor, newProps, ...) {
@@ -248,7 +266,9 @@ function updateClassInstance(current, workInProgress, ctor, newProps, ...) {
 }
 ```
 
-위의 스니펫에서 일부 보조 코드를 제거했습니다. 예를 들어 lifecycle 메서드를 호출하거나 트리거하기 위해 effect 에 추가하기 전에 React 는 `typeof` 연산자를 사용하여 component 가 메서드를 구현되었는지 확인합니다. 예를 들어, React 가 effect 를 추가하기 전에 `componentDidUpdate` 메소드를 검사하는 방법은 다음과 같습니다.
+위의 스니펫에서 일부 보조 코드를 제거했습니다. 
+예를 들어 lifecycle 메서드를 호출하거나 트리거하기 위해 effect 에 추가하기 전에 React 는 `typeof` 연산자를 사용하여 component 가 메서드를 구현되었는지 확인합니다. 
+예를 들어, React 가 effect 를 추가하기 전에 `componentDidUpdate` 메소드를 검사하는 방법은 다음과 같습니다.
 
 ```javascript
 if (typeof instance.componentDidUpdate === 'function') {
@@ -256,7 +276,9 @@ if (typeof instance.componentDidUpdate === 'function') {
 }
 ```
 
-이제는 `렌더링 단계`에서 `ClickCounter` Fiber 노드에 대해 어떤 작업이 수행되는지 알았습니다. 이제 이러한 작업이 fiber 노드에서 값을 변경하는 방법을 살펴 보겠습니다. React 가 시작되면 `ClickCounter` component 의 Fibre 노드는 다음과 같습니다.
+이제는 `렌더링 단계`에서 `ClickCounter` Fiber 노드에 대해 어떤 작업이 수행되는지 알았습니다. 
+이제 이러한 작업이 fiber 노드에서 값을 변경하는 방법을 살펴 보겠습니다. 
+React 가 시작되면 `ClickCounter` component 의 Fibre 노드는 다음과 같습니다.
 
 ```javascript
 {
