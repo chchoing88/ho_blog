@@ -303,16 +303,22 @@ function ProductDetails({ fetchProduct }) {
 
 React and the Virtual DOM 참고 동영상:  [https://www.youtube.com/watch?v=BYbgopx44vo](https://www.youtube.com/watch?v=BYbgopx44vo)
 
+### version 1
+
 - 중첩된 `Element`를 그릴수 있는 `render` 함수를 두게 된다. 여기서 `render` 는 재귀 함수를 통해 만들 수 있다.
 - 초기 생각해 볼 수 있는 `render`는 계속 `DOM`을 `append`를 시키는 것이다.
 - 진화된 `render`는 `root parent`에 `child`가 있다면 기존에 돔을 교체하는 `replaceChild` 를 시키는 것이다.
+
+### version 2
+
 - 위에서 문제는 모든 `dom`을 재 생성하기 때문에 마지막 `root parent`만 `replace`를 시킨다는 것이다. 재사용 할 수 있는 dom은 그대로 두는게 효율적일 것이다.
 - 이때 `Reconciliation`이 등장한다. 새로 생성한 `element tree`와 이전 `render`된 `element tree`를 비교해서 달라진 곳만 `update`를 시킨다.
 - 기존 그려졌던 `element`의 type 비교와 더불어 dom 의 재사용을 위한 새로운 개념인 `instance : {dom, element, childInstances }` 라는것을 도입
 - `reconcile` 함수의 역할은 `parentDom`, 이전의 그려졌던 `instance`, 새로운 `element` 받아서 조건(새로 생성, 업데이트, 삭제)에 맞게끔 `dom` 에 그려 준다.
   - 이전에 그려놓은 `instance` 가 없다면 새로 `instance` 를 만들고 만들어진 dom 을 `append` 시킨다.
   - 새로 그려지는 `element` 가 `null` 이라면 매칭되는 `parentDom` 에서 자식들을 삭제한다.
-  - 이전에 그려놓은 `instance` 의 `element type` 과 새로 그릴려는 `element type` 이 같으면 이전에 그려 놓은 `instance` 의 dom 에 prop 만 업데이트 한다. 그리고 나서 해당 `instance` 의 `children` 을 `reconcil` 을 한다. 여기서 따로 `reconcileChildren` 함수가 존재하는 이유는 `children` 이 배열 타입이기 때문이다.
+  - 이전에 그려놓은 `instance` 의 `element type` 과 새로 그릴려는 `element type` 이 같고 `DOM Element` 라면 이전에 그려 놓은 `instance 의 dom` 에 prop 만 업데이트를 하게 됩니다. 그리고 나서 해당 `instance` 의 `children` 을 `reconcil` 을 한다. 여기서 따로 `reconcileChildren` 함수가 존재하는 이유는 `children` 이 배열 타입이기 때문이다.
+  - 이전에 그려놓은 `instance` 의 `element type` 과 새로 그릴려는 `element type` 이 같고 `Component Element` 라면 컴포넌트의 인스턴스인 `public instance` 자체는 변하지 않는다. ( 때문에 컴포넌트의 state는 유지 된다. ) 그리곤 업데이트 전 라이프사이클이 호출이 되어 props가 업데이트 되고 `render()` 를 호출하게 되어 컴포넌트의 이전 엘리먼트 트리와 다음 엘리먼트 트리에 대해 diff 알고리즘을 재귀적으로 적용한다.
   - 그 외 모든 경우에는 `parenDom` 기준으로 `reconcilation` 새롭게 `instance` 를 만들어서 replace 한다.
 - 이렇게 진행이 되면 다음과 같은 문제가 또 발생할 수 있다.
     - 모든 변화에 전체 virtual DOM tree를 reconciliation을 진행할 수 밖에 없다.
@@ -320,6 +326,10 @@ React and the Virtual DOM 참고 동영상:  [https://www.youtube.com/watch?v=
     - State를 컴포넌트 안으로 넣어 보자.
 - 그래서 `class Component`가 탄생하게 된다. 이 `class 컴포넌트`의 인스턴스는 기존의 `instance` 개념과 차별을 두기 위해 `public instance`라고 명명한다.
 - `public instance`에는 `setState` 메서드를 통해서 `reconciliation을` 진행하고 기존에 그려졌던 `instance를` 지니고 있기 때문에 전체가 아닌 자기 자신을 기준으로 해서 자식들로만 `reconcile` 을 할 수 있는 장점을 얻을 수 있다.
+
+
+### version 3
+
 - 여기서 또 다른 문제점을 해결하기 위해 `Fiber` 라는게 도입
 - 여기서 `reconciliation` 로직은 재귀를 통해서 `Element tree` 구조의 변화를 감지하고 최종적으로 DOM을 그려낸다. 이 비용이 높아지면 브라우저의 메인 쓰레드를 잡아 먹기 때문에 동시에 다른 비싼 비용들의 로직들을 처리 해 낼수가 없다. ( 버벅이는 현상이 나타남 )
 - 기존의 재귀 용법에서 `iterator`, 즉 반복문 형태로 구조를 바꾸고(tree구조를 선형적으로 바꾸게 됨) react 스케쥴링을 통해서 cpu가 idle인 경우일 때 일부 `reconcile을` 처리하고 이 반복이 모두 완료가 되었을 때, DOM에 그리게 되는 형식이다.
