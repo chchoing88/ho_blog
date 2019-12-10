@@ -617,7 +617,7 @@ function reconcileChildren(instance, element) {
 * 이전에 그려놓은 `instance` 가 없다면 새로 `instance` 를 만들고 만들어진 dom 을 append 시킨다.
 * 새로 그려지는 `element` 가 null 이라면 매칭되는 `parentDom` 에서 자식들을 삭제한다.
 * 이전에 그려놓은 `instance` 의 element type 과 새로 그릴려는 `element type` 이 같으면 이전에 그려 놓은 `instance` 의 dom 에 prop 만 업데이트 한다. 그리고 나서 해당 `instance` 의 `children` 을 `reconcil` 을 한다. 여기서 따로 `reconcileChildren` 함수가 존재하는 이유는 `children` 이 배열 타입이기 때문이다.
-* 그 외 모든 경우에는 `parenDom` 기준으로 새롭게 `instance` 를 만들어서 replace 한다.
+* 그 외 모든 경우에는 `parentDom` 기준으로 새롭게 `instance` 를 만들어서 replace 한다.
 
 여기까지의 문제는 dom 을 재사용하긴 했다지만 모든 변화에 대해서 전체 dom 에 대한 render 를 진행한다는 것이다.
 
