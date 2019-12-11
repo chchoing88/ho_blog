@@ -116,13 +116,15 @@ Mouse.propTypes = {
 
 - 동적 데이터와 함께 작업할때 만들어지는 데이터, 변하는 데이터 즉, 다이나믹한 데이터들의 종류를 말한다.
 - state는 class component에 존재한다.
-- react는 자동적으로 모든 class component의 render 메서드를 실행 하고자 한다.
-- state는 object이고 class component에는 data를 넣을 공간이 있다. 그리고 이 데이터는 변한다.
+- `react`는 자동적으로 모든 `class component의 render 메서드`를 실행 하고자 한다.
+- `state`는 object이고 class component에는 data를 넣을 공간이 있다. 그리고 이 데이터는 변한다.
 - 바꿀 데이터를 state 안에 넣는다.
-- state를 직접적으로 바꾼다면 React는 render function 을 refresh 하지 않는다. 이 말의 의미는 state의 상태를 변경할때 React가 render function 을 호출하길 원한다는 뜻이다.
-- setState 메서드를 이용해서 state를 변경하면 React는 state를 refresh 하고 또한 render function 을 호출해준다.
-- setState를 호출하게 되면 React의 스케쥴에 등록을 하게 되고 현재 인스턴스와 partialState를 인자로 넘기게 된다. 이때 partialState는 fiber에 담겨져 있다가 reconciliation이 끝나고 나면 state에 Object.assign으로 적용이 된다. ( 바로 state가 변경되지 않는다. 중요한건 reconciliation이 끝나고 state가 한번에 반영이 된다는 것이다. )
-- 그렇기 때문에 setState를 연속으로 호출이 되면 전에 setState호출 해서 얻은 결과가 뒤에 setState에 반영이 되지 않는 것이다.
+- `state`를 직접적으로 바꾼다면 React는 `render function` 을 `refresh` 하지 않는다. 이 말의 의미는 state의 상태를 변경할때 React가 `render function` 을 호출하길 원한다는 뜻이다.
+- `setState` 메서드를 이용해서 state를 변경하면 React는 state를 refresh 하고 또한 render function 을 호출해준다.
+- `setState`로 `state`를 변경하고 새로 Render가 필요할때 사용합니다.
+- `state`를 변경하고자 할때 직접적으로 변경하는 것이 아니라 `setState` 메서드를 사용해서 변경합니다.
+- `setState`를 호출하게 되면 React의 스케쥴에 등록을 하게 되고 현재 클래스컴포넌트의 인스턴스와 `setState`의 인자로 넘겼던 `partialState`를 인자로 넘기게 됩니다. 이때 `partialState`는 `fiber`에 담겨져 있다가 `reconciliation`이 끝나고 나면 state에 `Object.assign`으로 적용이 됩니다. ( 즉, 바로 state가 변경되지 않습니다. 중요한건 `reconciliation`이 끝나고 `state` 가 한번에 반영이 된다는 것입니다. )
+- 그렇기 때문에 `setState` 를 연속으로 호출이 되면 전에 `setState` 호출 해서 얻은 결과가 뒤에 `setState` 에 반영이 되지 않는 것입니다. 그래서 `state`에 객체 대신에 함수 인자를 전달하는게 좋습니다. 
 
 ```javascript
 this.state = 1
@@ -165,6 +167,22 @@ this.setState({
 - 컴포넌트에서 다른 컴포넌트를 `children` 이나 `props` 로 받아서 구성할 수 있다.
 - 일반적인 컴포넌트에서 특수한 경우인 경우를 고려해야하는 경우 더 "구체적인" 컴포넌트가 "일반적인" 컴포넌트를 렌더링하고 구체적인 내용은 `props` 를 통해 내용을 구성한다.
 - 가끔은 상위 컴포넌트에서 하위 컴포넌트에 필요한 데이터를 `props` 로 해당 하위컴포넌트에 전달할때 depth가 너무 깊으면 힘들어지니 상위 컴포넌트에서 데이터를 포함한 해당 하위 컴포넌트를 품고 `props` 로 전달해서 render 하면 더 편할 때가 있다. 다 편한건 아니다.
+
+
+## Reconciliation (재조정)
+
+아래 다음과 같은 경우 자식들을 모두 instantiate 해서 한방에 부모 DOM에 append 또는 replace 합니다.
+
+- 타입이 다를때
+- 새로 생겨나야 할때
+
+Reconciliation 할 때 경우의 수는 다음과 같습니다.
+
+- 없으면 새로 만들고 ( 자식 까지 새로 만들어서 만듬 ) appendChild - 한방
+- 있었던건데 없어지면 지우고 ( 자식 밑으로 삭제 ) removeChild - 한방
+- 타입이 다르면 새로 만들어서 ( 자식 까지 만들어서 ) replaceChild - 한방
+- DOM Element 인데 type이 같으면 update 하고 기존 dom 활용
+- React Component 이면 render() 해서 reconcilation 재귀
 
 
 ## Context API
