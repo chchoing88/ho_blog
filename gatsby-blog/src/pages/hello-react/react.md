@@ -171,6 +171,10 @@ this.setState({
 
 ## Reconciliation (재조정)
 
+컴포넌트를 호출 => 새로운 React Element 반환 => 새로운 Element와 이전 Element 비교 => 변화 감지
+
+### 변화 감지
+
 아래 다음과 같은 경우 자식들을 모두 instantiate 해서 한방에 부모 DOM에 append 또는 replace 합니다.
 
 - 타입이 다를때
