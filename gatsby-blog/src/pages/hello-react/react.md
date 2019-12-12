@@ -362,3 +362,9 @@ React and the Virtual DOM 참고 동영상:  [https://www.youtube.com/watch?v=
 - 기존의 재귀 용법에서 `iterator`, 즉 반복문 형태로 구조를 바꾸고(tree구조를 선형적으로 바꾸게 됨) react 스케쥴링을 통해서 cpu가 idle인 경우일 때 일부 `reconcile을` 처리하고 이 반복이 모두 완료가 되었을 때, DOM에 그리게 되는 형식이다.
 - 정리하면 숫자를 증가하는 버튼을 한번 눌렀을 때, 즉, 뷰 업데이트가 이뤄지길 원할 때, `update` 큐에 업데이트 정보(해당 instance와 업데이트할 state)가 들어가게 되고 해당 `update` 를 빼와서 새로운 `fiber tree` 만들게 된다. 이때 `cpu의 idle 타임`을 보면서 이벤트가 발생한 컴포넌트에서 부터 선형트리 구조를 만들면서 `update` 정보를 수집하게 된다.
 - 만약에, 큐에 들어간 작업들 중에서 더 빠르게 끝나는 작업이 있다면 `cpu의 idle 타임`을 보고 그 작업부터 완료 되서 스크린에 보여 지게 될것이다.
+
+
+
+## 참고
+
+- [cheetsheets](https://devhints.io/react)

@@ -104,6 +104,37 @@ npm install --save-dev @babel/preset-env
 
 `@babel/preset-env`는 지정한 대상 환경을 가져 와서 매핑 목록과 비교하여 플러그인 목록을 컴파일하고 그것을 Babel에 전달합니다.
 
+### loose mode
+
+많은 바벨 플러그인은 2가지 모드를 지원합니다. 
+
+하나는 일반 모드(normal mode) 이고 또다른 하나는 (루즈 모드)loose mode 입니다.
+
+- normal mode : 최대한 ECMAScript 6 의 의미에 가깝게 따릅니다.
+- loose mode : 간단하게 ES5로 코드를 생성합니다.
+
+예를 들면 
+
+```javascript
+class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    toString() {
+        return `(${this.x}, ${this.y})`;
+    }
+}
+```
+
+위와 같은 코드에서 normal mode로 변환하면 `toString` 이라는 메서드를 non-enumerable(비 열거) 하게 만들지만 ( 비 열거가 되면 객체에서 속성을 열거하려 할때 나오지 않습니다. )
+
+loose mode 모드에선 손으로 작성한 것과 같은 스타일 처럼 일반 메서드로 할당 시켜 버립니다.
+
+- [참고](https://2ality.com/2015/12/babel6-loose-mode.html)
+
+
+
 ### useBuiltIns
 
 여러가지 옵션중에 `useBuiltIns` 이란 옵션은 polyfills을 다루기 위한 옵션 입니다.
