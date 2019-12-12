@@ -20,23 +20,25 @@ Hooks의 단점을 꼽자면 Hooks을 가지고 있는 컴포넌트 하위로는
 
 Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유** 를 쉽게 할 수 있도록 고안 된 API입니다. 필요한 컴포넌트에 일일이 props로 전달하지 않아도 Context 가 가지고 있는 값을 공유 받을 수 있다는게 가장 큰 장점입니다.
 
-따라서 이러한 장점과 Atomic 한 Component가 만났을 때, 다음과 같이 정의 내릴 수 있을 것입니다.
+
+## Atomic 과 Hooks, Context가 만났을때 매칭 정의
 
 - 하나의 기능에 대한 상태와 메서드들은 하나의 `custom Hooks`로 묶어 둡니다. 
 - Atomic 관점에서 기능의 응집도가 높은 단위는 `organisms` 또는 `molecules` 단위가 될 수 있습니다. 
 - `organisms` 과 하나의 `custom Hooks` 의 관계는 1 대 N 이 될 수 있습니다.
 - `molecules` 와 하나의 `custom Hooks` 의 관계는 1 대 1 관계를 유지 합니다. 
 - `Context.Provider` 로 `Context` 범위 설정은 여러 기능에서 상태를 공유해야 하는 상황인 `organisms` 또는 `pages` 단위에 매칭이 되어야 합니다.
-- `Context.Provider` 는 합성 패턴을 사용하기에 여러 `Context.Provider` 를 겹쳐 사용하면 최상위 `Context.Provider`의 변경으로 인해 하위 `Context.Provider`를 포함한 `children` 컴포넌트들이 호출(Reconciliation - component가 호출되서 리턴된 Element가 이전 Element와 같은지 비교) 될 수 있으므로 주의 해야 합니다. ( 호출 자체가 비용이 많지는 않지만 Virtual Dom인 React Element를 새롭게 만들어내는 불필요한 작업을 하게 될 수도 있습니다. 사실 중요한건 React Element가 이전과 바뀌지 않게 유지하는 것입니다. )
+- `Context.Provider` 는 합성 패턴을 사용하기에 여러 `Context.Provider` 를 겹쳐 사용하면 최상위 `Context.Provider`의 변경으로 인해 하위 
 - `pages` 단위 에서 `Context.Provider`로 공유가 필요한 값을 주입 합니다.
 - `organisms` 단위에서는 `useContext`로 해당 `Context` 값을 참조해 오도록 합니다. 
 
+> `Context.Provider`를 포함한 `children` 컴포넌트들이 호출(Reconciliation - component가 호출되서 리턴된 Element가 이전 Element와 같은지 비교) 될 수 있으므로 주의 해야 합니다. ( 호출 자체가 비용이 많지는 않지만 Virtual Dom인 React Element를 새롭게 만들어내는 불필요한 작업을 하게 될 수도 있습니다. 사실 중요한건 React Element가 이전과 바뀌지 않게 유지하는 것입니다. )
 
 ## 언제 Hooks 와 Context를 쓸까?
 
 - 기본적으로 상태가 필요한 기능은 `Hooks` 를 사용합니다.
-- **재사용**이 필요한 기능에 대해서는 `custom Hooks`를 만들어 사용합니다.
-- 상태가 **전역** 또는 서로 다른 컴포넌트 끼리의 **공유** 가 필요할 시에는 `Context`를 사용합니다.
+- **재사용**이 필요한 기능에 대해서는 `custom Hooks`를 만들어 다양한 컴포넌트에서 사용합니다.
+- 상태가 **전역** 관리되어져야 할때와 서로 다른 컴포넌트 끼리의 **공유** 가 필요할 시에는 `Context`를 사용합니다.
 
 ## Hooks 사용
 
@@ -175,8 +177,9 @@ export default TodoContext
 - TodoProvider 컴포넌트 안에서 사용하는 Hooks들의 로직이 **재사용이 필요하거나 로직이 복잡해질때는 custom Hooks로 빼둡니다.**
 
 ```javascript
-import React, { useState, useMemo } from 'react'
 // useTodo.js
+import React, { useState, useMemo } from 'react'
+
 const useTodo = () => {
   const [todoList, setTodoList] = useState([])
   const addTodo = () => {}
@@ -195,23 +198,22 @@ const useTodo = () => {
 ```
 
 ```javascript
-// PageContext.js
+// TodoContext.js
 import React, { useState, createContext } from 'react'
 import useTodo from 'useTodo'
 
-const PageContext = createContext() 
+const TodoContext = createContext() 
 
-const PageProvider = ({}) => {
+const TodoProvider = ({}) => {
   const todoStore = useTodo()
 
-  return <PageContext.Provider value={todoStore}>{children}</PageContext.Provider>
+  return <TodoContext.Provider value={todoStore}>{children}</TodoContext.Provider>
 }
 
 
-export { PageProvider }
+export { TodoProvider }
 
-export default PageContext
-
+export default TodoContext
 ```
 
 
@@ -236,7 +238,7 @@ const xxxPage = () => {
 }
 ```
 
-- 위와 같은 구조가 싫다면, 아래와 같이 생각해 볼 수 있습니다.
+- 위와 같은 구조가 싫다면, 아래와 같이 `pages` 전용 하나의 `Provider`를 만들어 볼 생각을 할 수 있습니다.
 
 ```javascript
   const xxxPage = () => {
@@ -275,6 +277,69 @@ const xxxPageProvider = ({Header, Footer, children}) => {
     </xxxContext.Provider>
   )
 }
+```
+
+### pages에서 provider를 하지 않고 organisms 컴포넌트 범위에서 provider를 하면서 useContext를 사용하지 않고 재사용할 수 있도록 props로 받는 컴포넌트를 만들고 싶다면? (필요시)
+
+```javascript
+// util.js
+
+export const createWithProvider = (
+  Context,
+  Provider
+) => mapContextToProps => WrappedComponent => {
+  const UseContextComponent = props => {
+    const contextValue = mapContextToProps(useContext(Context))
+    return <WrappedComponent {...contextValue} {...props}></WrappedComponent>
+  }
+
+  const withProvier = props => {
+    return (
+      <Provider>
+        <UseContextComponent {...props}></UseContextComponent>
+      </Provider>
+    )
+  }
+
+  const displayName =
+    WrappedComponent.displayName || WrappedComponent.name || 'component'
+  withProvier.displayName = displayName
+  return withProvier
+}
+```
+
+```javascript
+// TodoContext.js
+
+import React, { useState, createContext } from 'react'
+import useTodo from 'useTodo'
+
+const TodoContext = createContext() 
+
+const TodoProvider = ({}) => {
+  const todoStore = useTodo()
+
+  return <TodoContext.Provider value={todoStore}>{children}</TodoContext.Provider>
+}
+// Context value 값을 어떻게 매핑할지 정의하는 함수와 받을 컴포넌트를 인자로 받아 새로운 컴포넌트를 만들어 주는 HOC
+const withTodoProvider = createWithProvider(TodoContext, TodoProvider)
+
+export { TodoProvider, withTodoProvider }
+
+export default TodoContext
+```
+
+```javascript
+// TodoContainer.js
+
+import Todo from '../organisms/todo/Todo'
+import { withTodoProvider } from '../../context/TodoContext'
+
+// Todo organism의 props에 Context value 값을 매핑
+export default withTodoProvider(({ todoList, actions }) => ({
+  todoList,
+  actions,
+}))(Todo)
 
 ```
 
