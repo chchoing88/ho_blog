@@ -1,5 +1,5 @@
 ---
-title: React Context 와 Hooks 설계
+title: React Context 와 Hooks 설계 (작성중..)
 date: "2019-12-11T10:00:03.284Z"
 ---
 
@@ -30,7 +30,6 @@ Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유
 - `molecules` 와 하나의 `custom Hooks` 의 관계는 1 대 1 관계를 유지 합니다. 
 - `Context.Provider` 로 `Context` 범위 설정은 여러 기능에서 상태를 공유해야 하는 상황인 `organisms` 또는 `pages` 단위에 매칭이 되어야 합니다.
 - `Context.Provider` 는 합성 패턴을 사용하기에 여러 `Context.Provider` 를 겹쳐 사용하면 최상위 `Context.Provider`의 변경으로 인해 하위 `Context.Provider`를 포함한 `children` 컴포넌트들이 호출(Reconciliation - component가 호출되서 리턴된 Element가 이전 Element와 같은지 비교) 될 수 있으므로 주의 해야 합니다. ( 호출 자체가 비용이 많지는 않지만 Virtual Dom인 React Element를 새롭게 만들어내는 불필요한 작업을 하게 될 수도 있습니다. 사실 중요한건 React Element가 이전과 바뀌지 않게 유지하는 것입니다. )
-- `pages` 단위에서는 가급적 두개 이상의 `Context.Provider`를 사용하지 않도록 `지향` 합니다.
 - `organisms` 단위에서는 `useContext`로 해당 `Context` 값을 참조해 오도록 합니다. 그러기 위해선 `pages` 에서 `Context.Provider`로 주입된 값이나 `Container` 컴포넌트를 만들어 `Context.Provider`로 `organisms`을 감싸주어야 합니다.
 
 ## Hooks 사용
@@ -41,6 +40,7 @@ Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유
 ### 예시) 탭 UI
 
 ```javascript
+// hooks/ui.js
 import React, { useState, useMemo } from 'react'
 
 const useTab = (tabDataList) => {
@@ -91,6 +91,7 @@ const useTab = (tabDataList) => {
 ```
 
 ```javascript
+// TabWrapper.js
 import React from 'react'
 import { useTab } from 'hooks/ui'
 
@@ -117,17 +118,165 @@ const TabWrapper = () => {
 
 ## Context 사용
 
-- `Context` 는 단독 기능으론 관계가 없지만 서로 엮어서 기능을 해야할때 서로 가지고 있는 상태나 메서드를 **공유**해야 할 필요성이 있을 때 사용합니다.
-- `Context` 에서 가지고 있는 `state`는 일반 객체가 아닌 일반 객체를 `useMemo` 감싼 객체 또는 `useState` 로 관리 합니다.
-- `Context` 안에서도 자주 쓰는 기능이 있을 경우에는 `custom Hooks` 로 빼두어서 해당 `custom Hooks`를 state 관리용으로 사용합니다.
+- `Context.Provider` 는 합성 패턴을 이용해서 만들어 줍니다.
+- `Context` 는 단독 기능으론 관계가 없지만 서로 엮어서 기능을 해야할때 서로 가지고 있는 상태나 메서드를 **공유** 해야 할 필요성이 있을 때 사용합니다.
+- `Context` 안에서도 자주 쓰는 기능이 있을 경우에는 `custom Hooks` 로 빼두어서 해당 `custom Hooks`를 `state` 관리용으로 사용합니다.
+- `Context.Provider` 의 `value props`에 넘기는 값은 별도의 `Provider 컴포넌트`를 만들어 그 컴포넌트 안에 `state`를 유지하게 만들어 줍니다. 
+- `Provider 컴포넌트` 안의 `state` 값은 `useState` 를 이용해서 관리합니다. 
+  - 일반 객체롤 상태관리를 할 경우 Provider 컴포넌트가 호출될 때마다 이전 객체를 유지하지 못합니다. 매 새로운 객체가 만들어지게 됩니다.
+  - 일반 객체를 상태관리를 했을 경우 상태가 변경되었을때 React의 재 렌더링을 진행하라는 신호를 주지 못하게 됩니다. 
+- `Provider 컴포넌트` 의 `state`의 변경을 위한 메서드 공유가 필요한 경우 에는 별도의 객체를 만들어 `useMemo`로 매 호출마다 객체가 바뀌지 않게 막아줍니다. (적절한 디펜던시를 걸어주어서 디펜던시가 바뀌었을 때만 변경이 되도록 합니다.)
+
+### 기본 포멧 예시 
+
+- TodoList 에서 'done', 'doing', 'todo' 의 리스트 갯수를 Header 에서 보여주어야 한다면 TodoList 정보를 `Pages` 단위의 영역으로 올려서 필요한 컴포넌트에 정보를 공유 해야 합니다. 
+
+```javascript
+// Context 기본 포멧
+// TodoContext.js
+import React, { useState, createContext } from 'react'
+
+const TodoContext = createContext() 
+
+const TodoProvider = ({}) => {
+  const [todoList, setTodoList] = useState([])
+  const addTodo = () => {}
+  const removeTodo = () => {}
+
+  // Bad!!
+  // const store = {
+  //   name: 'merlin',
+  //   setName: () => {}
+  // }
+  
+  // (...)
+
+  const todoStore = useMemo(() => ({
+    todoList,
+    addTodo,
+    removeTodo,
+  }), [todoList])
+
+  return <TodoContext.Provider value={todoStore}>{children}</TodoContext.Provider>
+}
+
+const { Consumer: TodoConsumer } = TodoContext
+export {
+  TodoProvider,
+  TodoConsumer
+}
+
+export default TodoContext
+```
+
+- TodoProvider 컴포넌트 안에서 사용하는 Hooks들의 로직이 **재사용이 필요하거나 로직이 복잡해질때는 custom Hooks로 빼둡니다.**
+
+```javascript
+import React, { useState, useMemo } from 'react'
+// useTodo.js
+const useTodo = () => {
+  const [todoList, setTodoList] = useState([])
+  const addTodo = () => {}
+  const removeTodo = () => {}
+
+  // (...)
+
+  const todoStore = useMemo(() => ({
+    todoList,
+    addTodo,
+    removeTodo,
+  }), [todoList])
+
+  return TodoStore
+}
+```
+
+```javascript
+// TodoContext.js
+import React, { useState, createContext } from 'react'
+import useTodo from 'useTodo'
+
+const TodoContext = createContext() 
+
+const TodoProvider = ({}) => {
+  const todoStore = useTodo()
+
+  return <TodoContext.Provider value={todoStore}>{children}</TodoContext.Provider>
+}
+
+const { Consumer: TodoConsumer } = TodoContext
+export {
+  TodoProvider,
+  TodoConsumer
+}
+
+export default TodoContext
+
+```
 
 
-### 예시 
+
+### Pages에 여러개의 Provider가 필요할 경우 (필요시)
+
+- 여러 `Provider 컴포넌트` 를 겹쳐 사용하면 최상위 `Provider 컴포넌트`의 변경으로 인해 하위 `Provider 컴포넌트` 들이 호출되게 됩니다.
+
+```javascript
+const xxxPage = () => {
 
 
+  return (
+    <Provider1>
+      <HeaderProvider2>
+        <FooterProvider3>
+          <xxxTemplate header={<Header/>} contents={<Contents />} footer={<Footer />} /> 
+        </FooterProvider3>
+      </HeaderProvider2>
+    </Provider1>
+  )
+}
+```
+
+- 위와 같은 구조가 싫다면, 아래와 같이 생각해 볼 수 있습니다.
+
+```javascript
+  const xxxPage = () => {
+
+  return (
+    <xxxPageProvider Header={Header} Footer={Footer}>
+      (Header, Footer) => (
+        <xxxTemplate header={<Header/>} contents={<Contents />} Footer={<Footer />}/> 
+      )
+    </xxxPageProvider>
+  )
+}
+```
 
 
+```javascript
 
+const xxxPageProvider = ({Header, Footer, children}) => {
+
+  const HeaderContainer = () => (
+    <HeaderProvider>
+      <Header />
+    </HeaderProvider>
+  )
+
+  const FooterContainer = () => (
+    <FooterProvider>
+      <Header />
+    </FooterProvider>
+  )
+
+
+  return (
+    <xxxContext.Provider value={value}>
+      {children(HeaderContainer, FooterContainer)}
+    </xxxContext.Provider>
+  )
+}
+
+```
 
 ## 참고
 
