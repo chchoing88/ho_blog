@@ -3,15 +3,13 @@ title: React Context 와 Hooks 설계 (작성중..)
 date: "2019-12-11T10:00:03.284Z"
 ---
 
-# React Context 와 Hooks를 어떻게 설계 할 것인가?
+# Atomic 구조와 함께 React Context 와 Hooks를 어떻게 설계 할 것인가?
 
-React 16 버젼으로 올라오면서 Context 와 Hooks를 이용해서 store를 대체 할 수 있다는데 어떻게 쓰면 성능을 신경쓰면서 사용 할 수 있을지에 대한 고민 글입니다.
+React 16 버젼으로 올라오면서 Context 와 Hooks를 이용해서 store를 대체 할 수 있다는데 Atomic 구조와 어떻게 쓰면 성능을 신경쓰면서 사용 할 수 있을지에 대한 고민 글입니다.
 
-Context 나 Hooks에 대한 설명은 생략합니다.
+컴포넌트는 함수형 컴포넌트로 만듭니다.
 
-참고 : Component 구조는 Atomic 구조로 짠다고 생각하면 됩니다. 
-
-`atoms > molecules > organisms > template + pages`
+Atomic 구조 : `atoms > molecules > organisms > template + pages`
 
 
 ## Hooks 와 Context의 역할
@@ -30,7 +28,15 @@ Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유
 - `molecules` 와 하나의 `custom Hooks` 의 관계는 1 대 1 관계를 유지 합니다. 
 - `Context.Provider` 로 `Context` 범위 설정은 여러 기능에서 상태를 공유해야 하는 상황인 `organisms` 또는 `pages` 단위에 매칭이 되어야 합니다.
 - `Context.Provider` 는 합성 패턴을 사용하기에 여러 `Context.Provider` 를 겹쳐 사용하면 최상위 `Context.Provider`의 변경으로 인해 하위 `Context.Provider`를 포함한 `children` 컴포넌트들이 호출(Reconciliation - component가 호출되서 리턴된 Element가 이전 Element와 같은지 비교) 될 수 있으므로 주의 해야 합니다. ( 호출 자체가 비용이 많지는 않지만 Virtual Dom인 React Element를 새롭게 만들어내는 불필요한 작업을 하게 될 수도 있습니다. 사실 중요한건 React Element가 이전과 바뀌지 않게 유지하는 것입니다. )
-- `organisms` 단위에서는 `useContext`로 해당 `Context` 값을 참조해 오도록 합니다. 그러기 위해선 `pages` 에서 `Context.Provider`로 주입된 값이나 `Container` 컴포넌트를 만들어 `Context.Provider`로 `organisms`을 감싸주어야 합니다.
+- `pages` 단위 에서 `Context.Provider`로 공유가 필요한 값을 주입 합니다.
+- `organisms` 단위에서는 `useContext`로 해당 `Context` 값을 참조해 오도록 합니다. 
+
+
+## 언제 Hooks 와 Context를 쓸까?
+
+- 기본적으로 상태가 필요한 기능은 `Hooks` 를 사용합니다.
+- **재사용**이 필요한 기능에 대해서는 `custom Hooks`를 만들어 사용합니다.
+- 상태가 **전역** 또는 서로 다른 컴포넌트 끼리의 **공유** 가 필요할 시에는 `Context`를 사용합니다.
 
 ## Hooks 사용
 
@@ -70,6 +76,7 @@ const useTab = (tabDataList) => {
     
   }
 
+  // Computed 한 값
   // 현재 탭 index 
   const currentTabIndex = useMemo(() => {
     return tabList.findIndex(tabData => tabData.actived)
@@ -129,7 +136,7 @@ const TabWrapper = () => {
 
 ### 기본 포멧 예시 
 
-- TodoList 에서 'done', 'doing', 'todo' 의 리스트 갯수를 Header 에서 보여주어야 한다면 TodoList 정보를 `Pages` 단위의 영역으로 올려서 필요한 컴포넌트에 정보를 공유 해야 합니다. 
+- TodoList 에서 'done', 'doing', 'todo' 의 리스트 갯수를 Header 에서 보여주어야 한다면 TodoList 정보를 `Context`로 관리 `Pages` 단위의 범주로 설정해야 합니다.
 
 ```javascript
 // Context 기본 포멧
@@ -160,12 +167,8 @@ const TodoProvider = ({}) => {
   return <TodoContext.Provider value={todoStore}>{children}</TodoContext.Provider>
 }
 
-const { Consumer: TodoConsumer } = TodoContext
-export {
-  TodoProvider,
-  TodoConsumer
-}
 
+export { TodoProvider }
 export default TodoContext
 ```
 
@@ -192,25 +195,22 @@ const useTodo = () => {
 ```
 
 ```javascript
-// TodoContext.js
+// PageContext.js
 import React, { useState, createContext } from 'react'
 import useTodo from 'useTodo'
 
-const TodoContext = createContext() 
+const PageContext = createContext() 
 
-const TodoProvider = ({}) => {
+const PageProvider = ({}) => {
   const todoStore = useTodo()
 
-  return <TodoContext.Provider value={todoStore}>{children}</TodoContext.Provider>
+  return <PageContext.Provider value={todoStore}>{children}</PageContext.Provider>
 }
 
-const { Consumer: TodoConsumer } = TodoContext
-export {
-  TodoProvider,
-  TodoConsumer
-}
 
-export default TodoContext
+export { PageProvider }
+
+export default PageContext
 
 ```
 
