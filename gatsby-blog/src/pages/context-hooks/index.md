@@ -16,12 +16,12 @@ Atomic 구조 : `atoms > molecules > organisms > template + pages`
 
 Hooks의 가장 큰 장점 중 하나는 **상태와 관련된 로직을 재사용** 할 수 있다는 것입니다. 따라서 **컴포넌트와 무관하게 관련된 상태와 로직**을 Hooks로 구현을 하도록 합니다. 특히 `custom Hooks` 를 만들어 재 활용 할 수 있다는 장점이 있습니다. 
 
-Hooks의 단점을 꼽자면 Hooks을 가지고 있는 컴포넌트 하위로는 props로 데이터나 메서드를 내려 보낼 순 있지만 
+Hooks의 단점을 꼽자면 Hooks을 가지고 있는 컴포넌트 하위로는 props로 데이터나 메서드를 내려 보낼 순 있지만 자식 컴포넌트가 부모 컴포넌트에게 영향을 미치기란 어렵다. 즉, 공유하기가 어려움.
 
 Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유** 를 쉽게 할 수 있도록 고안 된 API입니다. 필요한 컴포넌트에 일일이 props로 전달하지 않아도 Context 가 가지고 있는 값을 공유 받을 수 있다는게 가장 큰 장점입니다.
 
 
-## Atomic 과 Hooks, Context가 만났을때 매칭 정의
+## Atomic 과 Hooks, Context가 만났을때 사용 정의
 
 - 하나의 기능에 대한 상태와 메서드들은 하나의 `custom Hooks`로 묶어 둡니다. 
 - Atomic 관점에서 기능의 응집도가 높은 단위는 `organisms` 또는 `molecules` 단위가 될 수 있습니다. 
