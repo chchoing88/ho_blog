@@ -6,6 +6,7 @@ date: "2019-12-11T10:00:03.284Z"
 # Atomic 구조와 함께 React Context 와 Hooks를 어떻게 설계 할 것인가?
 
 React 16 버젼으로 올라오면서 Context 와 Hooks를 이용해서 store를 대체 할 수 있다는데 Atomic 구조와 어떻게 쓰면 성능을 신경쓰면서 사용 할 수 있을지에 대한 고민 글입니다.
+React Context 와 Hooks를 사용하면 zero configuration 의 장점이 있습니다.
 
 컴포넌트는 함수형 컴포넌트로 만듭니다.
 
@@ -28,7 +29,7 @@ Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유
 - `organisms` 과 하나의 `custom Hooks` 의 관계는 1 대 N 이 될 수 있습니다.
 - `molecules` 와 하나의 `custom Hooks` 의 관계는 1 대 1 관계를 유지 합니다. 
 - `Context.Provider` 로 `Context` 범위 설정은 여러 기능에서 상태를 공유해야 하는 상황인 `organisms` 또는 `pages` 단위에 매칭이 되어야 합니다.
-- `pages` 단위 에서 `Context.Provider`로 공유가 필요한 값을 주입 합니다.
+- `pages` 단위 에서 `Context.Provider`로 공유가 필요한 값을 주입 합니다. 이때, 자주 변경이 이러나는 `Provider` 를 제일 안쪽에 위치시키도록 합니다.
 - `organisms` 단위에서는 `useContext`로 해당 `Context` 값을 참조해 오도록 합니다. 
 
 > `Context.Provider` 는 합성 패턴을 사용하기에 여러 `Context.Provider` 를 겹쳐 사용하면 최상위 `Context.Provider`의 변경으로 인해 하위 `Context.Provider`를 포함한 `children` 컴포넌트들이 호출(Reconciliation - component가 호출되서 리턴된 Element가 이전 Element와 같은지 비교) 될 수 있으므로 주의 해야 합니다. ( 호출 자체가 비용이 많지는 않지만 Virtual Dom인 React Element를 새롭게 만들어내는 불필요한 작업을 하게 될 수도 있습니다. 사실 중요한건 React Element가 이전과 바뀌지 않게 유지하는 것입니다. )
@@ -41,41 +42,46 @@ Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유
 
 ## Hooks 사용
 
-- Hooks는 함수형 컴포넌트에서 `상태에 따른 관련 메서드들의 응집도를 높이고 재사용성`을 위해 사용됩니다. 비교 대상은 class component에서 흔히 life cycle에 따라 관련 로직들이 흩어져 있는 모습을 볼수가 있습니다.
+- Hooks는 함수형 컴포넌트에서 `상태에 따른 관련 메서드들의 응집도를 높이고 재사용성`을 위해 사용됩니다. ( 비교 대상은 class component에서 흔히 life cycle에 따라 관련 로직들이 흩어져 있는 모습을 볼수가 있습니다. )
 - 서로 연관된 상태와 기능을 가진 `custom Hooks` 를 제작해 특정 component(View)에 의존하지 않는 별도의 Hooks로 만들면 **재사용성**에 도움이 됩니다.
+- `computed` 한 값은 `useMemo`로 상태값을 저장해 두고, `action` 을 공유해야 하는 함수의 경우에는 `useCallback` 을 사용해서 매번 함수가 새로 만들어 지는걸 방지 합니다.
+- `setState` 의 리턴된 배열이 [`상태`, `set함수`]라 했을 때 두번째 `set함수`를 사용할 때는 **함수형 업데이트**를 이용하면 `상태` 값에 의존적이지 않아도 됩니다. 
 
 ### 예시) 탭 UI
 
 ```javascript
 // hooks/ui.js
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 
 const useTab = (tabDataList) => {
   const [tabList, setTabList] = useState(tabDataList) // [{id: 'merlin', name: 'merlin', content: <Merlin/>, actived: true}]
  
+  // action 하는 함수들
   // tab을 추가 하려 할때
-  const addTabList = (tabData) => {
-    setTabList([
+  const addTabList = useCallback((tabData) => {
+    // 함수형 업데이트 
+    setTabList(tabList => [
       ...tabList,
       tabData
     ])
-  }
+  }, [])
+
+
   // 탭 눌렀을때 
-  const onHandleTabClick = (tabId) => {
+  const onHandleTabClick = useCallback((tabId) => {
     // tabName 이 맞는게 있으면 그걸 true 바꾸고 나머지 false
     // 맞는게 없으면 그대로 두자.
-    let newTabList = tabList
-  
-      if(newTabList.some(tabData => tabData.id === tabId)) {
-        newTabList = tabList.map((tabData, index) => {
+    // 함수형 업데이트
+    setTabList(tabList => {
+      if(tabList.some(tabData => tabData.id === tabId)) {
+        return tabList.map((tabData, index) => {
           tabData.actived = (tabData.id === tabId)
-        
           return tabData
-      })
-    }
-    setTabList(newTabList)
-    
-  }
+        })
+      }
+      return tabList
+    })
+  }, [])
 
   // Computed 한 값
   // 현재 탭 index 
@@ -93,7 +99,8 @@ const useTab = (tabDataList) => {
     tabLength,
     tabList,
     onHandleTabClick,
-    initTabList
+    initTabList,
+    addTabList
   }
 }
 ```
@@ -123,6 +130,10 @@ const TabWrapper = () => {
   )
 }
 ```
+
+
+
+
 
 ## Context 사용
 
