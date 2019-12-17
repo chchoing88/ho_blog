@@ -325,7 +325,7 @@ virtual DOM 안에 있는 "노드들"은 무엇을 해야 할까요? 한가지 �
 
 ### Instances
 
-그래서 우리는 새로운 용어인 Instances 를 소개하겠다. **instance 는 DOM 에 렌더링 된 element 를 나타냅니다.** 또한 element, dom, 그리고 childInstances 의 프로퍼티들을 지닌 plain 객체 입니다. childInstances 는 children element 의 instancese 들을 지닌 배열입니다.
+그래서 우리는 새로운 용어인 Instances 를 소개할 것입니다. **instance 는 DOM 에 렌더링 된 element 를 나타냅니다.** 또한 element, dom, 그리고 childInstances 의 프로퍼티들을 지닌 plain 객체 입니다. childInstances 는 children element 의 instancese 들을 지닌 배열입니다.
 
 각 DOM 노드는 매칭된 instance 를 가지고 있을 것입니다. reconciliation 알고리즘의 한가지 목표는 가능한한 많이 instance 를 creating 또는 removing 을 피하는 것입니다.
 여기서 instance 를 creating 그리고 removing 한다는 것은 DOM tree 를 수정해야 한다는 의미 일 것입니다.
@@ -797,7 +797,7 @@ class Component 에서 setState 를 사용하면 해당 컴포넌트를 기준�
 
 브라우저의 메인 쓰레드는 시간을 많이 쓰는 무엇인가로 인해 매우 바쁘게 움직있다고 할때, 매우 중요한 task 들은 끝날때 까지 기다려야 한다.
 
-이런 문제를 위해서 몇가지 데모를 준비했다. [데모](https://pomber.github.io/incremental-rendering-demo/react-sync.html)에서 행서들이 도는걸 유지하기 위해서 메인 쓰레드는 매 16ms 마다 사용가능 하도록 유지 시켜주어야 한다. 만약 이 메인쓰레드가 다른 무엇인가로 blocked 당했다고 한다면 여기서 매 200ms 라고 하자. 메인 쓰레드가 다시 자유로워 질때 까지 행성들이 멈춰있고 해당 프레임이 사라지는걸 확인 할 수 있을 것이다.
+이런 문제를 위해서 몇가지 데모를 준비했다. [데모](https://pomber.github.io/incremental-rendering-demo/react-sync.html)에서 행서들이 도는걸 유지하기 위해서 메인 쓰레드는 매 16ms 마다 사용가능 하도록 유지 시켜주어야 한다. 만약 이 메인쓰레드가 다른 무엇인가로 blocked 당했다고 한다면 여기서 매 200ms 라고 해봅시다. 메인 쓰레드가 다시 자유로워 질때 까지 행성들이 멈춰있고 해당 프레임이 사라지는걸 확인 할 수 있을 것이다.
 
 무엇이 메인 쓰레드 즉, 몇 에니메이션을 부드럽고 UI 응답을 유지하기 위해 예비의 마이크로 초도 둘수없게 바쁘게 하는가?
 

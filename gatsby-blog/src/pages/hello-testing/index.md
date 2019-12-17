@@ -1,5 +1,5 @@
 ---
-title: Hello Testing (작성중..)
+title: Hello Testing 
 date: '2019-11-14T10:00:03.284Z'
 ---
 

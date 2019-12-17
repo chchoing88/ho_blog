@@ -104,6 +104,8 @@ const useTab = (tabDataList) => {
     addTabList
   }
 }
+
+export { useTab }
 ```
 
 ```javascript
@@ -131,9 +133,6 @@ const TabWrapper = () => {
   )
 }
 ```
-
-
-
 
 
 ## Context 사용
@@ -226,8 +225,6 @@ export { TodoProvider }
 
 export default TodoContext
 ```
-
-
 
 ### Pages에 여러개의 Provider가 필요할 경우 (필요시)
 
@@ -353,6 +350,40 @@ export default withTodoProvider(({ todoList, actions }) => ({
 }))(Todo)
 
 ```
+
+## React.memo 를 사용한 컴포넌트 리렌더링 방지
+
+- `React.memo`는 higher order component로 props의 얕은 비교를 통해 리 렌더링 성능을 올립니다.
+- 함수형 컴포넌트의 `props` 변경이 없다면 컴포넌트의 호출을 막아 불필요한 리 렌더링(실제 DOM에 그려지는 것이 아닌 컴포넌트 호출로 새로운 React Element 생성) 되는 것을 방지하여 렌더링 성능을 최적화 시킬 수 있습니다.
+- `Atomic` 컴포넌트 단위에선 `molecules` 컴포넌트 단위에서 `React.memo`를 사용할 수 있도록 합니다. 또는 성능을 실제로 개선할 수 있는 상황에서 사용합니다.
+
+
+```javascript
+import React, {memo} from 'react'
+
+const TodoItem = ({todoList, onClick}) => {
+  return (
+    <div>TodoItem</div>
+  )
+}
+
+export default memo(TodoItem)
+```
+
+- 일반적인 얕은 비교가 아닌 `React.memo`에서 두번째 파라미터에 `propsAreEqual` 이라는 함수를 사용하여 특정 값들만 비교를 하는 것도 가능합니다. 리턴 값이 `true`(이전 props랑 다음에 들어오는 props가 같은 경우)면 리렌더링을 방지하고 `false` 면 리 렌더링을 실행합니다.
+
+```javascript
+import React, {memo} from 'react'
+
+const TodoItem = ({todoList, onClick}) => {
+  return (
+    <div>TodoItem</div>
+  )
+}
+
+export default memo(TodoItem, (prevProps, nextProps) => prevProps.todoList === )
+```
+
 
 ## 참고
 

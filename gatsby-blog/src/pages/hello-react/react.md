@@ -39,7 +39,7 @@ date: "2019-11-20T10:00:03.284Z"
 - class component , function component 이 둘다 입력으로 props를 받고 산출물로 element tree를 반환한다.
 - component가 입력으로 props를 받으면 부모 컴포넌트가 type 으로 해당 component 와 그것의 props를 element로 리턴했다는 것이다.
 - react는 Component를 가져와서 브라우저가 이해할 수 있는 평범한 일반 HTML로 만들어 준다.
-- react는 Component를 이용해서 Element를 만듭니다.
+- react는 Component를 이용해서 Element를 만듭니다. (컴포넌트는 엘리먼트를 만들어주는 함수 또는 클래스 입니다.)
 - component는 재사용이 가능하게 만들 수 있다. 이 말은 component를 계속 반복해서 사용할 수 있다는 것이다.
 
 
