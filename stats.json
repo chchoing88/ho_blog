@@ -153,8 +153,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-bf188ee60430baa15c98.js",
-      "path---index-bf188ee60430baa15c98.js.map"
+      "path---index-0cfbdb3263ff3882fb58.js",
+      "path---index-0cfbdb3263ff3882fb58.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -199,8 +199,8 @@
       "path---react-hook-8e62e2129fd00f7574c6.js.map"
     ],
     "path---hello-rollup": [
-      "path---hello-rollup-bc8d9153c485710b3ef4.js",
-      "path---hello-rollup-bc8d9153c485710b3ef4.js.map"
+      "path---hello-rollup-6e282fb6a20a6e2f415a.js",
+      "path---hello-rollup-6e282fb6a20a6e2f415a.js.map"
     ],
     "path---offline-plugin-app-shell-fallback": [
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js",
@@ -215,9 +215,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-93d3ca8f9542ea9c6261.js",
+      "app-9c6595acb8a1054a8a77.js",
       "build-js-styles.css",
-      "app-93d3ca8f9542ea9c6261.js.map",
+      "app-9c6595acb8a1054a8a77.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
