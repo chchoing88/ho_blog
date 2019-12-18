@@ -139,6 +139,20 @@ loose mode 모드에선 손으로 작성한 것과 같은 스타일 처럼 일�
 
 여러가지 옵션중에 `useBuiltIns` 이란 옵션은 polyfills을 다루기 위한 옵션 입니다.
 
+사전에 다음과 같이 설치를 해주어야 합니다.
+
+```bash
+npm install core-js@3 --save
+
+# or
+
+npm install core-js@2 --save
+
+# and
+
+npm istall regenerator-runtime --save
+```
+
 
 #### useBuiltIns: 'entry'
 
