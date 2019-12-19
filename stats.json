@@ -5,8 +5,8 @@
       "path---value-and-reference-6083800bc1607839d93d.js.map"
     ],
     "path---make-promise": [
-      "path---make-promise-947d7288b9833531f8f6.js",
-      "path---make-promise-947d7288b9833531f8f6.js.map"
+      "path---make-promise-b95ce5d507def76b7801.js",
+      "path---make-promise-b95ce5d507def76b7801.js.map"
     ],
     "path---javascript-prototype": [
       "path---javascript-prototype-dd176c5979078c57a58c.js",
@@ -219,9 +219,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-5fdd26048d88f92d382a.js",
+      "app-d1a3db81e52b8cebd9f8.js",
       "build-js-styles.css",
-      "app-5fdd26048d88f92d382a.js.map",
+      "app-d1a3db81e52b8cebd9f8.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
