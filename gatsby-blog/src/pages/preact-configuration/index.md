@@ -89,3 +89,8 @@ export default {
 }
 ```
 
+## github
+
+[github](https://github.com/chchoing88/preact-practice)
+
+> 예외사항으로 페이지 마다 번들된 JS를 만들기 위해서 `rollup` 셋팅을 조금 바꿔두었습니다. 필요시 적절하게 수정해야 합니다.
