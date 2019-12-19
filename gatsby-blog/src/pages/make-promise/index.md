@@ -412,6 +412,11 @@ function Promise(fn) {
     // 이 then은 체이닝 될때 resolve 함수에서 then을 bind해서 넘긴다.
     let self = this
 
+    // self(기존 Promise) 의 귀결이 끝나고 실행해야 하는걸 보장하기 위해 => self.done() 메서드 호출
+    // self.done() 메서드로 self Promise가 끝나고 실행해야 하는 함수 등록.
+    // 등록된 함수에서는 then 에서 등록해 뒀던 onFulfiled 호출 => resolve(onFulfilled(result))
+    // onFulfiled 함수가 결과 값이 나왔을때 새로운 Promise의 then에 등록해 뒀던 함수 다시 호출 => resolve(onFulfilled(result))
+
     return new Promise((resolve, reject) => {
       // 체이닝을 하기 위해서 promise를 리턴하자.
       return self.done(
