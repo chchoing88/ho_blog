@@ -24,6 +24,9 @@ rollup 셋팅시 다음과 같은 plugin을 설치하라는 공식 문서가 보
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import babel from "rollup-plugin-babel";
+import postcss from 'rollup-plugin-postcss'
+import { uglify } from 'rollup-plugin-uglify'
+
 
 export default {
   input: "src/js/main.js",
@@ -32,11 +35,15 @@ export default {
     format: "iife"
   },
   plugins: [
-    resolve(),
-    commonjs(),
-    babel({
+     babel({
       exclude: "node_modules/**" // only transpile our source code
     })
+    resolve({
+      browser: true, // axios 같이 서버 코드랑 브라우저 코드가 다 들어있는 모듈일때 package.json 보고 브라우저 관련 코드만 가져온다.
+    }),
+    commonjs(),
+    postcss(), // css 도 번들 포함
+    uglify(), 
   ]
 };
 
