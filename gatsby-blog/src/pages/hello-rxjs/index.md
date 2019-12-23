@@ -270,16 +270,13 @@ Observable 은 다양한 값을 지닌 lazy Push collections 입니다.
 
 ## Higher-Order RxJs Mapping Operator (switchMap, mergeMap, concatMap, exhaustMap)
 
-제일먼저 mapping operation 을 이해하기 전에 기본 로직인 concat, merge, switch and exhaust 전략부터 살펴볼것이다.
+제일먼저 mapping operation 을 이해하기 전에 기본 로직인 concat, merge, switch and exhaust 전략부터 살펴볼것입니다.
 
-끝으로는 어떻게 mapping operation 이 동작하고 언제 사용하고 왜 사용하는 이유까지 알게 될것이다.
+끝으로는 어떻게 mapping operation 이 동작하고 언제 사용하고 왜 사용하는 이유까지 알게 될것입니다.
 
 ### RxJs Map Operator
 
-이름에서 알수 있듯이 그것은 무엇인가를 mapping 하고 있는 것이다. 하지만 정확히 무엇을 mapping 하고 있는 것일까?
-map 연산자를 사용하면 input stream 의 값들을 가져올 수 있으며 그 값에 파생하는 output stream 을 만들 수 있습니다.
-
-그래서 map operator 는 input observable 의 값들을 매핑해주는 것이다.
+이름에서 알수 있듯이 그것은 무엇인가를 mapping 하고 있는 것입니다. 하지만 정확히 무엇을 mapping 하고 있는 것일까요?
 
 ![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-map.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/01-rxjs-map.png)
 
@@ -287,6 +284,8 @@ map 연산자를 사용하면 입력 스트림 (값 1, 2, 3)을 가져 와서 �
 
 맨 아래의 출력 스트림 값은 입력 스트림의 값을 가져 와서 함수를 적용하여 얻습니다. 이 함수는 단순히 값에 10을 곱합니다.
 따라서 map 연산자는 입력 관측 값의 값을 매핑하는 것입니다. 
+
+그래서 map operator 는 input observable 의 값들 모두를 매핑해주는 것입니다.
 
 ```javascript
 const http$: Observable<Course[]> = this.http.get('/api/courses')
@@ -299,7 +298,8 @@ http$
   .subscribe(courses => console.log('courses', courses))
 ```
 
-위 예제를 봅시다. 우리는 하나의 HTTP observable 을 만들었습니다. 이것은 backend 에 요청을 보내고 그 답을 구독하게 됩니다. 이 observable 은 backend 의 응답이 오면 값을 방출하게 됩니다.
+위 예제를 봅시다. 우리는 하나의 HTTP observable 을 만들었습니다. 이것은 backend 에 요청을 보내고 그 답을 구독하게 됩니다. 
+이 observable 은 backend 의 응답이 오면 값을 방출하게 됩니다.
 
 이 경우, 응답은 data 의 payload 프로퍼티에 감싸여져서 내려옵니다. 이 값을 얻기 위해서 우린 RxJs map operator 를 사용합니다. mapping function 은 JSON response payload 에 매핑하고 그 값을 추출합니다.
 
@@ -314,7 +314,7 @@ fakeAsyncData$.map(val => `New value ${val}`).subscribe({
 
 map(projectionFunction) {
      return new Observable(observer => {
-       return this.subscribe({
+       return this.subscribe({ // this는 fakeAsyncData$ 의 객체이다. 
           next(val) { observer.next( projectionFunction(val)) },
           error(e) { observer.error(e) } ,
           complete() { observer.complete() }
@@ -323,13 +323,17 @@ map(projectionFunction) {
   }
 ```
 
-우리가 `map` 메서드를 호출하게 되면 `new Observable`이 리턴된다. 이 Observable 에는 현재 source 코드에 대한 subscribes 가 들어있는데 이때 source 에 해당하는 것이 `fakeAsyncData$`가 되겠다. source 코드에서 새로운 값이 던져지게 되면 map 메서드가 받게 되고, 그 값을 `projectionFunction` 에 실어서 실행하게 된다. 그리곤 map 메서드에서 리턴했던 Observable 을 구독하고 있는 우리에게 그 `projectionFunction` 실행하고 리턴된 값이 전해지게 된다. (우리는 map Observable 을 구독하고 있어야 한다는 점을 명심하자.)
+우리가 `map` 메서드를 호출하게 되면 `new Observable`이 리턴됩니다. 이 Observable 에는 현재 source 코드에 대한 subscribes 가 들어있는데 이때 source 에 해당하는 것이 `fakeAsyncData$`가 되겠습니다. 
+
+source 코드에서 새로운 값이 던져지게 되면 map 메서드가 받게 되고, 그 값을 `projectionFunction` 에 실어서 실행하게 됩니다. 
+그리곤 map 메서드에서 리턴했던 Observable 을 구독하고 있는 우리에게 그 `projectionFunction` 실행하고 리턴된 값이 전해지게 된다. (우리는 map Observable 을 구독하고 있어야 한다는 점을 명심하자.)
 
 ### What is Higher-Order Observable Mappping?
 
-higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 대신에 값을 Observable 로 mapping 합니다. 그 observable 을 higher-order Observable 이라고 합니다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것이 방출하는 값들은 일반 plain 값이 아닌 우리가 별도로 구독할 수 있는 Observable 들이라는 점이다.
+higher-order mapping 은 일반 plain value 1 을 10 으로 맵핑하는 대신에 값을 Observable 로 mapping 합니다. 
+그 observable 을 higher-order Observable 이라고 합니다. 이 higher-order Observable 은 다른 Observable 과 같은 마찬가지 이지만 그것이 방출하는 값들은 일반 plain 값이 아닌 우리가 별도로 구독할 수 있는 Observable 들이라는 점이 다른점입니다.
 
-쉽게 말해 아래와 같은 코드가 있다.
+쉽게 말해 아래와 같은 코드가 있습니다.
 
 ```javascript
 const click$ = Observable.fromEvent(button, 'click')
@@ -344,9 +348,9 @@ clicksToInterval$.subscribe(intervalObservable =>
 )
 ```
 
-여기서 `clicksToInterval$`은 higher-order Observable 입니다. 우리가 이 Observable 을 구독하는 순간 `click$` Observable 은 `interval$` observable 과 함께 next()를 호출 할것입니다. 그렇게 되면 클릭시 일반적인 map 에서 보였던 plain 한 값이 보이지 않고 실행되지 않은 interval observable 객체가 보일것입니다.
+여기서 `clicksToInterval$`은 higher-order Observable 입니다. 우리가 이 Observable 을 구독하는 순간 `click$` Observable 은 `interval$` observable 과 함께 Observer의 next()를 호출 할것입니다. 그렇게 되면 클릭시 일반적인 map 에서 보였던 plain 한 값이 보이지 않고 실행되지 않은 `interval observable` 객체가 보일것입니다.
 
-그것은 `interval$` observable 을 구독하지 않았기 때문입니다. observable 들은 lazy 입니다. 만약 observable 이 지닌 값들을 가져오고 싶다면 반듯이 `subscribe()` 해야합니다.
+그 이유는 `interval$` observable 을 구독하지 않았기 때문입니다. observable 들은 lazy 입니다. 만약 observable 이 지닌 값들을 가져오고 싶다면 반듯이 `subscribe()` 해야합니다.
 
 ```javascript
 clicksToInterval$.subscribe(intervalObservable$ => {
@@ -368,17 +372,23 @@ const observable$ = click$.map(event => {
    return interval$;
 });
 
+
+// mergeAll() 메서드 사용
 observable$.mergeAll().subscribe(num => console.log(num));
 ```
 
-`mergeAll()`의 경우에는 inner observable(여기서 interval$에 해당함)을 받아다가 그것을 구독하고 해당 값을 observer 에게 전달시켜 줍니다. 즉, inner observable 이 emits 될때 그 값을 outer observable와 merging 해서 나에게 알려줍니다. 
+`mergeAll()`의 경우에는 inner observable(여기서 `interval$`에 해당함)을 받아다가 그것을 구독하고 해당 값을 `subscribe`로 등록한 `observer` 에게 전달시켜 줍니다. 즉, inner observable 이 emits 될때 그 값을 outer observable와 merging 해서 나에게 알려줍니다. 
 
 위의 경우에서는 source observable(또는 outer observable) 은 `click$` observable 이고 inner observable 은 `interval$` 입니다.
 그래서 `mergeMap()`은 단지 `map() + mergeAll()` 입니다.
 
-또한 위 코드에서 `observable$` 을 그냥 subscribe를 했다면 num에는 observable 객체가 콘솔에 찍힐것입니다. 
-`map()` 코드는 어떠한 이벤트 스트림에서 값을 받아서 즉, 신호로 받아들여서 새로운 값 또는 observable 객체로 맵핑할 때 사용되고 매 값이 나올때마다 output으로 observable 이 나올 것입니다. 이 모두를 한대 모아서 새로운 observable로 만드는 작업을 `mergeAll()`이 진행합니다.
-`mergeAll()`의 경우에는 모든 이벤트 스트림을 머지해서 observer에게 알려준다고 생각하면 될 것입니다.
+또한 위 코드에서 `observable$` 을 그냥 subscribe를 했다면 `num`에는 `observable`(`interval$`) 객체가 콘솔에 찍힐것입니다. 
+`map()` 코드는 어떠한 이벤트 스트림에서 값을 받아서 즉, 신호로 받아들여서 새로운 값 또는 `observable` 객체로 맵핑할 때 사용되고 매 값이 나올때마다 output으로 `observable` 이 나올 것입니다. 
+
+![https://rxjs-dev.firebaseapp.com/assets/images/marble-diagrams/mergeAll.png](https://rxjs-dev.firebaseapp.com/assets/images/marble-diagrams/mergeAll.png)
+
+output으로 `observable` 들을 하나의 새로운 `observable`로 만드는 작업을 `mergeAll()`이 진행합니다.
+`mergeAll()`의 경우에는 모든 이벤트 스트림을 머지해서 마지막으로 `subscribe`로 등록한 `observer`에게 알려준다고 생각하면 될 것입니다.
 
 위 코드를 `mergeMap()`으로 짠다면 아래와 같습니다.
 
@@ -419,7 +429,7 @@ this.form.valueChanges
     );
 ```
 
-하지만 위 그럼인 중첩된 subscribe 인 안티패턴에 속하게 된다.
+하지만 위 그럼인 중첩된 subscribe 인 안티패턴에 속하게 됩니다.
 
 단점으로는 첫번째로는 callback hell 에 빠질수 있고, 두번째로는 각각의 observable 의 subsciption 처리를 스스로가 해야한다는 점이 있습니다.
 
@@ -427,10 +437,10 @@ this.form.valueChanges
 
 만약 위 상황에서 여러 폼 값을 빠르게 연속적으로 내보내고 저장 작업을 완료하는데 시간이 걸리는 경우 어떻게 되는지 생각해봅시다.
 
-* 우리는 다른 save request 하기 전에 하나의 save request 가 완료되기를 기다리고 싶은가?
-* 우리는 병렬로 save 들을 하고 싶은가?
-* 우리는 새로운 save request 가 나타나면 진행했던것을 취소하고 싶은가?
-* 우리는 이미 진행중인 save request 동안 새로운 save request 에 대해서 무시하고 싶은가?
+* 우리는 다른 save request 하기 전에 하나의 save request 가 완료되기를 기다리고 싶은가요? (concat)
+* 우리는 병렬로 save 들을 하고 싶은가요? (merge)
+* 우리는 새로운 save request 가 나타나면 진행했던것을 취소하고 싶은가요? (switch)
+* 우리는 이미 진행중인 save request 동안 새로운 save request 에 대해서 무시하고 싶은가요? (exhaust)
 
 위 처럼 중첩된 상황이라면 우리는 실제로 병렬로 save operation 을 발생시킵니다. 이것은 사실 우리가 원하는 방식은 아닙니다. 왜냐하면 백엔드에서 순차적으로 저장한다는 보장이 없기 때문이고, 마지막 유효한 값이 실제로 백엔드에 저장되었다고 볼수 없기 때문입니다. 이 방법을 higher-order observable 로 피해봅시다.
 
@@ -870,6 +880,15 @@ Error Observable 에서 들어오는 각각의 error 값에 delay 를 적용하�
 에러가 발생할때마다 `delayWhen` operator 는 timer 함수를 호출함으로써 duration selector Observable 를 생성하게 된다. 이 duration selector Observable 는 0 값이 2 초후에 발생하게 되고 그 후엔 complete 된다. 그 일이 일어나게 되면 `delayWhen` Observable 은 주어졌던 error input 의 경과시간을 알게 되고 2 초라는 경과시간이 지나게 되면 error 는 notification Observable ouput 에 보여지게 된다. notification 에 value 가 emit 하게 되면, `retryWhen` operator 는 재시도를 하게 된다.
 
 
+## RxJS 개발방법
+
+1. 데이터 소스를 Observable로 생성
+2. Observable의 operator를 사용
+    - 데이터를 변경, 추출, 합침, 분리
+3. 원하는 데이터를 받아 처리하는 Observer를 만든다. 
+4. Observable의 subscribe를 통해 Observer를 등록한다.
+5. Observable 구독을 정지하고 자원을 해지한다.
+
 ## 출처
 
 * [https://www.youtube.com/watch?v=PhggNGsSQyg](https://www.youtube.com/watch?v=PhggNGsSQyg)
@@ -880,3 +899,4 @@ Error Observable 에서 들어오는 각각의 error 값에 delay 를 적용하�
 * [https://blog.angular-university.io/rxjs-higher-order-mapping/](https://blog.angular-university.io/rxjs-higher-order-mapping/)
 * [https://netbasal.com/javascript-observables-under-the-hood-2423f760584](https://netbasal.com/javascript-observables-under-the-hood-2423f760584)
 * [https://netbasal.com/understanding-mergemap-and-switchmap-in-rxjs-13cf9c57c885](https://netbasal.com/understanding-mergemap-and-switchmap-in-rxjs-13cf9c57c885)
+* [https://blogs.msmvps.com/deborahk/higher-order-observable/](https://blogs.msmvps.com/deborahk/higher-order-observable/)
