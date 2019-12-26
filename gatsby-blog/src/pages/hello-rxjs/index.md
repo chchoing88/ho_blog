@@ -508,9 +508,9 @@ this.form.valueChanges
 
 ### Observable Merging
 
-만약 다른 상황을 우리가 원한다면, 이전 Observable 이 끝나기를 기다리지 않고 병렬로 처리를 원한다면 이때 우리는 Merge 전략을 사용할수 있습니다. Merge 는 Concat 과 다르게 Observable 이 끝나기를 기다려주지 않습니다.
+만약 다른 상황을 우리가 원한다면, 이전 Observable 이 끝나기를 기다리지 않고 병렬로 처리를 원한다면 이때 우리는 `Merge` 전략을 사용할수 있습니다. `Merge` 는 `Concat` 과 다르게 `Observable` 이 끝나기를 기다려주지 않습니다.
 
-대신에 merge 구독은 매 Observable 과 같은 타임에 merged 됩니다. 그 후에 각 source Observable 의 값들이 시간이 자나서 혼합되어서 여러 값으로 result Observable 에 나타나게 됩니다.
+대신에 merge 구독은 매 Observable 과 같은 타임에 `merged` 됩니다. 그 후에 각 source Observable 의 값들이 시간이 자나서 혼합되어서 여러 값으로 result Observable 에 나타나게 됩니다.
 
 ```javascript
 const series1$ = interval(1000).pipe(map(val => val * 10))
@@ -544,9 +544,9 @@ mergeMap operator 작동방법은 다음과 같습니다.
 
 ![https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-mergeMap-2.png](https://s3-us-west-1.amazonaws.com/angular-university/blog-images/rxjs-map-operators/04-rxjs-mergeMap-2.png)
 
-각 source Observable 의 값은 concatMap 과 같이 inner Observable 로 mapping 됩니다. 이 inner Observable 은 mergeMap 에 의해서 구독됩니다.
+각 source Observable 의 값은 `concatMap` 과 같이 inner Observable 로 `mapping` 됩니다. 이 inner Observable 은 `mergeMap` 에 의해서 구독됩니다.
 inner Observable 이 새로운 값을 방출할때, 그것들은 즉시 output Observable 에 반영됩니다.
-다만 concatMap 과 다르게 mergeMap 의 경우에는 다음 inner Observable 이 일으키기(triggering) 전에 이전 inner Observable 이 complete 되는것을 기다려주지 않습니다. 이 의미는 mergeMap 은 여러개의 inner Observable 이 시간이 지나서 겹칠수도 있다는것을 뜻합니다. result Observable 에 반영되는 값들이 서로 겹쳐서 진행될 수 있다는 것입니다.
+다만 concatMap 과 다르게 `mergeMap` 의 경우에는 다음 inner Observable 이 일으키기(triggering) 전에 이전 inner Observable 이 complete 되는것을 기다려주지 않습니다. 이 의미는 `mergeMap` 은 여러개의 inner Observable 이 시간이 지나서 겹칠수도 있다는것을 뜻합니다. result Observable 에 반영되는 값들이 서로 겹쳐서 진행될 수 있다는 것입니다.
 
 위 예제의 경우 우린 concatMap 이 더 깔끔합니다. 우린 병렬로 저장되길 원하지 않기 때문에 mergeMap 은 적합지 않습니다.
 
@@ -563,7 +563,7 @@ this.form.valueChanges
     );
 ```
 
-위와 같이 mergeMap 을 사용했을 경우 우린 여러번 save request 가 병렬로 동작하는 모습을 크롬의 네트워크 탭에서 볼 수 있습니다. 그래서 이 경우는 error 입니다. 이런 로드가 많은 경우 이러한 요청이 순서없이 처리 될 수 있기 때문입니다.
+위와 같이 `mergeMap` 을 사용했을 경우 우린 여러번 save request 가 병렬로 동작하는 모습을 크롬의 네트워크 탭에서 볼 수 있습니다. 그래서 이 경우는 error 입니다. 이런 로드가 많은 경우 이러한 요청이 순서없이 처리 될 수 있기 때문입니다.
 
 아래는 가장 기본적인 `mergeMap()`의 실행문 입니다.
 
@@ -573,10 +573,10 @@ function myMergeMap(innerObservable) {
   const source = this
 
   return new Observable(observer => {
-    source.subscribe(outerValue => {
+    source.subscribe(outerValue => { // value from outer observable 
       /** innerObservable — the interval observable, in our case */
       innerObservable(outerValue).subscribe(innerValue => {
-        observer.next(innerValue)
+        observer.next(innerValue) // 밖 subscribe 실행시 넘어오는 observer에 값 넘겨줌.
       })
     })
   })
@@ -584,6 +584,20 @@ function myMergeMap(innerObservable) {
 
 Observable.prototype.myMergeMap = myMergeMap
 ```
+
+```javascript
+const click$ = Observable.fromEvent(button, ‘click’);
+const interval$ = Observable.interval(1000);
+
+const observable$ = click$.mergeMap(event => { 
+   return interval$;
+});
+
+observable$.subscribe(num => console.log(num));
+```
+
+위 코드를 보면 우리가 각 button 을 클릭할 때마다 inner `interval()` 의 `subscribe()` 메서드를 호출하는것을 배울 수 있습니다. 
+이는 페이지에서 각 독립적인 인터벌로 수행합니다. 만약에 이전 구독을 취소하고 단 하나만 유지하고 싶다면 `switch()` 오퍼레이션을 이용해야 합니다.
 
 ### Observable Switching
 

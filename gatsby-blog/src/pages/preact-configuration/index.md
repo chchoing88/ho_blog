@@ -61,6 +61,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import babel from 'rollup-plugin-babel'
 import postcss from 'rollup-plugin-postcss'
+import staticSite from 'rollup-plugin-static-site'
 import { uglify } from 'rollup-plugin-uglify'
 
 export const context = process.env.npm_config_context
@@ -85,6 +86,11 @@ export default {
     commonjs(),
     postcss(),
     uglify(),
+    staticSite({
+      dir: `dist/${context}`,
+      filename: 'index.html',
+      template: { path: `src/public/index.html` },
+    }),
   ],
 }
 ```
