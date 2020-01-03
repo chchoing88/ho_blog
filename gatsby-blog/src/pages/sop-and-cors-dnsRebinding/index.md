@@ -5,26 +5,32 @@ date: "2019-02-27T10:00:03.284Z"
 
 ## cookie
 
+쿠키는 사용자 속성을 기억하는 데 사용되는 작은 텍스트 파일이다.
+
 서버에서 `Set-Cookie` 라고 헤더에 셋팅을 하게 되면 브라우저는 해당 쿠키를 `key=value`로 저장하게 된다. 
 
 쿠키 중에는 2가지 쿠키가 존재한다.
-- 웹브라우저를 끄면 사라지는 휘발성 쿠키를 Session cookie.
-- 웹브라우저를 꺼도 사라지지 않는 쿠키를 Permanent 쿠키
+- 웹브라우저를 끄면 사라지는 휘발성 쿠키를 `Session cookie`.
+- 웹브라우저를 꺼도 사라지지 않는 쿠키를 `Permanent` 쿠키
 
-Permanent 쿠키를 셋팅할 때는 `key=value; [expire | Max-Age]` 라고 셋팅을 해준다. expire는 만료되다 라는 뜻이고 쿠키가 언제 죽을것인가 즉, 절대적인것 이다. 
+`Permanent` 쿠키를 셋팅할 때는 `key=value; [expire | Max-Age]` 라고 셋팅을 해준다. expire는 만료되다 라는 뜻이고 쿠키가 언제 죽을것인가 즉, 절대적인것 이다. 
 Max-Age는 현재 시점을 기준으로 상대적으로 얼마간 살아있을것인가 를 나타낸다. 예 `key=value; Max-Age=${60*60*24*30}` 30일 짜리 쿠키를 만드는 것이다.
 
 또한 쿠키 옵션 중에는 Secure, HttpOnly, path, domain 이 존재한다.
 
 - Secure는 웹브라우저와 웹서버가 `https`로 통신하는 경우만 웹브라우저가 쿠키를 서버로 전송하는 옵션이다. (`key=value; Secure`)
-- HttpOnly는 자바스크립트의 document.cookie를 이용해서 쿠키에 접속하는 것을 막는 옵션이다. 웹브라우저와 통신할 때만 전송되는 쿠키 이다. 쿠키를 훔쳐가는 행위를 막기 위한 방법이다. (`key=value; HttpOnly`)
+- `HttpOnly`는 자바스크립트의 document.cookie를 이용해서 쿠키에 접속하는 것을 막는 옵션이다. 웹브라우저와 통신할 때만 전송되는 쿠키 이다. 쿠키를 훔쳐가는 행위([XSS](https://www.kisa.or.kr/uploadfile/201312/201312161355109566.pdf))를 막기 위한 방법이다. (`key=value; HttpOnly`)
 
 path와 domina 옵션은 쿠키의 유효범위를 정의하는 옵션이다.
 어떤 특정 디렉토리에서만 쿠키가 활성화 되도록 하고 싶을때 path 라는 옵션을 지정한다. `key=value; path=/cookie` path라는 옵션을 주어서 어떤 디렉토리를 지정하면 디렉토리 하위에서만 쿠키가 활성화 되서 웹 브라우저는 거기에만 해당하는 쿠키를 서버에 전송한다.
 
 domain 옵션은 다음과 같이 사용하고  `key=value; Domain=o2.org` 어떤 서브 도메인에서도 살아있는 쿠키를 만드는 것이다. 즉, `test.o2.org` 에서는 해당 key, value 가 살아있는 것이다. 
 
+쿠키는 사용자 정보를 수집할때도 이용 가능한데 만약에 내 블로그 `www.myBlog.com` 이 있다고 생각해보자. 
+`myBlog` 에서 생성된 쿠키는 도메인 스코프를 지니기 때문에 `myBlog` 로만 전송이 될 수 있다. 
 
+하지만 `myBlog`에 페이스북 공유하기 버튼을 심어놨다고 생각해보자.
+페이스북 공유하기 버튼에 사용되는 이미지 또는 js 파일을 요청 할 것이다. 이때, 페이스북은 응답으로 여러 쿠키를 심을 것이다. 이후에 페이스북을 접속을 하게 되면 페이스북이 심어놨던 쿠키들을 다시 받을 수 있다. 이때 얻을 수 있는 정보는 아마 내가 `myBlog`에 들렀었고 좋아요 버튼을 눌렀다면 좋아요 버튼도 눌렀다는 사실까지 알 수 있을것이다.
 
 ## SOP
 
@@ -317,4 +323,5 @@ Same-origin Policy의 기법을 우회할수 있는 방법중 하나로 XMLHttpR
 - [https://blog.gypsyengineer.com/en/security/examples-of-dns-rebinding-attacks.html](https://blog.gypsyengineer.com/en/security/examples-of-dns-rebinding-attacks.html)
 - [https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/](https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/)
 - [https://opentutorials.org/course/3387/21744](https://opentutorials.org/course/3387/21744)
+- [https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies](https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies)
 
