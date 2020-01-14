@@ -75,3 +75,7 @@ export default useObservable;
 ## 참고 
 
 - [https://www.bitovi.com/blog/rxjs-with-react-pt-1](https://www.bitovi.com/blog/rxjs-with-react-pt-1)
+
+## 예제 github
+
+- [https://github.com/chchoing88/ts-react](https://github.com/chchoing88/ts-react)
