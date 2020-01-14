@@ -66,6 +66,11 @@ export default useObservable;
 // react function component
 ```
 
+## 추가 고민
+
+- 불필요한 구독은 취소하자.
+- 다양한 종류의 rxjs 의 operation 조합을 pipe로 따로 관라하자.
+- 어느 때고 필요하다면 구독을 취소 시킬 수 있어야 한다.
 
 ## 참고 
 
