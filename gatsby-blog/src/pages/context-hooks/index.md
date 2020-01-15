@@ -1,5 +1,5 @@
 ---
-title: React Context 와 Hooks 설계 (작성중..)
+title: React Context 와 Hooks 설계
 date: "2019-12-11T10:00:03.284Z"
 ---
 
