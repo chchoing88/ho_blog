@@ -12,7 +12,7 @@ date: "2019-11-25T10:00:03.284Z"
 rollup 셋팅시 다음과 같은 plugin을 설치하라는 공식 문서가 보입니다.
 
 - `rollup-plugin-node-resolve` : `node_modules`에 설치된 제 3자 모듈의 위치를 [Node resolution algorithm](https://nodejs.org/api/modules.html#modules_all_together) 를 사용해서 모듈의 위치를 찾아줍니다. 이 resolve 가 없을시 `import hljs from "highlight.js/lib/highlight";` 이런 node_modules에 설치된 모듈을 찾지 못합니다. 
-- `rollup-plugin-commonjs` : 다음 플러그인을 사용하면 node_modules에 설치된 모듈중에서 `require` 문을 사용하는 CommonJS 모듈을 ES6로 변환해서 번들코드에 포함시켜 줍니다.
+- `rollup-plugin-commonjs` : 다음 플러그인을 사용하면 node_modules에 설치된 모듈중에서 `require` 문을 사용하는 CommonJS 모듈을 ES6로 변환해서 번들코드에 포함시켜 줍니다. JS의 다양한 모듈 타입을 ES6로 맞춰서 번들한다고 생각하면 됩니다.
 - `rollup-plugin-babel` : 코드 번들링할때 babel을 이용하기 위해서 사용됩니다.
 
 
