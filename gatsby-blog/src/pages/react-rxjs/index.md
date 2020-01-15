@@ -29,11 +29,11 @@ date: "2020-01-14T10:00:03.284Z"
 
 ## data의 흐름
 
-- 전역에서 필요한 state는 외부에서 관리한다. 
-- 이 state가 변하는걸 알리기 위해 `Observable`로 만들어 준다. (`BehaviorSubject`)
-- 관찰이 필요한 react function Component에서는 `BehaviorSubject`(이때는 Observable 역할) 값을 구독하고 해당 값을 `useState`로 관리한다. ( 이를 도와줄 custom Hooks를 만든다. : `useObservable` )
-- state가 새롭게 바뀌었을 때 `setState` 로 useState의 state 변경함으로써 react function Component 에서 업데이트가 발생 되게 된다. 
-- 전역 state 값을 바꾸기 위해서는 `BehaviorSubject`(이때는 Observer 역할) 값을 가지고 `next(value)` 메서드를 호출한다.
+- 전역에서 필요한 `state`는 외부에서 관리한다. 
+- 이 `state`가 변하는걸 알리기 위해 `Observable`로 만들어 준다. (`BehaviorSubject`)
+- 관찰이 필요한 react function Component에서는 `BehaviorSubject`(이때는 `Observable` 역할) 값을 구독하고 해당 값을 `useState`로 관리한다. ( 이를 도와줄 custom Hooks를 만든다. : `useObservable` )
+- `state`가 새롭게 바뀌었을 때 `setState` 로 `useState`의 `state` 변경함으로써 react function Component 에서 업데이트가 발생 되게 된다. 
+- 전역 `state` 값을 바꾸기 위해서는 `BehaviorSubject`(이때는 `Observer` 역할) 값을 가지고 `next(value)` 메서드를 호출한다.
 
 ## 코드 
 
@@ -60,15 +60,108 @@ export default useObservable;
 
 ```javascript
 // store
+import { ITodoItem, ITodoStore } from "../types";
+import { BehaviorSubject } from "rxjs";
+
+class TodoItem implements ITodoItem {
+  todo: string;
+  isActive: boolean;
+
+  constructor(todo: string, isActive: boolean) {
+    this.todo = todo;
+    this.isActive = isActive;
+  }
+}
+
+class TodoStore implements ITodoStore {
+  todoList$: BehaviorSubject<ITodoItem[]>;
+
+  constructor(todoList: ITodoItem[]) {
+    this.todoList$ = new BehaviorSubject(todoList);
+  }
+
+  // action
+  addTodo = ({ todo, isActive }: ITodoItem) => {
+    const newTodo = new TodoItem(todo, isActive);
+    const newTodoList = [...this.todoList$.value, newTodo];
+
+    this.todoList$.next(newTodoList);
+  };
+}
+
+const TODO_LIST: ITodoItem[] = [
+  { todo: "typescript 학습하기", isActive: false }
+];
+
+const todoStore: ITodoStore = new TodoStore(TODO_LIST);
+
+export default todoStore;
+
 ```
 
 ```javascript
 // react function component
+// Todo
+import React from "react";
+import TodoList from "./TodoList";
+import useObservable from "../hooks/useObservable";
+import todoStore from "../store/TodoStore";
+import { ITodoItem } from "../types";
+
+function Todo() {
+  const todoList = useObservable<ITodoItem[]>(todoStore.todoList$);
+
+  return <TodoList todoList={todoList}></TodoList>;
+}
+
+export default Todo;
+
+```
+
+```javascript
+// TodoList
+import React from "react";
+import TodoItem from "./TodoItem";
+import { ITodoItem } from "../types";
+
+type TodoListProps = {
+  todoList: ITodoItem[];
+};
+
+function TodoList({ todoList }: TodoListProps) {
+  return (
+    <ul>
+      {todoList.map((todoItem: ITodoItem) => (
+        <TodoItem key={todoItem.todo} todoItem={todoItem}></TodoItem>
+      ))}
+    </ul>
+  );
+}
+
+TodoList.defaultProps = {
+  todoList: []
+};
+
+export default TodoList;
+
+// TodoItem
+import React from "react";
+import { ITodoItem } from "../types";
+
+type TodoItemProps = {
+  todoItem: ITodoItem;
+};
+
+function TodoItem({ todoItem }: TodoItemProps) {
+  return <li>{todoItem.todo}</li>;
+}
+
+export default TodoItem;
+
 ```
 
 ## 추가 고민
 
-- 불필요한 구독은 취소하자.
 - 다양한 종류의 rxjs 의 operation 조합을 pipe로 따로 관라하자.
 - 어느 때고 필요하다면 구독을 취소 시킬 수 있어야 한다.
 
