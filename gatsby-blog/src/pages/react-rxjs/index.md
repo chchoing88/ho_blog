@@ -35,7 +35,7 @@ date: "2020-01-14T10:00:03.284Z"
 - `state`가 새롭게 바뀌었을 때 `setState` 로 `useState`의 `state` 변경함으로써 react function Component 에서 업데이트가 발생 되게 된다. 
 - 전역 `state` 값을 바꾸기 위해서는 `BehaviorSubject`(이때는 `Observer` 역할) 값을 가지고 `next(value)` 메서드를 호출한다.
 
-## 코드 
+## 관련 코드 
 
 ```javascript
 // hooks (useObservable)
@@ -143,7 +143,9 @@ TodoList.defaultProps = {
 };
 
 export default TodoList;
+```
 
+```javascript
 // TodoItem
 import React from "react";
 import { ITodoItem } from "../types";
@@ -169,6 +171,6 @@ export default TodoItem;
 
 - [https://www.bitovi.com/blog/rxjs-with-react-pt-1](https://www.bitovi.com/blog/rxjs-with-react-pt-1)
 
-## 예제 github
+## 전체 코드
 
 - [https://github.com/chchoing88/ts-react](https://github.com/chchoing88/ts-react)
