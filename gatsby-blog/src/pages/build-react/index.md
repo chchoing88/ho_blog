@@ -1483,12 +1483,12 @@ render 또는 setState 시 에 발동되는 `reconcile` 라는 "diff" 알고리�
 root = rootFiber
 root.child = childFiber01
 childFiber01.parent = root
+childFiber01.sibling = childFiber02
 
 childFiber02.parent = root
-childFiber02.sibling = childFiber01
+childFiber02.sibling = childFiber03
 
 childFiber03.parent = root
-childFiber03.sibling = childFiber02
 ```
 
 위와 같은 구조가 되겠다.
