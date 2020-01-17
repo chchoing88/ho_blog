@@ -69,8 +69,8 @@
       "path---react-fiber-react-fiber-01-de4b57b558db4cda0d1b.js.map"
     ],
     "path---context-hooks": [
-      "path---context-hooks-19efda12c7aa89c27fee.js",
-      "path---context-hooks-19efda12c7aa89c27fee.js.map"
+      "path---context-hooks-3d7cbdaf203f473ffeaf.js",
+      "path---context-hooks-3d7cbdaf203f473ffeaf.js.map"
     ],
     "path---hello-react-react": [
       "path---hello-react-react-873ebfd40ad351c8d653.js",
@@ -140,9 +140,13 @@
       "path---hello-mobx-60b6bc228aa6a7f9648f.js",
       "path---hello-mobx-60b6bc228aa6a7f9648f.js.map"
     ],
+    "path---react-rxjs": [
+      "path---react-rxjs-a5db3c06e3e929a47c48.js",
+      "path---react-rxjs-a5db3c06e3e929a47c48.js.map"
+    ],
     "path---build-react": [
-      "path---build-react-b1eb50d332755bd71f62.js",
-      "path---build-react-b1eb50d332755bd71f62.js.map"
+      "path---build-react-f434a341563ef68309f3.js",
+      "path---build-react-f434a341563ef68309f3.js.map"
     ],
     "path---docker-depolyment": [
       "path---docker-depolyment-4012246536442f60159d.js",
@@ -153,8 +157,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-0ecfbef6785898936373.js",
-      "path---index-0ecfbef6785898936373.js.map"
+      "path---index-0159731583c382cab827.js",
+      "path---index-0159731583c382cab827.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -203,8 +207,8 @@
       "path---react-hook-8e62e2129fd00f7574c6.js.map"
     ],
     "path---hello-rollup": [
-      "path---hello-rollup-cc935624a2c7839b1238.js",
-      "path---hello-rollup-cc935624a2c7839b1238.js.map"
+      "path---hello-rollup-d49dff44499f23bc1e78.js",
+      "path---hello-rollup-d49dff44499f23bc1e78.js.map"
     ],
     "path---offline-plugin-app-shell-fallback": [
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js",
@@ -219,9 +223,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-986ccdd452a44bb65d97.js",
+      "app-f7e58a1e0599176712a8.js",
       "build-js-styles.css",
-      "app-986ccdd452a44bb65d97.js.map",
+      "app-f7e58a1e0599176712a8.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
