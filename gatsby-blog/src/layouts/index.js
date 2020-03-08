@@ -5,7 +5,7 @@ import { Container } from 'react-responsive-grid'
 import { rhythm, scale } from '../utils/typography'
 //import "prismjs/themes/prism.css"
 //import "./css/atom-dark-syntax.css"
-import "./css/monokai.css"
+import './css/monokai.css'
 
 class Template extends React.Component {
   render() {
@@ -34,7 +34,7 @@ class Template extends React.Component {
             }}
             to={'/'}
           >
-            Merlin Tec Blog
+            Merlin Tech Blog
           </Link>
         </h1>
       )
@@ -44,7 +44,6 @@ class Template extends React.Component {
           style={{
             fontFamily: 'Montserrat, sans-serif',
             marginTop: 0,
-
           }}
         >
           <Link

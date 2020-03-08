@@ -27,8 +27,8 @@ class Bio extends React.Component {
           }}
         />
         <p>
-          Written by <strong>Merlin.ho</strong> who lives and works in Pangyo building useful things.{' '}
-
+          Written by <strong>Merlin.ho</strong> who lives and works in Pangyo
+          building useful things.{' '}
         </p>
       </div>
     )
