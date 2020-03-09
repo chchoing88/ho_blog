@@ -226,7 +226,7 @@ export default useTab;
 ```
 
 ```ts
-// useApiObservable
+// useApiObservable.ts
 
 import { useState, useEffect, useRef } from "react";
 import { Observable, Subject } from "rxjs";
