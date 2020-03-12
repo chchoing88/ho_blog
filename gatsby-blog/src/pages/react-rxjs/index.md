@@ -177,7 +177,7 @@ export default TodoItem;
 ### rxjs 역할
 
 - hooks에 저장된 상태에 따른 비동기 처리와 같은 side effect(부수효과) 처리 로직
-ex) API 호출
+ex) API 호출, location 허용
 
 ### side effect를 rxjs로 다룰때의 장점
 
@@ -185,7 +185,7 @@ ex) API 호출
 ex) 연속된 같은 API 호출에서 가장 최신 호출의 데이터를 가져와서 view에 반영
 
 - 여러 side effect를 모아서 일괄 처리에 용이
-ex) 여러 API 호출의 응답이 다 모였을 때 view 반영
+ex) 여러 API 호출의 응답이 다 모였을 때 view 반영 및 에러처리
 
 ### 예시 코드
 
@@ -244,6 +244,7 @@ function useApiObservable<T>(
   });
 
   const { current: subject$ } = useRef(new Subject<T>());
+
   useEffect(() => {
     const sub = subject$
       .pipe(
@@ -266,7 +267,6 @@ function useApiObservable<T>(
   return [state, subject$];
 }
 
-// 종료 시점, pipe,
 export default useApiObservable;
 ```
 
@@ -279,6 +279,7 @@ export default useApiObservable;
     IOccupancyApiFetchParameter
   >(occupancyApi.fetch);
 
+  // currentTabData가 변경 되었을 때 api 스트림에 값 방출
   useEffect(() => {
     subject$.next({
       type: currentTabData.id
