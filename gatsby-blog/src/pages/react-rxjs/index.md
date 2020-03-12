@@ -286,7 +286,7 @@ export default useApiObservable;
   }, [subject$, currentTabData]);
 ```
 
-## 추가 고민
+## 추가적으로 고려해야 할 점
 
 - 다양한 종류의 rxjs 의 operation 조합을 pipe로 따로 관리하자.
 - 어느 때고 필요하다면 구독을 취소 시킬 수 있어야 한다.

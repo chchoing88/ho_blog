@@ -3,8 +3,6 @@ title: hello-RxJS
 date: "2019-01-28T10:00:03.284Z"
 ---
 
-# Intro
-
 * RxJS 의 특징을 알아보고 공부하자.
 * RxJS 의 공홈을 독파해보자.
 
