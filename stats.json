@@ -12,6 +12,10 @@
       "path---javascript-prototype-dd176c5979078c57a58c.js",
       "path---javascript-prototype-dd176c5979078c57a58c.js.map"
     ],
+    "path---typescript-react": [
+      "path---typescript-react-ea67490f56e5f7d21afd.js",
+      "path---typescript-react-ea67490f56e5f7d21afd.js.map"
+    ],
     "component---src-pages-index-js": [
       "component---src-pages-index-js-4a72a400e6141dde0d21.js",
       "component---src-pages-index-js-4a72a400e6141dde0d21.js.map"
@@ -96,6 +100,10 @@
       "path---hello-oop-8753bd908c30244d5ee3.js",
       "path---hello-oop-8753bd908c30244d5ee3.js.map"
     ],
+    "path---react-vega": [
+      "path---react-vega-a4b83f36dbf892111688.js",
+      "path---react-vega-a4b83f36dbf892111688.js.map"
+    ],
     "component---node-modules-gatsby-plugin-offline-app-shell-js": [
       "component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js",
       "component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js.map"
@@ -103,6 +111,10 @@
     "path---experience-monorepo": [
       "path---experience-monorepo-481c39ada3235001112a.js",
       "path---experience-monorepo-481c39ada3235001112a.js.map"
+    ],
+    "path---hello-rebass": [
+      "path---hello-rebass-b3c4cd2116b5d0d81c0a.js",
+      "path---hello-rebass-b3c4cd2116b5d0d81c0a.js.map"
     ],
     "component---src-templates-blog-post-js": [
       "component---src-templates-blog-post-js-dabe65ee189101b630a0.js",
@@ -113,8 +125,8 @@
       "path---call-stack-ae217c5d96088f3ccd78.js.map"
     ],
     "component---src-layouts-index-js": [
-      "component---src-layouts-index-js-60e98b905b7a1c56256e.js",
-      "component---src-layouts-index-js-60e98b905b7a1c56256e.js.map"
+      "component---src-layouts-index-js-14ce98a91c2ea25f4173.js",
+      "component---src-layouts-index-js-14ce98a91c2ea25f4173.js.map"
     ],
     "path---refactoring-simplifying-method-calls": [
       "path---refactoring-simplifying-method-calls-294a8dadb4d3828fd246.js",
@@ -141,8 +153,8 @@
       "path---hello-mobx-60b6bc228aa6a7f9648f.js.map"
     ],
     "path---react-rxjs": [
-      "path---react-rxjs-a5db3c06e3e929a47c48.js",
-      "path---react-rxjs-a5db3c06e3e929a47c48.js.map"
+      "path---react-rxjs-ffa3482ffc697d94c2e2.js",
+      "path---react-rxjs-ffa3482ffc697d94c2e2.js.map"
     ],
     "path---build-react": [
       "path---build-react-f434a341563ef68309f3.js",
@@ -157,8 +169,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-0159731583c382cab827.js",
-      "path---index-0159731583c382cab827.js.map"
+      "path---index-2b6305dfb3d4754fe17d.js",
+      "path---index-2b6305dfb3d4754fe17d.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -223,9 +235,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-f7e58a1e0599176712a8.js",
+      "app-5038aecc863a6bdeb837.js",
       "build-js-styles.css",
-      "app-f7e58a1e0599176712a8.js.map",
+      "app-5038aecc863a6bdeb837.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
@@ -253,8 +265,8 @@
       "path---refactoring-moving-between-object-9e40449234c2cb6b787d.js.map"
     ],
     "path---hello-rxjs": [
-      "path---hello-rxjs-326b1c77b9773a382340.js",
-      "path---hello-rxjs-326b1c77b9773a382340.js.map"
+      "path---hello-rxjs-439f76b4038286bfeb7c.js",
+      "path---hello-rxjs-439f76b4038286bfeb7c.js.map"
     ],
     "path---lazy-evaluation": [
       "path---lazy-evaluation-b06a6cf4962e0032b9fb.js",
