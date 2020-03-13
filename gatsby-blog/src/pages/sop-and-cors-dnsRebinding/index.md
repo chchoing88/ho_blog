@@ -19,12 +19,14 @@ Max-Age는 현재 시점을 기준으로 상대적으로 얼마간 살아있을�
 또한 쿠키 옵션 중에는 Secure, HttpOnly, path, domain 이 존재한다.
 
 - Secure는 웹브라우저와 웹서버가 `https`로 통신하는 경우만 웹브라우저가 쿠키를 서버로 전송하는 옵션이다. (`key=value; Secure`)
-- `HttpOnly`는 자바스크립트의 document.cookie를 이용해서 쿠키에 접속하는 것을 막는 옵션이다. 웹브라우저와 통신할 때만 전송되는 쿠키 이다. 쿠키를 훔쳐가는 행위([XSS](https://www.kisa.or.kr/uploadfile/201312/201312161355109566.pdf))를 막기 위한 방법이다. (`key=value; HttpOnly`)
+- `HttpOnly`는 자바스크립트의 document.cookie를 이용해서 쿠키에 접속하는 것을 막는 옵션이다. 웹브라우저와 통신할 때만 전송되는 쿠키 이다. 쿠키를 훔쳐가는 행위([XSS](https://www.kisa.or.kr/uploadfile/201312/201312161355109566.pdf))를 막기 위한 방법입니다. (`key=value; HttpOnly`)
 
 path와 domina 옵션은 쿠키의 유효범위를 정의하는 옵션이다.
 어떤 특정 디렉토리에서만 쿠키가 활성화 되도록 하고 싶을때 path 라는 옵션을 지정한다. `key=value; path=/cookie` path라는 옵션을 주어서 어떤 디렉토리를 지정하면 디렉토리 하위에서만 쿠키가 활성화 되서 웹 브라우저는 거기에만 해당하는 쿠키를 서버에 전송한다.
 
-domain 옵션은 다음과 같이 사용하고  `key=value; Domain=o2.org` 어떤 서브 도메인에서도 살아있는 쿠키를 만드는 것이다. 즉, `test.o2.org` 에서는 해당 key, value 가 살아있는 것이다. 
+domain 옵션은 다음과 같이 사용하고  `key=value; Domain=o2.org` 어떤 서브 도메인에서도 살아있는 쿠키를 만드는 것이다. 즉, `test.o2.org` 에서는 해당 key, value 가 살아있는 것입니다.
+
+특히 domain은 쿠키가 전송되게 될 호스트를 명시하는데 지정하지 않을 경우에는 서브 도메인은 포함되지 않는 현재 문서 위치의 호스트를 셋팅할 것이고, 명시적으로 설정하게 되면 서브도메인들은 항상 포함되게 됩니다.
 
 쿠키는 사용자 정보를 수집할때도 이용 가능한데 만약에 내 블로그 `www.myBlog.com` 이 있다고 생각해보자. 
 `myBlog` 에서 생성된 쿠키는 도메인 스코프를 지니기 때문에 `myBlog` 로만 전송이 될 수 있다. 
