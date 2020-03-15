@@ -141,29 +141,29 @@ function getTimestamp() {
 
 [header Set-Cookie]
 
-![헤더요청](./images/fetch/no-domain-first-header)
+![헤더요청](./images/fetch/no-domain-first-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/fetch/no-domain-first-chrome)
+![크롬쿠키](./images/fetch/no-domain-first-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/fetch/no-domain-first-server)
+![서버로 들어온 쿠키](./images/fetch/no-domain-first-server.png)
 
 - axois
 
 [header Set-Cookie]
 
-![헤더요청](./images/axios/no-domain-first-header)
+![헤더요청](./images/axios/no-domain-first-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/axios/no-domain-first-chrome)
+![크롬쿠키](./images/axios/no-domain-first-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/axios/no-domain-first-server)
+![서버로 들어온 쿠키](./images/axios/no-domain-first-server.png)
 
 #### 서브 도메인 (sub.merlin.com:20001)
 
@@ -171,29 +171,29 @@ function getTimestamp() {
 
 [header Set-Cookie]
 
-![헤더요청](./images/fetch/no-domain-second-header)
+![헤더요청](./images/fetch/no-domain-second-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/fetch/no-domain-second-chrome)
+![크롬쿠키](./images/fetch/no-domain-second-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/fetch/no-domain-second-server)
+![서버로 들어온 쿠키](./images/fetch/no-domain-second-server.png)
 
 - axois
 
 [header Set-Cookie]
 
-![헤더요청](./images/axios/no-domain-second-header)
+![헤더요청](./images/axios/no-domain-second-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/axios/no-domain-second-chrome)
+![크롬쿠키](./images/axios/no-domain-second-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/axios/no-domain-second-server)
+![서버로 들어온 쿠키](./images/axios/no-domain-second-server.png)
 
 #### 3자 도메인 (third.com:20001)
 
@@ -201,29 +201,29 @@ function getTimestamp() {
 
 [header Set-Cookie]
 
-![헤더요청](./images/fetch/no-domain-third-header)
+![헤더요청](./images/fetch/no-domain-third-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/fetch/no-domain-third-chrome)
+![크롬쿠키](./images/fetch/no-domain-third-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/fetch/no-domain-third-server)
+![서버로 들어온 쿠키](./images/fetch/no-domain-third-server.png)
 
 - axois
 
 [header Set-Cookie]
 
-![헤더요청](./images/axios/no-domain-third-header)
+![헤더요청](./images/axios/no-domain-third-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/axios/no-domain-third-chrome)
+![크롬쿠키](./images/axios/no-domain-third-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/axios/no-domain-third-server)
+![서버로 들어온 쿠키](./images/axios/no-domain-third-server.png)
 
 ### 쿠키에 도메인 설정 함 (domain: 'merlin.ho')
 
@@ -233,29 +233,29 @@ function getTimestamp() {
 
 [header Set-Cookie]
 
-![헤더요청](./images/fetch/domain-first-header)
+![헤더요청](./images/fetch/domain-first-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/fetch/domain-first-chrome)
+![크롬쿠키](./images/fetch/domain-first-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/fetch/domain-first-server)
+![서버로 들어온 쿠키](./images/fetch/domain-first-server.png)
 
 - axois
 
 [header Set-Cookie]
 
-![헤더요청](./images/axios/domain-first-header)
+![헤더요청](./images/axios/domain-first-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/axios/domain-first-chrome)
+![크롬쿠키](./images/axios/domain-first-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/axios/domain-first-server)
+![서버로 들어온 쿠키](./images/axios/domain-first-server.png)
 
 #### 서브 도메인 (sub.merlin.com:20001)
 
@@ -263,29 +263,29 @@ function getTimestamp() {
 
 [header Set-Cookie]
 
-![헤더요청](./images/fetch/domain-second-header)
+![헤더요청](./images/fetch/domain-second-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/fetch/domain-second-chrome)
+![크롬쿠키](./images/fetch/domain-second-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/fetch/domain-second-server)
+![서버로 들어온 쿠키](./images/fetch/domain-second-server.png)
 
 - axois
 
 [header Set-Cookie]
 
-![헤더요청](./images/axios/domain-second-header)
+![헤더요청](./images/axios/domain-second-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/axios/domain-second-chrome)
+![크롬쿠키](./images/axios/domain-second-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/axios/domain-second-server)
+![서버로 들어온 쿠키](./images/axios/domain-second-server.png)
 
 #### 3자 도메인 (third.com:20001)
 
@@ -293,29 +293,29 @@ function getTimestamp() {
 
 [header Set-Cookie]
 
-![헤더요청](./images/fetch/domain-third-header)
+![헤더요청](./images/fetch/domain-third-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/fetch/domain-third-chrome)
+![크롬쿠키](./images/fetch/domain-third-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/fetch/domain-third-server)
+![서버로 들어온 쿠키](./images/fetch/domain-third-server.png)
 
 - axois
 
 [header Set-Cookie]
 
-![헤더요청](./images/axios/domain-third-header)
+![헤더요청](./images/axios/domain-third-header.png)
 
 [chrome dev tools]
 
-![크롬쿠키](./images/axios/domain-third-chrome)
+![크롬쿠키](./images/axios/domain-third-chrome.png)
 
 [서버로 들어온 쿠키]
 
-![서버로 들어온 쿠키](./images/axios/domain-third-server)
+![서버로 들어온 쿠키](./images/axios/domain-third-server.png)
 
 ## 정리
 
