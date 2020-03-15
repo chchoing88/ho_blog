@@ -122,22 +122,17 @@ function getTimestamp() {
 
 2. 버튼을 눌렀을때 `merlin.com:10001`로 post method 호출을 보냅니다. ( axois, fetch )
 
-3. `merlin.com:10001` 에는 응답으로 쿠키를 보내봅니다.
-  3-1. 쿠키에 도메인 설정 함.
-  3-2. 쿠키에 도메인 설정을 안함.
+3. `merlin.com:10001` 에는 응답으로 쿠키를 보내봅니다. ( 쿠키에 도메인 설정 함 vs 쿠키에 도메인 설정을 안함 )
+  
 4. 크롬에서 쿠키가 잘 쌓이는지 확인합니다.  
 
 5. 한번 더 요청 시 저장된 쿠키가 서버로 잘 날라가는지도 확인합니다.
 
 6. 도메인 및 환경이 달라질 때마다 쿠키는 삭제해 줍니다.
 
-## 실험
+## 실험 (쿠키에 도메인 설정 안함)
 
-### 쿠키에 도메인 설정 안함
-
-#### 1차 도메인 (merlin.com:20001)
-
-- fetch
+### 1차 도메인 fetch 방법(merlin.com:20001)
 
 [header Set-Cookie]
 
@@ -151,7 +146,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/fetch/no-domain-first-server.png)
 
-- axois
+### 1차 도메인 axois 방법(merlin.com:20001)
 
 [header Set-Cookie]
 
@@ -165,9 +160,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/axios/no-domain-first-server.png)
 
-#### 서브 도메인 (sub.merlin.com:20001)
-
-- fetch
+### 서브 도메인 fetch 방법 (sub.merlin.com:20001)
 
 [header Set-Cookie]
 
@@ -181,7 +174,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/fetch/no-domain-second-server.png)
 
-- axois
+### 서브 도메인 axios 방법 (sub.merlin.com:20001)
 
 [header Set-Cookie]
 
@@ -195,9 +188,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/axios/no-domain-second-server.png)
 
-#### 3자 도메인 (third.com:20001)
-
-- fetch
+### 3자 도메인 fetch 방법(third.com:20001)
 
 [header Set-Cookie]
 
@@ -211,7 +202,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/fetch/no-domain-third-server.png)
 
-- axois
+### 3자 도메인 axios 방법(third.com:20001)
 
 [header Set-Cookie]
 
@@ -225,11 +216,9 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/axios/no-domain-third-server.png)
 
-### 쿠키에 도메인 설정 함 (domain: 'merlin.ho')
+## 실험 쿠키에 도메인 설정 함 (domain: 'merlin.ho')
 
-#### 1차 도메인 (merlin.com:20001)
-
-- fetch
+### 1차 도메인 fetch 방법(merlin.com:20001)
 
 [header Set-Cookie]
 
@@ -243,7 +232,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/fetch/domain-first-server.png)
 
-- axois
+### 1차 도메인 axios 방법(merlin.com:20001)
 
 [header Set-Cookie]
 
@@ -257,9 +246,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/axios/domain-first-server.png)
 
-#### 서브 도메인 (sub.merlin.com:20001)
-
-- fetch
+### 서브 도메인 fetch 방법(sub.merlin.com:20001)
 
 [header Set-Cookie]
 
@@ -273,7 +260,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/fetch/domain-second-server.png)
 
-- axois
+### 서브 도메인 axios 방법(sub.merlin.com:20001)
 
 [header Set-Cookie]
 
@@ -287,9 +274,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/axios/domain-second-server.png)
 
-#### 3자 도메인 (third.com:20001)
-
-- fetch
+### 3자 도메인 fetch 방법(third.com:20001)
 
 [header Set-Cookie]
 
@@ -303,7 +288,7 @@ function getTimestamp() {
 
 ![서버로 들어온 쿠키](./images/fetch/domain-third-server.png)
 
-- axois
+### 3자 도메인 axios 방법(third.com:20001)
 
 [header Set-Cookie]
 
