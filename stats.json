@@ -33,8 +33,8 @@
       "path---javascript-basic-1-9a67a2cd34c9412b299b.js.map"
     ],
     "path---web-cookie": [
-      "path---web-cookie-79f17982497b94696a37.js",
-      "path---web-cookie-79f17982497b94696a37.js.map"
+      "path---web-cookie-3a6e10bbaab4cf10e1a3.js",
+      "path---web-cookie-3a6e10bbaab4cf10e1a3.js.map"
     ],
     "path---hello-docker": [
       "path---hello-docker-05e42a31d1677fb4a2e0.js",
@@ -173,8 +173,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-09170932e5ada82f9d2e.js",
-      "path---index-09170932e5ada82f9d2e.js.map"
+      "path---index-4a91414c48c33a7306fe.js",
+      "path---index-4a91414c48c33a7306fe.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -234,14 +234,18 @@
       "path---hello-enzyme-20c1ec114c4f8773af3a.js",
       "path---hello-enzyme-20c1ec114c4f8773af3a.js.map"
     ],
+    "path---hello-o-auth": [
+      "path---hello-o-auth-1ded8c89a6d0d6d8d0ee.js",
+      "path---hello-o-auth-1ded8c89a6d0d6d8d0ee.js.map"
+    ],
     "path---refactoring-complex-refactoring": [
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js",
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-b7ec1a8d10d176c9911e.js",
+      "app-ddd634427f13eba60b54.js",
       "build-js-styles.css",
-      "app-b7ec1a8d10d176c9911e.js.map",
+      "app-ddd634427f13eba60b54.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
