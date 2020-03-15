@@ -17,7 +17,7 @@ creact react app 로 typescript로 만들어진 템플릿을 설치해줍니다.
 
 이때 사용할 수 있는 타입은 다음과 같습니다.
 
-```ts
+```typescript
 type CustomComponentProps = {
 
 }
@@ -39,7 +39,7 @@ React.FC 타입을 사용하게 되면 장 단점이 있습니다.
 
 하여 함수형 컴포넌트를 만들 때는 다음과 같이 만듭니다.
 
-```ts
+```typescript
 type CustomComponentProps = {
 
 }
@@ -77,7 +77,7 @@ type alias 를 사용했을 시에 예시는 다음과 같습니다.
 
     - 다음과 같이 하면 CustomComponent 를 사용할 시 name props은 optional props로 나타나게 되어 더 명시적으로 디폴트 값이 있다는 것을 알려줄 수 있습니다.
 
-    ```ts
+    ```typescript
     type CustomComponentProps = {
       age: number
     } & typeof defaultProps
@@ -91,7 +91,7 @@ type alias 를 사용했을 시에 예시는 다음과 같습니다.
 
     - rebass 의 컴포넌트 Props는 interface로 되어 있지만 type의 intersection 으로 컴포넌트의 props를 extends 할 수 있습니다.
 
-    ```ts
+    ```typescript
     import React from "react";
     import { Box, BoxProps } from "rebass";
     import { iconCollection } from "./Icon.styled";
@@ -113,7 +113,7 @@ type alias 를 사용했을 시에 예시는 다음과 같습니다.
 
 - keyof
 
-```ts
+```typescript
 interface CustomObject {
   name: 'merlin'
   address: 'address'
@@ -128,7 +128,7 @@ type CustomObjectValueType = CustomObject[keyof CustomObject]
 
 - Exclude
 
-```ts
+```typescript
 
 type CustomObjectValueType = 'merlin' | 'address' | 'age' | 'info'
 
@@ -139,7 +139,7 @@ type FilterCustomObjectValueType = Exclude<CustomObjectValueType, 'info' | 'age'
 
 - Pick
 
-```ts
+```typescript
 interface CustomObject {
   name: 'merlin'
   address: 'address'

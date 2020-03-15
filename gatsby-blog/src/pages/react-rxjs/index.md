@@ -189,7 +189,7 @@ ex) 여러 API 호출의 응답이 다 모였을 때 view 반영 및 에러처�
 
 ### 예시 코드
 
-```ts
+```typescript
 // useTab.ts
 
 import { useState, useCallback, useMemo } from "react";
@@ -225,7 +225,7 @@ function useTab<T>(tabDataList: ITabItem<T>[]) {
 export default useTab;
 ```
 
-```ts
+```typescript
 // useApiObservable.ts
 
 import { useState, useEffect, useRef } from "react";
@@ -270,7 +270,7 @@ function useApiObservable<T>(
 export default useApiObservable;
 ```
 
-```ts
+```typescript
 // 사용
  const { tabList, onHandleTabClick, currentTabData } = useTab(
     TAB_OCCUPANCY_LIST

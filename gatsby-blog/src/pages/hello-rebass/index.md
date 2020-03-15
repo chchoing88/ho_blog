@@ -45,7 +45,7 @@ rebass는 system-styled 장점을 더욱 간단히 이용 하는 것이라, 아�
 
   컴포넌트 개발시에 기본적으로 제공하는 (Box, Text, Image.. 등등의 컴포넌트를 미리 제공해 줍니다.)
 
-  ```ts
+  ```typescript
     import {Box, Text, Image} from 'rebass'
   ```
 
@@ -53,7 +53,7 @@ rebass는 system-styled 장점을 더욱 간단히 이용 하는 것이라, 아�
 
   다음 유지보수시 서로 다른 개발자가 작성한 컴포넌트가 아래의 예시와 같다고 했을 때
   
-  ```ts
+  ```typescript
     <CustomButton1 type="thin"/>
     <CustomButton2 thin/>
   ```
@@ -62,7 +62,7 @@ rebass는 system-styled 장점을 더욱 간단히 이용 하는 것이라, 아�
   
   반면 rebass를 사용한다면 새롭게 props 를 만들 필요가 없을 뿐더러 다른 개발자가 보아도 쉽게 이해 할 수 있습니다. 
   
-  ```ts
+  ```typescript
     <CustomButton1 p={2} /> // padding 이 테마의 scale의 2번째 값을 적용한다.
     <CustomButton2 p={3} /> // padding 이 테마의 scale의 3번째 값을 적용한다.
   ```
@@ -75,7 +75,7 @@ rebass는 system-styled 장점을 더욱 간단히 이용 하는 것이라, 아�
 
   css-in-js에서 사용하도록 하는 `styled()` 로 확장하는 컴포넌트는 기존 컴포넌트의 API가 복잡할수록 예측 가능하도록 확장하기가 어렵습니다. 반면 rebass로 확장을 하는 경우에는 예측 가능하도록 설계가 되어 있습니다.
 
-  ```ts
+  ```typescript
     import {Button} from 'rebass'
     
     function CustomButton() {
@@ -105,7 +105,7 @@ rebass와 typecript를 함께 썼을때 이슈로는 다음과 같습니다.
 
 rebass는 css-in-js를 @emotion 기반으로 사용하고 styled-system을 사용하는 것으로 github에서 보았습니다.
 
-```ts
+```typescript
   import styled from '@emotion/styled'
   
   export const Box = styled('div', {
@@ -149,7 +149,7 @@ rebass는 css-in-js를 @emotion 기반으로 사용하고 styled-system을 사�
 
 @emotion/core 에서 사용하는 css type 은
 
-```ts
+```typescript
   declare global {
     namespace JSX {
       /**
@@ -166,7 +166,7 @@ rebass는 css-in-js를 @emotion 기반으로 사용하고 styled-system을 사�
 
 rebass 의 css type을 살펴보면
 
-```ts
+```typescript
   import * as StyledComponents from 'styled-components';
   
   export interface BaseProps extends React.RefAttributes<any> {

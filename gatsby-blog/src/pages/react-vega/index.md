@@ -40,7 +40,7 @@ example code : [https://github.com/vega/react-vega/tree/master/packages/react-ve
 
 ### 예시 ( 트리 차트 )
 
-```ts
+```typescript
 import { createClassFromSpec } from "react-vega";
 
 export default createClassFromSpec({
@@ -226,7 +226,7 @@ export default createClassFromSpec({
 });
 ```
 
-```ts
+```typescript
 // 사용법
 <TagTreeChart
   data={tagChartData}
