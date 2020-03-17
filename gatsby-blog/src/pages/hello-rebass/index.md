@@ -99,6 +99,12 @@ ex) borderRadius 의 경우 smallRadius, mediumRadius, largeRadius
 이렇게 theme.js 에 디자인 명세를 작성하면 페이지에 들어가는 컴포넌트들은 될 수 있으면 이 명세에 따르도록 만듭니다.
 피치 못할 경우에는 각 컴포넌트에서 필요한 스타일을 추가 및 오버라이딩 해서 적용합니다.
 
+1. 디자인 가이드로 준 수치는 모두 theme.js 로 설정해 둔다. 
+2. theme에 있는 수치들은 sx props로 셋팅한다. 
+3. 보통은 atoms 단위에 있는 컴포넌트는 sx로 셋팅한다. ( 다른 컴포넌트에서 확장시 css props로 확장 )
+4. moleculos 이상부터는 공간부분을 대부분 theme에서 가져다 쓴다. 
+5. 나머지는 css로 사용하되 json 또는 styled-component의 css helper를 이용하면 간단하게 이용할 수 있을 듯 싶다.
+
 ## rebass + typescript
 
 rebass와 typecript를 함께 썼을때 이슈로는 다음과 같습니다.
