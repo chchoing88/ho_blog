@@ -209,7 +209,7 @@ const useTodo = () => {
 import React, { useState, createContext } from 'react'
 import useTodo from 'useTodo'
 
-const TodoContext = createContext() 
+const TodoContext = createContext()
 
 const TodoProvider = ({}) => {
   const todoStore = useTodo()
@@ -221,67 +221,6 @@ const TodoProvider = ({}) => {
 export { TodoProvider }
 
 export default TodoContext
-```
-
-### Pages에 여러개의 Provider가 필요할 경우 (필요시)
-
-- 여러 `Provider 컴포넌트` 를 겹쳐 사용하면 최상위 `Provider 컴포넌트`의 변경으로 인해 하위 `Provider 컴포넌트` 들이 호출되게 됩니다.
-
-```javascript
-const xxxPage = () => {
-
-
-  return (
-    <Provider1>
-      <HeaderProvider2>
-        <FooterProvider3>
-          <xxxTemplate header={<Header/>} contents={<Contents />} footer={<Footer />} /> 
-        </FooterProvider3>
-      </HeaderProvider2>
-    </Provider1>
-  )
-}
-```
-
-- 위와 같은 구조가 싫다면, 아래와 같이 `pages` 전용 하나의 `Provider`를 만들어 볼 생각을 할 수 있습니다.
-
-
-```javascript
-
-const xxxPageProvider = ({Header, Footer, children}) => {
-
-  const HeaderContainer = () => (
-    <HeaderProvider>
-      <Header />
-    </HeaderProvider>
-  )
-
-  const FooterContainer = () => (
-    <FooterProvider>
-      <Header />
-    </FooterProvider>
-  )
-
-
-  return (
-    <xxxContext.Provider value={value}>
-      {children(HeaderContainer, FooterContainer)}
-    </xxxContext.Provider>
-  )
-}
-```
-
-```javascript
-  const xxxPage = () => {
-
-  return (
-    <xxxPageProvider Header={Header} Footer={Footer}>
-      (Header, Footer) => (
-        <xxxTemplate header={<Header/>} contents={<Contents />} Footer={<Footer />}/> 
-      )
-    </xxxPageProvider>
-  )
-}
 ```
 
 ### organisms 컴포넌트 범위에서 provider를 하면서 organisms 내에서 useContext를 사용하지 않고 재사용할 수 있도록 props로 받는 컴포넌트를 만들고 싶다면? (필요시)
