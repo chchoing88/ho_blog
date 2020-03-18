@@ -31,6 +31,10 @@ Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유
 
 > `Context.Provider` 의 value 가 바뀌면 `useContext` 로 구독하고 있는 컴포넌트는 한번씩 호출을 하게 된다. (Reconciliation - component가 호출되서 리턴된 Element가 이전 Element와 같은지 비교) ( 호출 자체가 비용이 많지는 않지만 Virtual Dom인 React Element를 새롭게 만들어내는 불필요한 작업을 하게 될 수도 있습니다. 사실 중요한건 React Element가 이전과 바뀌지 않게 유지하는 것입니다. )
 
+> 잘못 알고 있었던 사실 : `Context.Provider`의 `value` 값이 바뀌면 그 밑에 `children` 컴포넌트들이 전부 호출이 되는 줄 알았으나 사실은 해당 `Context` 를 구독하고 있는 컴포넌트를 상위로 하위 자식 컴포넌트들만 호출이 된다.
+
+
+
 ## 언제 Hooks 와 Context를 쓸까?
 
 - 기본적으로 상태가 필요한 기능은 `Hooks` 를 사용합니다.
@@ -142,6 +146,7 @@ const TabWrapper = () => {
   - 일반 객체롤 상태관리를 할 경우 Provider 컴포넌트가 호출될 때마다 이전 객체를 유지하지 못합니다. 매 새로운 객체가 만들어지게 됩니다.
   - 일반 객체를 상태관리를 했을 경우 상태가 변경되었을때 React의 재 렌더링을 진행하라는 신호를 주지 못하게 됩니다. 
 - `Provider 컴포넌트` 의 `state`의 변경을 위한 메서드 공유가 필요한 경우 에는 별도의 객체를 만들어 `useMemo`로 매 호출마다 객체가 바뀌지 않게 막아줍니다. (적절한 디펜던시를 걸어주어서 디펜던시가 바뀌었을 때만 변경이 되도록 합니다.)
+- **상태와 액션을 가지고 있는 Context 가 있다고 하고 액션만 필요한 컴포넌트만 있다고 했을때, 상태 변경시 불필요하게 액션만 필요한 컴포넌트도 렌더링이 될 수 있으니 이때는 상태 Context와 액션 Context로 분리해서 사용하자.**
 
 ### 기본 포멧 예시
 
@@ -327,3 +332,4 @@ export default memo(TodoItem, (prevProps, nextProps) => prevProps.todoList === )
 ## 참고
 
 - [React Hooks와 Context를 이용한 설계 패턴](https://www.huskyhoochu.com/react-pattern-hooks-and-contexts/)
+- [TypeScript 환경에서 리액트 Context API 제대로 활용하기](https://velog.io/@velopert/typescript-context-api#context-%EC%A4%80%EB%B9%84%ED%95%98%EA%B8%B0)
