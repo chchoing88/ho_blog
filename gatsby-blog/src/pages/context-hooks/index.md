@@ -3,15 +3,12 @@ title: React Context 와 Hooks 설계
 date: "2019-12-11T10:00:03.284Z"
 ---
 
-# Atomic 구조와 함께 React Context 와 Hooks를 어떻게 설계 할 것인가?
-
 React 16 버젼으로 올라오면서 Context 와 Hooks를 이용해서 store를 대체 할 수 있다는데 Atomic 구조와 어떻게 쓰면 성능을 신경쓰면서 사용 할 수 있을지에 대한 고민 글입니다.
 React Context 와 Hooks를 사용하면 zero configuration 의 장점이 있습니다.
 
 컴포넌트는 함수형 컴포넌트로 만듭니다.
 
 Atomic 구조 : `atoms > molecules > organisms > template + pages`
-
 
 ## Hooks 와 Context의 역할
 
@@ -248,19 +245,6 @@ const xxxPage = () => {
 
 - 위와 같은 구조가 싫다면, 아래와 같이 `pages` 전용 하나의 `Provider`를 만들어 볼 생각을 할 수 있습니다.
 
-```javascript
-  const xxxPage = () => {
-
-  return (
-    <xxxPageProvider Header={Header} Footer={Footer}>
-      (Header, Footer) => (
-        <xxxTemplate header={<Header/>} contents={<Contents />} Footer={<Footer />}/> 
-      )
-    </xxxPageProvider>
-  )
-}
-```
-
 
 ```javascript
 
@@ -287,15 +271,30 @@ const xxxPageProvider = ({Header, Footer, children}) => {
 }
 ```
 
-### pages에서 provider를 하지 않고 organisms 컴포넌트 범위에서 provider를 하면서 useContext를 사용하지 않고 재사용할 수 있도록 props로 받는 컴포넌트를 만들고 싶다면? (필요시)
+```javascript
+  const xxxPage = () => {
+
+  return (
+    <xxxPageProvider Header={Header} Footer={Footer}>
+      (Header, Footer) => (
+        <xxxTemplate header={<Header/>} contents={<Contents />} Footer={<Footer />}/> 
+      )
+    </xxxPageProvider>
+  )
+}
+```
+
+### organisms 컴포넌트 범위에서 provider를 하면서 organisms 내에서 useContext를 사용하지 않고 재사용할 수 있도록 props로 받는 컴포넌트를 만들고 싶다면? (필요시)
 
 ```javascript
 // util.js
+// Context value 값을 어떻게 매핑할지 정의하는 함수와 적용할 컴포넌트를 인자로 받아 새로운 컴포넌트를 만들어 주는 HOC
 
 export const createWithProvider = (
   Context,
   Provider
 ) => mapContextToProps => WrappedComponent => {
+
   const UseContextComponent = props => {
     const contextValue = mapContextToProps(useContext(Context))
     return <WrappedComponent {...contextValue} {...props}></WrappedComponent>
@@ -312,6 +311,7 @@ export const createWithProvider = (
   const displayName =
     WrappedComponent.displayName || WrappedComponent.name || 'component'
   withProvier.displayName = displayName
+
   return withProvier
 }
 ```
@@ -322,14 +322,14 @@ export const createWithProvider = (
 import React, { useState, createContext } from 'react'
 import useTodo from 'useTodo'
 
-const TodoContext = createContext() 
+const TodoContext = createContext()
 
 const TodoProvider = ({}) => {
   const todoStore = useTodo()
 
   return <TodoContext.Provider value={todoStore}>{children}</TodoContext.Provider>
 }
-// Context value 값을 어떻게 매핑할지 정의하는 함수와 받을 컴포넌트를 인자로 받아 새로운 컴포넌트를 만들어 주는 HOC
+// Context value 값을 어떻게 매핑할지 정의하는 함수와 적용할 컴포넌트를 인자로 받아 새로운 컴포넌트를 만들어 주는 HOC
 const withTodoProvider = createWithProvider(TodoContext, TodoProvider)
 
 export { TodoProvider, withTodoProvider }
