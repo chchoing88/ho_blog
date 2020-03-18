@@ -29,7 +29,7 @@ Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유
 - `pages` 단위 에서 `Context.Provider`로 공유가 필요한 값을 주입 합니다. 이때, 자주 변경이 이러나는 `Provider` 를 제일 안쪽에 위치시키도록 합니다.
 - `organisms` 단위에서는 `useContext`로 해당 `Context` 값을 참조해 오도록 합니다. 
 
-> `Context.Provider` 는 합성 패턴을 사용하기에 여러 `Context.Provider` 를 겹쳐 사용하면 최상위 `Context.Provider`의 변경으로 인해 하위 `Context.Provider`를 포함한 `children` 컴포넌트들이 호출(Reconciliation - component가 호출되서 리턴된 Element가 이전 Element와 같은지 비교) 될 수 있으므로 주의 해야 합니다. ( 호출 자체가 비용이 많지는 않지만 Virtual Dom인 React Element를 새롭게 만들어내는 불필요한 작업을 하게 될 수도 있습니다. 사실 중요한건 React Element가 이전과 바뀌지 않게 유지하는 것입니다. )
+> `Context.Provider` 의 value 가 바뀌면 `useContext` 로 구독하고 있는 컴포넌트는 한번씩 호출을 하게 된다. (Reconciliation - component가 호출되서 리턴된 Element가 이전 Element와 같은지 비교) ( 호출 자체가 비용이 많지는 않지만 Virtual Dom인 React Element를 새롭게 만들어내는 불필요한 작업을 하게 될 수도 있습니다. 사실 중요한건 React Element가 이전과 바뀌지 않게 유지하는 것입니다. )
 
 ## 언제 Hooks 와 Context를 쓸까?
 
@@ -143,7 +143,7 @@ const TabWrapper = () => {
   - 일반 객체를 상태관리를 했을 경우 상태가 변경되었을때 React의 재 렌더링을 진행하라는 신호를 주지 못하게 됩니다. 
 - `Provider 컴포넌트` 의 `state`의 변경을 위한 메서드 공유가 필요한 경우 에는 별도의 객체를 만들어 `useMemo`로 매 호출마다 객체가 바뀌지 않게 막아줍니다. (적절한 디펜던시를 걸어주어서 디펜던시가 바뀌었을 때만 변경이 되도록 합니다.)
 
-### 기본 포멧 예시 
+### 기본 포멧 예시
 
 - TodoList 에서 'done', 'doing', 'todo' 의 리스트 갯수를 Header 에서 보여주어야 한다면 TodoList 정보를 `Context`로 관리 `Pages` 단위의 범주로 설정해야 합니다.
 
@@ -152,10 +152,12 @@ const TabWrapper = () => {
 // TodoContext.js
 import React, { useState, createContext } from 'react'
 
-const TodoContext = createContext() 
+const TodoContext = createContext()
 
 const TodoProvider = ({}) => {
+  // 상태
   const [todoList, setTodoList] = useState([])
+  // 액션
   const addTodo = () => {}
   const removeTodo = () => {}
 
@@ -296,7 +298,6 @@ export default withTodoProvider(({ todoList, actions }) => ({
 - 함수형 컴포넌트의 `props` 변경이 없다면 컴포넌트의 호출을 막아 불필요한 리 렌더링(실제 DOM에 그려지는 것이 아닌 컴포넌트 호출로 새로운 React Element 생성) 되는 것을 방지하여 렌더링 성능을 최적화 시킬 수 있습니다.
 - `Atomic` 컴포넌트 단위에선 `molecules` 컴포넌트 단위에서 `React.memo`를 사용할 수 있도록 합니다. 또는 성능을 실제로 개선할 수 있는 상황에서 사용합니다.
 
-
 ```javascript
 import React, {memo} from 'react'
 
@@ -322,7 +323,6 @@ const TodoItem = ({todoList, onClick}) => {
 
 export default memo(TodoItem, (prevProps, nextProps) => prevProps.todoList === )
 ```
-
 
 ## 참고
 
