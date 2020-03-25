@@ -63,6 +63,8 @@ A 라는 사용자가 example.com에 로그인 된 채로 (유효한 session id�
 
 ## 관련 코드
 
+### Login API
+
 ```typescript
 // login API
 
@@ -90,6 +92,8 @@ export const AuthAPi: IAuthApi = {
   }
 };
 ```
+
+### AuthContext
 
 ```typescript
 // AuthContext.tsx
@@ -184,6 +188,8 @@ export function useAuthDispatch() {
 }
 ```
 
+### Login
+
 ```typescript
 // Login.tsx
 
@@ -211,6 +217,8 @@ if (resultLoginStatus.isLoginSuccess) {
 }
 
 ```
+
+### PrivateRoute
 
 ```typescript
 // PrivateRoute.tsx
@@ -252,6 +260,8 @@ function PrivateRoute({
 export default PrivateRoute;
 
 ```
+
+### AuthLink
 
 ```typescript
 // AuthLink.tsx
@@ -299,6 +309,8 @@ function AuthLink({
 export default withRouter(AuthLink);
 
 ```
+
+### Logout
 
 ```typescript
 // logout 일부
