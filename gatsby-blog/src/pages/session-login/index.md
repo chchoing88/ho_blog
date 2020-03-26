@@ -193,28 +193,54 @@ export function useAuthDispatch() {
 ```typescript
 // Login.tsx
 
-const [loginState, subject$] = useApiObservable(AuthAPi.login, false);
-const authDispatch = useAuthDispatch();
+function Login({ location }: LoginProps) {
+  const [loginState, subject$] = useApiObservable(AuthAPi.login, false);
+  const authDispatch = useAuthDispatch();
 
-const onSubmit = (e: React.FormEvent) => {
-  if (e.currentTarget !== null) {
-    subject$.next(e.currentTarget as HTMLFormElement);
-  }
-};
-
-const resultLoginStatus = loginStatus(loginState);
-if (resultLoginStatus.isLoginSuccess) {
-  authDispatch({
-    type: "LOGIN",
-    username: resultLoginStatus.username
-  });
-  // 리다이렉트
-  const { from } = (location.state as { from: { pathname: string } }) || {
-    from: { pathname: "/" }
+  const onSubmit = (e: React.FormEvent) => {
+    if (e.currentTarget !== null) {
+      subject$.next(e.currentTarget as HTMLFormElement);
+    }
   };
-  return <Redirect to={from} />;
-  // return <Redirect to={{ ...from, state: { isAuth: true } }} />;
+
+  const resultLoginStatus = loginStatus(loginState);
+  if (resultLoginStatus.isLoginSuccess) {
+    authDispatch({
+      type: "LOGIN",
+      username: resultLoginStatus.username
+    });
+    // 리다이렉트
+    const { from } = (location.state as { from: { pathname: string } }) || {
+      from: { pathname: "/" }
+    };
+    return <Redirect to={from} />;
+    // return <Redirect to={{ ...from, state: { isAuth: true } }} />;
+  }
+
+  return (
+    <Flex
+      sx={{
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%"
+      }}
+    >
+      <Box sx={{ position: "relative", width: "400px" }}>
+        <Heading variant="loginLogo" sx={{ mb: 2 }}>
+          User Finding Operation
+        </Heading>
+        <LoginForm
+          onSubmit={onSubmit}
+          errorMessage={resultLoginStatus.errorMessage}
+        ></LoginForm>
+        <LoginInfo></LoginInfo>
+      </Box>
+    </Flex>
+  );
 }
+
+export default Login;
 
 ```
 
