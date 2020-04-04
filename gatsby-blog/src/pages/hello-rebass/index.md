@@ -3,13 +3,13 @@ title: Hello rebass
 date: "2020-03-09T10:00:03.284Z"
 ---
 
-이번 프로젝트에 rebass 라는 React primitive ui component build with styled system 이라는 라이브러리를 사용해보고 정보와 사용 느낀점을 남깁니다.
+이번 프로젝트에 rebass 라는 `React primitive ui component build with styled system` 이라는 라이브러리를 사용해보고 정보와 사용 느낀점을 남깁니다.
 
 ## rebass 란
 
-React에서 사용할 수 있는 UI 원시 컴포넌트들을 지원하는 라이브러리로써 기존의 css-in-js 라이브러리에 styled-system을 이용해서 만들어져 있습니다.
+React에서 사용할 수 있는 UI 원시 컴포넌트들을 지원하는 라이브러리로써 기존의 `css-in-js` 라이브러리에 `styled-system`을 이용해서 만들어져 있습니다.
 
-즉, css-in-js에 이런 styled-system을 믹싱해서 원시 컴포넌트를 미리 만들어 둔 것이 rebass 입니다.
+즉, css-in-js에 이런 `styled-system`을 믹싱해서 원시 컴포넌트를 미리 만들어 둔 것이 `rebass` 입니다.
 
 css-in-js : styled-component , @emotion
 
@@ -28,7 +28,7 @@ css-in-js : styled-component , @emotion
 
 ## styled-system 이란
 
-Styled System은 constraint-based design system principles에 영향을 받아 비주얼 디자인의 특정 영역 내에서 디자인 제약 스케일을 관리하기 위한 솔루션 입니다.
+`Styled System`은 `constraint-based design system principles`에 영향을 받아 비주얼 디자인의 특정 영역 내에서 디자인 제약 스케일을 관리하기 위한 솔루션 입니다.
 
 > "디자인 시스템은 기본적으로 디자인과 코드로 구현 된 규칙, 제약 조건 및 원칙의 모음입니다." -Sylvee L.-
 > '디자인 시스템'이란, 서비스를 만드는데 사용한 공통 컬러, 서체, 인터랙션, 각종 정책 및 규정에 관한 모든 컴포넌트를 정리해놓은 것을 뜻합니다. -배재민 디자이너-
@@ -39,7 +39,7 @@ Styled System은 constraint-based design system principles에 영향을 받아 �
 
 ## rebass 장점
 
-rebass는 system-styled 장점을 더욱 간단히 이용 하는 것이라, 아래 장점들은 styled-system의 장점이 되기도 합니다.
+`rebass`는 `system-styled` 장점을 더욱 간단히 이용 하는 것이라, 아래 장점들은 `styled-system`의 장점이 되기도 합니다.
 
 1. 가장 작고 견고한 Component 들을 제공합니다.
 
@@ -58,9 +58,9 @@ rebass는 system-styled 장점을 더욱 간단히 이용 하는 것이라, 아�
     <CustomButton2 thin/>
   ```
 
-  다양한 API 형식을 지니는 컴포넌트를 제작할 수 있으며 이는 곧 또다른 유지보수시 큰 시간을 들이게 됩니다. 
+  다양한 API 형식을 지니는 컴포넌트를 제작할 수 있으며 이는 곧 또다른 유지보수시 큰 시간을 들이게 됩니다.
   
-  반면 rebass를 사용한다면 새롭게 props 를 만들 필요가 없을 뿐더러 다른 개발자가 보아도 쉽게 이해 할 수 있습니다. 
+  반면 rebass를 사용한다면 새롭게 props 를 만들 필요가 없을 뿐더러 다른 개발자가 보아도 쉽게 이해 할 수 있습니다.
   
   ```typescript
     <CustomButton1 p={2} /> // padding 이 테마의 scale의 2번째 값을 적용한다.
@@ -99,17 +99,17 @@ ex) borderRadius 의 경우 smallRadius, mediumRadius, largeRadius
 이렇게 theme.js 에 디자인 명세를 작성하면 페이지에 들어가는 컴포넌트들은 될 수 있으면 이 명세에 따르도록 만듭니다.
 피치 못할 경우에는 각 컴포넌트에서 필요한 스타일을 추가 및 오버라이딩 해서 적용합니다.
 
-1. 디자인 가이드로 준 수치는 모두 theme.js 로 설정해 둔다. 
-2. theme에 있는 수치들은 sx props로 셋팅한다. 
+1. 디자인 가이드로 준 수치는 모두 theme.js 로 설정해 둔다.
+2. theme에 있는 수치들은 sx props로 셋팅한다.
 3. 보통은 atoms 단위에 있는 컴포넌트는 sx로 셋팅한다. ( 다른 컴포넌트에서 확장시 css props로 확장 )
-4. moleculos 이상부터는 공간부분을 대부분 theme에서 가져다 쓴다. 
+4. moleculos 이상부터는 공간부분을 대부분 theme에서 가져다 쓴다.
 5. 나머지는 css로 사용하되 json 또는 styled-component의 css helper를 이용하면 간단하게 이용할 수 있을 듯 싶다.
 
 ## rebass + typescript
 
 rebass와 typecript를 함께 썼을때 이슈로는 다음과 같습니다.
 
-rebass는 css-in-js를 @emotion 기반으로 사용하고 styled-system을 사용하는 것으로 github에서 보았습니다.
+rebass는 css-in-js를 `@emotion` 기반으로 사용하고 `styled-system`을 사용하는 것으로 github에서 보았습니다.
 
 ```typescript
   import styled from '@emotion/styled'
@@ -151,9 +151,9 @@ rebass는 css-in-js를 @emotion 기반으로 사용하고 styled-system을 사�
   export const Box: React.FunctionComponent<BoxProps>;
 ```
 
-하지만 다른 컴포넌트에서  @emotion/core를 import 할 경우 css에 대한 충돌이 발생 합니다.
+하지만 다른 컴포넌트에서 `@emotion/core`를 import 할 경우 css에 대한 충돌이 발생 합니다.
 
-@emotion/core 에서 사용하는 css type 은
+`@emotion/core` 에서 사용하는 css type 은
 
 ```typescript
   declare global {
@@ -181,13 +181,13 @@ rebass 의 css type을 살펴보면
   }
 ```
 
-여기서 rebass의 css props는 왜 StyledComponents 를 아직도 type으로 지정하는지는 아직 파악이 안됩니다. 
+여기서 rebass의 css props는 왜 StyledComponents 를 아직도 type으로 지정하는지는 아직 파악이 안됩니다.
 
 ## rebass 느낀점
 
-디자이너가 있다면 어느정도 디자인에 대한 system을 만들어 두고 시작하면 좀 더 손쉽게 쓸 수 있을거 같습니다. 
-여기서 디자인 system은 간단하게 디자인 가이드 정도 생각하면 될 듯 싶습니다. 
-스타일 어디까지를 테마로 뺴두어야 할지의 경계를 정하지 못한다면 theme.js가 자칫 의미가 없어질 수 있습니다. 
+디자이너가 있다면 어느정도 디자인에 대한 `system`을 만들어 두고 시작하면 좀 더 손쉽게 쓸 수 있을거 같습니다.
+여기서 디자인 `system`은 간단하게 디자인 가이드 정도 생각하면 될 듯 싶습니다.
+스타일 어디까지를 테마로 뺴두어야 할지의 경계를 정하지 못한다면 theme.js가 자칫 의미가 없어질 수 있습니다.
 
 장점을 정리해보면 다음과 같습니다.
 
@@ -200,16 +200,46 @@ rebass 의 css type을 살펴보면
 
 css-in-js 들에는 develop 할 경우 css 네이밍을 개발자가 정해놓은 룰에 따라서 네이밍을 붙여주기도 합니다.
 
-특히 @emotion 에서는 [https://emotion.sh/docs/babel-plugin-emotion](https://emotion.sh/docs/babel-plugin-emotion) 를 사용하면 css 네이밍을 붙여줍니다.
+특히 `@emotion` 에서는 [https://emotion.sh/docs/babel-plugin-emotion](https://emotion.sh/docs/babel-plugin-emotion) 를 사용하면 css 네이밍을 붙여줍니다.
 
 이는 개발자 도구에서도 어느 컴포넌트에서 렌더링이 되었는지 한눈에 알아 볼 수 있습니다.
 
-- rebass에서 @emotion/styled 를 사용하고 있어서 위 플러그인을 사용함.
+- `rebass`에서 `@emotion/styled` 를 사용하고 있어서 위 플러그인을 사용함.
 
-하지만 rebass 에서는 다음의 경우에만 css 네이밍을 붙여 줍니다.
+하지만 `rebass` 에서는 다음의 경우에만 css 네이밍을 붙여 줍니다.
 
 1. props로 css 속성이 들어간 컴포넌트 : babel config에 정해진 룰대로 자동으로 css 네이밍을 붙여줍니다.
 2. sx props 안에 label property가 존재하는 경우 : label의 값으로 css 네이밍을 붙여줍니다.
+
+## styled component로 비슷하게 만들어 보기
+
+추가적으로 테마를 사용하지 않을 경우에 styled component 모듈로도 이렇게 primitive UI Component를 만들어 볼 수 있을 것이다.
+
+해서 한번 도전해 보았다.
+쉬운 `Atom`의 `Box Component` 는 다음과 같이 만들 수 있을 꺼 같습니다.
+
+```typescript
+import React from "react";
+import styled, { FlattenSimpleInterpolation } from "styled-components";
+
+type BoxProps = {
+  children?: React.ReactNode;
+  css?: FlattenSimpleInterpolation;
+};
+type BoxStyledProps = {
+  css?: FlattenSimpleInterpolation;
+};
+
+const BoxStyled = styled.div<BoxStyledProps>`
+  ${props => (props.css ? props.css : "")}
+`;
+
+function Box({ children, css }: BoxProps) {
+  return <BoxStyled css={css}>{children}</BoxStyled>;
+}
+
+export default Box;
+```
 
 ## 참고
 

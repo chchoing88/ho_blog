@@ -1,5 +1,5 @@
 ---
-title: algorithm Hashing
+title: algorithm Hashing (ing)
 date: '2020-03-30T10:00:03.284Z'
 ---
 
