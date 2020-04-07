@@ -65,7 +65,7 @@ Action -> State -> Views
 
 - MobX 는 action 이 상태를 변경하고 그에 따른 views 를 업데이트하는 단방향 데이터 흐름을 지원합니다.
 - 모든 파생들은 state 가 변할때 **자동적(automatically)** 그리고 **따로 분리 되지 않는 행동단위(atomically)** 업데이트 됩니다. 결과적으로는 그 변화하는 값에서 중간값들을 관찰할 수는 없습니다.
-- 모든 파생들은 기본적으로 **동기식(synchronously)** 으로 업데이트 됩니다. 이 의미는 actions이 state 가 변화된 후 computed 된 value 를 안전하게 확인할 수 있다는 의미입니다.
+- 모든 파생들은 기본적으로 **동기식(synchronously)** 으로 업데이트 됩니다. 이 의미는 actions 이 state 가 변화시키고 난 후 computed 된 value 를 안전하게 확인할 수 있다는 의미입니다.
 - Computed value 는 update 가 **lazily** 하게 됩니다. 실제로 사용되지 않는 Computed value 는 side effect 위해 필요로 하지 않는 이상 업데이트 되지 않는다. 만약 view 가 더이상 사용하지 않는다면 자동적으로 가비지 컬렉터가 수거해 갑니다.
 - 모든 Computed 된 value 들은 **pure** 해야 합니다. Compute에서는 state 변화를 지원하지 않습니다.
 
