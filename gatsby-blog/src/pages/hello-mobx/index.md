@@ -709,9 +709,10 @@ Tip: `observer`가 다른 데코레이터나 higher-order-compoenets 와 함께 
 
 ### dereference values inside your components
 
-> `dereference` 라는건 주소를 참조하고 있는 변수(reference)를 보고 해당 주소로 찾아가서 값을 보는 것을 말한다. c 언어로 예를 들자면 & 기호가 reference operator 고 \* 기호가 dereference operator 라고 보면 되겠다.
+> `dereference(역참조)` 라는건 주소를 참조하고 있는 변수(reference)를 보고 해당 주소로 찾아가서 값을 보는 것을 말한다. c 언어로 예를 들자면 & 기호가 reference operator 고 \* 기호가 dereference operator 라고 보면 되겠다.
 
 Mobx 는 많은 것을 할 수있지만, 원시타입을 observable 로 만들 수 없다.(비록 boxed obserbables 로 감싸면 observable 로 만들 수 있다.) 그렇기 때문에 값들을 observable 하고 있는게 아니라 객체의 프로퍼티들을 observable 하고 있다는 것이다. 이것이 의미하는건 `@observer`는 사실 역참조한 값에 반응하는것 이다.
+
 좀 더 쉽게 말하면 `const person = {name : 'merlin'}` person 이라는 객체가 있을 때 name 이 observable 이라면 'merlin'이란 값이 바뀌는거에 대해서 포커스를 두는 것이 아니라 `person.name` 의 변화에 포커스를 두고 있다는 사실이다.
 이 때 아마도 person.name 의 `defineProperty` 으로 `get`과 `set` 메서드를 설정해 두어서 그런게 아닐까 싶다.
 그래서 위 예제에서 Timer components 는 다음과같이 초기화 된 경우 반응하지 않는다.
