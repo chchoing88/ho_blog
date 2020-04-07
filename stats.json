@@ -169,8 +169,8 @@
       "path---think-high-order-function-58f7199816abbe8ab707.js.map"
     ],
     "path---hello-mobx": [
-      "path---hello-mobx-60b6bc228aa6a7f9648f.js",
-      "path---hello-mobx-60b6bc228aa6a7f9648f.js.map"
+      "path---hello-mobx-677d5c255f00c5aa0c55.js",
+      "path---hello-mobx-677d5c255f00c5aa0c55.js.map"
     ],
     "path---react-rxjs": [
       "path---react-rxjs-b0ef8fe47f9edf7e3044.js",
@@ -189,8 +189,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-b62462e731d1bd38828b.js",
-      "path---index-b62462e731d1bd38828b.js.map"
+      "path---index-99eda307a4157d60f885.js",
+      "path---index-99eda307a4157d60f885.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -203,6 +203,10 @@
     "path---hello-algorithms-queue": [
       "path---hello-algorithms-queue-64adb1793536d1ddeeb8.js",
       "path---hello-algorithms-queue-64adb1793536d1ddeeb8.js.map"
+    ],
+    "path---why-set-state-async": [
+      "path---why-set-state-async-de06158212c6347a9a36.js",
+      "path---why-set-state-async-de06158212c6347a9a36.js.map"
     ],
     "path---preact-configuration": [
       "path---preact-configuration-7312d027ac4d63ce2e99.js",
@@ -275,9 +279,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-2aa98bab1c5466b7d45d.js",
+      "app-c43b62bb1127dcffc5f8.js",
       "build-js-styles.css",
-      "app-2aa98bab1c5466b7d45d.js.map",
+      "app-c43b62bb1127dcffc5f8.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
