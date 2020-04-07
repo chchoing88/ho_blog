@@ -726,10 +726,10 @@ React.render(<Timer timerData={timerData.secondsPassed} />, document.body)
 
 Mobx는 90% 정도 유저가 기대하는대로 움직이지만 가끔은 기대하는 것 처럼 움직이지 않을 때가 있습니다. 여기서는 Mobx가 react 하는 것을 어떻게 이해하는지 짚어 볼 것입니다.
 
-- MobX 는 observable 프로퍼티에 반응한다. 이 프로퍼티를 추적하는 함수의 실행을 하는동안 읽어짐으로써 반응한다.
+- MobX 는 observable 프로퍼티에 반응한다. 이 프로퍼티를 추적하는 함수 실행 동안 읽혀지는 값 입니다.
 - '_reading_' 이라 함은 object 의 프로퍼티에 접근하는 것이다. 예들 들어 user.name or user['name'] 이러한 경우들이다.
 - '_trackable functions_' 라는건 `computed`의 표현입니다, observer component 의 render 메서드 그리고 `when`, `reaction`, 그리고 `autorun`에 첫번째로 전달되는 함수들입니다.
-- '_during_'의 의미는 함수 실행동안에 읽고있는 오직 observables 들만 추적한다는것을 뜻한다. 이들의 값들은 추적하는 함수에 의해 직접적으로 또는 간접적으로 사용되는지는 중요하지 않습니다.
+- '_during_'의 의미는 함수 실행동안에 읽고 있는 오직 observables 들만 추적한다는것을 뜻한다. 이들의 값들은 추적하는 함수에 의해 직접적으로 또는 간접적으로 사용되는지는 중요하지 않습니다.
 
 MobX 는 이럴때 반응하지 않습니다.
 
