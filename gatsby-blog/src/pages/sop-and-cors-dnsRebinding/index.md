@@ -323,6 +323,7 @@ Same-origin Policy의 기법을 우회할수 있는 방법중 하나로 XMLHttpR
 - [https://www.netsparker.com/whitepaper-same-origin-policy/#SameOriginPolicyinDetail](https://www.netsparker.com/whitepaper-same-origin-policy/#SameOriginPolicyinDetail)
 - [https://blog.gypsyengineer.com/en/security/examples-of-dns-rebinding-attacks.html](https://blog.gypsyengineer.com/en/security/examples-of-dns-rebinding-attacks.html)
 - [https://github.com/mpgn/ByP-SOP](https://github.com/mpgn/ByP-SOP)
+- [https://twitter.com/SpiderSec/status/1219865409895026689/photo/1](https://twitter.com/SpiderSec/status/1219865409895026689/photo/1)
 - [https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/](https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/)
 - [https://opentutorials.org/course/3387/21744](https://opentutorials.org/course/3387/21744)
 - [https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies](https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies)
