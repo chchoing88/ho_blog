@@ -242,10 +242,10 @@ Content-Type: text/plain
 
 - Access-Control-Allow-Methods – 이것들은 브라우저가 보낼 수있는 허용 된 요청 방법입니다.
 - Access-Control-Allow-Headers – 이것은 브라우저가 전송할 수있는 승인 된 추가 HTTP 헤더입니다.
-- Access-Control-Max-Age – 이 HTTP 헤더가 응답에 설정되면 서버는 브라우저가 동일한 종류의 요청에 대해이 OPTIONS 결과를 캐시하기를 원합니다. 이를 통해 브라우저는 각각의 요청 전에 OPTIONS 요청을하지 않고도이 최대 연령 설정 내의 리소스에 비슷한 요청을 할 수 있습니다.
+- Access-Control-Max-Age – 이 HTTP 헤더가 응답에 설정되면 서버는 브라우저가 동일한 종류의 요청에 대해 이 OPTIONS 결과를 캐시하기를 원합니다. 이를 통해 브라우저는 각각의 요청 전에 OPTIONS 요청을하지 않고도이 최대 연령 설정 내의 리소스에 비슷한 요청을 할 수 있습니다.
 
 주의 해야 할점은 *Access-Control-Max-Age* 이 값이 86400초 또는 24시간으로 설정되어있습니다. 하지만 각 브라우저는 이 필드의 최대 값을 정의하고 있기에
-브라우저의 최대 보존 기간을 초과하면 이 값을 무시하고 최대 허용 값을 사용하게 됩니다. 예를 들어 크롬은 최대 10분 입니다. 
+브라우저의 최대 보존 기간을 초과하면 이 값을 무시하고 최대 허용 값을 사용하게 됩니다. 예를 들어 크롬은 최대 10분 입니다.
 
 
 ### Cookies
@@ -295,7 +295,6 @@ invocation.send('…');
 
 동일 출처 정책은 클라이언트 측 웹 보안의 중심에 있지만 광범위하고 매우 다양하며 브라우저에서 브라우저로, 기술 구현간에 중요한 세부 사항이 다릅니다. 이해하는 것이 중요한 개념이지만 더 중요한 것은 차이점과 함정을 똑같이 고려해야한다는 것입니다. 개발자 (실제로 보안 엔지니어)가 자신의 요구에 맞는 Same-Origin Policy를 이해하고 적절하게 구현할 때 실제로는 더 풍부한 웹을 만듭니다.
 
-
 ## DNS Rebinding
 
 Same-origin Policy의 기법을 우회할수 있는 방법중 하나로 XMLHttpRequest를 통해서 localhost 또는 다른 도메인 주소의 요청을 전송할수 없으나 이 방법으로 우회할수 있다. 보통 공격해서 정보를 탈취하는데 쓰일수 있다.
@@ -303,18 +302,18 @@ Same-origin Policy의 기법을 우회할수 있는 방법중 하나로 XMLHttpR
 간단한 설명은 다음과 같다.
 
 - 공격자는 attack.com (ip: 1.1.1.1) 이라는 도메인을 등록해둔다. 그리고 그 사이트요청에 공격자가 컨트롤 가능한 DNS 서버가 응답하게 만든다.
-- 공격자는 DNS 서버의 TTL(TIME TO LIVE) 설정을 짧게 설정한다. 이것은 응답 캐싱을 막기 위해서이다. 
+- 공격자는 DNS 서버의 TTL(TIME TO LIVE) 설정을 짧게 설정한다. 이것은 응답 캐싱을 막기 위해서이다.
 - 마지막으로 attack.com 서버를 시작한다.
 - 이때 일반 사용자는 본인만 접속할수 있는 custom.com (ip 2.2.2.2) 사이트가 있다고 하자.
 - 일반 사용자는 공격자가 만든 웹페이지 (attack.com)에 접속하게 된다. 해당 웹페이지에는 사용자 웹 브라우저에서 돌아가는 자바스크립트를 포함하고 있다.
 - 이 스크립트 코드는 같은 도메인인 attack.com 의 attack.com/secret.html 자원을 추가로 다운로드 하도록 만든다.
 - 이때, 브라우저는 다시 DNS에게 attack.com 도메인에 대한 요청을 보내게 된다. ( 이유는 TTL을 짧게 설정했기 때문에. )
-- 하지만 공격자의 DNS 응답은 새로운 IP를 응답해준다. 내가 탈취하고 싶은 IP가 되겠다. ( custom.com 의 IP ,localhost..등등 )
-- 그 결과로 사용자는 원하지도 않게 attack.com/secret.html 대신에 custom.com/secret.html 의 자원을 로드하게 된다. 
-- 이게 바로 Same-origin Policy가 bypass 당한것이다. 
+- 하지만 공격자의 DNS 응답은 새로운 IP를 응답해준다. 여기서 IP는 내가 탈취하고 싶은 IP가 되겠다. ( custom.com 의 IP ,localhost..등등 )
+- 그 결과로 사용자는 원하지도 않게 attack.com/secret.html 대신에 custom.com/secret.html 의 자원을 로드하게 된다.
+- 로드 된 후에 응답된 데이터를 image.src 같은 곳에 쿼리 스트링으로 넣어서 필요한 데이터를 공격자 서버로 전송시켜 버린다.
+- 이게 바로 Same-origin Policy가 bypass 당한것이다.
 
-
-이러한 문제를 막는 방법으로는 'Host' 헤더가 다른 허용하는 호스트 네임을 지니고 있는지 확인하는 것이다. 
+이러한 문제를 막는 방법으로는 'Host' 헤더가 다른 허용하는 호스트 네임을 지니고 있는지 확인하는 것이다.
 서버는 'Host' 헤더에 예기치 않은 호스트 이름이 포함되어 있다면 서버는 요청을 거부해야한다. 다른말로 말하면 'Host'헤더에 대해 적절한 white-listing ('안전'이 증명된 것만을 허용)가 구현되어야합니다.
 
 
@@ -323,6 +322,7 @@ Same-origin Policy의 기법을 우회할수 있는 방법중 하나로 XMLHttpR
 - [https://savni.tistory.com/entry/DNS-Rebinding%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-Transmission-%EC%B7%A8%EC%95%BD%EC%A0%90-%EB%B6%84%EC%84%9D](https://savni.tistory.com/entry/DNS-Rebinding%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-Transmission-%EC%B7%A8%EC%95%BD%EC%A0%90-%EB%B6%84%EC%84%9D)
 - [https://www.netsparker.com/whitepaper-same-origin-policy/#SameOriginPolicyinDetail](https://www.netsparker.com/whitepaper-same-origin-policy/#SameOriginPolicyinDetail)
 - [https://blog.gypsyengineer.com/en/security/examples-of-dns-rebinding-attacks.html](https://blog.gypsyengineer.com/en/security/examples-of-dns-rebinding-attacks.html)
+- [https://github.com/mpgn/ByP-SOP](https://github.com/mpgn/ByP-SOP)
 - [https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/](https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/)
 - [https://opentutorials.org/course/3387/21744](https://opentutorials.org/course/3387/21744)
 - [https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies](https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies)
