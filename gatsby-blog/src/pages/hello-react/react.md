@@ -192,12 +192,11 @@ Reconciliation 할 때 경우의 수는 다음과 같습니다.
 - Consumer는 context 변화를 구독하는 React 컴포넌트입니다. 함수 컴포넌트안에서 context를 읽기 위해서 쓸 수 있습니다. Context.Consumer의 자식은 함수여야합니다. 이 함수는 context의 현재값을 받고 React 노드를 반환합니다.
 - useContext를 쓰면 컴포넌트 함수 자체는 실행이 된다. 실제로 return 부분이 실행된다면 그게 실제로 re-rendering 되는 것이기 때문에 return 에 있는 부분만 캐싱을 해줘야 한다. useMemo 사용 ( 참고 : [https://www.youtube.com/watch?v=Y7m9RKmD0UQ](https://www.youtube.com/watch?v=Y7m9RKmD0UQ) )
 
-
 ## React Hooks
 
-- 함수형 컴포넌트에서도 상태 관리를 할 수 있는 useState. 렌더링 직후 작업을 설정하는 useEffect 덩의 기능을 제공하여 기존의 함수형 컴포넌트에서 할 수 없었던 다양한 작업을 할 수 있게 해 줍니다.
+- 함수형 컴포넌트에서도 상태 관리를 할 수 있는 useState. 렌더링 직후 작업을 설정하는 useEffect 등의 기능을 제공하여 기존의 함수형 컴포넌트에서 할 수 없었던 다양한 작업을 할 수 있게 해 줍니다.
 - useState는 함수형 컴포넌트에서도 가변적인 상태를 지닐 수 있게 해줍니다.
-- useEffect는 리액트 컴포넌트가 렌더링될 때마다 특정 작업을 수행하도록 설정할 수 있는 Hook이다. 
+- useEffect는 리액트 컴포넌트가 렌더링될 때마다 특정 작업을 수행하도록 설정할 수 있는 Hook이다.
 클래스형 컴포넌트의 componentDidMount와 componentDidUpdate를 합친 형태로 보아도 무방하다.
 - useEffect는 기본적으로 DOM 렌더링되고 난 직후마다 실행되며, 두 번째 파라미터 배열에 무엇을 넣는지에 따라 실행되는 조건이 달라진다.
 - 컴포넌트가 언마운트되기 전이나 업데이트 되기 직전에 어떠한 작업을 수행하고 싶다면 useEffect에서 cleanup 함수를 반환해 주어야 합니다.
@@ -205,12 +204,11 @@ Reconciliation 할 때 경우의 수는 다음과 같습니다.
 - effect는 다음 effect가 발생할때 마다 default로 이전 effect를 clean up 해줄 수 있다. effect 의 return 으로 함수를 적어둔다면 리엑트는 자동으로 정리를 해야할때(다음 effect 함수가 실행되기 이전에) 이 함수를 실행 시킵니다.
 - useEffect가 발동되면 해당되는 함수 컴포넌트는 무조건 다시 호출이 됩니다.
 - useEffect의 두번째 인자로 빈 배열(`[]`)을 넣는다면 mount시와 unmount시에만 호출이 됩니다. 그래서 update시에 effect 함수 호출을 건너뛸 수 있습니다.
-- 만약 useEffect의 두번째 인자로 빈 배열(`[]`)을 넣는다면 effect 안에 있는 state와 props는 항상 초기값을 가리킬 것입니다. 
-
+- 만약 useEffect의 두번째 인자로 빈 배열(`[]`)을 넣는다면 effect 안에 있는 state와 props는 항상 초기값을 가리킬 것입니다.
 
 ### useEffect 는 왜 매 업데이트 시 마다 호출이 될까?
 
-우리 컴포넌트에서 this.props에서 친구의 온라인 유무 상태를 받아온다고 생각해보자. componentDidMount와 componentWillMount시에 친구 ID를 사용해서 로직을 구현할 것이다. 근데 만약 props가 변경되어 친구가 변경 되었다면, 다른 친구의 온라인 상태를 표현해 줄것입니다. 
+우리 컴포넌트에서 this.props에서 친구의 온라인 유무 상태를 받아온다고 생각해보자. componentDidMount와 componentWillMount시에 친구 ID를 사용해서 로직을 구현할 것이다. 근데 만약 props가 변경되어 친구가 변경 되었다면, 다른 친구의 온라인 상태를 표현해 줄것입니다.
 
 또한 unMount시에 없는 친구 ID를 사용하기에 에러가 나기 충분하다. 그래서 사용자는 componentDidUpdate 에 추가 로직을 잊지 않고 넣어주어야 합니다.
 
@@ -249,7 +247,7 @@ ChatAPI.unsubscribeFromFriendStatus(300, handleStatusChange); // Clean up last e
 일반적으로는 안전하지 못합니다.
 
 특히 해당 함수가 props를 참조하고 있다면 bug가 일어날 수 있습니다.
-왜냐하면 props가 바뀌면 해당 함수를 호출하지 않기 때문입니다. 
+왜냐하면 props가 바뀌면 해당 함수를 호출하지 않기 때문입니다.
 해당 함수를 생략하려면 오직 그 함수가 props나 state 그것에 파생된 값을 참조하고 있지 않을때만 안전합니다.
 
 ```javascript
@@ -262,8 +260,8 @@ function Example({ someProp }) {
     doSomething();
   }, []); // 🔴 This is not safe (it calls `doSomething` which uses `someProp`)
 }
-
 ```
+
 effect 함수 밖 함수에 의해 사용되는 state나 props를 인지하긴 힘듭니다. 그렇기 때문에 보통 effect가 필요한 함수를 안쪽에 선언할 것입니다. 그러면 컴포넌트 스코프의 어떤 값들이 effect에 의존적인지 알아보기 쉬울 것입니다.
 
 ```javascript
@@ -278,7 +276,7 @@ function Example({ someProp }) {
 }
 ```
 
-만약에 컴포넌트 스코프에 있는 어떠한 값도 사용하지 않는다면 빈배열로 넣는것은 안전할 것입니다. 
+만약에 컴포넌트 스코프에 있는 어떠한 값도 사용하지 않는다면 빈배열로 넣는것은 안전할 것입니다.
 
 만약에 몇몇 이유로 effect 안에 함수를 이동시키기 없다면 몇몇 선택지가 있습니다.
 
@@ -318,7 +316,6 @@ function ProductDetails({ fetchProduct }) {
 
 - custom 함수 안에서는 예외적으로 호출 할 수 있습니다.
 
-
 ## React Render
 
 React and the Virtual DOM 참고 동영상:  [https://www.youtube.com/watch?v=BYbgopx44vo](https://www.youtube.com/watch?v=BYbgopx44vo)
@@ -347,7 +344,6 @@ React and the Virtual DOM 참고 동영상:  [https://www.youtube.com/watch?v=
 - 그래서 `class Component`가 탄생하게 된다. 이 `class 컴포넌트`의 인스턴스는 기존의 `instance` 개념과 차별을 두기 위해 `public instance`라고 명명한다.
 - `public instance`에는 `setState` 메서드를 통해서 `reconciliation을` 진행하고 기존에 그려졌던 `instance를` 지니고 있기 때문에 전체가 아닌 자기 자신을 기준으로 해서 자식들로만 `reconcile` 을 할 수 있는 장점을 얻을 수 있다.
 
-
 ### version 3
 
 - 여기서 또 다른 문제점을 해결하기 위해 `Fiber` 라는게 도입
@@ -355,8 +351,6 @@ React and the Virtual DOM 참고 동영상:  [https://www.youtube.com/watch?v=
 - 기존의 재귀 용법에서 `iterator`, 즉 반복문 형태로 구조를 바꾸고(tree구조를 선형적으로 바꾸게 됨) react 스케쥴링을 통해서 cpu가 idle인 경우일 때 일부 `reconcile을` 처리하고 이 반복이 모두 완료가 되었을 때, DOM에 그리게 되는 형식이다.
 - 정리하면 숫자를 증가하는 버튼을 한번 눌렀을 때, 즉, 뷰 업데이트가 이뤄지길 원할 때, `update` 큐에 업데이트 정보(해당 instance와 업데이트할 state)가 들어가게 되고 해당 `update` 를 빼와서 새로운 `fiber tree` 만들게 된다. 이때 `cpu의 idle 타임`을 보면서 이벤트가 발생한 컴포넌트에서 부터 선형트리 구조를 만들면서 `update` 정보를 수집하게 된다.
 - 만약에, 큐에 들어간 작업들 중에서 더 빠르게 끝나는 작업이 있다면 `cpu의 idle 타임`을 보고 그 작업부터 완료 되서 스크린에 보여 지게 될것이다.
-
-
 
 ## 참고
 
