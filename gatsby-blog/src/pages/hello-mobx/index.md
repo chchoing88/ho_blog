@@ -1081,6 +1081,8 @@ class Store {
 
 - 인라인 action 의 단점은 TypeScript 가 그것들을 추론하기 어렵다는 것이다. 그래서 모든 callback 에 type 을 적용해야한다. 이렇게 callback 전부에 action 을 생성하는 대신, action 함수안에 callback 을 약간 수정해서 state 를 수정할 수 있다.
 
+이 패턴의 장점은 액션 안을 어지럽히지 않고 전체 프로세스가 끝날 때 가능한 한 모든 상태 수정을 적용하는 것입니다.
+
 ```javascript
 mobx.configure({ enforceActions: 'observed' })
 
