@@ -90,6 +90,17 @@ class HashTable {
 
 해시된 키를 저장할 배열을 만든 다음 해시 테이블의 각 배열 요소에 빈 배열을 할당하는 방식이다. 즉, 2차 배열을 만드는 것이다.
 
+```javascript
+const tables = [
+  60: [David], // key: David, data: David
+  68: [Jennifer],
+  69: [Mike],
+  70: [Donnie, Jonathan]
+  78: [Cynthia, Danny]
+  88: [Raymond, Clayton]
+]
+```
+
 ```typescript
 class HashTable {
   table: string[][];
@@ -160,6 +171,33 @@ class HashTable {
 오픈 주소법에는 충돌이 발생하면 해시 테이블의 다음 요소가 비어 있는지 확인한 후 다음 요소가 비어 있으면 비어 있는 요소에 키를 저장합니다.
 
 대부분의 해시 테이블에는 비어 있는 공간이 많이 있으므로 비어있는 공간을 이용해 키를 저장한다는 것이 선형 조사 기법의 핵심입니다.
+
+```javascript
+// key 저장
+const tables = [
+  60: David, // key: David, data: David
+  68: Jennifer,
+  69: Mike,
+  70: Donnie, //Jonathan
+  71: Jonathan,
+  78: Cynthia, //Danny]
+  79: Danny,
+  88: Raymond, Clayton
+  89: Clayton
+]
+// Data 저장
+const values = [
+  60: David, // key: David, data: David
+  68: Jennifer,
+  69: Mike,
+  70: Donnie, //Jonathan
+  71: Jonathan,
+  78: Cynthia, //Danny]
+  79: Danny,
+  88: Raymond, Clayton
+  89: Clayton
+]
+```
 
 ```typescript
 class HashTable {
