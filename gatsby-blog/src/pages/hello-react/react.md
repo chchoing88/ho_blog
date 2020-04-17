@@ -3,8 +3,6 @@ title: React 정리
 date: "2019-11-20T10:00:03.284Z"
 ---
 
-# React 정리
-
 ## 리액트가 동작하는 방법 (요약)
 
 - react는 모든 요소를 생성해서 해당 되는 dom에 밀어 넣는다.
@@ -64,10 +62,10 @@ date: "2019-11-20T10:00:03.284Z"
 - PropTypes 으로 props의 타입을 체크 할 수 있다.
 
 ```javascript
-// Food component에서는 인자로 props 객체를 받을 수 있다. 
+// Food component에서는 인자로 props 객체를 받을 수 있다.
 const Food = ({name}) => {
 	return (
-		<div>I like {name}</div>	
+		<div>I like {name}</div
 	)
 }
 
@@ -133,7 +131,6 @@ this.setState({
 
 - setState에서 this.state를 직접 참조(의존)하기 보다는 현재 state를 받는 함수 형태로 넘기는게 좋다. ( setState(currentState => currentState + 1) )
 
-
 ## Life Cycle
 
 - life cycle method는 react가 component를 생성하는 그리고 없애는데 호출되는 메서드 이다.
@@ -153,18 +150,22 @@ this.setState({
 - unmount
     - `componentWillUnmount()` : 컴포넌트가 웹 브라우저상에서 사라지기 전에 호출하는 메서드 입니다.
 
-
 ## Composition
 
 - 컴포넌트에서 다른 컴포넌트를 `children` 이나 `props` 로 받아서 구성할 수 있다.
 - 일반적인 컴포넌트에서 특수한 경우인 경우를 고려해야하는 경우 더 "구체적인" 컴포넌트가 "일반적인" 컴포넌트를 렌더링하고 구체적인 내용은 `props` 를 통해 내용을 구성한다.
 - 가끔은 상위 컴포넌트에서 하위 컴포넌트에 필요한 데이터를 `props` 로 해당 하위컴포넌트에 전달할때 depth가 너무 깊으면 힘들어지니 상위 컴포넌트에서 데이터를 포함한 해당 하위 컴포넌트를 품고 `props` 로 전달해서 render 하면 더 편할 때가 있다. 다 편한건 아니다.
 
-
 ## Reconciliation (재조정)
 
-- 컴포넌트를 호출 => 새로운 React Element 반환 => 새로운 Element와 이전 Element 비교 => 변화 감지
-- 컴포넌트가 React Element 새로 만들면 기존 Dom에 그려졌던 Element랑 비교
+- 컴포넌트를 호출 => 새로운 `React Element` 반환 => 새로운 `Element와` 이전 `Element` 비교 => 변화 감지
+- 컴포넌트가 `React Element` 새로 만들면 기존 `Dom` 에 그려졌던 `Element`랑 비교
+- 변화가 생긴 컴포넌트를 기준으로 그 컴포넌트가 반환한(리턴한) `React Element`를 이전(DOM에 그려졌던 Element)과 비교
+- 비교된 결과가 이전 인스턴스가 없었던 것이라면 새로운 `element`를 바탕으로 새롭게 append 시도
+- 비교된 결과가 새로운 `element`가 없다면 이전 `instance`를 실제 DOM에서 삭제
+- 배교된 결과가 타입이 다르다면 새로운 element를 바탕으로 `replace` 시도 ( 자식까지 모두 )
+- 새로운 `element type` 이 `dom type`이면 `dom property` 들을 update 진행
+- 새로운 `element type` 이 컴포넌트라면 (class, function) 컴포넌트의 `render()` 메서드 또는 `return` 결과의 `React Element` 들을 가지고 다시 `reconcile` 진행
 
 ### 변화 감지
 
@@ -180,7 +181,6 @@ Reconciliation 할 때 경우의 수는 다음과 같습니다.
 - 타입이 다르면 새로 만들어서 ( 자식 까지 만들어서 ) replaceChild - 한방
 - DOM Element 인데 type이 같으면 update 하고 기존 dom 활용
 - React Component 이면 render() 해서 reconcilation 재귀
-
 
 ## Context API
 
