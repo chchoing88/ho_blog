@@ -52,7 +52,7 @@ class Graph {
 
   addEdge(v: number, w: number) {
     this.adj[v].push(w);
-    this.adj[w].push(v);
+    this.adj[w].push(v); // 순환 참조를 안시키려면 주석을 해야한다.
     this.edges++;
   }
 
@@ -113,7 +113,7 @@ class Graph {
 
   addEdge(v: number, w: number) {
     this.adj[v].push(w);
-    this.adj[w].push(v);
+    this.adj[w].push(v); // 순환 참조를 안시키려면 주석을 해야한다.
     this.edges++;
   }
 
@@ -148,3 +148,137 @@ class Graph {
 }
 
 ```
+
+### 너비 우선 검색 (BFS)
+
+- 첫 번째 정점에서 시작해 가능한 한 첫 번째 정점과 가까운 정점을 방문한다.
+- 기본적으로 너비 우선 검색은 그래프를 계층(layer)별로 탐색한다. 즉, 첫 번째 정점에서 가장 가까운 계층을 먼저 탐색한 다음 시작 정점에서 점점 멀리 있는 계층을 검색하는 방식이다.
+- 너비 우선 검색에서는 배열 대신 큐를 이용해 방문한 정점을 저장한다.
+
+```typescript
+bfs(s: number) {
+    const queue = [] as number[];
+    this.marked[s] = true;
+    queue.push(s);
+
+    while (queue.length > 0) {
+      const v = queue.shift(); // 큐에서 가져옴
+      if (v !== undefined) {
+        console.log(`Visited vertex: ${v}`);
+
+        for (let w of this.adj[v]) {
+          if (!this.marked[w]) {
+            // 이미 방문하지 않았던 w 정점에 대해서
+            this.edgesTo[w] = v; // 경로를 찾을때 간선 정보를 겹치지 않게 유지할 배열
+            this.marked[w] = true; // 정점에 도달
+            queue.push(w); // 방문한 정점에서 가장 인접한 레벨의 정점들을 큐에 넣어둔다.
+          }
+        }
+      }
+    }
+  }
+// 0 -> [1,2], 1 -> [0,3], 2 -> [0,4], 3 -> [1], 4 -> [2]
+// 0,1,2,3,4
+```
+
+## 최단 경로 찾기
+
+- 정점 간의 최단 경로를 찾는 것이다.
+- `너비 우선 검색`을 수행하면 자동으로 한 정점에서 연결된 다른 정점으로 도달하는 최단 경로를 찾게 된다.
+- 정점 A에서 정점 D로 도달하는 최단 경로를 찾는다고 할 때 1개의 간선 경로를 찾아보고 없으면 2개의 간선 경로를 찾아보는 식으로 반복 검색을 수행할 수 있다.
+- 한 정점에서 다른 정점으로 연결하는 간선 정보를 유지할 배열이 필요 (`this.edgesTo`) : 겹치지 않게 간선 정보를 유지하는 것으로 보인다.
+
+```typescript
+pathTo(v: number) {
+  const source = 0;
+  // 너비 우선 검색을 우선 실행한다.
+  // 간선 정보 수집 및 marked 수집.
+  this.bfs(0);
+
+  if (!this.hasPathTo(v)) {
+    return undefined;
+  }
+
+  const path = [];
+  for (let i = v; i !== source; i = this.edgesTo[i]) {
+    // 여기서 this.edgesTo는 다음과 같다.
+    // const g = new Graph(5)
+    // g.addEdge(0, 1)
+    // g.addEdge(0, 2)
+    // g.addEdge(1, 3)
+    // g.addEdge(2, 4)
+    // 1 - 0, 2 - 0, 3 - 1, 4 - 2 간선 정보
+    path.push(i);
+  }
+  path.push(source);
+  return path;
+}
+
+hasPathTo(v: number) {
+  return this.marked[v];
+}
+
+// const path = g.pathTo(4) : 정점 0에서 정점 4로 도달하는 최단 경로를 보여줌.
+// 0, 2, 4
+```
+
+## 위상 정렬
+
+- 위상 정렬(Topological sorting)은 방향성 그래프의 모든 방향성 간선이 왼쪽에서 오른쪽 정점을 가리키도록 모든 정점을 배치하는 방법이다. 즉, 순서가 정해져 있는 작업을 차례대로 나열할때 사용한다.
+- 이와 같은 구조는 선수 제약 일정 관리에서 찾아볼 수 있으며, 예를 들면 물리1을 이수하지 않은 학생은 물리2를 이수 할 수 없도록 하는것과 같다.
+- 위상 정렬 알고리즘은 깊이 우선 검색 알고리즘과 비슷하다. 다만, 방문한 정점을 즉시 출력했던 깊이 우선 검색과 달리 위상 정렬 알고리즘에서는 우선 현재 정점과 인접한 모든 정점을 방문한 다음 인접 리스트를 모두 확인하고 현재 정점을 스택으로 푸시한다.
+- topSort() 함수로 정렬 과정을 설정한 다음, 헬퍼 함수인 topSortHelper() 함수를 호출한다.
+- 핵심 기능은 재귀 함수인 topSortHelper() 함수에서 수행한다.
+- topSortHelper() 함수는 현재 방문한 정점으로 표시한 다음 현재 정점의 인접 리스트에 있는 각각의 인접 정점을 재귀적으로 방문하면서 방문한 것으로 표시한다.
+- 위상 정렬은 DAG(Directed Acyclic Graph: 사이클이 없는 방향성이 있는 그래프) 에만 적용이 가능합니다. 즉, 사이클이 발생하면 위상정렬을 할 수 없습니다.
+- 위상 정렬은 여러개의 답이 존재 할 수 있습니다.
+
+```typescript
+addEdge(v: number, w: number) {
+  this.adj[v].push(w);
+  // DAG에만 적용이 가능
+  //this.adj[w].push(v); // 순환 참조를 안시키려면 주석을 해야한다.
+  this.edges++;
+}
+
+topSort() {
+  const stack: number[] = [];
+  const visited = [];
+  for (let i = 0; i < this.vertices; i++) {
+    visited[i] = false;
+  }
+
+  for (let i = 0; i < this.vertices; i++) {
+    if (visited[i] == false) {
+      this.topSortHelper(i, visited, stack);
+    }
+  }
+  let length = stack.length;
+  for (let i = 0; i < length; i++) {
+    console.log(stack.pop());
+  }
+}
+
+topSortHelper(v: number, visited: boolean[], stack: number[]) {
+  visited[v] = true;
+  for (var w of this.adj[v]) {
+    if (!visited[w]) {
+      this.topSortHelper(w, visited, stack);
+    }
+  }
+  stack.push(v);
+}
+
+// const g = new Graph(6);
+// g.addEdge(1,2);
+// g.addEdge(2,5);
+// g.addEdge(1,3);
+// g.addEdge(1,4);
+// g.addEdge(0,1);
+// 0 -> 1 -> 4 -> 3 -> 2 -> 5
+```
+
+## 정리
+
+- 그래프의 깊이를 먼저 탐색하기 위해선 재귀를 활용해서 가장 깊이 있는 뎁스 까지 내려갔다가 끝나면 남아있던 형제 정점에서 다시 탐색을 시작한다.
+- 그래프의 너비를 먼저 탐색하기 위해선 현재 정점에 인접한(자식 뎁스)를 큐에 넣고 큐에서 하나씩 빼서 방문하게 만든다.
