@@ -73,6 +73,8 @@ fakeAsyncData$.subscribe({
 
 `subscribe` 메서드로 여러 observer 들을 등록해도 모두 push 해줄 수 있습니다.
 
+요약하면 데이터를 발생시키는 함수를 등록시키고 데이터가 발생되면 약속된 `observer`의 `next` 메서드 인자로 넘겨줍니다. 그 이후에 `subscribe` 메서드로 `observer` (관찰하고 싶은 녀석들) 을 등록 시키면 데이터를 발생 시키는 함수를 실행 시킵니다.
+
 아래 코드는 조금 더 진화된 코드
 
 ```javascript
