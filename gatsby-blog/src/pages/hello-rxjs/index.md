@@ -585,6 +585,10 @@ function myMergeMap(innerObservable) {
 Observable.prototype.myMergeMap = myMergeMap
 ```
 
+새로운 `Observable`을 리턴 시키면서 `source`에서 발생되는 데이터를 받아 오기 위해 `subscribe`로 `observer`를 등록시킵니다.
+source 에서 발생되는 데이터를 받아와서 `myMergeMap`의 인자로 받아왔던 `innerObservable`을 실행시키면서 바로 해당 결과 값을 받아오기 위해 `subscribe`를 실행 시킵니다.
+이때 `innerValue` 값을 새로운 `Observable`에 등록될 `observer`의 `next()` 메서드로 밖에 전달해 줍니다.
+
 ```javascript
 const click$ = Observable.fromEvent(button, ‘click’);
 const interval$ = Observable.interval(1000);
