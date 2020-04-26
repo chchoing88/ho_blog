@@ -795,18 +795,18 @@ class Component 에서 setState 를 사용하면 해당 컴포넌트를 기준�
 
 ### Why Fiber
 
-브라우저의 메인 쓰레드는 시간을 많이 쓰는 무엇인가로 인해 매우 바쁘게 움직있다고 할때, 매우 중요한 task 들은 끝날때 까지 기다려야 한다.
+브라우저의 메인 쓰레드는 시간을 많이 쓰는 무엇인가로 인해 매우 바쁘게 움직이고 있다고 할때, 매우 중요한 task 들은 끝날때 까지 기다려야 한다.
 
-이런 문제를 위해서 몇가지 데모를 준비했다. [데모](https://pomber.github.io/incremental-rendering-demo/react-sync.html)에서 행서들이 도는걸 유지하기 위해서 메인 쓰레드는 매 16ms 마다 사용가능 하도록 유지 시켜주어야 한다. 만약 이 메인쓰레드가 다른 무엇인가로 blocked 당했다고 한다면 여기서 매 200ms 라고 해봅시다. 메인 쓰레드가 다시 자유로워 질때 까지 행성들이 멈춰있고 해당 프레임이 사라지는걸 확인 할 수 있을 것이다.
+이런 문제를 위해서 몇가지 데모를 준비했다. [데모](https://pomber.github.io/incremental-rendering-demo/react-sync.html)에서 행서들이 도는걸 유지하기 위해서 메인 쓰레드는 매 16ms 마다 사용가능 하도록 유지 시켜주어야 한다. 만약 이 메인쓰레드가 다른 무엇인가로 blocked 당했다고 한다면 여기서 매 200ms 라고 해봅시다. 메인 쓰레드가 다시 자유로워 질때 까지 행성들이 멈춰있고 해당 프레임이 사라지는걸 확인 할 수 있을 것입니다.
 
-무엇이 메인 쓰레드 즉, 몇 에니메이션을 부드럽고 UI 응답을 유지하기 위해 예비의 마이크로 초도 둘수없게 바쁘게 하는가?
+에니메이션을 부드럽고 UI 응답을 유지하기 위해 예비의 마이크로 초도 둘수없게 무엇이 메인쓰레드를 바쁘게 했을까요?
 
-reconciliation 코드를 기억하는가? 한번 reconciliation 코드를 실행하면 멈추지 않는다. 메인 스레드가 다른 작업을 수행해야하는 경우 reconciliation 코드는 대기해야합니다. 그리고 이 reconciliation 코드는 많은 재귀 호출로 인해서 지연될 수 있는 코드다. 이런이유로 우리는 해당 코드를 재귀 호출을 루프로 교체가능한 새로운 데이터 구조를 사용하는 reconciliation 코드를 재 작성해야 합니다.
+`reconciliation` 코드를 기억합니까? 한번 `reconciliation` 코드를 실행하면 멈추지 않습니다. 메인 스레드가 다른 작업을 수행해야하는 경우 `reconciliation` 코드는 대기 해야합니다. 그리고 이 `reconciliation` 코드는 많은 재귀 호출로 인해서 지연될 수 있는 코드 입니다. 이런 이유로 우리는 해당 코드를 재귀 호출을 루프로 교체 가능한 새로운 데이터 구조를 사용하는 `reconciliation` 코드를 재 작성해야 합니다.
 
 ### Scheduling micro-tasks
 
-우린 이제 작업을 작은 단위로 나눌 필요가 있습니다. 짧은 시간동안 동작하기 위해서 짧은 단위로 나눈다. 메인 스레드가 더 우선 순위가 높은 작업을 수행하게하고 보류중인 작업이 있으면 작업을 끝내기 위해 다시 돌아옵니다.
-이 작업을 돕기 위해서 `requestIdelCallback()` 함수를 이용 할 것입니다. 이것은 callback 함수를 큐에 넣어 두는데 이것은 브라우저가 idle 타임에 호출이 되고, 얼만큼 이용가능한 시간인지 설명해주는 `deadline` 파라미터를 포함하고 있다.
+우린 이제 작업을 작은 단위로 나눌 필요가 있습니다. 이것들은 짧은 시간동안 동작하기 위한 조각들입니다. 메인 스레드가 더 우선 순위가 높은 작업을 수행하게하고 보류중인 작업이 있으면 작업을 끝내기 위해 다시 돌아옵니다.
+이 작업을 돕기 위해서 `requestIdelCallback()` 함수를 이용 할 것입니다. 이것은 `callback` 함수를 큐에 넣어 두는데 이것은 브라우저가 idle 타임에 호출이 되고, 얼만큼 이용가능한 시간인지 설명해주는 `deadline` 파라미터를 포함하고 있다.
 
 ```javascript
 const ENOUGH_TIME = 1 // milliseconds
@@ -823,10 +823,12 @@ function schedule(task) {
 // 이 함수는 브라우저가 idle 시점에 호출되고
 // deadline 파라미터로 적절한 시간이 남았는지를 확인해서 해당 로직을 수행한다.
 function performWork(deadline) {
+  // 다음 작업이 남아있는지를 확인
   if (!nextUnitOfWork) {
     nextUnitOfWork = workQueue.shift()
   }
 
+  // 다음 작업이 있고 시간이 충분히 남았다면 작업 수행
   while (nextUnitOfWork && deadline.timeRemaining() > ENOUGH_TIME) {
     nextUnitOfWork = performUnitOfWork(nextUnitOfWork)
   }
@@ -837,14 +839,15 @@ function performWork(deadline) {
 }
 ```
 
-실제 작업은 `performUnitOfWork` 함수에서 일어납니다. `performUnitOfWork` 안에 우리의 **reconciliation code** (이전 instance 와 새로 들어온 element 를 비교해서 어떤 방법(replace, append,...)으로 dom 을 렌더링할지를 결정) 를 작성할 필요가 있습니다. `performUnitOfWork` 함수는 작업 조각을 동작시켜야 합니다. 그리곤 다음에 작업을 다시 시작하는 데 필요한 모든 정보를 반환해야 햡니다.
-<br />
-이런 작업의 조각들을 추적하기위해 fiber 들을 사용할 것입니다. 즉, fiber 는 일련의 작업을 다시 시작하기 위해 만들어졌고 이것을 작업 정보 명세서라고 생각하면 될거 같다.
+실제 작업은 `performUnitOfWork` 함수에서 일어납니다. `performUnitOfWork` 안에 우리의 **reconciliation code** (이전 instance 와 새로 들어온 element 를 비교해서 어떤 방법(replace, append,...)으로 dom 을 렌더링할지를 결정) 를 작성할 필요가 있습니다.
+`performUnitOfWork` 함수는 작업의 조각을 동작시켜야 합니다. 그리곤 다음에 작업을 다시 시작하는 데 필요한 모든 정보를 반환해야 햡니다.
+
+이런 작업의 조각들을 추적하기위해 `fiber` 들을 사용할 것입니다. 즉, `fiber` 는 일련의 작업을 다시 시작하기 위해 만들어졌고 이것을 작업 정보 명세서라고 생각하면 될거 같습니다.
 
 ### The fiber data structure
 
-우리는 render 를 원하는 각 컴포넌트에 대해 fiber 를 생성할 것입니다. `nextUnitOfWork` 는 우리가 원하는 다음 작업인 next fiber 를 위한 참조 값입니다. `performUnitOfWork` 는 fiber 대한 작업을하고 완료가 되면 새로운 fiber 를 리턴합니다.
-<br />
+우리는 render(그려지기)를 원하는 각 컴포넌트에 대해 fiber 를 생성할 것입니다. `nextUnitOfWork` 는 우리가 원하는 다음 작업인 next fiber 를 위한 참조 값입니다. `performUnitOfWork` 는 fiber 대한 작업을하고 완료가 되면 모든 작업이 끝날때 까지 새로운 fiber 를 리턴합니다.
+
 fiber 는 어떻게 생겼는가?
 
 ```javascript
@@ -864,31 +867,31 @@ let fiber = {
 ```
 
 이것은 보통의 자바스크립트 객체입니다.
-<br />
+
 우리는 `parents`, `child` 그리고 `sibling` 프로퍼티를 사용하여 component 의 tree 를 설명 하는 fiber 들의 tree 를 구축합니다.
-<br />
+
 `stateNode`는 component instance 에 대한 참조 값이다. 이 값으론 DOM element (createDomElement) 또는 유저가 정의한 class component 의 instance (createInstance) 를 가질 수 있습니다.  
-<br />
-예를 들면,
+
+예를 들면 :
 
 ![fiber01.png](./fiber01.png)
 
-위 예제에서 우리가 지원할 서로 다른 3 가지 종류의 컴포넌트들을 볼수 있다.
+위 예제에서 우리가 지원할 서로 다른 3 가지 종류의 컴포넌트들을 볼수 있습니다.
 
-* `b`,`p` 그리고 `i` 를 위한 fiber 들은 **host components** 대표한다. 이들의 식별자는 tag 에 `HOST_COMPONENT` 라고 지칭 할것이다. `type`은 string(html element 의 태그) 이 될것이다. `props`는 속성값과 해당 element 의 이벤트 리스너가 되겠다.
-* `Foo` fiber 는 **class component** 를 대표한다. 이것의 `tag`는 `CLASS_COMPONENT` 가 될 것이고, `type`은 유저가 정의한 `Didact.Component`를 상속한 `class` 의 참조값이 될것이다.
-* `div`를 위한 fiber 는 **host root** 를 대표한다. 이것은 위에서 언급한 host component 과 유사한데 그 이유는 DOM element 를 지니고 있기 때문이다. 그러나 이 host root 는 트리의 root 가 되어서 특별하게 다뤄질 것이다. `tag`는 `HOST_ROOT`가 될것이다. 이 fiber 의 stateNode 는 `Didact.render()`로 전달 받은 DOM node 이다.
+* `b`,`p` 그리고 `i` 를 위한 fiber 들은 **host components** 표현합니다. 이들의 식별자는 tag 에 `HOST_COMPONENT` 라고 지칭 할것이다. `type`은 string(html element 의 태그) 이 될것입니다. `props`는 속성값과 해당 element 의 이벤트 리스너가 되겠습니다.
+* `Foo` fiber 는 **class component** 를 표현합니다. 이것의 `tag`는 `CLASS_COMPONENT` 가 될 것이고, `type`은 유저가 정의한 `Didact.Component`를 상속한 `class` 의 참조값이 될것이다.
+* `div`를 위한 fiber 는 **host root** 를 표현합니다. 이것은 위에서 언급한 host component 과 유사한데 그 이유는 `stateNode` 와 같은 DOM element 를 지니고 있기 때문입니다. 그러나 이 host root 는 트리의 root 가 되어서 특별하게 다뤄질 것입니다. `tag`는 `HOST_ROOT`가 될것입니다. 이 fiber 의 `stateNode` 는 `Didact.render()`로 전달 받은 DOM node 이다.
 
-다른 중요한 프로퍼티는 `alternate` 이다. 이 `alternate` 가 필요한 이유는 대부분의 시간동안에 두가지의 fiber tree 를 가져야 하기 때문입니다.
-**한가지 tree 는 우리가 이미 render 한 DOM 에 관한 것이고, 이것을 우린 current tree 또는 old tree 라고 부를 것이다. 또 다른 하나는 우리가 `setState()` 또는 `Didact.render()` 호출을 통해서 새로운 update 작업을 할때 생성되는 tree 이다. 이것을 우린 _work-in-progress tree_ 라고 부를 것입니다.**
+다른 중요한 프로퍼티는 `alternate` 입니다. 이 `alternate` 가 필요한 이유는 대부분의 시간동안에 두가지의 fiber tree 를 가져야 하기 때문입니다.
+**한가지 tree 는 우리가 이미 render 한 DOM 에 관한 것이고, 이것을 우린 current tree 또는 old tree 라고 부를 것이다. 또 다른 하나는 우리가 `setState()` 또는 `Didact.render()` 호출을 통해서 새로운 update 작업을 할때 생성되는 tree 이다. 이것을 우린 _work-in-progress_ tree 라고 부를 것입니다.**
 
-work-in-progress tree 는 old tree 와 어떤 fiber 도 공유하지 않습니다. (이것은 work-in-progress tree 를 만들때 매번 새로운 객체 fiber 로 만든다는 이야기 이다.)일단 work-in-progress tree 를 완성하고나면 필요한 DOM 을 변화를 만들고, 다시 이 work-in-progress tree 가 old tree 가됩니다.
+work-in-progress tree 는 old tree 를 가진 어떤 fiber 와도 공유하지 않습니다. (이것은 work-in-progress tree 를 만들때 매번 새로운 객체 fiber 로 만든다는 이야기 이다.) 일단 work-in-progress tree 를 완성하고 필요한 DOM 을 변화를 만들 필요성을 가지면, 다시 이 work-in-progress tree 가 old tree 가 됩니다.
 
-따라서 `alternate`는 work-in-progress tree fiber 들을 old tree 에 상응하는 fiber 들과 연결하기 위해 사용합니다. fiber 와 그것의 `alternate`는 같은 `tag`, `type` 그리고 `stateNode`를 공유합니다. 때론 새로운 rendering 작업이 있을떈 fiber 들은 `alternate`를 안가지고 있을 수 있다.
+따라서 `alternate`는 work-in-progress tree fiber 들을 old tree 에 상응하는 fiber 들과 연결하기 위해 사용합니다. fiber 와 그것의 `alternate`는 같은 `tag`, `type` 그리고 `stateNode`를 공유합니다. 때론 새로운 rendering 작업이 있을떈 fiber 들은 `alternate`를 안가지고 있을 수 있습니다.
 
-여기서 `alternate`는 처음에 dom 에 그릴땐 어떤한 값을 안가지고 있다가 dom 을 그리고 나고 다시 render 시에는 \_rootContainerFiber 값을 `alternate`에 할당한다. 그 이후에 `reconcileChildrenArray` (children 돌면서 fiber 를 만들어 줌) 메서드 실행시에 `wipFiber.alternate.child`를 `oldFiber`로 활용한다.
+여기서 `alternate`는 처음에 dom 에 그릴땐 어떤한 값을 안가지고 있다가 dom 을 그리고 나고 다시 render 시에는 \_rootContainerFiber 값을 `alternate`에 할당합니단. 그 이후에 `reconcileChildrenArray` (children 돌면서 fiber 를 만들어 줌) 메서드 실행시에 `wipFiber.alternate.child`를 `oldFiber`로 활용합니다.
 
-마지막으로, `effects`리스트와 `effectTag`를 갖습니다. work-in-progress tree 안에서 DOM 이 변화할 필요가 있는 fiber 를 찾았을때 `effectTag`를 `PLACEMENT`, `UPDATE` 또는 `DELETION`으로 설정합니다. 모든 DOM 변화를 손쉽게 처리하기 위해 `effectTag`를 가지고 있는 모든 fiber 들의 목록(fiber 하위 트리로부터 나온 fiber 들)을 `effects`에 유지합니다.
+마지막으로, `effects`리스트와 `effectTag`를 갖습니다. work-in-progress tree 안에서 DOM 이 변화할 필요가 있는 fiber 를 찾았을때 `effectTag`를 `PLACEMENT`, `UPDATE` 또는 `DELETION`으로 설정합니다. 모든 DOM 변화를 손쉽게 처리하기 위해 `effectTag`를 가지고 있는 모든 자식 fiber 들의 목록(fiber 하위 트리로부터 나온 fiber 들)을 `effects`에 유지합니다.
 
 ### Didact call hierarchy
 
@@ -900,11 +903,11 @@ work-in-progress tree 는 old tree 와 어떤 fiber 도 공유하지 않습니�
 
 ### Old code
 
-대부분의 코드를 재 작성해야 한다고 이야기 했었었다. 하지만 먼저 수정하지 않을 코드가 있는지 살펴봅시다.
+대부분의 코드를 재 작성해야 한다고 이야기 했었습니다. 하지만 먼저 수정하지 않을 코드가 있는지 살펴봅시다.
 
-트랜스파일된 JSX 가 사용하는 함수인 `createElement` 함수를 작성했습니다. 우리가 작성한 `createElement()` 함수는 변할 필요가 없다. 우린 계속 동일한 element 들을 사용할 것이기 때문이다. 여기서 element 는 `type`,`props` 그리고 `children`을 가진 평범한 자바스크립트 객체였다.
+트랜스파일된 JSX 가 사용하는 함수인 `createElement` 함수를 작성했습니다. 우리가 작성한 `createElement()` 함수는 변할 필요가 없다. 우린 계속 동일한 element 들을 사용할 것이기 때문입니다. 여기서 element 는 `type`,`props` 그리고 `children`을 가진 평범한 자바스크립트 객체였습니다.
 
-우린 노드의 DOM 프로퍼티를 갱신 하기 위해 `updateDomProperties()` 도 작성했었다. 또 DOM element 들을 생성하기 위해 `createDomElement()` 함수도 추출했습니다. 이 두 함수 모두 [이곳](https://gist.github.com/pomber/c63bd22dbfa6c4af86ba2cae0a863064)에서 볼수 있습니다.
+우린 노드의 DOM 프로퍼티를 갱신 하기 위해 `updateDomProperties()` 도 작성했었습니다. 또 DOM element 들을 생성하기 위해 `createDomElement()` 함수도 추출했습니다. 이 두 함수 모두 [이곳](https://gist.github.com/pomber/c63bd22dbfa6c4af86ba2cae0a863064)에서 볼수 있습니다.
 
 base class 인 `Component` 도 작성했었습니다. 여기서 `setState()`가 `scheduleUpdate()` 를 호출하게 만들고 `createInstance()` 가 instance 에 fiber 를 참조하도록 만듭시다.
 
@@ -967,10 +970,10 @@ function scheduleUpdate(instance, partialState) {
 }
 ```
 
-`updateQueue` 배열을 사용해서 보류중인 update 추적할 것입니다. 매 `render()` 또는 `scheduleUpdate()` 호출은 새로운 업데이트를 `updateQueue` 큐에 넣는다.
-각 업데이트들의 업데이트 정보는 다르고 이것을 우리가 나중에 `resetNextUnitOfWork()` 에서 어떻게 사용할지 볼수 있을것입니다.
+`updateQueue` 배열을 사용해서 보류중인 update 추적할 것입니다. 매 `render()` 또는 `scheduleUpdate()` 호출은 새로운 업데이트를 `updateQueue` 큐에 넣습니다.
+각 업데이트들의 업데이트 정보는 다르고 이것을 우리가 나중에 `resetNextUnitOfWork()` 에서 어떻게 사용할지 볼 수 있을것입니다.
 
-업데이트를 큐에 넣고 나서, `performWork()`에 대한 지연 호출을 트리거합니다.
+업데이트를 큐에 넣고 나서, `performWork()`에 대한 지연(deferred) 호출을 트리거합니다.
 
 ![fiber04.png](./fiber04.png)
 
@@ -980,7 +983,11 @@ const ENOUGH_TIME = 1 // milliseconds
 // render 또는 scheduleUpdate 에서
 // requestIdleCallback(performWork) 로 호출함.
 function performWork(deadline) {
+  // cpu 시간이 괜찮을때까지 loop 돌면서 작업 수행
   workLoop(deadline)
+  
+  // cpu에 시간이 안괜찮아서 workLoop 탈출
+  // 남은 작업이 있으면 performWork를 다시 호출함
   if (nextUnitOfWork || updateQueue.length > 0) {
     requestIdleCallback(performWork)
   }
@@ -1007,7 +1014,7 @@ function workLoop(deadline) {
 
 `workLoop()` 은 시간을 주시하는 함수입니다. 만약 deadline 이 너무 가깝다면(마감시간), 루프 작업은 멈추고 다음 업데이트 해야할 작업을 남겨둡니다. 그래서 다시 다음 타임에 재개 될 수 있도록 합니다.
 
-> `deadline.timeRemaining()`이 다른 작업 단위를 실행하기에 충분한지 아닌지 확인하기 위해 ENOUGH_TIME (1ms 상수, React 와 동일)을 사용합니다. `performUnitOfWork()`가 그 이상을 수행하면 마감 시간이 초과 될것입니다. deadline 은 브라우저의 제안 일 뿐이므로 몇 밀리 초 동안 초과실행 하는것은 그렇게 나쁘지 않습니다.
+> `deadline.timeRemaining()`이 다른 작업 단위를 실행하기에 충분한지 아닌지 확인하기 위해 `ENOUGH_TIME` (1ms 상수, React 와 동일)을 사용합니다. `performUnitOfWork()`가 그 이상을 수행하면 마감 시간이 초과 될것입니다. deadline 은 브라우저의 제안 일 뿐이므로 몇 밀리 초 동안 초과실행 하는것은 그렇게 나쁘지 않습니다.
 
 `performUnitOfWork()`는 업데이트를위한 work-in-progress 트리를 만들고 DOM 에 적용해야 할 변경 사항을 남겨둡니다. **이것은 한 번에 한 fiber 씩 점진적으로 이루어질 것입니다.**
 
