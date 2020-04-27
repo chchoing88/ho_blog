@@ -1099,16 +1099,16 @@ update 객체에 `partialState`가 있다면 컴포넌트 인스턴스에 속해
 
 그런 다음 `nextUnitOfWork`에 새 fiber 를 할당합니다. **이 fiber 는 새로운 work-in-progress tree 의 root 입니다.**
 
-만약 old root 가 없다면(이미 그려진 DOM 이 없다면), `stateNode`(component instance)는 `render()` 호출할때 매개 변수로 받은 DOM 노드(containerDom)입니다. `props` 는 update 객체의 `newProps`가됩니다 : 여기서 `newProps`는 element(render() 함수의 element 매개변수 값)들을 가지고있는 children 프로퍼티를 가진 객체이다(위 `render` 함수 참고 : newProps: { children: elements }). `alternate`은 null 이 될 것입니다. 왜냐하면 처음으로 호출되는 `render` 이기 때문에 이전에 그렸던 루트 fiber 가 없다.
+만약 old root 가 없다면(이미 그려진 DOM 이 없다면), `stateNode`(component instance)는 `render()` 호출할때 매개 변수로 받은 DOM 노드(containerDom)입니다. `props` 는 update 객체의 `newProps`가 됩니다 : 여기서 `newProps`는 element(render() 함수의 element 매개변수 값)들을 가지고있는 children 프로퍼티를 가진 객체이다(위 `render` 함수 참고 : newProps: { children: elements }). `alternate`은 null 이 될 것입니다. 왜냐하면 처음으로 호출되는 `render` 이기 때문에 이전에 그렸던 루트 fiber 가 없다.
 
-만약 old root 가 있다면 `stateNode`는 이전 루트의 DOM 노드가됩니다. `props`는 다시 newProps 가 null 이 아니면 `newProps`로 할당되고 그렇지 않으면 이전 루트에서 `props` 복사합니다. `alternate`는 이전 루트 fiber 가됩니다.
+만약 old root 가 있다면 `stateNode`는 이전 루트의 DOM 노드가됩니다. `props`는 다시 `newProps` 가 null 이 아니면 `newProps`로 할당되고 그렇지 않으면 이전 루트에서 `props` 복사합니다. `alternate`는 이전 루트 fiber 가 됩니다.
 
 이제 우리는 work-in-progress tree 의 root 을 가지고 나머지 부분을 만들기 시작합시다.
 
 ![fiber06.png](./fiber06.png)
 
 ```javascript
-// wipFiber
+// wipFiber 는 처음에 아래와 같은 객체입니다.
 // {
 //   tag: HOST_ROOT,
 //   stateNode: update.dom || root.stateNode,
@@ -1116,6 +1116,8 @@ update 객체에 `partialState`가 있다면 컴포넌트 인스턴스에 속해
 //   alternate: root,
 // }
 
+// beginWork는 전위 탐색으로 탐색되고
+// completeWork는 후위 탐색으로 탐색된다.
 function performUnitOfWork(wipFiber) {
   beginWork(wipFiber)
   if (wipFiber.child) {
@@ -1145,16 +1147,16 @@ function performUnitOfWork(wipFiber) {
 
 `performUnitOfWork()`를 여러 번 호출하면 자식(children)이 없는 파이버를 찾을 때까지 각 파이버의 첫번째 자식의 자식들을 생성하면서 계속해서 트리의 하위로 내려갑니다. 그리고 오른쪽으로 옮겨서 siblings 에도 같은 작업을 수행합니다. 그리고 다시 위로 올라와서 같은 작업을 수행합니다.
 
-<!-- ![fiber-search.png](./fiber-search.png)
+![fiber-search.png](./fiber-search.png)
 
-위 처럼 트리구조가 있을때 순서는 다음과 같다.
-
-파란색 순서는 `beginWork()` 가 호출되는 순서이고 빨간색 순서는 `completeWork()` 가 호출되는 순서이다. -->
+위 처럼 트리구조가 있을때 순서는 다음과 같습니다.
+파란색 순서는 `beginWork()` 가 호출되는 순서이고 빨간색 순서는 `completeWork()` 가 호출되는 순서입니다.
+`beginWork` 는 전위 탐색으로 탐색되고 `completeWork` 는 후위 탐색으로 호출 됩니다.
 
 ![fiber07.png](./fiber07.png)
 
 ```javascript
-// wipFiber
+// wipFiber 는 처음에 아래와 같은 객체입니다.
 // {
 //   tag: HOST_ROOT,
 //   stateNode: update.dom || root.stateNode,
