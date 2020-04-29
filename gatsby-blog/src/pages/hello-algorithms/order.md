@@ -192,7 +192,99 @@ shellSort() {
 
 ## 머지 정렬
 
-- 
+- 정렬된 서브리스트를 서로 합병하여(머지) 최종적으로 정렬된 큰 리스트를 만드는 과정에서 유래 했습니다.
+- 쉽게는 두 개의 정렬된 서브배열을 준비한 다음 두 배열을 비교하면서 가장 작은 요소를 세 번째 배열로 삽입합니다.
+- 이때, 머지 정렬은 별도의 서브 배열의 저장공간이 필요합니다.
+- 함수가 호출될때마다 절반씩 잘라서 재귀적으로 함수를 호출하고 맨 끝에 작은 조각부터 2개씩 병합해서 정렬된 배열을 머지해 나가는 방법 입니다.
+- 시간 복잡도는 O(n log n) 이 됩니다.
+- 파티션이 낱개가 될 때 까지 쪼개지니 n번 호출에 한번 호출당 검색해야 할 데이터 양이 절반씩 줄어드니 log n 입니다.
+
+### 하양식 머지 정렬
+
+- 머지 정렬은 보통 재귀 알고리즘으로 구현해야 하지만 자바스크립트 언어가 처리할 수 있는 것보다 더 깊은 재귀가 필요하므로 자바스크립트에서는 하양식이 아닌 상향식 머지 정렬 기법을 이용해야 합니다.
+
+### 상향식 머지 졍렬
+
+- 비재귀 또는 반복 방식으로 구현한 머지 정렬을 상향식 머지 정렬이라고 합니다.
+- 상향식 머지 정렬에서는 먼저 정렬할 데이터를 한 개의 요소를 갖는 여러 배열로 분할합니다. 그리고 이들 배열의 left 배열과 right 배열을 합치면서 최종적으로 정렬된 데이터를 포함하는 하나의 배열이 만들어질 때까지 이 과정을 반복합니다.
+- 제일 먼저 분할을 진행하고 2의 배수의 배열들을 머지하면서 최종 머지 합니다.
+
+```typescript
+// 가장 먼저 배열을 하나씩 쪼개서 (상향식)
+// 쪼갠 배열들을 머지 시켜야 합니다.
+mergeSort() {
+  let step = 1; // 쪼갤 단위
+  // 쪼갤 단위가 dataStore 보다 짧을때 계속 수행
+  while (step < this.dataStore.length) {
+    // 처음 시작 left, right 그룹의 배열의 시작 인덱스
+    let leftStart = 0;
+    let rightStart = step;
+
+    // left, right 를 step 으로 쌍을 만들 수 있을 때
+    while (rightStart + step <= this.dataStore.length) {
+      this.mergeArray(
+        this.dataStore,
+        leftStart,
+        leftStart + step - 1,
+        rightStart,
+        rightStart + step - 1
+      );
+      // 그다음 leftStart, rightStart
+      leftStart = rightStart + step;
+      rightStart = leftStart + step;
+    }
+    // 나머지 left, right 쌍을 만들 수 없을 때
+    if (rightStart < this.dataStore.length) {
+      this.mergeArray(
+        this.dataStore,
+        leftStart,
+        leftStart + step - 1,
+        rightStart,
+        this.dataStore.length - 1
+      );
+    }
+
+    step = step * 2;
+  }
+}
+
+// 두 정렬된 그룹의 배열의 각 첫번째 요소를 가지고
+// 작은수 부터 배치하여 머지합니다.
+mergeArray(
+  arr: number[],
+  leftStart: number,
+  leftStop: number,
+  rightStart: number,
+  rightStop: number
+) {
+  // 임시 배열 복사 생성
+  const tempArray = arr.map((item) => item);
+
+  let part1 = leftStart;
+  let part2 = rightStart;
+
+  // 다시 arr에 정렬된것을 할당
+  for (let i = leftStart; i <= rightStop; i++) {
+    if (part2 > rightStop) {
+      // part2 가 rightStop 보다 커진다면 우측 배열은 정렬이 끝난 것이다
+      arr[i] = tempArray[part1];
+      part1++;
+    } else if (part1 > leftStop) {
+      // part1 이 rightStart가 같아지거나 커진다면 왼쪽 배열은 정렬이 끝난 것이다
+      arr[i] = tempArray[part2];
+      part2++;
+    } else {
+      if (tempArray[part1] <= tempArray[part2]) {
+        arr[i] = tempArray[part1];
+        part1++;
+      } else {
+        arr[i] = tempArray[part2];
+        part2++;
+      }
+    }
+  }
+}
+```
 
 ## 퀵 정렬
 
