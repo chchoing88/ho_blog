@@ -36,7 +36,7 @@ XXS의 취약점은 애플리케이션이 신뢰할 수 없는 데이터를 가�
 
 요청 URL
 
-```
+```http
 http://www.server.com/search/?q<script>alert(document.cookie)</script>&x=0&y=0
 ```
 
@@ -84,13 +84,13 @@ http://www.server.com/search/?q<script>alert(document.cookie)</script>&x=0&y=0
 
 위 페이지에서 name 변수에 다음과 같이 변수를 입력하면
 
-```
+```http
 http://www.server.com/page.html?name=merlin
 ```
 
 정상적으로 동작합니다. 하지만 DOM 기반 XSS 공격을 위해서 다음과 같이 입력하면 브라우저에서 script 의 내용이 실행되게 됩니다.
 
-```
+```http
 http://www.server.com/page.html?name=<script>alert(document.cookie)</script>
 ```
 
