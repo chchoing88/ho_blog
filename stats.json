@@ -28,6 +28,10 @@
       "component---src-pages-index-js-4a72a400e6141dde0d21.js",
       "component---src-pages-index-js-4a72a400e6141dde0d21.js.map"
     ],
+    "path---hello-algorithms-order": [
+      "path---hello-algorithms-order-ead22b6d361f17bdbbaf.js",
+      "path---hello-algorithms-order-ead22b6d361f17bdbbaf.js.map"
+    ],
     "path---react-fiber-react-fiber-03": [
       "path---react-fiber-react-fiber-03-65967f924f216a27d0a9.js",
       "path---react-fiber-react-fiber-03-65967f924f216a27d0a9.js.map"
@@ -37,8 +41,8 @@
       "path---react-hook-hood-hook-75a9cdff94a7a74ac6a2.js.map"
     ],
     "path---hello-algorithms-graph": [
-      "path---hello-algorithms-graph-8e5236e6f3454c734af9.js",
-      "path---hello-algorithms-graph-8e5236e6f3454c734af9.js.map"
+      "path---hello-algorithms-graph-9356aed1a68e4ead2759.js",
+      "path---hello-algorithms-graph-9356aed1a68e4ead2759.js.map"
     ],
     "path---javascript-basic-1": [
       "path---javascript-basic-1-9a67a2cd34c9412b299b.js",
@@ -197,8 +201,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-4599342ad0fe87984109.js",
-      "path---index-4599342ad0fe87984109.js.map"
+      "path---index-3d5c46ed38df11f9e939.js",
+      "path---index-3d5c46ed38df11f9e939.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -211,6 +215,10 @@
     "path---hello-algorithms-queue": [
       "path---hello-algorithms-queue-64adb1793536d1ddeeb8.js",
       "path---hello-algorithms-queue-64adb1793536d1ddeeb8.js.map"
+    ],
+    "path---javascript-security": [
+      "path---javascript-security-564e1c9acafb75411e8d.js",
+      "path---javascript-security-564e1c9acafb75411e8d.js.map"
     ],
     "path---why-set-state-async": [
       "path---why-set-state-async-de06158212c6347a9a36.js",
@@ -291,9 +299,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-674ffcc75a5017688f28.js",
+      "app-f9c8670b3cbeff3c763e.js",
       "build-js-styles.css",
-      "app-674ffcc75a5017688f28.js.map",
+      "app-f9c8670b3cbeff3c763e.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
