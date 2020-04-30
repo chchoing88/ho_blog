@@ -61,24 +61,24 @@ jsdom은 대게 순수한 자바스크립트를 사용해서 브라우저와 같
 테스트 툴들은 다음과 같은 기능들로 나뉘어 집니다. 일부는 하나의 기능 만 제공하고 일부는 조합을 제공합니다.
 가장 유연한 설정 기능을 얻으려면 여러 도구를 함께 사용하는 것이 일반적입니다.
 
-1.  **Test launchers** 는 당신의 테스트들을 유저가 CLI 또는 UI 를 이용해서 설정한 노드 또는 브라우저에서 실행하게 합니다.
+1. **Test launchers** 는 당신의 테스트들을 유저가 CLI 또는 UI 를 이용해서 설정한 노드 또는 브라우저에서 실행하게 합니다.
     또한 브라우저를 수동으로 열어도 가능합니다. ([Karma](https://karma-runner.github.io/), [Jasmine](http://jasmine.github.io/), [Jest](https://facebook.github.io/jest/), [TestCafe](https://github.com/DevExpress/testcafe), [Cypress](https://www.cypress.io/))
 
-2.  **Testing structure** 는 당신의 테스트 파일들을 정렬할 수 있도록 도와줍니다. ([Mocha](https://mochajs.org/), [Jasmine](http://jasmine.github.io/), [Jest](https://facebook.github.io/jest/), [Cucumber](https://github.com/cucumber/cucumber-js), [TestCafe](https://github.com/DevExpress/testcafe), [Cypress](https://www.cypress.io/))
+2. **Testing structure** 는 당신의 테스트 파일들을 정렬할 수 있도록 도와줍니다. ([Mocha](https://mochajs.org/), [Jasmine](http://jasmine.github.io/), [Jest](https://facebook.github.io/jest/), [Cucumber](https://github.com/cucumber/cucumber-js), [TestCafe](https://github.com/DevExpress/testcafe), [Cypress](https://www.cypress.io/))
 
-3.  **Assertion functions** 기대한 값과 테스트 결과 값을 비교합니다. ([Chai](http://chaijs.com/), [Jasmine](http://jasmine.github.io/), [Jest](https://facebook.github.io/jest/), [Unexpected](http://unexpected.js.org/), [TestCafe](https://github.com/DevExpress/testcafe), [Cypress](https://www.cypress.io/))
+3. **Assertion functions** 기대한 값과 테스트 결과 값을 비교합니다. ([Chai](http://chaijs.com/), [Jasmine](http://jasmine.github.io/), [Jest](https://facebook.github.io/jest/), [Unexpected](http://unexpected.js.org/), [TestCafe](https://github.com/DevExpress/testcafe), [Cypress](https://www.cypress.io/))
 
-4.  **Generate and display test progress and results.** ([Mocha](https://mochajs.org/), [Jasmine](http://jasmine.github.io/), [Jest](https://facebook.github.io/jest/), [Karma](https://karma-runner.github.io/), [TestCafe](https://github.com/DevExpress/testcafe), [Cypress](https://www.cypress.io/))
+4. **Generate and display test progress and results.** ([Mocha](https://mochajs.org/), [Jasmine](http://jasmine.github.io/), [Jest](https://facebook.github.io/jest/), [Karma](https://karma-runner.github.io/), [TestCafe](https://github.com/DevExpress/testcafe), [Cypress](https://www.cypress.io/))
 
-5.  **Mocks, spies, and stubs** 는 테스트들의 특정 부분을 분리하고 그것들의 사이드 이펙트 들과 분리시켜 주기 위해 사용합니다. ([Sinon](http://sinonjs.org/), [Jasmine](http://jasmine.github.io/), [enzyme](http://airbnb.io/enzyme/docs/api/), [Jest](https://facebook.github.io/jest/), [testdouble](https://testdouble.com/))
+5. **Mocks, spies, and stubs** 는 테스트들의 특정 부분을 분리하고 그것들의 사이드 이펙트 들과 분리시켜 주기 위해 사용합니다. ([Sinon](http://sinonjs.org/), [Jasmine](http://jasmine.github.io/), [enzyme](http://airbnb.io/enzyme/docs/api/), [Jest](https://facebook.github.io/jest/), [testdouble](https://testdouble.com/))
 
-6.  **Generate and compare snapshots** 는 이전 수행에서의 의도로 부터 컴포넌트와 데이터 구조의 변화를 확인하기 위해 사용합니다. ([Jest](https://facebook.github.io/jest/), [Ava](https://github.com/avajs/ava))
+6. **Generate and compare snapshots** 는 이전 수행에서의 의도로 부터 컴포넌트와 데이터 구조의 변화를 확인하기 위해 사용합니다. ([Jest](https://facebook.github.io/jest/), [Ava](https://github.com/avajs/ava))
 
-7.  **Generate code coverage** 당신의 테스트로 인해 코드가 어느정도 커버가 되는지에 대한 코드의 양을 알 수 있습니다. ([Istanbul](https://gotwarlost.github.io/istanbul/), [Jest](https://facebook.github.io/jest/), [Blanket](http://blanketjs.org/))
+7. **Generate code coverage** 당신의 테스트로 인해 코드가 어느정도 커버가 되는지에 대한 코드의 양을 알 수 있습니다. ([Istanbul](https://gotwarlost.github.io/istanbul/), [Jest](https://facebook.github.io/jest/), [Blanket](http://blanketjs.org/))
 
-8.  **Browser Controllers** Functional Tests를 위한 유저 액션을 시뮬레이션 합니다. ([Nightwatch](http://nightwatchjs.org/), [Nightmare](http://www.nightmarejs.org/), [Phantom](http://phantomjs.org/)**,** [Puppeteer](https://github.com/GoogleChrome/puppeteer), [TestCafe](https://github.com/DevExpress/testcafe), [Cypress](https://www.cypress.io/))
+8. **Browser Controllers** Functional Tests를 위한 유저 액션을 시뮬레이션 합니다. ([Nightwatch](http://nightwatchjs.org/), [Nightmare](http://www.nightmarejs.org/), [Phantom](http://phantomjs.org/)**,** [Puppeteer](https://github.com/GoogleChrome/puppeteer), [TestCafe](https://github.com/DevExpress/testcafe), [Cypress](https://www.cypress.io/))
 
-9.  **Visual Regression** **Tools** 는 이미지 비교 기술을 사용하여 사이트를 이전 버전과 시각적으로 비교하는 데 사용됩니다. ([Applitools](https://applitools.com/), [Percy](https://percy.io/), [Wraith](http://bbc-news.github.io/wraith/), [WebdriverCSS](https://github.com/webdriverio-boneyard/webdrivercss))
+9. **Visual Regression** **Tools** 는 이미지 비교 기술을 사용하여 사이트를 이전 버전과 시각적으로 비교하는 데 사용됩니다. ([Applitools](https://applitools.com/), [Percy](https://percy.io/), [Wraith](http://bbc-news.github.io/wraith/), [WebdriverCSS](https://github.com/webdriverio-boneyard/webdrivercss))
 
 위에서 언급 한 용어 중 일부를 설명해 보겠습니다.
 
