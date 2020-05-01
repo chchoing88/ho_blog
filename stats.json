@@ -20,6 +20,10 @@
       "path---javascript-prototype-dd176c5979078c57a58c.js",
       "path---javascript-prototype-dd176c5979078c57a58c.js.map"
     ],
+    "path---hello-algorithms-advanced": [
+      "path---hello-algorithms-advanced-a224fe99ddc2a8012743.js",
+      "path---hello-algorithms-advanced-a224fe99ddc2a8012743.js.map"
+    ],
     "path---typescript-react": [
       "path---typescript-react-1a9173d47ec4aaf50a34.js",
       "path---typescript-react-1a9173d47ec4aaf50a34.js.map"
@@ -27,10 +31,6 @@
     "component---src-pages-index-js": [
       "component---src-pages-index-js-4a72a400e6141dde0d21.js",
       "component---src-pages-index-js-4a72a400e6141dde0d21.js.map"
-    ],
-    "path---hello-algorithms-order": [
-      "path---hello-algorithms-order-ead22b6d361f17bdbbaf.js",
-      "path---hello-algorithms-order-ead22b6d361f17bdbbaf.js.map"
     ],
     "path---react-fiber-react-fiber-03": [
       "path---react-fiber-react-fiber-03-65967f924f216a27d0a9.js",
@@ -201,8 +201,8 @@
       "path---ui-unit-testing-a749535a7628a8651417.js.map"
     ],
     "path---index": [
-      "path---index-3d5c46ed38df11f9e939.js",
-      "path---index-3d5c46ed38df11f9e939.js.map"
+      "path---index-6e9add53cf6f85fb39e0.js",
+      "path---index-6e9add53cf6f85fb39e0.js.map"
     ],
     "path---react-fiber-react-fiber-02": [
       "path---react-fiber-react-fiber-02-92e24b4eb81ef95103c4.js",
@@ -263,8 +263,8 @@
       "path---react-ssr-b91bf25e1b9aa24a4c14.js.map"
     ],
     "path---hello-testing": [
-      "path---hello-testing-9cafd47c9b843bbcdede.js",
-      "path---hello-testing-9cafd47c9b843bbcdede.js.map"
+      "path---hello-testing-3111b77152e9265de403.js",
+      "path---hello-testing-3111b77152e9265de403.js.map"
     ],
     "path---refactoring-organization-data-2": [
       "path---refactoring-organization-data-2-6725e1fa3585396087cf.js",
@@ -287,8 +287,8 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "path---hello-enzyme": [
-      "path---hello-enzyme-20c1ec114c4f8773af3a.js",
-      "path---hello-enzyme-20c1ec114c4f8773af3a.js.map"
+      "path---hello-enzyme-04e7282ae6300ccc1626.js",
+      "path---hello-enzyme-04e7282ae6300ccc1626.js.map"
     ],
     "path---hello-o-auth": [
       "path---hello-o-auth-1ded8c89a6d0d6d8d0ee.js",
@@ -299,9 +299,9 @@
       "path---refactoring-complex-refactoring-3bde085886c272fceff0.js.map"
     ],
     "app": [
-      "app-f9c8670b3cbeff3c763e.js",
+      "app-3cde925024b1107c9aff.js",
       "build-js-styles.css",
-      "app-f9c8670b3cbeff3c763e.js.map",
+      "app-3cde925024b1107c9aff.js.map",
       "build-js-styles.css.map"
     ],
     "path---refactoring-concise-conditionals": [
@@ -321,12 +321,20 @@
       "path---maintainable-javascript-event-handling-08483da9a7c1874195de.js.map"
     ],
     "path---tail-recursion": [
-      "path---tail-recursion-f761287dce59e97bc243.js",
-      "path---tail-recursion-f761287dce59e97bc243.js.map"
+      "path---tail-recursion-678402b32796cb6ceb5b.js",
+      "path---tail-recursion-678402b32796cb6ceb5b.js.map"
+    ],
+    "path---hello-algorithms-search": [
+      "path---hello-algorithms-search-ab8a2117d1ff484ce314.js",
+      "path---hello-algorithms-search-ab8a2117d1ff484ce314.js.map"
     ],
     "path---refactoring-moving-between-object": [
       "path---refactoring-moving-between-object-9e40449234c2cb6b787d.js",
       "path---refactoring-moving-between-object-9e40449234c2cb6b787d.js.map"
+    ],
+    "path---hello-algorithms-sort": [
+      "path---hello-algorithms-sort-a6b2413c28bdc8a0666a.js",
+      "path---hello-algorithms-sort-a6b2413c28bdc8a0666a.js.map"
     ],
     "path---hello-rxjs": [
       "path---hello-rxjs-0ed4a738df5e0ed5cfc9.js",
