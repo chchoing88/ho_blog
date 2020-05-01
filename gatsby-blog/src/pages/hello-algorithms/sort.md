@@ -1,5 +1,5 @@
 ---
-title: Order Algorithms
+title: Sort Algorithms
 date: '2020-04-28T10:00:03.284Z'
 ---
 
