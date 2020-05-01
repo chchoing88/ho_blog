@@ -458,7 +458,7 @@ module.exports = function() {
 
 # Choose Your Unit and Integration Tests Framework
 
-- 간단히 말해서, 만약 그냥 사직하고 싶다거나 대형 프로젝트에 빠른 프레임워크를 찾고 있다면 **Jest** 와 함께 라면 잘못 가지 않을 것입니다.
+- 간단히 말해서, 만약 그냥 시작하고 싶다거나 대형 프로젝트에 빠른 프레임워크를 찾고 있다면 **Jest** 와 함께 라면 잘못 가지 않을 것입니다.
 
 - 만약 확장가능하고 매우 유연한 설정을 원한다면, go with **Mocha**.
 
