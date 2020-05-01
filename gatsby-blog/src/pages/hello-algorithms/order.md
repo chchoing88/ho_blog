@@ -291,3 +291,51 @@ mergeArray(
 - 리스트를 두 개의 서브리스트로 나누는 피벗을 선택합니다.
 - 피벗을 기준으로 작은 값은 피벗의 왼쪽으로 큰 값은 피벗의 오른쪽으로 오도록 모든 요소를 정렬시킵니다.
 - 피벗을 기준으로 분류된 각각의 서브리스트에 1, 2번 과정을 반복한다.
+- 왼쪽 부분이 피벗보다 크다면 잠시 멈췄다가 오른쪽 부분을 살펴 봅니다. 오른쪽 수가 피벗보다 작다면 잠시 멈춰서 멈췄던 왼쪽 값과 오른쪽 값을 스왑시킵니다.
+- 위 동작은 start point 와 end point가 교차 되면 한번 정렬이 완성된것입니다.
+- 이 순서를 재귀적으로 호출합니다. 왼쪽 배열부터 정렬을 해서 합쳐오면 다시 오른쪽 부분을 정렬해서 최종적으로 합칩니다.
+- 시간 복잡도는 O(n log n) 이 됩니다.
+
+```typescript
+// 퀵 정렬
+// 피벗을 기준으로 왼쪽과 오른쪽을 나눠서 정렬을 시작합니다
+quickSort() {
+  this.dataStore = this.qSort(this.dataStore);
+}
+
+qSort(list: number[]): number[] {
+  // 정렬할 데이터가 없으면 빈 배열을 리턴합니다
+  if (list.length === 0) {
+    return [];
+  }
+
+  if (list.length === 1) {
+    return list;
+  }
+
+  const [lesser, greater, pivot] = this.partition(list);
+  const sortLesser = this.qSort(lesser);
+  const sortGreater = this.qSort(greater);
+
+  return sortLesser.concat(pivot, sortGreater);
+}
+
+partition(list: number[]): number[][] {
+  // 물리적으로 가운데 값을 피벗으로 잡는다
+  const pivot = Math.floor((list.length - 1) / 2);
+  const lesser: number[] = [];
+  const greater: number[] = [];
+
+  for (let i = 0; i < list.length; i++) {
+    if (i !== pivot) {
+      if (list[i] < list[pivot]) {
+        lesser.push(list[i]);
+      } else {
+        greater.push(list[i]);
+      }
+    }
+  }
+
+  return [lesser, greater, [list[pivot]]];
+}
+```
