@@ -126,7 +126,7 @@ function factorial(n) {
   var recur = function(result, n) {
     if (n === 1) return result
 
-    return recur(result * n, n - 1)
+    return recur(result * n, n-1)
   }
   return recur(1, n)
 }
@@ -135,32 +135,30 @@ function factorial(n) {
 
 위 코드에서 `factorial(100000000)` 실행시키면 Maximum call stack size exceeded 에러가 발생한다.
 
-그래서 한가지 방법중에 하나가 trampoline 이라고 불리는 패턴이다.
+그래서 한가지 방법중에 하나가 `trampoline` 이라고 불리는 패턴이다.
 만약 위에서 말한 계속 호출하는 방식이 아닌 호출할 함수를 리턴해준다면, 우리는 tramploine 을 사용해서 계속적으로 실행할 수 있다.
 
-trampoline 자바스크립트에서 tail recursion 을 실행시켜주는 helper function 이다.
-보통 다른 문서들에서 thunk 와 tramploining 이란 단어를 들어 봤을 것이다.
-`thunk`는 아직 호출되지 않는 함수를 말한다. 즉, 다른 함수에 대한 호출을 래핑하는 함수이다. 간단하게는 currying 과 binding 에서 이런 기능을 볼 수 있다.
-`trampoline function`에 thunk 를 전달을 하면 bound function 이 나오고, 해당 인자 값과 함께 while-loop 를 통해서 bound function 이 더 이상 함수가 아닐때 까지 그것의 recursive function 을 호출한다.
+`trampoline` 자바스크립트에서 tail recursion 을 실행시켜주는 `helper function` 이다.
+보통 다른 문서들에서 `thunk` 와 `tramploining` 이란 단어를 들어 봤을 것이다.
+`thunk`는 아직 호출되지 않는 함수를 말한다. 즉, 다른 함수에 대한 호출을 래핑하는 함수이다. 간단하게는 `currying` 과 `binding` 에서 이런 기능을 볼 수 있다. ( ex. redux-thunk s)
+`trampoline function`에 `thunk` 를 전달을 하면 `bound function` 이 나오고, 해당 인자 값과 함께 `while-loop` 를 통해서 `bound function` 이 더 이상 함수가 아닐때 까지 그것의 `recursive function` 을 호출한다.
 
 ```javascript
 function trampoline(fn) {
   while (fn && fn instanceof Function) {
-//continue if fn is not undefined/null and if it is still a
-//function
+  //continue if fn is not undefined/null and if it is still a function
     fn = fn(); // recur.bind(null,1*4,3) 을 실행.. 이 함수도 thunk 함수이다. 함수 호출 이후에 함수를 리턴함으로
   }
-//we call the function and assign the result of called previous fn
-//to new fn
+  // we call the function and assign the result of called previous fn to new fn
+  // when we are done return fn when fn is the result and no longer function.
   return fn;
-//when we are done return fn when fn is the result and no longer
-//function.
 }
+
 function factorial(n) {
   var recur = function(result, n) {
     if (n === 1)
       return result;
-    return recur.bind(null, result * n, n — 1);
+    return recur.bind(null, result * n, n-1);
   }
   return trampoline(recur(1, n));
 }
@@ -168,7 +166,7 @@ function factorial(n) {
 
 위 예에서 `factorical(4)` 를 호출한다고 가정을 해보고 호출을 따라가보자.
 여기서 위에서 설명한 `thunk 함수`는 `recur 함수`이다.
-`recur(1,n)` 을 trampoline 함수에 인자로 넘겼을 때, `recur(1,4)` 를 호출 후에 우리는 사실 `recur.bind(null,1*4,3)` 을 넘기게 됩니다.
+`recur(1,n)` 을 `trampoline` 함수에 인자로 넘겼을 때, `recur(1,4)` 를 호출 후에 우리는 사실 `recur.bind(null,1*4,3)` 을 넘기게 됩니다.
 while 반복문은 recur 가 undefined/null 이지 않고, 함수인지를 체크한다. 여기서 recur 이 bounded 되고 나서도 recur 함수는 Function object 의 인스턴스로 여전히 남아있게 된다.
 
 ```javascript
@@ -176,13 +174,13 @@ console.log(recur.bind(null, 1 * 4, 3)) // [Function: bound recur]
 ```
 
 루프에 2 가지 상태를 확인한 후에 fn 을 호출한다. 그리곤 그것의 결과를 다시 fn 에 할당한다.
-그러면 fn 은 `recur.bind(null,4*3,2)` 가 된다. 이 루프는 `recur.bind(null,12*2,1)` 이 될때까지 동작하게 된다. 그리곤 24 를 리턴한다. 여기서 24 값은 undefined/null 이 아니다, 그래서 while 루프 상태값에서 통과가 되지만 24 값은 function 이 아니기에 while 루프가 중지된다. trampoline 함수는 결국 24 인 fn 을 반환하게 된다.
+그러면 fn 은 `recur.bind(null,4*3,2)` 가 된다. 이 루프는 `recur.bind(null,12*2,1)` 이 될때까지 동작하게 된다. 그리곤 24 를 리턴한다. 여기서 24 값은 undefined/null 이 아니다, 그래서 while 루프 상태값에서 통과가 되지만 24 값은 function 이 아니기에 while 루프가 중지된다. `trampoline` 함수는 결국 24 인 fn 을 반환하게 된다.
 
-이 과정에서 우리는 함수 호출을 쌓을 필요가 없습니다. 각 함수가 호출되어 바운드 함수를 반환 한 다음 호출 스택에서 제거됩니다. 그런 다음 trampoline 의 while 루프를 사용하여 바운드 함수를 호출하여 각 재귀 적 단계로 건너 뛰게 됩니다.
+이 과정에서 우리는 함수 호출을 쌓을 필요가 없습니다. 각 함수가 호출되어 바운드 함수를 반환 한 다음 호출 스택에서 제거됩니다. 그런 다음 `trampoline` 의 while 루프를 사용하여 바운드 함수를 호출하여 각 재귀 적 단계로 건너 뛰게 됩니다.
 
 while 문을 돌면서 fn 이 함수가 아닌 값으로 떨어질때까지 호출하고 리턴하고를 반복한다. fn 을 만들때에는 해당 조건이 완성되지 않았을 때는 계속 함수를 리턴하도록 해준다.
 
-결과적으로 같이 `factorial(100000000)`을 실행할 경우에 call stack 에러가 뜨지 않는다.
+결과적으로 같이 `factorial(100000000)`을 실행할 경우에 call stack 에러가 뜨지 않습니다.
 
 ## 예시
 
@@ -280,31 +278,31 @@ const trampoline = fn => {
 만약 아래와 같은 간단한 구조였다면
 
 ```javascript
-    const data = {
-    	id: 'us'
-    	child: [
-    		{id:'kor', child:[
-    			{id: 'ab'},
-    			{id: 'cd'}
-    		]},
-    		{id:'jp'},
-    	]
-    }
+const data = {
+  id: 'us'
+  child: [
+    {id:'kor', child:[
+      {id: 'ab'},
+      {id: 'cd'}
+    ]},
+    {id:'jp'},
+  ]
+}
 
-    // stack의 움직임
-    // 1.
-    [data]
-    // data를 result에 넣어두고 data있었던 자리에 child를 풀어서 다시 스택에 넣는다.
-    [{id:'kor'...},{id: 'jp'...}]
+// stack의 움직임
+// 1.
+[data]
+// data를 result에 넣어두고 data있었던 자리에 child를 풀어서 다시 스택에 넣는다.
+[{id:'kor'...},{id: 'jp'...}]
 
-    // 2.
-    // 첫번째 데이터(id:'kor')를 빼내어서 다시 result에 넣어두고 child가 있기에 다시 풀어서 stack에 넣는다.
-    [{id:'ab'}, {id:'cd'}, {id:'jp'..}]
+// 2.
+// 첫번째 데이터(id:'kor')를 빼내어서 다시 result에 넣어두고 child가 있기에 다시 풀어서 stack에 넣는다.
+[{id:'ab'}, {id:'cd'}, {id:'jp'..}]
 
-    // 지금까지의 result는
-    [{id:'us'}, {id:'kor'}]
+// 지금까지의 result는
+[{id:'us'}, {id:'kor'}]
 
-    // 이렇게 해서 순서대로 flat하게 만들 수 있다.
+// 이렇게 해서 순서대로 flat하게 만들 수 있다.
 ```
 
 < iteration 로직 >
