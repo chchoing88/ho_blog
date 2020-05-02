@@ -18,7 +18,7 @@ module.exports = {
   company: "DK TECHIN",
   location: "Korea",
   email: "chchoing@naver.com",
-  website: "https://chchoing88.github.io/ho_blog/", // ex.'https://junhobaik.github.io'
+  website: "https://chchoing88.github.io/ho_blog", // ex.'https://junhobaik.github.io'
   linkedin: "", // ex.'https://www.linkedin.com/in/junho-baik-16073a19ab'
   facebook: "", // ex.'https://www.facebook.com/zuck' or 'https://www.facebook.com/profile.php?id=000000000000000'
   instagram: "", // ex.'https://www.instagram.com/junhobaik'

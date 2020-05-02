@@ -3,7 +3,7 @@ const { title, description, author, googleAnalytics, siteUrl } = config;
 
 const gatsbyConfig = {
   siteMetadata: { title, description, author, siteUrl },
-  pathPrefix: "/ho_blog",
+  pathPrefix: `/ho_blog`,
   plugins: [
     {
       resolve: `gatsby-plugin-google-analytics`,
