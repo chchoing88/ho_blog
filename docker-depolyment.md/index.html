@@ -615,14 +615,14 @@
 <li>버츄어 박스에 공유 폴더 설정
 참고 : <a href="http://theniceguy.tistory.com/13" target="_blank" rel="nofollow noopener noreferrer">http://theniceguy.tistory.com/13</a></li>
 </ol>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">## 우분투에 공유폴더 마운트 
-$ sudo mount --types vboxsf blog_project blog_project</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment">## 우분투에 공유폴더 마운트 </span>
+$ <span class="token function">sudo</span> <span class="token function">mount</span> --types vboxsf blog_project blog_project</code></pre></div>
 <ul>
 <li>로컬 blog<em>project 폴더를 버츄어박스의 blog\</em>proect 폴더랑 연결</li>
 <li>버츄어 박스 내의 blog_proect 폴더안에는 도커에서 필요한 소스파일 및 설정파일들이 담겨져 있음.</li>
 <li>로드밸런싱을 위한 nginx-proxy 이미지 다운 받기 </li>
 </ul>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">## nginx-proxy 이미지 다운 받기 
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment">## nginx-proxy 이미지 다운 받기 </span>
 $ docker pull jwilder/nginx-proxy </code></pre></div>
 <ul>
 <li>사실 여기서 받지 않아도  docker-compose.yml 파일에 설정이 되어있어서 docker-compose up 하면 자동으로 pull을 받게 된다.</li>
@@ -646,7 +646,7 @@ $ docker pull jwilder/nginx-proxy </code></pre></div>
 <ol start="4">
 <li>도커파일을 express 이미지로 빌드.</li>
 </ol>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker build -t blog_express:v1 -f ./dockerfile/Dockerfile_express .</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker build -t blog_express:v1 -f ./dockerfile/Dockerfile_express <span class="token builtin class-name">.</span></code></pre></div>
 <ol start="5">
 <li>모아둔 이미지들을 실행할 수 있도록 docker compose 작성</li>
 </ol>
@@ -725,35 +725,35 @@ nginx 설정에 server_name이 VIRTUAL_HOST 에 설정했던 값이 박혀있기
 <ol start="6">
 <li>/etc/hosts 파일 수정</li>
 </ol>
-<div class="gatsby-highlight" data-language="vi"><pre class="language-vi"><code class="language-vi">0.0.0.0   nodeapp.local</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token number">0.0</span>.0.0   nodeapp.local</code></pre></div>
 <ol start="7">
 <li>블루-그린 배포를 위한 쉘 스크립트 작성</li>
 </ol>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">#check.sh
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment">#check.sh</span>
 
-#!/bin/sh
+<span class="token comment">#!/bin/sh</span>
 
-EXIST_BLUE=$(docker ps | grep app_blue)
+<span class="token assign-left variable">EXIST_BLUE</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>docker <span class="token function">ps</span> <span class="token operator">|</span> <span class="token function">grep</span> app_blue<span class="token variable">)</span></span>
 
-if [ -z &quot;$EXIST_BLUE&quot;]; then
+<span class="token keyword">if</span> <span class="token punctuation">[</span> -z <span class="token string">"<span class="token variable">$EXIST_BLUE</span>"</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
     docker-compose up -d app_blue
     docker-compose stop app_green
-    echo &quot;run app_blue!!&quot;
-else
+    <span class="token builtin class-name">echo</span> <span class="token string">"run app_blue!!"</span>
+<span class="token keyword">else</span>
     docker-compose up -d app_green
     docker-compose stop app_blue
-    echo &quot;run app_green!!&quot;
-fi</code></pre></div>
+    <span class="token builtin class-name">echo</span> <span class="token string">"run app_green!!"</span>
+<span class="token keyword">fi</span></code></pre></div>
 <ul>
 <li>check.sh 를 작성해서 app_blue가 실행했을 경우에는 app_green이 실행 후 app_blue 를 중지.</li>
 <li>app_green 이 실행했을 경우에는 app_blue를 실행 후 app_green 를 중지.</li>
 <li>test</li>
 </ul>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh"># 처음에는 app_blue를 띄운다.
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment"># 처음에는 app_blue를 띄운다.</span>
 $ docker-compose up -d app_blue
 
-# 그 다음부턴 무중단으로 .check.sh 를 실행
-$ sudo sh check.sh</code></pre></div>
+<span class="token comment"># 그 다음부턴 무중단으로 .check.sh 를 실행</span>
+$ <span class="token function">sudo</span> <span class="token function">sh</span> check.sh</code></pre></div>
 <p><span
       class="gatsby-resp-image-wrapper"
       style="position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 590px;"

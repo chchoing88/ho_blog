@@ -774,52 +774,52 @@
 <h2 id="docker-use" style="position:relative;"><a href="#docker-use" aria-label="docker use permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Docker use</h2>
 <p>도커 허브에서 원하는 이미지를 다운 받을 수 있다.
 <a href="https://hub.docker.com/" target="_blank" rel="nofollow noopener noreferrer">도커 허브</a></p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker --help</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker --help</code></pre></div>
 <p>도커의 명령어를 살펴볼 수 있다.</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker pull nginx:latest
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker pull nginx:latest
 or
-$ docker run -d -it \
---name merlin-nginx \
--p 8080:80 \
+$ docker run -d -it <span class="token punctuation">\</span>
+--name merlin-nginx <span class="token punctuation">\</span>
+-p <span class="token number">8080</span>:80 <span class="token punctuation">\</span>
 nginx:latest</code></pre></div>
 <p>pull 을 하면 해당 이미지만 받는것이다 <br>
 run 을 실행하게 되면 local 에 nginx:latest 라는 이미지가 없으면 자동으로 hub 에서 다운받아서 run 을 시킨다.</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker images
-$ docker ps
-$ docker ps [-a] [-l] [-n number]</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker images
+$ docker <span class="token function">ps</span>
+$ docker <span class="token function">ps</span> <span class="token punctuation">[</span>-a<span class="token punctuation">]</span> <span class="token punctuation">[</span>-l<span class="token punctuation">]</span> <span class="token punctuation">[</span>-n number<span class="token punctuation">]</span></code></pre></div>
 <p>images 는 도커 이미지 리스트를 살펴볼 수 있다. <br>
 ps 는 실행중인 컨테이너 리스트를 볼 수 있다. <br>
 -a 옵션을 붙이면 종료된 목록까지 볼 수 있다.<br>
 -l 옵션은 마지막 실행했던 목록 , -n 은 리눅스의 tail 명령어와 동일하다.</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker commit -a &quot;merlin &lt;merlin@kakaocrop.com&gt;&quot; -m olympic-search-pc naughty_torvalds search.daum.pc:olypic</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker commit -a <span class="token string">"merlin &lt;merlin@kakaocrop.com>"</span> -m olympic-search-pc naughty_torvalds search.daum.pc:olypic</code></pre></div>
 <p>현재 돌아가고 있는 컨테이너를 이미지로 만들 수 있다.<br>
 -a 옵션 : author , -m : 커밋 메세지 , &#x3C;naughty_torvalds> 들어가는 부분 : 지금 동작하고 있는 컨테이너 이름 , &#x3C;search.daum.pc:olypic> 새로운 이미지 네임과 태그</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker rm &lt;컨테이너 이름&gt;
-$ docker rmi &lt;이미지&gt;
-# 한번에 처리.
-$ docker rm $(docker ps -a -q)</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker <span class="token function">rm</span> <span class="token operator">&lt;</span>컨테이너 이름<span class="token operator">></span>
+$ docker rmi <span class="token operator">&lt;</span>이미지<span class="token operator">></span>
+<span class="token comment"># 한번에 처리.</span>
+$ docker <span class="token function">rm</span> <span class="token variable"><span class="token variable">$(</span>docker <span class="token function">ps</span> -a -q<span class="token variable">)</span></span></code></pre></div>
 <p>도커 이미지와 컨테이너 삭제</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker start &lt;컨테이너 이름&gt;
-$ docker stop  &lt;컨테이너 이름&gt;
-$ docker restart &lt;컨테이너 이름&gt;</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker start <span class="token operator">&lt;</span>컨테이너 이름<span class="token operator">></span>
+$ docker stop  <span class="token operator">&lt;</span>컨테이너 이름<span class="token operator">></span>
+$ docker restart <span class="token operator">&lt;</span>컨테이너 이름<span class="token operator">></span></code></pre></div>
 <p>도커 컨테이너 실행 , 중지 , 재부팅</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker attach &lt;실행중인 컨테이너 이름&gt;
-$ docker exec -it &lt;실행중인 컨테이너 이름&gt; &lt;컨테이너 안에서 실행할 명령&gt;
-$ docker exec -it merlin-nginx /bin/bash</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker attach <span class="token operator">&lt;</span>실행중인 컨테이너 이름<span class="token operator">></span>
+$ docker <span class="token builtin class-name">exec</span> -it <span class="token operator">&lt;</span>실행중인 컨테이너 이름<span class="token operator">></span> <span class="token operator">&lt;</span>컨테이너 안에서 실행할 명령<span class="token operator">></span>
+$ docker <span class="token builtin class-name">exec</span> -it merlin-nginx /bin/bash</code></pre></div>
 <p>attach 는 실행중인 도커 컨테이너에 접속한다. 단, ps 쳤을때 command 에 /bin/bash 라고 쳐져있어야 자유롭게 입력할 수 있다. 그렇지 않으면 입력은 할 수 없고 출력만 보인다. <br>
 exec 는 컨테이너 안에서 수행할 명령을 날려줍니다. -it 옵션을 주면 실행된 bash 쉘에서 입력 및 출력을 할 수가 있습니다.</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker inspect &lt;컨테이너 이름 or 이미지:태그&gt;</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker inspect <span class="token operator">&lt;</span>컨테이너 이름 or 이미지:태그<span class="token operator">></span></code></pre></div>
 <p>이미지 또는 컨테이너의 세부정보를 출력합니다.</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker history &lt;이미지:태그&gt;</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker <span class="token function">history</span> <span class="token operator">&lt;</span>이미지:태그<span class="token operator">></span></code></pre></div>
 <p>이미지의 히스토리를 조회</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker diff &lt;실행중인 컨테이너 이름&gt;</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker <span class="token function">diff</span> <span class="token operator">&lt;</span>실행중인 컨테이너 이름<span class="token operator">></span></code></pre></div>
 <p>컨테이너가 실행되면서 변경된 파일 목록을 출력합니다. 비교 기준은 컨테이너를 생성한 이미지 내용입니다.</p>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker cp &lt;컨테이너 이름&gt;:&lt;경로&gt; &lt;호스트 경로&gt;</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker <span class="token function">cp</span> <span class="token operator">&lt;</span>컨테이너 이름<span class="token operator">></span>:<span class="token operator">&lt;</span>경로<span class="token operator">></span> <span class="token operator">&lt;</span>호스트 경로<span class="token operator">></span></code></pre></div>
 <p>컨테이너에서 파일을 꺼내기.</p>
 <hr>
 <h2 id="docker-build" style="position:relative;"><a href="#docker-build" aria-label="docker build permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Docker build</h2>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker [OPTIONS] PATH | URL | -
-$ docker build -t app .</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker <span class="token punctuation">[</span>OPTIONS<span class="token punctuation">]</span> <span class="token environment constant">PATH</span> <span class="token operator">|</span> URL <span class="token operator">|</span> -
+$ docker build -t app <span class="token builtin class-name">.</span></code></pre></div>
 <p>-t 옵션은 생성할 이미지 이름을 지정합니다. <br>
 -f 옵션은 파일명을 custom 하게 지었을때 사용하거나 Dockerfile 경로가 루트에 없을때 이용. <br>
 PATH 는 도커 이미지 빌드 할때 전송되는 context 를 가리킨다. <br></p>
@@ -922,16 +922,16 @@ PATH 는 도커 이미지 빌드 할때 전송되는 context 를 가리킨다. <
 <hr>
 <h2 id="docker-app-data-관리법" style="position:relative;"><a href="#docker-app-data-%EA%B4%80%EB%A6%AC%EB%B2%95" aria-label="docker app data 관리법 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Docker app data 관리법</h2>
 <h3 id="호스트의-지정된-폴더를-컨테이너에-다이렉트로-마운트" style="position:relative;"><a href="#%ED%98%B8%EC%8A%A4%ED%8A%B8%EC%9D%98-%EC%A7%80%EC%A0%95%EB%90%9C-%ED%8F%B4%EB%8D%94%EB%A5%BC-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88%EC%97%90-%EB%8B%A4%EC%9D%B4%EB%A0%89%ED%8A%B8%EB%A1%9C-%EB%A7%88%EC%9A%B4%ED%8A%B8" aria-label="호스트의 지정된 폴더를 컨테이너에 다이렉트로 마운트 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>호스트의 지정된 폴더를 컨테이너에 다이렉트로 마운트</h3>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker run --name merlin_ubuntu -d -v &lt;호스트 폴더경로&gt;:&lt;마운트될 컨테이너 폴더경로&gt; -it ubuntu:14.04</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker run --name merlin_ubuntu -d -v <span class="token operator">&lt;</span>호스트 폴더경로<span class="token operator">></span>:<span class="token operator">&lt;</span>마운트될 컨테이너 폴더경로<span class="token operator">></span> -it ubuntu:14.04</code></pre></div>
 <h3 id="volume-container-사용" style="position:relative;"><a href="#volume-container-%EC%82%AC%EC%9A%A9" aria-label="volume container 사용 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>volume container 사용</h3>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh"># 볼륨 컨테이너를 만든다. busybox 기반 정말 리눅스의 최소 기반만 가지고 있다. 1.14MB
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment"># 볼륨 컨테이너를 만든다. busybox 기반 정말 리눅스의 최소 기반만 가지고 있다. 1.14MB</span>
 $ docker run -v /dbdata --name dbdata busybox
 
-# 볼륨 컨테이너를 우분투 컨테이너에 연결
-$ docker run --volumes-from=dbdata -it ubuntu:14.04 /bin/bash
+<span class="token comment"># 볼륨 컨테이너를 우분투 컨테이너에 연결</span>
+$ docker run --volumes-from<span class="token operator">=</span>dbdata -it ubuntu:14.04 /bin/bash
 
-# 빽업도 진행할 수 있다.
-$ docker run —volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata</code></pre></div>
+<span class="token comment"># 빽업도 진행할 수 있다.</span>
+$ docker run —volumes-from dbdata -v <span class="token variable"><span class="token variable">$(</span><span class="token builtin class-name">pwd</span><span class="token variable">)</span></span>:/backup ubuntu <span class="token function">tar</span> cvf /backup/backup.tar /dbdata</code></pre></div>
 <h3 id="volume-으로-사용" style="position:relative;"><a href="#volume-%EC%9C%BC%EB%A1%9C-%EC%82%AC%EC%9A%A9" aria-label="volume 으로 사용 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>volume 으로 사용</h3>
 <ul>
 <li>보통 standalone 컨테이너에는 -v 또는 --volume 옵션을 사용했고, swarm service 에는 --mount 옵션을 사용해 왔지만 17.06 이후 버젼부터는 standalone 컨테이너에서 모두 사용이 가능하다.</li>
@@ -944,36 +944,36 @@ $ docker run —volumes-from dbdata -v $(pwd):/backup ubuntu tar cvf /backup/bac
 <li>bind 타입, 이 bind 타입은 host 어디에나 저장이 될 수 있다. 여기서 중요한 시스템 파일이나 디렉토리들에 사용이 될수있고 언제든지 도커가 아닌 프로세스나 도커 컨테이너에서 수정될수 있다.</li>
 <li>tmpfs 타입, 이 타입은 hosts 의 메모리에 저장이 된다. 그리고 host 파일시스템에 쓸수가 없다. 휘발성이 강하다.</li>
 </ul>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker volume create my-vol
-$ docker volume ls
-## Remove a volume:
-$ docker volume rm my-vol</code></pre></div>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">## 컨테이너 연결
-## mount 방법
-$ docker run -d \
-  -it \
-  --name devtest \
-  --mount source=myvol2,target=/app \
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker volume create my-vol
+$ docker volume <span class="token function">ls</span>
+<span class="token comment">## Remove a volume:</span>
+$ docker volume <span class="token function">rm</span> my-vol</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment">## 컨테이너 연결</span>
+<span class="token comment">## mount 방법</span>
+$ docker run -d <span class="token punctuation">\</span>
+  -it <span class="token punctuation">\</span>
+  --name devtest <span class="token punctuation">\</span>
+  --mount <span class="token assign-left variable">source</span><span class="token operator">=</span>myvol2,target<span class="token operator">=</span>/app <span class="token punctuation">\</span>
   nginx:latest
 
-  $ docker run -d \
-  -it \
-  --name=nginxtest \
-  --mount source=nginx-vol,destination=/usr/share/nginx/html \
+  $ docker run -d <span class="token punctuation">\</span>
+  -it <span class="token punctuation">\</span>
+  --name<span class="token operator">=</span>nginxtest <span class="token punctuation">\</span>
+  --mount <span class="token assign-left variable">source</span><span class="token operator">=</span>nginx-vol,destination<span class="token operator">=</span>/usr/share/nginx/html <span class="token punctuation">\</span>
   nginx:latest
 
-# -v 방법
- $ docker run -d \
-  -it \
-  --name devtest \
-  -v myvol2:/app \
+<span class="token comment"># -v 방법</span>
+ $ docker run -d <span class="token punctuation">\</span>
+  -it <span class="token punctuation">\</span>
+  --name devtest <span class="token punctuation">\</span>
+  -v myvol2:/app <span class="token punctuation">\</span>
   nginx:latest
 
 
-  $ docker run -d \
-  -it \
-  --name=nginxtest \
-  -v nginx-vol:/usr/share/nginx/html \
+  $ docker run -d <span class="token punctuation">\</span>
+  -it <span class="token punctuation">\</span>
+  --name<span class="token operator">=</span>nginxtest <span class="token punctuation">\</span>
+  -v nginx-vol:/usr/share/nginx/html <span class="token punctuation">\</span>
   nginx:latest</code></pre></div>
 <p><span
       class="gatsby-resp-image-wrapper"
@@ -1215,20 +1215,20 @@ networks<span class="token punctuation">:</span></code></pre></div>
 <li>컨테이너 내부의 아이피를 확인하려면 ifconfig eth0 라고 치면 되는데 ifconfig 가 잘 안먹는다. 그럴땐 도커 inspect 로 확인하자.</li>
 </ul>
 <h3 id="network-확인" style="position:relative;"><a href="#network-%ED%99%95%EC%9D%B8" aria-label="network 확인 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>network 확인</h3>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ ip addr show
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">ip</span> addr show
 or
-$ ifconfig</code></pre></div>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh">$ docker attach nonenetcontainer
-# 접속후
-$ cat /etc/hosts
-$ ip -4 addr</code></pre></div>
+$ <span class="token function">ifconfig</span></code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ docker attach nonenetcontainer
+<span class="token comment"># 접속후</span>
+$ <span class="token function">cat</span> /etc/hosts
+$ <span class="token function">ip</span> -4 addr</code></pre></div>
 <p>attach 했던걸 detach 하기 위해선 CTRL-p CTRL-q 를 입력하면 된다.</p>
 <h3 id="network-방식" style="position:relative;"><a href="#network-%EB%B0%A9%EC%8B%9D" aria-label="network 방식 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>network 방식</h3>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh"># 네트워크 방식 확인하기 ( 드라이버 ) bridge , host , none ( 네임 기준 )
-$ docker network ls</code></pre></div>
-<div class="gatsby-highlight" data-language="sh"><pre class="language-sh"><code class="language-sh"># 기본 네트워크는 bridge 방식이다.
-# 다른방식으로 컨테이너를 생성하고 싶다면
-$ docker run --new={네트워크 타입}</code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment"># 네트워크 방식 확인하기 ( 드라이버 ) bridge , host , none ( 네임 기준 )</span>
+$ docker network <span class="token function">ls</span></code></pre></div>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment"># 기본 네트워크는 bridge 방식이다.</span>
+<span class="token comment"># 다른방식으로 컨테이너를 생성하고 싶다면</span>
+$ docker run --new<span class="token operator">=</span><span class="token punctuation">{</span>네트워크 타입<span class="token punctuation">}</span></code></pre></div>
 <ol>
 <li>
 <p>birdge</p>
