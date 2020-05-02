@@ -1,7 +1,7 @@
 module.exports = {
   /** Site MetaData (Required all)*/
   title: `Merlin Tech Blog`, // (* Required)
-  description: `A starter blog FT tec.`, // (* Required)
+  description: `A starter blog FT tech.`, // (* Required)
   author: `Merlin.ho`, // (* Required)
   siteUrl: "https://chchoing88.github.io/ho_blog", // (* Required)
   // ex.'https://junhobaik.github.io'
@@ -13,7 +13,7 @@ module.exports = {
   // If the file does not exist, it is replaced by a random image.
 
   /** Home > Bio information*/
-  comment: "A starter blog FT tec.",
+  comment: "A starter blog FT tech.",
   name: "CHOI HO CHEOL",
   company: "DK TECHIN",
   location: "Korea",
