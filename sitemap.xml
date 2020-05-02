@@ -41,9 +41,9 @@
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/build-react.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/tail-recursion.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/refactoring.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/no-null-comparison/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/event-handling/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/user-error-throwing/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/no-null-comparison/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/complex-refactoring/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/generalization-processing/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/simplifying-method-calls/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -56,7 +56,6 @@
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/moving-between-object/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/method-cleanup/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/sop-and-cors-dnsRebinding.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/webpack-understanding/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hello-rxjs.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hello-mobx.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hello-middleware.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -72,6 +71,7 @@
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hello-webServer.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/webpack-config.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hello-monad.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/webpack-understanding/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hello-webpack.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hello-react.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/docker-depolyment.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
