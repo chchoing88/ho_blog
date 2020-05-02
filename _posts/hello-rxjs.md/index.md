@@ -715,7 +715,7 @@ catchError 에 error handling 함수를 전달한다. 이 핸들러 함수는 �
 error handling 함수는 recovery Observable 인 `of([])`를 리턴한다.
 recovery Observable 의 값들은 catchError 에 의해 리턴된 output Observable 안에서 방출되는 replacement value 들 이다.
 
-결과적으론 http$ Observable 은 error 를 더이상 발생시키지 않는다. 따라서 subscribe 에서 error handling 은 호출되지 않는다. 대신 빈배열인 [] (빈배열 : fallback value) 값을 방출하고 http$ observable 은 completed 된다.
+결과적으론 http$ Observable 은 error 를 더이상 발생시키지 않는다. 따라서 subscribe 에서 error handling 은 호출되지 않는다. 대신 빈 배열인 [] (빈배열 : fallback value) 값을 방출하고 http$ observable 은 completed 된다.
 
 ```javascript
 const http$ = this.http.get<Course[]>('/api/courses');

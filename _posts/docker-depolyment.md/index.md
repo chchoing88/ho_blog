@@ -196,8 +196,7 @@ nginx 설정에 server_name이 VIRTUAL&lowbar;HOST 에 설정했던 값이 박�
 
 6. /etc/hosts 파일 수정
 
-```vi
-
+```bash
 0.0.0.0   nodeapp.local
 ```
 

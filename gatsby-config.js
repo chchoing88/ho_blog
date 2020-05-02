@@ -1,9 +1,9 @@
-const config = require('./config');
+const config = require("./config");
 const { title, description, author, googleAnalytics, siteUrl } = config;
 
 const gatsbyConfig = {
   siteMetadata: { title, description, author, siteUrl },
-
+  pathPrefix: "/ho_blog",
   plugins: [
     {
       resolve: `gatsby-plugin-google-analytics`,
@@ -42,34 +42,36 @@ const gatsbyConfig = {
           {
             resolve: `gatsby-remark-prismjs`,
             options: {
-              classPrefix: 'language-',
+              classPrefix: "language-",
               inlineCodeMarker: null,
-              aliases: {},
+              aliases: {
+                sh: "bash",
+              },
               showLineNumbers: false,
             },
           },
           {
-            resolve: 'gatsby-remark-emojis',
+            resolve: "gatsby-remark-emojis",
             options: {
               active: true,
-              class: 'emoji-icon',
+              class: "emoji-icon",
               size: 64,
               styles: {
-                display: 'inline',
-                margin: '0',
-                'margin-top': '1px',
-                position: 'relative',
-                top: '5px',
-                width: '25px',
+                display: "inline",
+                margin: "0",
+                "margin-top": "1px",
+                position: "relative",
+                top: "5px",
+                width: "25px",
               },
             },
           },
           `gatsby-remark-autolink-headers`,
           `gatsby-remark-katex`,
           {
-            resolve: 'gatsby-remark-external-links',
+            resolve: "gatsby-remark-external-links",
             options: {
-              target: '_blank',
+              target: "_blank",
             },
           },
         ],
@@ -95,11 +97,11 @@ const gatsbyConfig = {
         short_name: title,
         description: description,
         start_url: `/`,
-        lang: 'ko',
+        lang: "ko",
         background_color: `#fff`,
         theme_color: `#fff`,
         display: `standalone`,
-        icon: 'src/images/icon.png',
+        icon: "src/images/icon.png",
         legacy: false,
         include_favicon: false,
       },
@@ -138,7 +140,7 @@ const gatsbyConfig = {
           }
       }`,
         serialize: ({ site, allSitePage }) => {
-          return allSitePage.edges.map(edge => {
+          return allSitePage.edges.map((edge) => {
             return {
               url: site.siteMetadata.siteUrl + edge.node.path,
               changefreq: `daily`,
@@ -168,13 +170,13 @@ const gatsbyConfig = {
         feeds: [
           {
             serialize: ({ query: { site, allMarkdownRemark } }) => {
-              return allMarkdownRemark.edges.map(edge => {
+              return allMarkdownRemark.edges.map((edge) => {
                 return Object.assign({}, edge.node.frontmatter, {
                   description: edge.node.excerpt,
                   date: edge.node.frontmatter.date,
                   url: site.siteMetadata.siteUrl + edge.node.fields.slug,
                   guid: site.siteMetadata.siteUrl + edge.node.fields.slug,
-                  custom_elements: [{ 'content:encoded': edge.node.html }],
+                  custom_elements: [{ "content:encoded": edge.node.html }],
                 });
               });
             },
@@ -197,29 +199,31 @@ const gatsbyConfig = {
                 }
               }
             `,
-            output: '/rss.xml',
+            output: "/rss.xml",
             title: `${title} | Feed`,
           },
         ],
       },
     },
     {
-      resolve: 'gatsby-plugin-robots-txt',
+      resolve: "gatsby-plugin-robots-txt",
       options: {
         host: siteUrl,
-        sitemap: `${siteUrl}${siteUrl[siteUrl.length - 1] !== '/' ? '/' : ''}sitemap.xml`,
-        policy: [{ userAgent: '*', allow: '/' }],
+        sitemap: `${siteUrl}${
+          siteUrl[siteUrl.length - 1] !== "/" ? "/" : ""
+        }sitemap.xml`,
+        policy: [{ userAgent: "*", allow: "/" }],
       },
     },
   ],
 };
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   gatsbyConfig.plugins.push({
     resolve: `gatsby-source-filesystem`,
     options: {
       path: `${__dirname}/_drafts`,
-      name: 'markdown-pages',
+      name: "markdown-pages",
     },
   });
 }
