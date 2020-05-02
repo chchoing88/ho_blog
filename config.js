@@ -8,13 +8,13 @@ module.exports = {
   // ex.'https://junhobaik.github.io/' << X, Do not enter "/" at the end.
 
   /** Header */
-  profileImageFileName: "", // include filename extension ex.'profile.jpg'
+  profileImageFileName: "merlin.png", // include filename extension ex.'profile.jpg'
   // The Profile image file is located at path "./images/"
   // If the file does not exist, it is replaced by a random image.
 
   /** Home > Bio information*/
   comment: "A starter blog FT tec.",
-  name: "Choi Ho Cheol",
+  name: "CHOI HO CHEOL",
   company: "DK TECHIN",
   location: "Korea",
   email: "chchoing@naver.com",
