@@ -1,2 +1,4 @@
 User-agent: *
-Disallow:
+Allow: /
+Sitemap: https://chchoing88.github.io/ho_blog/sitemap.xml
+Host: https://chchoing88.github.io
