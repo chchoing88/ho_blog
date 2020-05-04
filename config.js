@@ -26,7 +26,7 @@ module.exports = {
 
   /** Post */
   enablePostOfContents: true, // TableOfContents activation (Type of Value: Boolean. Not String)
-  disqusShortname: "hocheol", // comments (Disqus sort-name)
+  disqusShortname: "https-chchoing88-github-io-ho-blog", // comments (Disqus sort-name)
   enableSocialShare: true, // Social share icon activation (Type of Value: Boolean. Not String)
 
   /** Optional */
