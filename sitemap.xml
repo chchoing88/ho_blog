@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/graphql.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/advanced/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/searchAlgorithms/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/javascript-security.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -12,8 +13,8 @@
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hello-iscroll.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hashing/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/linkedList/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/queue/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/stack/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/queue/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/list/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/session-login.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/hello-OAuth.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -42,8 +43,8 @@
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/tail-recursion.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/refactoring.md/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/event-handling/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/user-error-throwing/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/no-null-comparison/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/user-error-throwing/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/complex-refactoring/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/generalization-processing/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://chchoing88.github.io/ho_blog/ho_blog/simplifying-method-calls/</loc> <lastmod>2001-01-01</lastmod> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
