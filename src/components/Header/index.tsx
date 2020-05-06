@@ -1,13 +1,19 @@
-import * as React from 'react';
-import { useEffect, useState, useCallback } from 'react';
-import { Link } from 'gatsby';
-import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faTags, faSearch, faMoon, faSun, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { connect } from 'react-redux';
-import { useColorMode } from 'theme-ui';
+import * as React from "react";
+import { useEffect, useState, useCallback } from "react";
+import { Link } from "gatsby";
+import { FontAwesomeIcon as Fa } from "@fortawesome/react-fontawesome";
+import {
+  faTags,
+  faSearch,
+  faMoon,
+  faSun,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { connect } from "react-redux";
+import { useColorMode } from "theme-ui";
 
-import './header.scss';
-const config = require('../../../config');
+import "./header.scss";
+const config = require("../../../config");
 
 export interface headerPropsType {
   siteTitle: string;
@@ -22,59 +28,63 @@ const Header = (props: headerPropsType) => {
   const [, setYPos] = useState(0);
   const [isHide, setIsHide] = useState(false);
   const [colorMode, setColorMode] = useColorMode();
+  const isDevelopment = process.env.NODE_ENV === "development";
+  const rootPath = isDevelopment ? "/" : "/ho_blog/";
 
   const toggleTheme = useCallback(() => {
     const ms: number = 300;
-    const header: HTMLElement | null = document.getElementById('Header');
+    const header: HTMLElement | null = document.getElementById("Header");
 
     document.body.style.transition = `background-color ${ms}ms`;
     if (header) header.style.transition = `background-color ${ms}ms`;
 
-    if (colorMode === 'dark') {
-      setColorMode('default');
+    if (colorMode === "dark") {
+      setColorMode("default");
     } else {
-      setColorMode('dark');
+      setColorMode("dark");
     }
 
     setTimeout(() => {
-      document.body.style.transition = 'none';
+      document.body.style.transition = "none";
       if (header) header.style.transition = `background-color ${ms}ms`;
     }, ms + 100);
   }, [colorMode]);
 
   useEffect(() => {
-    const bio: HTMLDivElement | null = document.querySelector('.bio');
+    const bio: HTMLDivElement | null = document.querySelector(".bio");
     if (bio) {
       if (isHide === true) {
-        bio.style.opacity = '0';
-        bio.style.pointerEvents = 'none';
+        bio.style.opacity = "0";
+        bio.style.pointerEvents = "none";
       } else {
-        bio.style.opacity = '1';
-        bio.style.pointerEvents = 'all';
+        bio.style.opacity = "1";
+        bio.style.pointerEvents = "all";
       }
     }
   }, [isHide]);
 
   useEffect(() => {
-    const profile: HTMLImageElement | null = document.querySelector('.header-profile-image-wrap>img');
+    const profile: HTMLImageElement | null = document.querySelector(
+      ".header-profile-image-wrap>img"
+    );
 
     const prevPath: string = path;
     const currPath: string = location.pathname;
 
     if (profile) {
       if (currPath === prevPath) {
-        setPath(location.pathname, currPath !== '/' ? '25px' : '50px');
+        setPath(location.pathname, currPath !== rootPath ? "25px" : "50px");
       }
 
-      if (prevPath !== '/' && currPath === '/') {
-        setPath(location.pathname, '50px');
+      if (prevPath !== rootPath && currPath === rootPath) {
+        setPath(location.pathname, "50px");
       }
 
-      if (prevPath === '/' && currPath !== '/') {
-        setPath(location.pathname, '25px');
+      if (prevPath === rootPath && currPath !== rootPath) {
+        setPath(location.pathname, "25px");
       }
 
-      if (prevPath !== '/' && currPath !== '/') {
+      if (prevPath !== rootPath && currPath !== rootPath) {
         setPath(location.pathname);
       }
     } else {
@@ -82,7 +92,7 @@ const Header = (props: headerPropsType) => {
     }
 
     const setVisible: () => void = () => {
-      setYPos(prevYPos => {
+      setYPos((prevYPos) => {
         const currentYPos = window.pageYOffset;
 
         if (currentYPos > 0) setIsHide(prevYPos < currentYPos);
@@ -90,12 +100,15 @@ const Header = (props: headerPropsType) => {
         return currentYPos;
       });
     };
-    document.addEventListener('scroll', setVisible);
-    return () => document.removeEventListener('scroll', setVisible);
+    document.addEventListener("scroll", setVisible);
+    return () => document.removeEventListener("scroll", setVisible);
   }, []);
 
   return (
-    <header id="Header" className={`${isHide ? 'hide' : 'show'} ${isMobile ? 'mobile' : ''}`}>
+    <header
+      id="Header"
+      className={`${isHide ? "hide" : "show"} ${isMobile ? "mobile" : ""}`}
+    >
       <div className="header-title">
         <Link to="/">
           <div className="header-profile-image-wrap">
@@ -103,11 +116,11 @@ const Header = (props: headerPropsType) => {
               src={
                 config.profileImageFileName
                   ? require(`../../images/${config.profileImageFileName}`)
-                  : 'https://source.unsplash.com/random/100x100'
+                  : "https://source.unsplash.com/random/100x100"
               }
               alt="title profile picture"
-              width={size || '25px'}
-              height={size || '25px'}
+              width={size || "25px"}
+              height={size || "25px"}
             />
           </div>
         </Link>
@@ -119,24 +132,31 @@ const Header = (props: headerPropsType) => {
 
       <nav id="nav">
         <div className="theme-toggle">
-          <div className="theme-toggle-description" style={{ display: isMobile ? 'none' : 'flex' }}>
+          <div
+            className="theme-toggle-description"
+            style={{ display: isMobile ? "none" : "flex" }}
+          >
             <Fa
-              icon={colorMode === 'dark' ? faMoon : faSun}
-              style={{ fontSize: colorMode === 'dark' ? '1.1rem' : '1.2rem' }}
+              icon={colorMode === "dark" ? faMoon : faSun}
+              style={{ fontSize: colorMode === "dark" ? "1.1rem" : "1.2rem" }}
             />
-            <Fa icon={faChevronRight} style={{ fontSize: '0.9rem' }} />
+            <Fa icon={faChevronRight} style={{ fontSize: "0.9rem" }} />
           </div>
 
           <Fa
-            icon={colorMode === 'dark' ? faSun : faMoon}
-            style={{ fontSize: colorMode === 'dark' ? '1.2rem' : '1.1rem' }}
+            icon={colorMode === "dark" ? faSun : faMoon}
+            style={{ fontSize: colorMode === "dark" ? "1.2rem" : "1.1rem" }}
             onMouseEnter={() => {
-              const toggle: HTMLDivElement | null = document.querySelector('.theme-toggle-description');
-              if (toggle) toggle.style.opacity = '0.5';
+              const toggle: HTMLDivElement | null = document.querySelector(
+                ".theme-toggle-description"
+              );
+              if (toggle) toggle.style.opacity = "0.5";
             }}
             onMouseLeave={() => {
-              const toggle: HTMLDivElement | null = document.querySelector('.theme-toggle-description');
-              if (toggle) toggle.style.opacity = '0';
+              const toggle: HTMLDivElement | null = document.querySelector(
+                ".theme-toggle-description"
+              );
+              if (toggle) toggle.style.opacity = "0";
             }}
             onClick={() => {
               toggleTheme();
@@ -166,13 +186,22 @@ const Header = (props: headerPropsType) => {
   );
 };
 
-const mapStateToProps = ({ path, size, isMobile }: { path: string; size: string; isMobile: boolean }) => {
+const mapStateToProps = ({
+  path,
+  size,
+  isMobile,
+}: {
+  path: string;
+  size: string;
+  isMobile: boolean;
+}) => {
   return { path, size, isMobile };
 };
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {
-    setPath: (path: string, size: string) => dispatch({ type: `SET_PATH`, path, size }),
+    setPath: (path: string, size: string) =>
+      dispatch({ type: `SET_PATH`, path, size }),
   };
 };
 
