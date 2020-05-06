@@ -259,8 +259,14 @@ Content-Type: text/plain
 우리는 지금까지 다양한 HTTP header와 함께 CORS를 보여주었다. 하지만 *Cookie* HTTP header는 공유할 수가 없다. 디폴트로 브라우저에서 사용되는 인증서 (including cookies, authentications, and certificates)들은 CORS 요청과 함께 전송되지 않는다. Simple 또는 Preflight 둘다. 
 IE8 과 IE9 에서 사용하는 XDomainRequest도 마찬가지 이다. 어떤 상황에서도 이러한 자격 증명 데이터를 보낼 수 없습니다.
 
-만약 우리가 접근 가능한 origin 한에서 쿠키 데이터를 전송하고 싶다면, 우리는 간단하게 *Cookie* HTTP header를 CORS 요청에 사용함으로써 쿠키 컨텐츠를 전송할수 있다. (도메인, 만료등의 추가정보 없이) 이것을 Preflight 요청인 OPTIONS 요청에 추가할수 있다. 하지만 필수는 아니다. 응답이 왔을때 서버는 반드시 이 인증의 요청에 대한 받아드리는것과 동의하는것을 *Access-Control-Allow-Credentials* HTTP header로 알려아 한다. 'true' 값으로. 
+만약 우리가 접근 가능한 origin 한에서 쿠키 데이터를 전송하고 싶다면, 우리는 간단하게 *Cookie* HTTP header를 CORS 요청에 사용함으로써 쿠키 컨텐츠를 전송할수 있다. (도메인, 만료등의 추가정보 없이) 이것을 Preflight 요청인 OPTIONS 요청에 추가할수 있다. 하지만 필수는 아니다. 응답이 왔을때 서버는 반드시 이 인증의 요청에 대한 받아드리는것과 동의하는것을 *Access-Control-Allow-Credentials* HTTP header로 알려아 한다. 'true' 값으로 셋팅합니다.
 만약 HTTP header에 이 값을 못받았다면 브라우저는 전체 요청을 실패로 간주하게 된다.
+
+### XDomainRequest
+
+XDomainRequest는 W3C 표준이 아니며 마소에서 IE8, IE9 에서 비동기 CORS 통신을 하기 위해 만든 객체입니다.
+XDR 은 setReqestHeader가 없다. 반면 conentType이라는 프로퍼티 읽기 전용으로 존재합니다. ( XHR에는 contentType 이라는게 없다. )
+XDomainRequest는 쿠기를 같이 전송할수 없고 ( withCredentials를 사용할수 없음 ) 또한, RequestHeader를 별도로 지정할수가 없습니다. 오직 요청 헤더는 "text/plain"만이 가능합니다.
 
 ### Implementations
 
@@ -322,8 +328,7 @@ Same-origin Policy의 기법을 우회할수 있는 방법중 하나로 XMLHttpR
 이러한 문제를 막는 방법으로는 'Host' 헤더가 다른 허용하는 호스트 네임을 지니고 있는지 확인하는 것이다.
 서버는 'Host' 헤더에 예기치 않은 호스트 이름이 포함되어 있다면 서버는 요청을 거부해야한다. 다른말로 말하면 'Host'헤더에 대해 적절한 white-listing ('안전'이 증명된 것만을 허용)가 구현되어야합니다.
 
-
-## 출처 
+## 출처
 
 - [https://savni.tistory.com/entry/DNS-Rebinding%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-Transmission-%EC%B7%A8%EC%95%BD%EC%A0%90-%EB%B6%84%EC%84%9D](https://savni.tistory.com/entry/DNS-Rebinding%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-Transmission-%EC%B7%A8%EC%95%BD%EC%A0%90-%EB%B6%84%EC%84%9D)
 - [https://www.netsparker.com/whitepaper-same-origin-policy/#SameOriginPolicyinDetail](https://www.netsparker.com/whitepaper-same-origin-policy/#SameOriginPolicyinDetail)
@@ -333,4 +338,6 @@ Same-origin Policy의 기법을 우회할수 있는 방법중 하나로 XMLHttpR
 - [https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/](https://www.netsparker.com/blog/web-security/same-site-cookie-attribute-prevent-cross-site-request-forgery/)
 - [https://opentutorials.org/course/3387/21744](https://opentutorials.org/course/3387/21744)
 - [https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies](https://developer.mozilla.org/ko/docs/Web/HTTP/Cookies)
-
+- [참고 CORS 1](https://homoefficio.github.io/2015/07/21/Cross-Origin-Resource-Sharing/)
+- [참고 CORS 2](https://developer.mozilla.org/ko/docs/Web/HTTP/Access_control_CORS)
+- [참고 CORS 3](https://blog.naver.com/PostView.nhn?blogId=laziel&logNo=220357236324&proxyReferer=https%3A%2F%2Fwww.google.co.kr%2F)
