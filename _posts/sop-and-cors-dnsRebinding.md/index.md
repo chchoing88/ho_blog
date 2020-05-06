@@ -125,19 +125,23 @@ XmlHTTPRequest 도 동일하게 Same-origin Policy의 요구사항이 적용됩�
 
 XmlHTTPRequest 객체를 사용해서 다른 출처에 있는 요청을 보낼수 있지만, 응답을 읽을수가 없다. 그래서 어떻게 해야할까? 어떻게 하면 비동기적으로 여러 다양한 데이터를 받을 수 있을까? 
 
-Same-origin Policy 원리 하에 우리는 스크립트가 로드된 사이트의 컨텍스트 안에서 동작하는 것을 안다. 당연히 유효한 스크립트 파일이어야 한다는 것이다. 이런 기술을 이용해서 JSONP 가 사용됩니다.
+Same-origin Policy 원리 하에 우리는 스크립트가 로드된 사이트의 컨텍스트 안에서 동작하는 것을 압니다. 당연히 유효한 스크립트 파일이어야 한다는 것입니다. 이런 기술을 이용해서 JSONP 가 사용됩니다. 
+즉, script 요소는 src를 호출한 결과를 javascript를 불러와서 포함시키는 것이 아니고 실행시키는 태그입니다.
 
 이는 Same-origin Policy를 우회할 수 있습니다.
 
-
 여기 다음과 같은 호출이 있다고 생각합시다. http://www.example.com/getAlbums?callback=foobarbaz
 응답으로는 다음과 같은 결과를 볼수 있습니다.
+
+> JSONP에서 p는 padding을 뜯한다. padding은 우리말로 속, 충전재를 의미한다. 여기에서는 클라이언트측 콜백 함수에 전달하는 응답 결과를 가리킨다. JSONP의 결과로 돌려받는 데이터는 JavaScript 호출 표현식이다. 그리고 그 안에 사용자가 원하는 결과가 들어있는데, 이것이 속과 같다는 뜻이다.
+출처 : [https://wit.nts-corp.com/2014/04/22/1400](https://wit.nts-corp.com/2014/04/22/1400)
 
 ```javascript
 foobarbaz([{"artist": "Michael Jackson", "album": "Black or White"}{"artist": "Beatles, The", "album": "Revolution"}]);
 ```
 
-잠시 분석해보자면 
+잠시 분석해보자면
+
 1. 우리는 *http://www.example.com/getAlbums*의 리소스를 요청했고 그리고 callback 이름을 쿼리 스트링으로 *foobarbaz* 라고 지정했습니다.
 2. 해당 리소스에서 JSON 결과가 리턴될때 그 결과를 함수 이름 *foobarbaz* 으로 감싸줘야 한다. 이는 쿼리 스트링으로 정의내린 이름이다.
 
