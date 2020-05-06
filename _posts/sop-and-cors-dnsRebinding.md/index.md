@@ -166,6 +166,7 @@ Access-Control-Allow-Origin: *
 
 ## Cross-Origin Resource Sharing (CORS) in Detail
 
+CORS를 사용하기 위해서 클라이언트와 서버는 몇 가지 추가 정보를 주고 받아야 합니다. 여기서 서버는 클라이언트가 전송한 헤더를 확인해서 요청을 허용할지 말지를 결정하는 것입니다.
 CORS 요청은 2가지 타입이 있다. Simple Request와 Preflight 이다. 대부분의 일반 CORS 요청은 일반적인 HTTP 헤더 및 작업으로 구성된 단순 요청 범주에 속합니다. 그러나 프리 플라이트 요청은 단순 요청의 일반적인 신뢰할 수있는 범위를 벗어나는 비정형 성으로 인해 서버에 대한 추가 유효성 검사가 필요하다.
 
 ### Simple Request
