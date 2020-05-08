@@ -247,4 +247,100 @@ dKnapsack(capacity, size, value, n)
 
 ## 탐욕 알고리즘
 
-- 문제를 해결하는 좋은 해결책을 찾아가는 기법입니다.
+- 문제를 해결하는 좋은 해결책을 찾아가는 기법입니다. (이 선택이 나중 선택에 어떤 영향을 줄 것인지 전혀 고려하지 않음)
+- 탐욕 알고리즘에는 '최상'의 해법을 선택하다 보면 결구 끄것이 전체 문제를 해결하는 '최상'의 선택이 될 것이라는 전제가 깔려있습니다.
+
+### 동전 거스름돈 문제
+
+상점에서 어떤 물건을 샀는데 거스름돈이 63센트라고 가정해보자. 탐욕 알고리즘에 따르면 점원은 2개의 쿼터(quarter), 한개의 다임(dime), 세 개의 페니(penny)를 건넬 것입니다.
+이것이 하프 달러(half dollar)를 사용하지 않고 63센트를 거슬러주는 최소한의 코인입니다.
+( 1달러 : 100센트, 하프달러는 50센트: 더이상 발행 안함, 쿼터는 25센트, 다임은 10센트, 니켈은 5센트, 페니는 1센트 )
+
+```javascript
+// 하프달러는 없다고 생각하자.
+// 단위가 높은 화폐인 쿼터로 거스름돈을 완성하면서 coins 배열에 저장한다.
+// 남은 거스름돈이 쿼터보다 작아지면 다음으로 작은 화폐 단위인 다임으로 이동해 가능한 많은 다임을 활용한다.
+// 사용한 다임의 수도 coins 배열에 저장한다.
+// 이와 같이 니켈, 페니를 이용해서 거스름돈을 만들어 냅니다.
+const QUARTER = 0.25;
+const DIME = 0.1;
+const NICKEL = 0.05;
+const PENNY = 0.01;
+function makeChange(originAmt, coins) {
+  // 쿼터로 나눴을때 originAmt가 크다는것은 originAmt가 0.25 값보다 크다는 것을 의미한다.
+  if(originAmt % QUARTER < originAmt) {
+    coins[3] = parseInt(originAmt / QUARTER); // 몫을 coins에 저장
+    originAmt = originAmt % QUARTER;
+  }
+
+  if(originAmt % DIME < originAmt) {
+    coins[2] = parseInt(originAmt / DIME); // 몫을 coins에 저장
+    originAmt = originAmt % DIME;
+  }
+
+  if(originAmt % NICKEL < originAmt) {
+    coins[1] = parseInt(originAmt / NICKEL); // 몫을 coins에 저장
+    originAmt = originAmt % NICKEL;
+  }
+  coins[0] = parseInt(originAmt / PENNY);
+};
+
+const originAmt = 0.63;
+const coins = [];
+makeChange(originAmt, coins)
+console.log(coins)
+
+// [3, empty, 1, 2]
+// 0.01 * 3 + 0.1 + 0.25 * 2 = 0.63
+```
+
+### 배낭 문제: 탐욕 알고리즘
+
+배낭에 추가할 물건이 기본적으로 연속적일 때만 탐욕 알고리즘을 적용할 수 있습니다. 즉, 개별적으로 셀 수 없는 물건만 사용해야 합니다. 연속적인 물건을 이용하면 단위 부피를 단위 가격으로 나누어 물건의 값을 계산할 수 있습니다. 따라서 가장 값어치가 높은 물건부터 물건이 고갈되거나 배낭이 찰 때까지 먼저 넣은 다음 두 번째로 값어치가 높은 물건을 넣는 순의 전략을 이용할 수 있습니다. 예를 들어 TV 반 개를 배낭에 넣을 수 없기 때문에 탐욕 알고리즘에서는 셀 수 없는 연속적인 물건만 제대로 계산할 수 있습니다. 즉, 덩어리 진 것, 쪼갤 수 있는 것들이 탐욕 알고리즘을 적용할 수 있을 것입니다.
+
+연속적인 물건을 담는 배낭 문제를 분수(fractional) 배낭 문제라고 합니다. 분수 배낭 문제의 알고리즘은 다음과 같이 풉니다.
+
+1. 배낭의 용량을 W 물건의 가치를 v, 물건의 무게는 w다.
+2. 항목의 값어치는 v/W 비율로 평가합니다.
+3. 값어치가 높은 물건부터 고려합니다.
+4. 가능한 한 많은 물건을 추가 합니다.
+
+| 물건 | A  | B   | C  | D  |
+|------|----|-----|----|----|
+| 값   | 50 | 140 | 60 | 60 |
+| 무게 | 5  | 20  | 10 | 12 |
+| 비율 | 10 | 7   | 6  | 5  |
+
+가방 무게는 30 입니다.
+
+```javascript
+// 이걸 하기 전에 무게와 값어치 배열을 비율에 따라 내림차순으로 정렬을 해야 합니다.
+function ksack(values, weights, capacity) {
+  let loadedWeight = 0; // 가방에 쌓이는 무게
+  let index = 0;
+  let loadedValue = 0; // 가방에 쌓인 값어치
+
+  while((loadedWeight < capacity) && (index < values.length)) { // 가방에 용량이 남았거나 물건 순회를 다했을 경우 탈출
+    if(weights[index] <= (capacity - loadedWeight)) { // 물건의 무게가 남아있는 가방 무게보다 적게 나간다면 담자!!
+      loadedValue = loadedValue + values[index];
+      loadedWeight = loadedWeight + weights[index];
+    } else {
+      // 물건의 무게가 남아있는 가방 무게보다 더 무겁다면 그 물건을 쪼개서 꽉 채워보자.
+      const ratio = (capacity - loadedWeight) / weights[index];
+      loadedValue = loadedValue + (ratio * values[index]);
+      loadedWeight = loadedWeight + weights[index];
+    }
+    index = index + 1;
+  }
+
+  return loadedValue;
+}
+
+const itmes = ['A', 'B', 'C', 'D'];
+const values = [50, 140, 60, 60];
+const weight = [5, 20, 10, 12];
+const capacity = 30;
+console.log(ksack(values, weight, capacity));
+```
+
+여기서는 물건 A, B를 모두 담고 물건 C는 반만 담는 것이 최적의 답입니다.
