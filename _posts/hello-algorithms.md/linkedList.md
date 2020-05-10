@@ -195,7 +195,7 @@ class LinkedList {
 순환형 연결 리스트에서는 노드의 끝을 지나 계속 탐색하면 결국 역받향에 있는 노드로 이동 할 수 있습니다.
 
 ```typescript
-// 순환과 양방향의 합성 
+// 순환과 양방향의 합성
 
 class LinkedList {
   head: LinkedNode<string>;
@@ -292,5 +292,126 @@ class LinkedList {
     }
   }
 }
+
+```
+
+### 수정 본
+
+```javascript
+
+class LinkedList {
+  constructor(head) {
+    this.head = new LinkedNode(head);
+    this.tail = this.head;
+    this.tail.next = this.head;
+    this.head.previous = this.tail;
+  }
+
+  find(id) {
+    let currNode = this.head;
+    while (
+      currNode.next &&
+      currNode.element.id !== id &&
+      currNode.next !== this.head
+    ) {
+      currNode = currNode.next;
+    }
+
+    if (currNode.element.id === id) {
+      return currNode;
+    }
+
+    return null;
+  }
+
+  // 어떤 노드를 추가할 것이고, 어느 노드 앞에 추가할지를 지정해야 한다.
+  insert(newElement, id) {
+    const newNode = new LinkedNode(newElement);
+    const currentNode = this.find(id);
+    if (currentNode) {
+      newNode.next = currentNode.next;
+      newNode.previous = currentNode; // 추가
+      currentNode.next = newNode;
+
+      this.head.previous = newNode;
+      this.tail = newNode;
+      return true;
+    }
+    return false;
+  }
+
+  insertLast(newElement) {
+    const newNode = new LinkedNode(newElement);
+    // 꼬리 노드의 다음 노드로 연결합니다.
+    // 새로운 노드의 다음 노드로는 head, 이전 노드로는 이전 tail이 되고
+    // 자신이 tail 이 됩니다.
+    newNode.next = this.head;
+    newNode.previous = this.tail;
+    this.head.previous = newNode;
+    this.tail.next = newNode;
+    this.tail = newNode;
+  }
+
+  remove(id) {
+    let removeNode = this.find(id);
+    if (removeNode) {
+      const previousRemoveNode = removeNode.previous;
+      const nextRemoveNode = removeNode.next;
+
+      // 지울 이전 노드가 있다면 이전 노드의 다음 노드를 지울 노드 다음 노드와 연결해준다.
+      if (previousRemoveNode) {
+        previousRemoveNode.next = removeNode.next;
+      }
+      // 지울 다음 노드가 있다면 다음 노드의 이전 노드를 지울 노드 이전 노드와 연결해준다.
+      if (nextRemoveNode) {
+        nextRemoveNode.previous = previousRemoveNode;
+      }
+
+      if (removeNode === this.tail && removeNode === this.head) {
+        // 노드가 하나라면 전부 null 처리 한다.
+        this.head = null;
+        this.tail = null;
+      } else if (removeNode === this.head) {
+        this.head = nextRemoveNode;
+      } else if (removeNode === this.tail) {
+        this.tail = previousRemoveNode;
+      }
+
+      removeNode.next = null;
+      removeNode.previous = null;
+      removeNode = null;
+      return true;
+    }
+
+    return false;
+  }
+
+  getList() {
+    const result = [];
+    let currNode = this.head;
+    if (currNode !== null) {
+      result.push(currNode.element);
+
+      while (currNode.next && currNode.next !== this.head) {
+        currNode = currNode.next;
+        result.push(currNode.element);
+      }
+    }
+
+    return result;
+  }
+
+  // 전체 연결 리스트 보여주기
+  display() {
+    let currNode = this.head;
+    console.log(currNode.next.element);
+    while (currNode.next && currNode.next !== this.head) {
+      console.log(currNode.next.element);
+      currNode = currNode.next;
+    }
+  }
+}
+
+
 
 ```
