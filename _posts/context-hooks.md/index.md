@@ -329,7 +329,16 @@ const TodoItem = ({todoList, onClick}) => {
 export default memo(TodoItem, (prevProps, nextProps) => prevProps.todoList === )
 ```
 
+## 언제 useMemo and useCallback를 사용해야 할까
+
+1. JSX의 인라인으로 넘기는 함수 body 부분에 `useCallback` 을 사용한 함수를 넘기지 말아야 합니다. 어짜피 JSX의 인라인으로 함수를 넘기게 되면 항상 렌더링이 되게 되어 있습니다.
+2. `useMemo` 또한 값을 메모이제이션을 시키는 함수인데 해당 값을 컴포넌트 밖으로 빼서 관리 할 수 있다면 굳이 `useMemo`를 사용할 필요가 없습니다.
+3. 부모 함수형 컴포넌트에서 호출 될때 새로운 함수 또는 값을 할당해서 자식 컴포넌트의 props로 넘기게 될때 불필요한 호출을 하게 될때 `useMemo`와 `useCallback`을 사용합시다.
+4. 특히 함수 컴포넌트 내에서 비싼 호출을 하는 함수가 있을 경우에는 더더욱 `useMemo`를 사용합시다.
+5. 부모 컴포넌트에서 다른 자식들로 인해 현재 자식 컴포넌트가 렌더링에 호출될 위험에 있을땐, `React.memo`를 사용해서 props가 바뀔때만 렌더링이 이뤄지도록 합시다.
+
 ## 참고
 
 - [React Hooks와 Context를 이용한 설계 패턴](https://www.huskyhoochu.com/react-pattern-hooks-and-contexts/)
 - [TypeScript 환경에서 리액트 Context API 제대로 활용하기](https://velog.io/@velopert/typescript-context-api#context-%EC%A4%80%EB%B9%84%ED%95%98%EA%B8%B0)
+- [When to useMemo and useCallback](https://ideveloper2.dev/blog/2019-06-14--when-to-use-memo-and-use-callback/)
