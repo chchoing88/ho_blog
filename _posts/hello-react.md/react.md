@@ -158,7 +158,7 @@ this.setState({
 
 ## Reconciliation (재조정)
 
-- 컴포넌트를 호출 => 새로운 `React Element` 반환 => 새로운 `Element와` 이전 `Element` 비교 => 변화 감지
+- 컴포넌트를 호출 => 새로운 `React Element` 반환 => 새로운 `Element`와 이전 `Element` 비교 => 변화 감지
 - 컴포넌트가 `React Element` 새로 만들면 기존 `Dom` 에 그려졌던 `Element`랑 비교
 - 변화가 생긴 컴포넌트를 기준으로 그 컴포넌트가 반환한(리턴한) `React Element`를 이전(DOM에 그려졌던 Element)과 비교
 - 비교된 결과가 이전 인스턴스가 없었던 것이라면 새로운 `element`를 바탕으로 새롭게 append 시도
@@ -166,6 +166,34 @@ this.setState({
 - 배교된 결과가 타입이 다르다면 새로운 element를 바탕으로 `replace` 시도 ( 자식까지 모두 )
 - 새로운 `element type` 이 `dom type`이면 `dom property` 들을 update 진행
 - 새로운 `element type` 이 컴포넌트라면 (class, function) 컴포넌트의 `render()` 메서드 또는 `return` 결과의 `React Element` 들을 가지고 다시 `reconcile` 진행
+
+위에서 Element는 다음과 같은 형태를 가집니다.
+
+```javascript
+// DOM Elements
+
+const DomElement = {
+  type: 'button',
+  props: {
+    className: 'button button-blue',
+    children: {
+      type: 'b',
+      props: {
+        children: 'OK!'
+      }
+    }
+  }
+}
+// Component Elements
+
+const ComponentElement = {
+  type: Button,
+  props: {
+    color: 'blue',
+    children: 'OK!'
+  }
+}
+```
 
 ### 변화 감지
 
