@@ -1,6 +1,6 @@
 ---
-title: '[algorithms] graph Hashing'
-date: '2020-04-20T10:00:03.284Z'
+title: "[algorithms] graph"
+date: "2020-04-20T10:00:03.284Z"
 ---
 
 ## 그래프 정의
@@ -153,7 +153,6 @@ class Graph {
     }
   }
 }
-
 ```
 
 ### 너비 우선 검색 (BFS)
