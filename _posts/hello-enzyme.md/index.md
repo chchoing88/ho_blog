@@ -81,6 +81,13 @@ React 구성 요소를 테스트하기 위해 사용자 지정 어설 ​​션 
 
 ### [Shallow Rendering](https://airbnb.io/enzyme/docs/api/shallow.html)
 
+Shallow Render 특징은 다음과 같습니다.
+
+- Shallow Render를 진행하는 컴포넌트 내부에 React 컴포넌트는 렌더링 하지 않습니다.
+- Shallow Render를 진행하는 컴포넌트는 render or return 되는 첫번째 children 부터 렌더링이 됩니다.
+
+반면 Mount는 내부 React Component도 렌더링이 되면서 Mount 시 넘겼던 컴포넌트 부터 렌더링이 진행됩니다.
+
 ```javascript
 import React from 'react';
 import { expect } from 'chai';
