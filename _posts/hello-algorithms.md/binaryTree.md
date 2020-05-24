@@ -1,5 +1,5 @@
 ---
-title: '[algorithms] binaryTree Hashing'
+title: '[algorithms] binaryTree'
 date: '2020-04-19T10:00:03.284Z'
 ---
 
