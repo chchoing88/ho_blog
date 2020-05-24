@@ -30,6 +30,7 @@ class Queue<T> {
   }
 
   dequeue() {
+    // 배열에서 첫 번째 요소를 제거하고, 제거된 요소를 반환
     return this.dataStore.shift();
   }
 
