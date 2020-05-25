@@ -6,8 +6,8 @@ date: "2020-04-20T10:00:03.284Z"
 ## 그래프 정의
 
 - `그래프는 정점과 간선`으로 이루어져 있다. (지도로 치면 `각 마을은 정점이며 도로가 간선`이다.)
-- `간선`은 `(v1, v2)와 같은 쌍으로 정의`하며, 여기서 v1, v2는 그래프의 정점이다.
-- `정점`은 `무게(weight)` 또는 `비용(cost)`을 포함할 수 있다.
+- `간선(Edge)`은 `(v1, v2)와 같은 쌍으로 정의`하며, 여기서 v1, v2는 그래프의 정점이다.
+- `정점(Vertex)`은 `무게(weight)` 또는 `비용(cost)`을 포함할 수 있다.
 - 간선에서 정점의 순서를 따지는 그래프를 `방향성 그래프(directed graph 또는 digraph)`라 한다.
 - 방향성 그래프에서는 화살표로 간선을 표시하고 정점간 흐름을 의미한다.
 - 방향성이 없는 그래프를 `무방향성 그래프(unordered graph)` 또는 그래프라고 한다.
@@ -50,9 +50,37 @@ adj[1] = [2]
 adj[2] = [0,1,3,4]
 adj[3] = [2]
 adj[4] = [2]
+// 그래프 클래스에는 Vertex의 연결 리스트의 head를 지니고 있고,
+// 각각의 Vertex에는 다음 Vertex 와 간선 연결 리스트의 head를 지니고 있어야 한다.
+// 각각의 간선에는 다음 간선들을 지니고 있어야 한다.
+class Graph {
+  this.vertexHead = null;
+}
+
+class Vertex {
+  this.nextVertex = null; // 다음 정점
+  this.edgeHead = null; // 간선 연결 리스트
+  this.wasVisited = false; // 방문 이력
+  this.distance = null; // 단일 출발지에서 최단 거리 구할때 사용
+  this.key = null;
+}
+
+class Edge {
+  this.nextEdge = null; // 다음 간선
+  this.destination = null; // 향하는 정점(Vertex 인스턴스) : A 정점의 간선 연결 리스트에 연결 되어있고 destination이 B 라고 하면 A->B
+  this.data = null; // 간선의 weight
+}
 ```
 
-## 그래프 구현
+```javascript
+// 인접 행렬
+const vertexList = ['A', 'B', 'C', 'D', 'E', 'F']
+const adj = [...vertexList.map(_ => Array())]
+adj[0][0] = 0 // A 에서 A 로 향하는 간선
+adj[0][1] = 1 // A 에서 B 로 향하는 간선
+```
+
+## 그래프 구현 (간단한)
 
 - Graph 클래스는 그래프의 정점수를 나타내는 배열 길이를 이용해 `그래프의 간선 수, 정점 수 정보`를 유지한다.
 - 배열의 각 요소를 for문으로 반복하면서 각 요소에 인접 정점을 저장할 서브 배열을 추가한 다음 각 요소를 빈 문자열로 초기화 함.
@@ -115,6 +143,160 @@ class Graph {
 - 정점 2에는 정점 0,4로 연결되는 간선이
 - 정점 3에는 정점 1로 연결되는 간선이
 - 정점 4에는 정점 2로 연결되는 간선이 있다.
+
+## 그래프 구현 (연결 리스트)
+
+```typescript
+// 연결 리스트를 사용한 그래프 구현
+// 간선
+class Edge<T> {
+  data: number; // 간선의 weight
+  nextEdge: Edge<T> | null;
+  destination: Vertex<T>;
+
+  constructor(data: number, des: Vertex<T>) {
+    this.data = data;
+    this.nextEdge = null;
+    this.destination = des;
+  }
+}
+
+// 정점
+class Vertex<T> {
+  label: T;
+  wasVisited: boolean;
+  edgeHead: Edge<T> | null;
+  nextVertex: Vertex<T> | null;
+
+  constructor(label: T) {
+    this.label = label;
+    this.wasVisited = false; // 탐색시 사용
+    this.edgeHead = null;
+    this.nextVertex = null;
+  }
+}
+
+// 그래프
+class Graph2<T> {
+  vertexHead: Vertex<T> | null;
+  count: number;
+
+  constructor() {
+    this.vertexHead = null;
+    this.count = 0; // 총 정점 갯수
+  }
+
+  insertVertex(label: T) {
+    const newVertex = new Vertex<T>(label);
+    let lastVertex = this.vertexHead;
+    if (lastVertex) {
+      // 계속 순환 하면서 다음 vertex 가 없을 때까지
+      while (lastVertex.nextVertex !== null) {
+        lastVertex = lastVertex.nextVertex;
+      }
+      lastVertex.nextVertex = newVertex;
+    } else {
+      // vertexHead 가 없다면
+      this.vertexHead = newVertex;
+    }
+    this.count = this.count + 1;
+  }
+
+  deleteVertex(label: T) {
+    // 삭제 : 삭제 타겟의 다음 vertex를 삭제 타겟의 이전 vertex에 연결 시켜 주어야 한다.
+    let targetVertex = this.vertexHead;
+    let prevVertex = null;
+    while (targetVertex && targetVertex.label !== label) {
+      prevVertex = targetVertex;
+      targetVertex = targetVertex.nextVertex;
+    }
+    if (!targetVertex) return false;
+
+    if (prevVertex) {
+      // 삭제 되는 이전 vertex 가 있다면 타겟 vertex의 다음 vertex를 넘긴다.
+      prevVertex.nextVertex = targetVertex.nextVertex;
+    } else {
+      // 첫 vertext가 삭제 된다면
+      this.vertexHead = targetVertex.nextVertex;
+    }
+
+    this.count = this.count - 1;
+  }
+
+  insertEdge(data: number, fromLabel: T, toLabel: T) {
+    // fromLabel을 가지고 from Vertext를 찾자
+    let fromVertex = this.vertexHead;
+    let toVertex = this.vertexHead;
+
+    while (fromVertex && fromVertex.label !== fromLabel) {
+      fromVertex = fromVertex.nextVertex;
+    }
+
+    while (toVertex && toVertex.label !== toLabel) {
+      toVertex = toVertex.nextVertex;
+    }
+
+    if (!fromVertex || !toVertex) return false;
+
+    // 새로 만든 간선을 fromVertex의 마지막 edge에 추가한다.
+    const newEdge = new Edge<T>(data, toVertex);
+
+    let lastEdge = fromVertex.edgeHead;
+    if (lastEdge) {
+      while (lastEdge.nextEdge !== null) {
+        lastEdge = lastEdge.nextEdge;
+      }
+      lastEdge.nextEdge = newEdge;
+    } else {
+      // fromVertex의 edgeHead가 없다면 처음에 넣어준다.
+      fromVertex.edgeHead = newEdge;
+    }
+  }
+
+  deleteEdge(fromLabel: T, toLabel: T) {
+    let fromVertex = this.vertexHead;
+
+    while (fromVertex && fromVertex.label !== fromLabel) {
+      fromVertex = fromVertex.nextVertex;
+    }
+
+    if (!fromVertex) return false;
+    let targetEdge = fromVertex.edgeHead;
+    let preTargetEdge = null;
+
+    while (targetEdge !== null) {
+      if (targetEdge.destination.label === toLabel) break;
+      preTargetEdge = targetEdge;
+      targetEdge = targetEdge.nextEdge;
+    }
+
+    if (!targetEdge) return false;
+
+    if (preTargetEdge) {
+      preTargetEdge.nextEdge = targetEdge.nextEdge;
+    } else {
+      // 삭제될 타겟팅의 이전이 없다면 첫 엣지다.
+      fromVertex.edgeHead = targetEdge.nextEdge;
+    }
+  }
+}
+
+// const graph = new Graph2();
+// graph.insertVertex('A');
+// graph.insertVertex('B');
+// graph.insertVertex('C');
+// graph.insertVertex('D');
+// graph.insertVertex('E');
+// graph.insertVertex('F');
+// graph.insertEdge(1, 'A', 'B');
+// graph.insertEdge(1, 'B', 'C');
+// graph.insertEdge(1, 'B', 'E');
+// graph.insertEdge(1, 'C', 'E');
+// graph.insertEdge(1, 'C', 'D');
+// graph.insertEdge(1, 'E', 'D');
+// graph.insertEdge(1, 'E', 'F');
+// graph.deleteVertex('B')
+```
 
 ## 그래프 검색
 
