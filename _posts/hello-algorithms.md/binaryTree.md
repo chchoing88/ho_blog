@@ -99,7 +99,7 @@ class BST<T> {
     // 중위 탐색 (왼쪽 -> 부모 -> 오른쪽) 오름 차순 탐색
     // 부모 기준으로 왼쪽 시도후 부모 시도 그리고 나서 부모의 오른쪽 시도
     if (node !== null) {
-      this.inOrder(node.left); // 부모 노드의 왼쪽부터 출력 시도
+      this.inOrder(node.left); // 부모 노드의 왼쪽 부터 출력 시도
       console.log(node.data + " "); // 부모 자신 출력
       this.inOrder(node.right); // 부모 노드의 오른쪽 출력 시도
     }

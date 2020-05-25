@@ -415,7 +415,7 @@ class Heap {
     }
     const del = dataList[rootIndex];
 
-    // 2. 후미에 있는 값을 root에 할당해준다.
+    // 2. 가장 후미에 있는 값을 root에 할당해준다.
     const lastData = dataList.pop() as number;
     if (dataList.length > 0) {
       dataList[rootIndex] = lastData;
