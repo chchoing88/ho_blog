@@ -183,6 +183,10 @@ class BST<T> {
     this.root = this.removeNode(this.root, data);
   }
 
+  // 삭제가 이뤄 진다면
+  // 삭제가 이뤄지는 노드의 오른쪽 자식이 없다면 왼쪽 자식이 해당 노드 자리를 대체한다.
+  // 삭제가 이뤄지는 노드의 왼쪽 자식이 없다면 오른쪽 자식이 해당 노드 자리를 대체한다.
+  // 자식이 둘다 있다면 오른쪽 노드의 가장 작은 노드를 찾아서 해당 노드 자리를 대체하고 오른쪽 가장 작은 노드는 null 처리 한다.
   removeNode(node: BSTNode<T> | null, data: T) {
     if (node === null) {
       return null;
@@ -195,27 +199,34 @@ class BST<T> {
       }
       // 왼쪽 자식이 없는 노드
       if (node.left === null) {
+        // 부모 노드의 왼쪽 또는 오른쪽 자식으로 들어갈 노드
         return node.right;
       }
 
       // 오른쪽 자식이 없는 노드
       if (node.right === null) {
+        // 부모 노드의 왼쪽 또는 오른쪽 자식으로 들어갈 노드
         return node.left;
       }
 
       // 두 자식이 있는 노드
-      // 가장 오른쪽에서 작은 노드를 찾는다.
+      // 삭제할 노드는 양쪽 자식의 사이 값이기 때문에
+      // 가장 오른쪽에서 작은 노드를 찾아 바꿔 준다.
       const tempNode = this.getSmallest(node.right);
       // 찾은 노드의 데이터를 삭제하고자 하는 노드와 교체한다.
       node.data = tempNode.data;
-      // 찾은 노드를 null 처리 한다.
+      // 가장 오른쪽에서 작은 노드인 찾은 노드를 null 처리 한다.
       // node.right 가 그대로 리턴된다.
       node.right = this.removeNode(node.right, tempNode.data);
+      // tempNode로 대체된 노드
       return node;
     } else if (data < node.data) {
+      // 찾는 데이터가 작다면 왼쪽 노드로 이동해서 삭제를 진행해 본다.
+      // 왼쪽 노드로 이동해서 삭제가 되기 때문에 새로운 왼쪽 노드를 할당 합니다.
       node.left = this.removeNode(node.left, data);
       return node;
     } else {
+      // 찾는 데이터가 크다면 오른쪽 노드로 이동해서 삭제를 진행해 본다.
       node.right = this.removeNode(node.right, data);
       return node;
     }

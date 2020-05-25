@@ -358,11 +358,11 @@ class LinkedList {
       const previousRemoveNode = removeNode.previous;
       const nextRemoveNode = removeNode.next;
 
-      // 지울 이전 노드가 있다면 이전 노드의 다음 노드를 지울 노드 다음 노드와 연결해준다.
+      // 지울 노드의 이전 노드가 있다면 이전 노드의 다음 노드를 지울 노드 다음 노드(nextRemoveNode)와 연결해준다.
       if (previousRemoveNode) {
-        previousRemoveNode.next = removeNode.next;
+        previousRemoveNode.next = nextRemoveNode;
       }
-      // 지울 다음 노드가 있다면 다음 노드의 이전 노드를 지울 노드 이전 노드와 연결해준다.
+      // 지울 노드의 다음 노드가 있다면 다음 노드의 이전 노드를 지울 노드 이전 노드(previousRemoveNode)와 연결해준다.
       if (nextRemoveNode) {
         nextRemoveNode.previous = previousRemoveNode;
       }
@@ -386,6 +386,7 @@ class LinkedList {
     return false;
   }
 
+  // 노드를 list 형식으로 뽑아 볼때 사용
   getList() {
     const result = [];
     let currNode = this.head;
