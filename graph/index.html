@@ -531,11 +531,12 @@
 <li><a href="/ho_blog/graph/#%EC%A0%95%EC%A0%90-%ED%91%9C%ED%98%84-vertex-%ED%81%B4%EB%9E%98%EC%8A%A4">정점 표현 (Vertex 클래스)</a></li>
 <li><a href="/ho_blog/graph/#%EA%B0%84%EC%84%A0-%ED%91%9C%ED%98%84">간선 표현</a></li>
 <li>
-<p><a href="/ho_blog/graph/#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84">그래프 구현</a></p>
+<p><a href="/ho_blog/graph/#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84-%EA%B0%84%EB%8B%A8%ED%95%9C">그래프 구현 (간단한)</a></p>
 <ul>
 <li><a href="/ho_blog/graph/#%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8-%EA%B2%B0%EA%B3%BC">프로그램 결과</a></li>
 </ul>
 </li>
+<li><a href="/ho_blog/graph/#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84-%EC%97%B0%EA%B2%B0-%EB%A6%AC%EC%8A%A4%ED%8A%B8">그래프 구현 (연결 리스트)</a></li>
 <li>
 <p><a href="/ho_blog/graph/#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B2%80%EC%83%89">그래프 검색</a></p>
 <ul>
@@ -549,8 +550,8 @@
 </ul></div></div><div class="blog-post-content"><h2 id="그래프-정의" style="position:relative;"><a href="#%EA%B7%B8%EB%9E%98%ED%94%84-%EC%A0%95%EC%9D%98" aria-label="그래프 정의 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>그래프 정의</h2>
 <ul>
 <li><code class="language-text">그래프는 정점과 간선</code>으로 이루어져 있다. (지도로 치면 <code class="language-text">각 마을은 정점이며 도로가 간선</code>이다.)</li>
-<li><code class="language-text">간선</code>은 <code class="language-text">(v1, v2)와 같은 쌍으로 정의</code>하며, 여기서 v1, v2는 그래프의 정점이다.</li>
-<li><code class="language-text">정점</code>은 <code class="language-text">무게(weight)</code> 또는 <code class="language-text">비용(cost)</code>을 포함할 수 있다.</li>
+<li><code class="language-text">간선(Edge)</code>은 <code class="language-text">(v1, v2)와 같은 쌍으로 정의</code>하며, 여기서 v1, v2는 그래프의 정점이다.</li>
+<li><code class="language-text">정점(Vertex)</code>은 <code class="language-text">무게(weight)</code> 또는 <code class="language-text">비용(cost)</code>을 포함할 수 있다.</li>
 <li>간선에서 정점의 순서를 따지는 그래프를 <code class="language-text">방향성 그래프(directed graph 또는 digraph)</code>라 한다.</li>
 <li>방향성 그래프에서는 화살표로 간선을 표시하고 정점간 흐름을 의미한다.</li>
 <li>방향성이 없는 그래프를 <code class="language-text">무방향성 그래프(unordered graph)</code> 또는 그래프라고 한다.</li>
@@ -588,8 +589,33 @@ adj<span class="token punctuation">[</span><span class="token number">0</span><s
 adj<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
 adj<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span>
 adj<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
-adj<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span></code></pre></div>
-<h2 id="그래프-구현" style="position:relative;"><a href="#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84" aria-label="그래프 구현 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>그래프 구현</h2>
+adj<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+<span class="token comment">// 그래프 클래스에는 Vertex의 연결 리스트의 head를 지니고 있고,</span>
+<span class="token comment">// 각각의 Vertex에는 다음 Vertex 와 간선 연결 리스트의 head를 지니고 있어야 한다.</span>
+<span class="token comment">// 각각의 간선에는 다음 간선들을 지니고 있어야 한다.</span>
+<span class="token keyword">class</span> <span class="token class-name">Graph</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>vertexHead <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Vertex</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>nextVertex <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// 다음 정점</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>edgeHead <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// 간선 연결 리스트</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>wasVisited <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token comment">// 방문 이력</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>distance <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// 단일 출발지에서 최단 거리 구할때 사용</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>key <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Edge</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>nextEdge <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// 다음 간선</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>destination <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// 향하는 정점(Vertex 인스턴스) : A 정점의 간선 연결 리스트에 연결 되어있고 destination이 B 라고 하면 A->B</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>data <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// 간선의 weight</span>
+<span class="token punctuation">}</span></code></pre></div>
+<div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// 인접 행렬</span>
+<span class="token keyword">const</span> vertexList <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'A'</span><span class="token punctuation">,</span> <span class="token string">'B'</span><span class="token punctuation">,</span> <span class="token string">'C'</span><span class="token punctuation">,</span> <span class="token string">'D'</span><span class="token punctuation">,</span> <span class="token string">'E'</span><span class="token punctuation">,</span> <span class="token string">'F'</span><span class="token punctuation">]</span>
+<span class="token keyword">const</span> adj <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">...</span>vertexList<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">_</span> <span class="token operator">=></span> <span class="token function">Array</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+adj<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span> <span class="token comment">// A 에서 A 로 향하는 간선</span>
+adj<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token comment">// A 에서 B 로 향하는 간선</span></code></pre></div>
+<h2 id="그래프-구현-간단한" style="position:relative;"><a href="#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84-%EA%B0%84%EB%8B%A8%ED%95%9C" aria-label="그래프 구현 간단한 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>그래프 구현 (간단한)</h2>
 <ul>
 <li>Graph 클래스는 그래프의 정점수를 나타내는 배열 길이를 이용해 <code class="language-text">그래프의 간선 수, 정점 수 정보</code>를 유지한다.</li>
 <li>배열의 각 요소를 for문으로 반복하면서 각 요소에 인접 정점을 저장할 서브 배열을 추가한 다음 각 요소를 빈 문자열로 초기화 함.</li>
@@ -650,6 +676,156 @@ adj<span class="token punctuation">[</span><span class="token number">4</span><s
 <li>정점 3에는 정점 1로 연결되는 간선이</li>
 <li>정점 4에는 정점 2로 연결되는 간선이 있다.</li>
 </ul>
+<h2 id="그래프-구현-연결-리스트" style="position:relative;"><a href="#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84-%EC%97%B0%EA%B2%B0-%EB%A6%AC%EC%8A%A4%ED%8A%B8" aria-label="그래프 구현 연결 리스트 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>그래프 구현 (연결 리스트)</h2>
+<div class="gatsby-highlight" data-language="typescript"><pre class="language-typescript"><code class="language-typescript"><span class="token comment">// 연결 리스트를 사용한 그래프 구현</span>
+<span class="token comment">// 간선</span>
+<span class="token keyword">class</span> <span class="token class-name">Edge</span><span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  data<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span> <span class="token comment">// 간선의 weight</span>
+  nextEdge<span class="token operator">:</span> Edge<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span> <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  destination<span class="token operator">:</span> Vertex<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span><span class="token punctuation">;</span>
+
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token parameter">data<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">,</span> des<span class="token operator">:</span> Vertex<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>data <span class="token operator">=</span> data<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>nextEdge <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>destination <span class="token operator">=</span> des<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 정점</span>
+<span class="token keyword">class</span> <span class="token class-name">Vertex</span><span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  label<span class="token operator">:</span> <span class="token constant">T</span><span class="token punctuation">;</span>
+  wasVisited<span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+  edgeHead<span class="token operator">:</span> Edge<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span> <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  nextVertex<span class="token operator">:</span> Vertex<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span> <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token parameter">label<span class="token operator">:</span> <span class="token constant">T</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>label <span class="token operator">=</span> label<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>wasVisited <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token comment">// 탐색시 사용</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>edgeHead <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>nextVertex <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 그래프</span>
+<span class="token keyword">class</span> <span class="token class-name">Graph2</span><span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  vertexHead<span class="token operator">:</span> Vertex<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span> <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  count<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>vertexHead <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token comment">// 총 정점 갯수</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">insertVertex</span><span class="token punctuation">(</span><span class="token parameter">label<span class="token operator">:</span> <span class="token constant">T</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> newVertex <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vertex</span><span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span><span class="token punctuation">(</span>label<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> lastVertex <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>vertexHead<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>lastVertex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 계속 순환 하면서 다음 vertex 가 없을 때까지</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span>lastVertex<span class="token punctuation">.</span>nextVertex <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        lastVertex <span class="token operator">=</span> lastVertex<span class="token punctuation">.</span>nextVertex<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      lastVertex<span class="token punctuation">.</span>nextVertex <span class="token operator">=</span> newVertex<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// vertexHead 가 없다면</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>vertexHead <span class="token operator">=</span> newVertex<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">deleteVertex</span><span class="token punctuation">(</span><span class="token parameter">label<span class="token operator">:</span> <span class="token constant">T</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 삭제 : 삭제 타겟의 다음 vertex를 삭제 타겟의 이전 vertex에 연결 시켜 주어야 한다.</span>
+    <span class="token keyword">let</span> targetVertex <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>vertexHead<span class="token punctuation">;</span>
+    <span class="token keyword">let</span> prevVertex <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>targetVertex <span class="token operator">&amp;&amp;</span> targetVertex<span class="token punctuation">.</span>label <span class="token operator">!==</span> label<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      prevVertex <span class="token operator">=</span> targetVertex<span class="token punctuation">;</span>
+      targetVertex <span class="token operator">=</span> targetVertex<span class="token punctuation">.</span>nextVertex<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>targetVertex<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>prevVertex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 삭제 되는 이전 vertex 가 있다면 타겟 vertex의 다음 vertex를 넘긴다.</span>
+      prevVertex<span class="token punctuation">.</span>nextVertex <span class="token operator">=</span> targetVertex<span class="token punctuation">.</span>nextVertex<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 첫 vertext가 삭제 된다면</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>vertexHead <span class="token operator">=</span> targetVertex<span class="token punctuation">.</span>nextVertex<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">this</span><span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>count <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">insertEdge</span><span class="token punctuation">(</span><span class="token parameter">data<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">,</span> fromLabel<span class="token operator">:</span> <span class="token constant">T</span><span class="token punctuation">,</span> toLabel<span class="token operator">:</span> <span class="token constant">T</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// fromLabel을 가지고 from Vertext를 찾자</span>
+    <span class="token keyword">let</span> fromVertex <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>vertexHead<span class="token punctuation">;</span>
+    <span class="token keyword">let</span> toVertex <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>vertexHead<span class="token punctuation">;</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>fromVertex <span class="token operator">&amp;&amp;</span> fromVertex<span class="token punctuation">.</span>label <span class="token operator">!==</span> fromLabel<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      fromVertex <span class="token operator">=</span> fromVertex<span class="token punctuation">.</span>nextVertex<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>toVertex <span class="token operator">&amp;&amp;</span> toVertex<span class="token punctuation">.</span>label <span class="token operator">!==</span> toLabel<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      toVertex <span class="token operator">=</span> toVertex<span class="token punctuation">.</span>nextVertex<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>fromVertex <span class="token operator">||</span> <span class="token operator">!</span>toVertex<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 새로 만든 간선을 fromVertex의 마지막 edge에 추가한다.</span>
+    <span class="token keyword">const</span> newEdge <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Edge</span><span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> toVertex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">let</span> lastEdge <span class="token operator">=</span> fromVertex<span class="token punctuation">.</span>edgeHead<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>lastEdge<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span>lastEdge<span class="token punctuation">.</span>nextEdge <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        lastEdge <span class="token operator">=</span> lastEdge<span class="token punctuation">.</span>nextEdge<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      lastEdge<span class="token punctuation">.</span>nextEdge <span class="token operator">=</span> newEdge<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// fromVertex의 edgeHead가 없다면 처음에 넣어준다.</span>
+      fromVertex<span class="token punctuation">.</span>edgeHead <span class="token operator">=</span> newEdge<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">deleteEdge</span><span class="token punctuation">(</span><span class="token parameter">fromLabel<span class="token operator">:</span> <span class="token constant">T</span><span class="token punctuation">,</span> toLabel<span class="token operator">:</span> <span class="token constant">T</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> fromVertex <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>vertexHead<span class="token punctuation">;</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>fromVertex <span class="token operator">&amp;&amp;</span> fromVertex<span class="token punctuation">.</span>label <span class="token operator">!==</span> fromLabel<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      fromVertex <span class="token operator">=</span> fromVertex<span class="token punctuation">.</span>nextVertex<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>fromVertex<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> targetEdge <span class="token operator">=</span> fromVertex<span class="token punctuation">.</span>edgeHead<span class="token punctuation">;</span>
+    <span class="token keyword">let</span> preTargetEdge <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>targetEdge <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>targetEdge<span class="token punctuation">.</span>destination<span class="token punctuation">.</span>label <span class="token operator">===</span> toLabel<span class="token punctuation">)</span> <span class="token keyword">break</span><span class="token punctuation">;</span>
+      preTargetEdge <span class="token operator">=</span> targetEdge<span class="token punctuation">;</span>
+      targetEdge <span class="token operator">=</span> targetEdge<span class="token punctuation">.</span>nextEdge<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>targetEdge<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>preTargetEdge<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      preTargetEdge<span class="token punctuation">.</span>nextEdge <span class="token operator">=</span> targetEdge<span class="token punctuation">.</span>nextEdge<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 삭제될 타겟팅의 이전이 없다면 첫 엣지다.</span>
+      fromVertex<span class="token punctuation">.</span>edgeHead <span class="token operator">=</span> targetEdge<span class="token punctuation">.</span>nextEdge<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// const graph = new Graph2();</span>
+<span class="token comment">// graph.insertVertex('A');</span>
+<span class="token comment">// graph.insertVertex('B');</span>
+<span class="token comment">// graph.insertVertex('C');</span>
+<span class="token comment">// graph.insertVertex('D');</span>
+<span class="token comment">// graph.insertVertex('E');</span>
+<span class="token comment">// graph.insertVertex('F');</span>
+<span class="token comment">// graph.insertEdge(1, 'A', 'B');</span>
+<span class="token comment">// graph.insertEdge(1, 'B', 'C');</span>
+<span class="token comment">// graph.insertEdge(1, 'B', 'E');</span>
+<span class="token comment">// graph.insertEdge(1, 'C', 'E');</span>
+<span class="token comment">// graph.insertEdge(1, 'C', 'D');</span>
+<span class="token comment">// graph.insertEdge(1, 'E', 'D');</span>
+<span class="token comment">// graph.insertEdge(1, 'E', 'F');</span>
+<span class="token comment">// graph.deleteVertex('B')</span></code></pre></div>
 <h2 id="그래프-검색" style="position:relative;"><a href="#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B2%80%EC%83%89" aria-label="그래프 검색 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>그래프 검색</h2>
 <ul>
 <li>깊이 우선 검색 (depth first search)</li>
@@ -872,11 +1048,12 @@ adj<span class="token punctuation">[</span><span class="token number">4</span><s
 <li><a href="/ho_blog/graph/#%EC%A0%95%EC%A0%90-%ED%91%9C%ED%98%84-vertex-%ED%81%B4%EB%9E%98%EC%8A%A4">정점 표현 (Vertex 클래스)</a></li>
 <li><a href="/ho_blog/graph/#%EA%B0%84%EC%84%A0-%ED%91%9C%ED%98%84">간선 표현</a></li>
 <li>
-<p><a href="/ho_blog/graph/#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84">그래프 구현</a></p>
+<p><a href="/ho_blog/graph/#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84-%EA%B0%84%EB%8B%A8%ED%95%9C">그래프 구현 (간단한)</a></p>
 <ul>
 <li><a href="/ho_blog/graph/#%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8-%EA%B2%B0%EA%B3%BC">프로그램 결과</a></li>
 </ul>
 </li>
+<li><a href="/ho_blog/graph/#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84-%EC%97%B0%EA%B2%B0-%EB%A6%AC%EC%8A%A4%ED%8A%B8">그래프 구현 (연결 리스트)</a></li>
 <li>
 <p><a href="/ho_blog/graph/#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B2%80%EC%83%89">그래프 검색</a></p>
 <ul>
