@@ -930,7 +930,7 @@ h <span class="token operator">=</span> <span class="token punctuation">(</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">const</span> del <span class="token operator">=</span> dataList<span class="token punctuation">[</span>rootIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-    <span class="token comment">// 2. 후미에 있는 값을 root에 할당해준다.</span>
+    <span class="token comment">// 2. 가장 후미에 있는 값을 root에 할당해준다.</span>
     <span class="token keyword">const</span> lastData <span class="token operator">=</span> dataList<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token builtin">number</span><span class="token punctuation">;</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>dataList<span class="token punctuation">.</span>length <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       dataList<span class="token punctuation">[</span>rootIndex<span class="token punctuation">]</span> <span class="token operator">=</span> lastData<span class="token punctuation">;</span>

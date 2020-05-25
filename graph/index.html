@@ -23,7 +23,7 @@
   },
   "image": ["https://chchoing88.github.io/ho_blog/ho_blog/static/merlin-412eee4caa42c8dab2f36c2168a6a41f.png"]
 }
-</script><title data-react-helmet="true">[algorithms] graph | Merlin Tech Blog</title><link data-react-helmet="true" rel="icon" href="data:;base64,iVBORw0KGgo="/><link data-react-helmet="true" href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700%7CNanum+Gothic+Coding:400,700%7CNoto+Serif+KR:300,400,700%7CRaleway" rel="stylesheet"/><meta data-react-helmet="true" name="description" content="그래프 정의 그래프는 정점과 간선으로 이루어져 있다. (지도로 치면 각 마을은 정점이며 도로가 간선이다.) 간선은 (v1, v2)와 같은 쌍으로 정의하며, 여기서 v1, v2는 그래프의 정점이다. 정점은 무게(weight) 또는 비용(cost…"/><meta data-react-helmet="true" property="og:title" content="[algorithms] graph"/><meta data-react-helmet="true" property="og:description" content="그래프 정의 그래프는 정점과 간선으로 이루어져 있다. (지도로 치면 각 마을은 정점이며 도로가 간선이다.) 간선은 (v1, v2)와 같은 쌍으로 정의하며, 여기서 v1, v2는 그래프의 정점이다. 정점은 무게(weight) 또는 비용(cost…"/><meta data-react-helmet="true" property="og:type" content="website"/><meta data-react-helmet="true" name="twitter:card" content="summary"/><meta data-react-helmet="true" name="twitter:creator" content="Merlin.ho"/><meta data-react-helmet="true" name="twitter:title" content="[algorithms] graph"/><meta data-react-helmet="true" name="twitter:description" content="그래프 정의 그래프는 정점과 간선으로 이루어져 있다. (지도로 치면 각 마을은 정점이며 도로가 간선이다.) 간선은 (v1, v2)와 같은 쌍으로 정의하며, 여기서 v1, v2는 그래프의 정점이다. 정점은 무게(weight) 또는 비용(cost…"/><meta data-react-helmet="true" name="keywords" content="Merlin Tech Blog,Merlin.ho,undefined"/><meta data-react-helmet="true" name="google-site-verification" content=""/><script data-react-helmet="true" async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><meta name="generator" content="Gatsby 2.18.18"/><style data-react-helmet="true">svg:not(:root).svg-inline--fa {
+</script><title data-react-helmet="true">[algorithms] graph | Merlin Tech Blog</title><link data-react-helmet="true" rel="icon" href="data:;base64,iVBORw0KGgo="/><link data-react-helmet="true" href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700%7CNanum+Gothic+Coding:400,700%7CNoto+Serif+KR:300,400,700%7CRaleway" rel="stylesheet"/><meta data-react-helmet="true" name="description" content="그래프 정의 으로 이루어져 있다. (지도로 치면 이다.) 은 하며, 여기서 v1, v…"/><meta data-react-helmet="true" property="og:title" content="[algorithms] graph"/><meta data-react-helmet="true" property="og:description" content="그래프 정의 으로 이루어져 있다. (지도로 치면 이다.) 은 하며, 여기서 v1, v…"/><meta data-react-helmet="true" property="og:type" content="website"/><meta data-react-helmet="true" name="twitter:card" content="summary"/><meta data-react-helmet="true" name="twitter:creator" content="Merlin.ho"/><meta data-react-helmet="true" name="twitter:title" content="[algorithms] graph"/><meta data-react-helmet="true" name="twitter:description" content="그래프 정의 으로 이루어져 있다. (지도로 치면 이다.) 은 하며, 여기서 v1, v…"/><meta data-react-helmet="true" name="keywords" content="Merlin Tech Blog,Merlin.ho,undefined"/><meta data-react-helmet="true" name="google-site-verification" content=""/><script data-react-helmet="true" async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><meta name="generator" content="Gatsby 2.18.18"/><style data-react-helmet="true">svg:not(:root).svg-inline--fa {
   overflow: visible;
 }
 
@@ -548,43 +548,61 @@
 <li><a href="/ho_blog/graph/#%EC%A0%95%EB%A6%AC">정리</a></li>
 </ul></div></div><div class="blog-post-content"><h2 id="그래프-정의" style="position:relative;"><a href="#%EA%B7%B8%EB%9E%98%ED%94%84-%EC%A0%95%EC%9D%98" aria-label="그래프 정의 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>그래프 정의</h2>
 <ul>
-<li>그래프는 정점과 간선으로 이루어져 있다. (지도로 치면 각 마을은 정점이며 도로가 간선이다.)</li>
-<li>간선은 (v1, v2)와 같은 쌍으로 정의하며, 여기서 v1, v2는 그래프의 정점이다.</li>
-<li>정점은 무게(weight) 또는 비용(cost)을 포함할 수 있다.</li>
-<li>간선에서 정점의 순서를 따지는 그래프를 방향성 그래프(directed graph 또는 digraph)라 한다.</li>
+<li><code class="language-text">그래프는 정점과 간선</code>으로 이루어져 있다. (지도로 치면 <code class="language-text">각 마을은 정점이며 도로가 간선</code>이다.)</li>
+<li><code class="language-text">간선</code>은 <code class="language-text">(v1, v2)와 같은 쌍으로 정의</code>하며, 여기서 v1, v2는 그래프의 정점이다.</li>
+<li><code class="language-text">정점</code>은 <code class="language-text">무게(weight)</code> 또는 <code class="language-text">비용(cost)</code>을 포함할 수 있다.</li>
+<li>간선에서 정점의 순서를 따지는 그래프를 <code class="language-text">방향성 그래프(directed graph 또는 digraph)</code>라 한다.</li>
 <li>방향성 그래프에서는 화살표로 간선을 표시하고 정점간 흐름을 의미한다.</li>
-<li>방향성이 없는 그래프를 무방향성 그래프(unordered graph) 또는 그래프라고 한다.</li>
-<li>경로의 길이는 경로의 첫 번째 정점에서 마지막 정점까지의 간선 수를 의미한다.</li>
-<li>경로는 정점 자신으로 향하는 경로 즉, 루프도 퍼함한다. 이때 루프의 길이는 0 이다.</li>
-<li>첫 번째 정점에서 마지막 정점으로 도달하는 하나 이상의 간선으로 이루어졌으며 경로가 같은 상황을 사이클(cycle)이라 한다.</li>
-<li>한 정점이 다른 정점과 연결되어 있고, 다른 정점도 한 정점과 연결되어 있으면 두 정점은 서로 강하게(strongly) 연결되어 있다고 말한다.</li>
+<li>방향성이 없는 그래프를 <code class="language-text">무방향성 그래프(unordered graph)</code> 또는 그래프라고 한다.</li>
+<li><code class="language-text">경로의 길이</code>는 경로의 첫 번째 정점에서 마지막 정점까지의 <code class="language-text">간선 수</code>를 의미한다.</li>
+<li>경로는 정점 자신으로 향하는 경로 즉, 루프도 포함한다. 이때 루프의 길이는 0 이다.</li>
+<li>첫 번째 정점에서 마지막 정점으로 도달하는 하나 이상의 간선으로 이루어졌으며 경로가 같은 상황을 <code class="language-text">사이클(cycle)</code>이라 한다.</li>
+<li>한 정점이 다른 정점과 연결되어 있고, 다른 정점도 한 정점과 연결되어 있으면 두 정점은 서로 <code class="language-text">강하게(strongly</code>) 연결되어 있다고 말한다.</li>
 </ul>
 <h2 id="정점-표현-vertex-클래스" style="position:relative;"><a href="#%EC%A0%95%EC%A0%90-%ED%91%9C%ED%98%84-vertex-%ED%81%B4%EB%9E%98%EC%8A%A4" aria-label="정점 표현 vertex 클래스 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>정점 표현 (Vertex 클래스)</h2>
 <ul>
 <li>정점을 식별할 수 있는 데이터 멤버와 정점을 방문했는지 여부를 확인할 수 있는 데이터 멤버가 필요. (label, wasVisited)</li>
 <li>Graph 클래스가 사용할 정점은 배열에 저장할 것이다.</li>
 </ul>
+<div class="gatsby-highlight" data-language="typescript"><pre class="language-typescript"><code class="language-typescript"><span class="token keyword">class</span> <span class="token class-name">Vertex</span><span class="token operator">&lt;</span><span class="token constant">T</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  label<span class="token operator">:</span> <span class="token constant">T</span><span class="token punctuation">;</span>
+  wasVisited<span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token parameter">label<span class="token operator">:</span> <span class="token constant">T</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>label <span class="token operator">=</span> label<span class="token punctuation">;</span> <span class="token comment">// 데이터 멤버</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>wasVisited <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token comment">// 정점을 방문했는지 여부</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></div>
 <h2 id="간선-표현" style="position:relative;"><a href="#%EA%B0%84%EC%84%A0-%ED%91%9C%ED%98%84" aria-label="간선 표현 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>간선 표현</h2>
 <ul>
-<li>그래프의 구조를 표현하는 것은 간선</li>
+<li>그래프의 구조를 표현하는 것은 간선이다.</li>
 <li>실제 정보는 간선에 저장된다.</li>
-<li>인접 리스트 (adjacency list) 또는 인접 리스트 배열(array of adjacency list)이라 불리는 방법으로 그래프의 간선을 표현할 것이다.</li>
-<li>인접 리스트에서는 인접한 각 정점의 배열 리스트에 정점을 인덱스로 이용해 간선을 저장한다. 예를 들어 정점 2가 정점 0, 1, 3, 4로 연결되고 인덱스는 2에 저장되어 있다고 가정하면 인덱스 2에는 정점 0, 1, 3, 4의 정보가 들어있을 것이다.</li>
-<li>간선을 구현하는 또 다른 방법으로 인접 행렬(adjacency matrix) 이라는 방식도 있다. 인접 행렬이란 두 정점 간의 간선이 존재하는지 여부를 알려주는 요소를 포함하는 이차원 배열이다.</li>
+<li>그래프를 이진 트리 처럼 구현하는 것은 바람직하지 않다. 이진 트리에서 부모 노드는 오직 두 개 이하의 자식 노드를 가질 수 있으므로 대부분의 이진 트리 구현은 비슷한 편이다. 하지만 그래프는 이진트리에 비해 훨씬 유연한 구조를 가진다.</li>
+<li><code class="language-text">인접 리스트 (adjacency list)</code> 또는 <code class="language-text">인접 리스트 배열(array of adjacency list)</code>이라 불리는 방법으로 그래프의 간선을 표현할 것이다.</li>
+<li><code class="language-text">인접 리스트에서는 인접한 각 정점의 배열 리스트에 정점을 인덱스로 이용해 간선을 저장</code>한다. 예를 들어 정점 2가 정점 0, 1, 3, 4로 연결되고 인덱스는 2에 저장되어 있다고 가정하면 인덱스 2에는 정점 0, 1, 3, 4의 정보가 들어있을 것이다.</li>
+<li>간선을 구현하는 또 다른 방법으로 <code class="language-text">인접 행렬(adjacency matrix)</code> 이라는 방식도 있다. 인접 행렬이란 <code class="language-text">두 정점 간의 간선이 존재하는지 여부를 알려주는 요소를 포함하는 이차원 배열</code>이다.</li>
 </ul>
+<div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// 인접 리스트</span>
+<span class="token keyword">const</span> adj <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+adj<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+adj<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+adj<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span>
+adj<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+adj<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span></code></pre></div>
 <h2 id="그래프-구현" style="position:relative;"><a href="#%EA%B7%B8%EB%9E%98%ED%94%84-%EA%B5%AC%ED%98%84" aria-label="그래프 구현 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>그래프 구현</h2>
 <ul>
-<li>Graph 클래스는 그래프의 정점수를 나타내는 배열 길이를 이용해 그래프의 간선 수, 정점 수 정보를 유지한다.</li>
+<li>Graph 클래스는 그래프의 정점수를 나타내는 배열 길이를 이용해 <code class="language-text">그래프의 간선 수, 정점 수 정보</code>를 유지한다.</li>
 <li>배열의 각 요소를 for문으로 반복하면서 각 요소에 인접 정점을 저장할 서브 배열을 추가한 다음 각 요소를 빈 문자열로 초기화 함.</li>
 </ul>
-<div class="gatsby-highlight" data-language="typescript"><pre class="language-typescript"><code class="language-typescript"><span class="token keyword">class</span> <span class="token class-name">Graph</span> <span class="token punctuation">{</span>
+<div class="gatsby-highlight" data-language="typescript"><pre class="language-typescript"><code class="language-typescript"><span class="token comment">// 정점 수를 인자로 받아서 인덱스에 매핑 시킨다.</span>
+<span class="token keyword">class</span> <span class="token class-name">Graph</span> <span class="token punctuation">{</span>
   vertices<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span>
   edges<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span>
   adj<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
   <span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token parameter">v<span class="token operator">:</span> <span class="token builtin">number</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>vertices <span class="token operator">=</span> v<span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>edges <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>vertices <span class="token operator">=</span> v<span class="token punctuation">;</span> <span class="token comment">// 총 정점 수</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>edges <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token comment">// 총 간선 수</span>
 
     <span class="token keyword">this</span><span class="token punctuation">.</span>adj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>adj<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -592,15 +610,16 @@
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
 
+  <span class="token comment">// 정점 v 와 정점 w를 인접 리스트에 추가한다.</span>
   <span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token parameter">v<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">,</span> w<span class="token operator">:</span> <span class="token builtin">number</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>adj<span class="token punctuation">[</span>w<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 순환 참조를 안시키려면 주석을 해야한다.</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>edges<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>edges<span class="token operator">++</span><span class="token punctuation">;</span> <span class="token comment">// 간선의 수를 1만큼 증가 시킨다.</span>
   <span class="token punctuation">}</span>
 
   <span class="token function">showGraph</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"this.adj"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>adj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>adj<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">verticeList<span class="token punctuation">,</span> index</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>adj<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">verticeList<span class="token punctuation">,</span> index</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span> <span class="token comment">// verticeList : 정점 리스트</span>
       <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>index<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> -> </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
       verticeList<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">vertice</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span>vertice <span class="token operator">!==</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -610,7 +629,19 @@
       <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre></div>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// const g = Graph(5);</span>
+<span class="token comment">// g.addEdge(0,1);</span>
+<span class="token comment">// g.addEdge(0,2);</span>
+<span class="token comment">// g.addEdge(1,3);</span>
+<span class="token comment">// g.addEdge(2,4);</span>
+<span class="token comment">// g.showGraph();</span>
+<span class="token comment">// 0 -> 1 2</span>
+<span class="token comment">// 1 -> 0 3</span>
+<span class="token comment">// 2 -> 0 4</span>
+<span class="token comment">// 3 -> 1</span>
+<span class="token comment">// 4 -> 2</span></code></pre></div>
 <h3 id="프로그램-결과" style="position:relative;"><a href="#%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8-%EA%B2%B0%EA%B3%BC" aria-label="프로그램 결과 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>프로그램 결과</h3>
 <ul>
 <li>정점 0에는 정점 1,2로 연결되는 간선이</li>
@@ -633,7 +664,7 @@
 <li>깊이 우선 검색은 <code class="language-text">Stack</code>을 이용해서 구현합니다.</li>
 <li><strong>스택에 일단 루트 노드를 넣고 먼저 스택에서 노드를 하나 꺼내서 그 해당 child 노드를 전부 스택에 넣고 꺼낸 노드는 출력을 하는 것입니다.</strong></li>
 <li>여기서 child 노드를 스택에 넣을 때는 한번 넣었던 child 노드는 넣지 않습니다.</li>
-<li>특히 DFS를 구현할때 재귀 호출을 이용하면 코드가 간결해 집니다.</li>
+<li>특히 <code class="language-text">DFS를 구현할때 재귀 호출</code>을 이용하면 코드가 간결해 집니다.</li>
 </ul>
 <div class="gatsby-highlight" data-language="typescript"><pre class="language-typescript"><code class="language-typescript"><span class="token keyword">class</span> <span class="token class-name">Graph</span> <span class="token punctuation">{</span>
   vertices<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span>
@@ -677,15 +708,18 @@
   <span class="token punctuation">}</span>
 
   <span class="token comment">// 재귀는 곧 돌아와서 다시 할일이 있기 때문에 사용한다.</span>
+  <span class="token comment">// 재귀는 곧 stack을 이용한다. browser 실행 stack을 이용한다.</span>
   <span class="token comment">// 순서 0 -> true, this.adj[0] = 1, this.dfs(1), 1 -> true,...</span>
   <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token parameter">v<span class="token operator">:</span> <span class="token builtin">number</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 이 실행 자체가 stack에 들어간다.</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>marked<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>marked<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">!==</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Visited vertex: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>v<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-
+    <span class="token comment">// 방문한 인접한 노드를 loop를 돈다.</span>
     <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> w <span class="token keyword">of</span> <span class="token keyword">this</span><span class="token punctuation">.</span>adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token comment">// 이미 방문 했던 vertex는 무시한다.</span>
+      <span class="token comment">// 인접한 노드를 방문한다.</span>
       <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>marked<span class="token punctuation">[</span>w<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">dfs</span><span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token punctuation">}</span>
@@ -707,15 +741,17 @@
     <span class="token keyword">this</span><span class="token punctuation">.</span>marked<span class="token punctuation">[</span>s<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
     queue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
+  <span class="token comment">// 큐에 더이상 실행 시킬 노드가 없을 때 까지</span>
     <span class="token keyword">while</span> <span class="token punctuation">(</span>queue<span class="token punctuation">.</span>length <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token keyword">const</span> v <span class="token operator">=</span> queue<span class="token punctuation">.</span><span class="token function">shift</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 큐에서 가져옴</span>
       <span class="token keyword">if</span> <span class="token punctuation">(</span>v <span class="token operator">!==</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Visited vertex: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>v<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
+        <span class="token comment">// 인접한 노드들에 대해서 순환을 돈다.</span>
         <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> w <span class="token keyword">of</span> <span class="token keyword">this</span><span class="token punctuation">.</span>adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
           <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>marked<span class="token punctuation">[</span>w<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token comment">// 이미 방문하지 않았던 w 정점에 대해서</span>
-            <span class="token keyword">this</span><span class="token punctuation">.</span>edgesTo<span class="token punctuation">[</span>w<span class="token punctuation">]</span> <span class="token operator">=</span> v<span class="token punctuation">;</span> <span class="token comment">// 경로를 찾을때 간선 정보를 겹치지 않게 유지할 배열</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>edgesTo<span class="token punctuation">[</span>w<span class="token punctuation">]</span> <span class="token operator">=</span> v<span class="token punctuation">;</span> <span class="token comment">// 최단 경로 찾을 때 이용 : 경로를 찾을때 간선 정보를 겹치지 않게 유지할 배열</span>
             <span class="token keyword">this</span><span class="token punctuation">.</span>marked<span class="token punctuation">[</span>w<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span> <span class="token comment">// 정점에 도달</span>
             queue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 방문한 정점에서 가장 인접한 레벨의 정점들을 큐에 넣어둔다.</span>
           <span class="token punctuation">}</span>
@@ -724,11 +760,15 @@
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
 <span class="token comment">// 0 -> [1,2], 1 -> [0,3], 2 -> [0,4], 3 -> [1], 4 -> [2]</span>
-<span class="token comment">// 0,1,2,3,4</span></code></pre></div>
+<span class="token comment">// 0,1,2,3,4</span>
+<span class="token comment">// this.edgesTo[1] = 0</span>
+<span class="token comment">// this.edgesTo[2] = 0</span>
+<span class="token comment">// this.edgesTo[3] = 1</span>
+<span class="token comment">// this.edgesTo[4] = 2</span></code></pre></div>
 <h2 id="최단-경로-찾기" style="position:relative;"><a href="#%EC%B5%9C%EB%8B%A8-%EA%B2%BD%EB%A1%9C-%EC%B0%BE%EA%B8%B0" aria-label="최단 경로 찾기 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>최단 경로 찾기</h2>
 <ul>
 <li>정점 간의 최단 경로를 찾는 것이다.</li>
-<li><code class="language-text">너비 우선 검색</code>을 수행하면 자동으로 한 정점에서 연결된 다른 정점으로 도달하는 최단 경로를 찾게 된다.</li>
+<li><code class="language-text">너비 우선 검색</code>을 수행하면 자동으로 <code class="language-text">한 정점에서 연결된 다른 정점으로 도달하는 최단 경로</code>를 찾게 된다.</li>
 <li>정점 A에서 정점 D로 도달하는 최단 경로를 찾는다고 할 때 1개의 간선 경로를 찾아보고 없으면 2개의 간선 경로를 찾아보는 식으로 반복 검색을 수행할 수 있다.</li>
 <li>한 정점에서 다른 정점으로 연결하는 간선 정보를 유지할 배열이 필요 (<code class="language-text">this.edgesTo</code>) : 겹치지 않게 간선 정보를 유지하는 것으로 보인다.</li>
 </ul>
@@ -761,17 +801,17 @@
   <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>marked<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
-<span class="token comment">// const path = g.pathTo(4) : 정점 0에서 정점 4로 도달하는 최단 경로를 보여줌.</span>
+<span class="token keyword">const</span> paths <span class="token operator">=</span> g<span class="token punctuation">.</span><span class="token function">pathTo</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token comment">// 정점 0에서 정점 4로 도달하는 최단 경로를 보여줌.</span>
 <span class="token comment">// 0, 2, 4</span></code></pre></div>
 <h2 id="위상-정렬" style="position:relative;"><a href="#%EC%9C%84%EC%83%81-%EC%A0%95%EB%A0%AC" aria-label="위상 정렬 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>위상 정렬</h2>
 <ul>
-<li>위상 정렬(Topological sorting)은 방향성 그래프의 모든 방향성 간선이 왼쪽에서 오른쪽 정점을 가리키도록 모든 정점을 배치하는 방법이다. 즉, 순서가 정해져 있는 작업을 차례대로 나열할때 사용한다.</li>
-<li>이와 같은 구조는 선수 제약 일정 관리에서 찾아볼 수 있으며, 예를 들면 물리1을 이수하지 않은 학생은 물리2를 이수 할 수 없도록 하는것과 같다.</li>
-<li>위상 정렬 알고리즘은 깊이 우선 검색 알고리즘과 비슷하다. 다만, 방문한 정점을 즉시 출력했던 깊이 우선 검색과 달리 위상 정렬 알고리즘에서는 우선 현재 정점과 인접한 모든 정점을 방문한 다음 인접 리스트를 모두 확인하고 현재 정점을 스택으로 푸시한다.</li>
-<li>topSort() 함수로 정렬 과정을 설정한 다음, 헬퍼 함수인 topSortHelper() 함수를 호출한다.</li>
-<li>핵심 기능은 재귀 함수인 topSortHelper() 함수에서 수행한다.</li>
-<li>topSortHelper() 함수는 현재 방문한 정점으로 표시한 다음 현재 정점의 인접 리스트에 있는 각각의 인접 정점을 재귀적으로 방문하면서 방문한 것으로 표시한다.</li>
-<li>위상 정렬은 DAG(Directed Acyclic Graph: 사이클이 없는 방향성이 있는 그래프) 에만 적용이 가능합니다. 즉, 사이클이 발생하면 위상정렬을 할 수 없습니다.</li>
+<li><code class="language-text">위상 정렬(Topological sorting)</code>은 방향성 그래프의 모든 방향성 간선이 왼쪽에서 오른쪽 정점을 가리키도록 모든 정점을 배치하는 방법이다. 즉, 순서가 정해져 있는 작업을 차례대로 나열할때 사용한다.</li>
+<li>이와 같은 구조는 <code class="language-text">선수 제약 일정 관리</code>에서 찾아볼 수 있으며, 예를 들면 물리1을 이수하지 않은 학생은 물리2를 이수 할 수 없도록 하는것과 같다.</li>
+<li>위상 정렬 알고리즘은 깊이 우선 검색 알고리즘과 비슷하다. 다만, 방문한 정점을 즉시 출력했던 깊이 우선 검색과 달리 <code class="language-text">위상 정렬 알고리즘에서는 우선 현재 정점과 인접한 모든 정점을 방문한 다음 인접 리스트를 모두 확인하고 현재 정점을 스택으로 푸시</code>한다.</li>
+<li><code class="language-text">topSort()</code> 함수로 정렬 과정을 설정한 다음, 헬퍼 함수인 <code class="language-text">topSortHelper()</code> 함수를 호출한다.</li>
+<li>핵심 기능은 재귀 함수인 <code class="language-text">topSortHelper()</code> 함수에서 수행한다.</li>
+<li><code class="language-text">topSortHelper()</code> 함수는 현재 방문한 정점으로 표시한 다음 현재 정점의 인접 리스트에 있는 각각의 인접 정점을 재귀적으로 방문하면서 방문한 것으로 표시한다.</li>
+<li>위상 정렬은 <code class="language-text">DAG(Directed Acyclic Graph: 사이클이 없는 방향성이 있는 그래프)</code> 에만 적용이 가능합니다. 즉, 사이클이 발생하면 위상정렬을 할 수 없습니다.</li>
 <li>위상 정렬은 여러개의 답이 존재 할 수 있습니다.</li>
 </ul>
 <div class="gatsby-highlight" data-language="typescript"><pre class="language-typescript"><code class="language-typescript"><span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token parameter">v<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">,</span> w<span class="token operator">:</span> <span class="token builtin">number</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -784,15 +824,19 @@
 <span class="token function">topSort</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> stack<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> visited <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment">// visited 초기화</span>
+  <span class="token comment">// this.vertices : 총 정점 수</span>
   <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>vertices<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     visited<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
   <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>vertices<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>visited<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 연결되지 않은 정점 들도 파악한다.</span>
       <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">topSortHelper</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> visited<span class="token punctuation">,</span> stack<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
+  <span class="token comment">// 출력</span>
   <span class="token keyword">let</span> length <span class="token operator">=</span> stack<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
   <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>stack<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -801,6 +845,8 @@
 
 <span class="token function">topSortHelper</span><span class="token punctuation">(</span><span class="token parameter">v<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">,</span> visited<span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> stack<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   visited<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+  <span class="token comment">// 깊이 우선 탐색을 위한 재귀</span>
+  <span class="token comment">// dfs 와 다른 점은 browser의 stack 외에 다른 stack 에 그 결과물을 저장하는데 있다.</span>
   <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> w <span class="token keyword">of</span> <span class="token keyword">this</span><span class="token punctuation">.</span>adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>visited<span class="token punctuation">[</span>w<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">topSortHelper</span><span class="token punctuation">(</span>w<span class="token punctuation">,</span> visited<span class="token punctuation">,</span> stack<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -815,11 +861,12 @@
 <span class="token comment">// g.addEdge(1,3);</span>
 <span class="token comment">// g.addEdge(1,4);</span>
 <span class="token comment">// g.addEdge(0,1);</span>
+<span class="token comment">// g.topSort()</span>
 <span class="token comment">// 0 -> 1 -> 4 -> 3 -> 2 -> 5</span></code></pre></div>
 <h2 id="정리" style="position:relative;"><a href="#%EC%A0%95%EB%A6%AC" aria-label="정리 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>정리</h2>
 <ul>
-<li>그래프의 깊이를 먼저 탐색하기 위해선 재귀를 활용해서 가장 깊이 있는 뎁스 까지 내려갔다가 끝나면 남아있던 형제 정점에서 다시 탐색을 시작한다.</li>
-<li>그래프의 너비를 먼저 탐색하기 위해선 현재 정점에 인접한(자식 뎁스)를 큐에 넣고 큐에서 하나씩 빼서 방문하게 만든다.</li>
+<li>그래프의 깊이를 먼저 탐색하기 위해선 <code class="language-text">재귀(stack)</code>를 활용해서 가장 깊이 있는 뎁스 까지 내려갔다가 끝나면 남아있던 형제 정점에서 다시 탐색을 시작한다.</li>
+<li>그래프의 너비를 먼저 탐색하기 위해선 현재 정점에 인접한(자식 뎁스)를 <code class="language-text">큐</code>에 넣고 큐에서 하나씩 빼서 방문하게 만든다.</li>
 </ul></div></div><div class="social-share"><ul><li class="social-share-item email"><button separator=" " aria-label="email" class="react-share__ShareButton" style="background-color:transparent;border:none;padding:0;font:inherit;color:inherit;cursor:pointer"><svg viewBox="0 0 64 64" width="24" height="24"><circle cx="32" cy="32" r="31" fill="#7f7f7f"></circle><path d="M17,22v20h30V22H17z M41.1,25L32,32.1L22.9,25H41.1z M20,39V26.6l12,9.3l12-9.3V39H20z" fill="white"></path></svg></button></li><li class="social-share-item facebook"><button aria-label="facebook" class="react-share__ShareButton" style="background-color:transparent;border:none;padding:0;font:inherit;color:inherit;cursor:pointer"><svg viewBox="0 0 64 64" width="24" height="24"><circle cx="32" cy="32" r="31" fill="#3b5998"></circle><path d="M34.1,47V33.3h4.6l0.7-5.3h-5.3v-3.4c0-1.5,0.4-2.6,2.6-2.6l2.8,0v-4.8c-0.5-0.1-2.2-0.2-4.1-0.2 c-4.1,0-6.9,2.5-6.9,7V28H24v5.3h4.6V47H34.1z" fill="white"></path></svg></button></li><li class="social-share-item twitter"><button aria-label="twitter" class="react-share__ShareButton" style="background-color:transparent;border:none;padding:0;font:inherit;color:inherit;cursor:pointer"><svg viewBox="0 0 64 64" width="24" height="24"><circle cx="32" cy="32" r="31" fill="#00aced"></circle><path d="M48,22.1c-1.2,0.5-2.4,0.9-3.8,1c1.4-0.8,2.4-2.1,2.9-3.6c-1.3,0.8-2.7,1.3-4.2,1.6 C41.7,19.8,40,19,38.2,19c-3.6,0-6.6,2.9-6.6,6.6c0,0.5,0.1,1,0.2,1.5c-5.5-0.3-10.3-2.9-13.5-6.9c-0.6,1-0.9,2.1-0.9,3.3 c0,2.3,1.2,4.3,2.9,5.5c-1.1,0-2.1-0.3-3-0.8c0,0,0,0.1,0,0.1c0,3.2,2.3,5.8,5.3,6.4c-0.6,0.1-1.1,0.2-1.7,0.2c-0.4,0-0.8,0-1.2-0.1 c0.8,2.6,3.3,4.5,6.1,4.6c-2.2,1.8-5.1,2.8-8.2,2.8c-0.5,0-1.1,0-1.6-0.1c2.9,1.9,6.4,2.9,10.1,2.9c12.1,0,18.7-10,18.7-18.7 c0-0.3,0-0.6,0-0.8C46,24.5,47.1,23.4,48,22.1z" fill="white"></path></svg></button></li><li class="social-share-item linkedin"><button aria-label="linkedin" class="react-share__ShareButton" style="background-color:transparent;border:none;padding:0;font:inherit;color:inherit;cursor:pointer"><svg viewBox="0 0 64 64" width="24" height="24"><circle cx="32" cy="32" r="31" fill="#007fb1"></circle><path d="M20.4,44h5.4V26.6h-5.4V44z M23.1,18c-1.7,0-3.1,1.4-3.1,3.1c0,1.7,1.4,3.1,3.1,3.1 c1.7,0,3.1-1.4,3.1-3.1C26.2,19.4,24.8,18,23.1,18z M39.5,26.2c-2.6,0-4.4,1.4-5.1,2.8h-0.1v-2.4h-5.2V44h5.4v-8.6 c0-2.3,0.4-4.5,3.2-4.5c2.8,0,2.8,2.6,2.8,4.6V44H46v-9.5C46,29.8,45,26.2,39.5,26.2z" fill="white"></path></svg></button></li><li class="social-share-item reddit"><button aria-label="reddit" class="react-share__ShareButton" style="background-color:transparent;border:none;padding:0;font:inherit;color:inherit;cursor:pointer"><svg viewBox="0 0 64 64" width="24" height="24"><circle cx="32" cy="32" r="31" fill="#5f99cf"></circle><path d="m 52.8165,31.942362 c 0,-2.4803 -2.0264,-4.4965 -4.5169,-4.4965 -1.2155,0 -2.3171,0.4862 -3.128,1.2682 -3.077,-2.0247 -7.2403,-3.3133 -11.8507,-3.4782 l 2.5211,-7.9373 6.8272,1.5997 -0.0102,0.0986 c 0,2.0281 1.6575,3.6771 3.6958,3.6771 2.0366,0 3.6924,-1.649 3.6924,-3.6771 0,-2.0281 -1.6575,-3.6788 -3.6924,-3.6788 -1.564,0 -2.8968,0.9758 -3.4357,2.3443 l -7.3593,-1.7255 c -0.3213,-0.0782 -0.6477,0.1071 -0.748,0.4233 L 32,25.212062 c -4.8246,0.0578 -9.1953,1.3566 -12.41,3.4425 -0.8058,-0.7446 -1.8751,-1.2104 -3.0583,-1.2104 -2.4905,0 -4.5152,2.0179 -4.5152,4.4982 0,1.649 0.9061,3.0787 2.2389,3.8607 -0.0884,0.4794 -0.1462,0.9639 -0.1462,1.4569 0,6.6487 8.1736,12.0581 18.2223,12.0581 10.0487,0 18.224,-5.4094 18.224,-12.0581 0,-0.4658 -0.0493,-0.9248 -0.1275,-1.377 1.4144,-0.7599 2.3885,-2.2304 2.3885,-3.9406 z m -29.2808,3.0872 c 0,-1.4756 1.207,-2.6775 2.6894,-2.6775 1.4824,0 2.6877,1.2019 2.6877,2.6775 0,1.4756 -1.2053,2.6758 -2.6877,2.6758 -1.4824,0 -2.6894,-1.2002 -2.6894,-2.6758 z m 15.4037,7.9373 c -1.3549,1.3481 -3.4816,2.0043 -6.5008,2.0043 l -0.0221,-0.0051 -0.0221,0.0051 c -3.0209,0 -5.1476,-0.6562 -6.5008,-2.0043 -0.2465,-0.2448 -0.2465,-0.6443 0,-0.8891 0.2465,-0.2465 0.6477,-0.2465 0.8942,0 1.105,1.0999 2.9393,1.6337 5.6066,1.6337 l 0.0221,0.0051 0.0221,-0.0051 c 2.6673,0 4.5016,-0.5355 5.6066,-1.6354 0.2465,-0.2465 0.6477,-0.2448 0.8942,0 0.2465,0.2465 0.2465,0.6443 0,0.8908 z m -0.3213,-5.2615 c -1.4824,0 -2.6877,-1.2002 -2.6877,-2.6758 0,-1.4756 1.2053,-2.6775 2.6877,-2.6775 1.4824,0 2.6877,1.2019 2.6877,2.6775 0,1.4756 -1.2053,2.6758 -2.6877,2.6758 z" fill="white"></path></svg></button></li><li class="social-share-item pocket"><button aria-label="pocket" class="react-share__ShareButton" style="background-color:transparent;border:none;padding:0;font:inherit;color:inherit;cursor:pointer"><svg viewBox="0 0 64 64" width="24" height="24"><circle cx="32" cy="32" r="31" fill="#EF3F56"></circle><path d="M41.084 29.065l-7.528 7.882a2.104 2.104 0 0 1-1.521.666 2.106 2.106 0 0 1-1.522-.666l-7.528-7.882c-.876-.914-.902-2.43-.065-3.384.84-.955 2.228-.987 3.1-.072l6.015 6.286 6.022-6.286c.88-.918 2.263-.883 3.102.071.841.938.82 2.465-.06 3.383l-.015.002zm6.777-10.976C47.463 16.84 46.361 16 45.14 16H18.905c-1.2 0-2.289.82-2.716 2.044-.125.363-.189.743-.189 1.125v10.539l.112 2.096c.464 4.766 2.73 8.933 6.243 11.838.06.053.125.102.19.153l.04.033c1.882 1.499 3.986 2.514 6.259 3.014a14.662 14.662 0 0 0 6.13.052c.118-.042.235-.065.353-.087.03 0 .065-.022.098-.042a15.395 15.395 0 0 0 6.011-2.945l.039-.045.18-.153c3.502-2.902 5.765-7.072 6.248-11.852L48 29.674v-10.52c0-.366-.041-.728-.161-1.08l.022.015z" fill="white"></path></svg></button></li></ul></div><aside class="ad"><ins class=" adsbygoogle" style="display:block" data-ad-client="ca-pub-5001380215831339" data-ad-slot="5214956675" data-ad-layout="" data-ad-layout-key="" data-ad-format="auto" data-full-width-responsive="true"></ins></aside><div class="comments"><div id="disqus_thread"></div></div></div><div class="toc outside"><ul>
 <li><a href="/ho_blog/graph/#%EA%B7%B8%EB%9E%98%ED%94%84-%EC%A0%95%EC%9D%98">그래프 정의</a></li>
 <li><a href="/ho_blog/graph/#%EC%A0%95%EC%A0%90-%ED%91%9C%ED%98%84-vertex-%ED%81%B4%EB%9E%98%EC%8A%A4">정점 표현 (Vertex 클래스)</a></li>

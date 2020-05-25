@@ -643,6 +643,12 @@ enzyme 대한 문서와 예제는 mocha와 chai를 사용하지만 선택한 프
 </ul>
 <h2 id="basic-usage" style="position:relative;"><a href="#basic-usage" aria-label="basic usage permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Basic Usage</h2>
 <h3 id="shallow-rendering" style="position:relative;"><a href="#shallow-rendering" aria-label="shallow rendering permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><a href="https://airbnb.io/enzyme/docs/api/shallow.html" target="_blank" rel="nofollow noopener noreferrer">Shallow Rendering</a></h3>
+<p>Shallow Render 특징은 다음과 같습니다.</p>
+<ul>
+<li>Shallow Render를 진행하는 컴포넌트 내부에 React 컴포넌트는 렌더링 하지 않습니다.</li>
+<li>Shallow Render를 진행하는 컴포넌트는 render or return 되는 첫번째 children 부터 렌더링이 됩니다.</li>
+</ul>
+<p>반면 Mount는 내부 React Component도 렌더링이 되면서 Mount 시 넘겼던 컴포넌트 부터 렌더링이 진행됩니다.</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">'react'</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> expect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'chai'</span><span class="token punctuation">;</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span> shallow <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'enzyme'</span><span class="token punctuation">;</span>
