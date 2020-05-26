@@ -593,6 +593,10 @@
   <span class="token keyword">const</span> <span class="token punctuation">[</span>state<span class="token punctuation">,</span> setState<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token function">useEffect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// 여기 observable은 BehaviorSubject 이다.</span>
+    <span class="token comment">// 왜냐하면 일반 Subject는 next가 이뤄지고 나서 subscribe에서 값을 가져 올 수 있지만,</span>
+    <span class="token comment">// BehaviorSubject 는 observable이 만들어 지기 이전 값을 바로 가져올 수 있기 때문이다.</span>
+    <span class="token comment">// 따러서 BehaviorSubject 의 인자로 넣어주는 값이 바로 setState로 state를 설정할 수 있다.</span>
     <span class="token keyword">const</span> sub <span class="token operator">=</span> observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>setState<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> sub<span class="token punctuation">.</span><span class="token function">unsubscribe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>observable<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -618,9 +622,11 @@
 <span class="token punctuation">}</span>
 
 <span class="token keyword">class</span> <span class="token class-name">TodoStore</span> <span class="token keyword">implements</span> <span class="token class-name">ITodoStore</span> <span class="token punctuation">{</span>
+  
   todoList$<span class="token operator">:</span> BehaviorSubject<span class="token operator">&lt;</span>ITodoItem<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">></span><span class="token punctuation">;</span>
 
   <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">todoList<span class="token operator">:</span> ITodoItem<span class="token punctuation">[</span><span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 기본 Subject 와 다르게 subscribe 가 만들어지기(observer) 바로 직전 next 호출까지 (emit) 받아올수 있다.</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>todoList$ <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BehaviorSubject</span><span class="token punctuation">(</span>todoList<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
