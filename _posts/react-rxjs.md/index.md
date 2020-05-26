@@ -50,6 +50,10 @@ function useObservable<T>(observable: Rx.Observable<T>) {
   const [state, setState] = useState();
 
   useEffect(() => {
+    // 여기 observable은 BehaviorSubject 이다.
+    // 왜냐하면 일반 Subject는 next가 이뤄지고 나서 subscribe에서 값을 가져 올 수 있지만,
+    // BehaviorSubject 는 observable이 만들어 지기 이전 값을 바로 가져올 수 있기 때문이다.
+    // 따러서 BehaviorSubject 의 인자로 넣어주는 값이 바로 setState로 state를 설정할 수 있다.
     const sub = observable.subscribe(setState);
     return () => sub.unsubscribe();
   }, [observable]);
@@ -78,9 +82,11 @@ class TodoItem implements ITodoItem {
 }
 
 class TodoStore implements ITodoStore {
+  
   todoList$: BehaviorSubject<ITodoItem[]>;
 
   constructor(todoList: ITodoItem[]) {
+    // 기본 Subject 와 다르게 subscribe 가 만들어지기(observer) 바로 직전 next 호출까지 (emit) 받아올수 있다.
     this.todoList$ = new BehaviorSubject(todoList);
   }
 
