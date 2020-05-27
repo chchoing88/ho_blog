@@ -37,8 +37,10 @@ A 라는 사용자가 example.com에 로그인 된 채로 (유효한 session id�
 1. 페이지 이동 Link 누를시 check api 호출 후 세션 valid 확인
 2. true 시 'to' props로 이동
 3. false 시 세션 만료 모달창 띄움 ( 모달 확인 시 /login 페이지로 이동 )
-
-    ㄴ 이때,  모달창은 이전에 보고 있던 화면에서 띄운다.
+  
+이때, 모달창은 이전에 보고 있던 화면에서 띄우기 위해서 `Link` 컴포넌트 클릭시 `Auth.check` 를 진행한다.
+`Link` 컴포넌트의 `onClick` 을 `prevent` 진행 후 `Auth.check`
+만약 `PrivateRoute` 에서 진행 시 아마도 빈 페이지 화면에서 모달 창이 뜰거 같아서 이렇게 진행 했었다.
 
 ## 제공하는 API 호출시 ( 페이지 내 )
 
