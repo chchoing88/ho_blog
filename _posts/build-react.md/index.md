@@ -806,7 +806,7 @@ class Component 에서 setState 를 사용하면 해당 컴포넌트를 기준�
 ### Scheduling micro-tasks
 
 우린 이제 작업을 작은 단위로 나눌 필요가 있습니다. 이것들은 짧은 시간동안 동작하기 위한 조각들입니다. 메인 스레드가 더 우선 순위가 높은 작업을 수행하게하고 보류중인 작업이 있으면 작업을 끝내기 위해 다시 돌아옵니다.
-이 작업을 돕기 위해서 `requestIdelCallback()` 함수를 이용 할 것입니다. 이것은 `callback` 함수를 큐에 넣어 두는데 이것은 브라우저가 idle 타임에 호출이 되고, 얼만큼 이용가능한 시간인지 설명해주는 `deadline` 파라미터를 포함하고 있다.
+이 작업을 돕기 위해서 `requestIdleCallback()` 함수를 이용 할 것입니다. 이것은 `callback` 함수를 큐에 넣어 두는데 이것은 브라우저가 idle 타임에 호출이 되고, 얼만큼 이용가능한 시간인지 설명해주는 `deadline` 파라미터를 포함하고 있다.
 
 ```javascript
 const ENOUGH_TIME = 1 // milliseconds
