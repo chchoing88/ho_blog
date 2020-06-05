@@ -75,3 +75,4 @@ nodejs는 외부 자원(http, fs) 에서 쏟아지는 데이터 양(push : 일�
 - [https://iximiuz.com/en/posts/nodejs-readable-streams-distilled/](https://iximiuz.com/en/posts/nodejs-readable-streams-distilled/)
 - [https://medium.com/@jayphelps/backpressure-explained-the-flow-of-data-through-software-2350b3e77ce7](https://medium.com/@jayphelps/backpressure-explained-the-flow-of-data-through-software-2350b3e77ce7)
 - [http://jeonghwan-kim.github.io/node/2017/08/12/node-stream-you-need-to-know-3.html#%EC%93%B0%EA%B8%B0-%EC%8A%A4%ED%8A%B8%EB%A6%BC-%EB%A7%8C%EB%93%A4%EA%B8%B0](http://jeonghwan-kim.github.io/node/2017/08/12/node-stream-you-need-to-know-3.html#%EC%93%B0%EA%B8%B0-%EC%8A%A4%ED%8A%B8%EB%A6%BC-%EB%A7%8C%EB%93%A4%EA%B8%B0)
+- [https://velog.io/@devzunky/TIL-no.95-Node.js-Buffer#stream](https://velog.io/@devzunky/TIL-no.95-Node.js-Buffer#stream)
