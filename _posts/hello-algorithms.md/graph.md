@@ -42,6 +42,22 @@ class Vertex<T> {
 - `인접 리스트에서는 인접한 각 정점의 배열 리스트에 정점을 인덱스로 이용해 간선을 저장`한다. 예를 들어 정점 2가 정점 0, 1, 3, 4로 연결되고 인덱스는 2에 저장되어 있다고 가정하면 인덱스 2에는 정점 0, 1, 3, 4의 정보가 들어있을 것이다.
 - 간선을 구현하는 또 다른 방법으로 `인접 행렬(adjacency matrix)` 이라는 방식도 있다. 인접 행렬이란 `두 정점 간의 간선이 존재하는지 여부를 알려주는 요소를 포함하는 이차원 배열`이다.
 
+### 인접행렬
+
+![http://www.ktword.co.kr/img_data/2453_1.JPG](http://www.ktword.co.kr/img_data/2453_1.JPG)
+
+```javascript
+// 인접 행렬
+const vertexList = ["A", "B", "C", "D", "E", "F"];
+const adj = [...vertexList.map((_) => Array())];
+adj[0][0] = 0; // A 에서 A 로 향하는 간선
+adj[0][1] = 1; // A 에서 B 로 향하는 간선
+```
+
+### 인접 리스트
+
+![http://www.ktword.co.kr/img_data/2453_3.JPG](http://www.ktword.co.kr/img_data/2453_3.JPG)
+
 ```javascript
 // 인접 리스트
 const adj = []
@@ -70,14 +86,6 @@ class Edge {
   this.destination = null; // 향하는 정점(Vertex 인스턴스) : A 정점의 간선 연결 리스트에 연결 되어있고 destination이 B 라고 하면 A->B
   this.data = null; // 간선의 weight
 }
-```
-
-```javascript
-// 인접 행렬
-const vertexList = ['A', 'B', 'C', 'D', 'E', 'F']
-const adj = [...vertexList.map(_ => Array())]
-adj[0][0] = 0 // A 에서 A 로 향하는 간선
-adj[0][1] = 1 // A 에서 B 로 향하는 간선
 ```
 
 ## 그래프 구현 (간단한)
@@ -111,7 +119,8 @@ class Graph {
 
   showGraph() {
     console.log("this.adj", this.adj);
-    this.adj.forEach((verticeList, index) => { // verticeList : 정점 리스트
+    this.adj.forEach((verticeList, index) => {
+      // verticeList : 정점 리스트
       console.log(`${index} -> `);
       verticeList.forEach((vertice) => {
         if (vertice !== undefined) {
