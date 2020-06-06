@@ -1,6 +1,6 @@
 ---
-title: '[algorithms] advanced'
-date: '2020-05-01T10:00:03.284Z'
+title: "[algorithms] advanced"
+date: "2020-05-01T10:00:03.284Z"
 ---
 
 ## 동적 프로그래밍
@@ -15,11 +15,11 @@ date: '2020-05-01T10:00:03.284Z'
 
 ```typescript
 function recurFib(n) {
-  if(n < 2) {
+  if (n < 2) {
     return n;
   } else {
     // 위에서 아래로 내려가면서 문제를 해결
-    return recurFib(n-1) + recurFib(n-2);
+    return recurFib(n - 1) + recurFib(n - 2);
   }
 }
 ```
@@ -32,18 +32,18 @@ function dynFib(n) {
   // 초기화
   const val = new Array(n).fill(0);
 
-  if(n === 1 || n === 2) {
+  if (n === 1 || n === 2) {
     return 1;
-  } else if(n > 2) {
+  } else if (n > 2) {
     val[1] = 1;
     val[2] = 1;
     for (let i = 3; i <= n; i++) {
       // 작은 수부터 차근차근 더해 갑니다.
-      val[i] = val[i-1] + val[i-2];
+      val[i] = val[i - 1] + val[i - 2];
     }
   }
 
-  return val[n]
+  return val[n];
 }
 ```
 
@@ -55,7 +55,7 @@ function iterFib(n) {
   let nextLast = 1; // 두번째
   let result = 1;
 
-  for(let i = 3; i <= n; i++) {
+  for (let i = 3; i <= n; i++) {
     result = last + nextLast;
     last = nextLast;
     nextLast = result;
@@ -73,7 +73,7 @@ function iterFib(n) {
 - 알고리즘이 끝나면 일치한 횟수를 저장한 변수와 인덱스 변수를 이용해 가장 긴 공통 문자열을 반환합니다.
 
 ```typescript
-function Isc (word1: string, word2: string) {
+function Isc(word1: string, word2: string) {
   const icsArr: number[][] = [];
   let max = 0;
   let index = 0;
@@ -85,20 +85,19 @@ function Isc (word1: string, word2: string) {
       icsArr[i][j] = 0;
     }
   }
-  
 
   // 계산
   // i === 0 || j === 0 인 곳은 0으로 셋팅해준다
   for (let i = 1; i <= word1.length; i++) {
     for (let j = 1; j <= word2.length; j++) {
-      if(word1[i-1] === word2[j-1]) {
+      if (word1[i - 1] === word2[j - 1]) {
         // 단어가 같으면 카운트를 해줍니다.
         // 이전 문자 비교 count에 + 1 을 해줍니다.
-        icsArr[i][j] = icsArr[i-1][j-1] + 1;
+        icsArr[i][j] = icsArr[i - 1][j - 1] + 1;
 
         // 카운트 한 값이 max 보다 크다면 max 값을 업데이트 하고
         // 그 인덱스를 index에 저장해둔다
-        if(max < icsArr[i][j]) {
+        if (max < icsArr[i][j]) {
           max = icsArr[i][j];
           index = i;
         }
@@ -107,23 +106,23 @@ function Isc (word1: string, word2: string) {
   }
 
   // 출력
-  if(max === 0) {
-    return '';
+  if (max === 0) {
+    return "";
   }
 
-  if(max > 0) {
-    let str = '';
-    console.log(icsArr)
+  if (max > 0) {
+    let str = "";
+    console.log(icsArr);
     // index - max : 연속된 max 값을 가지는 해당 index에 max를 빼면 시작 인덱스를 얻을 수 있다
     // Isc('abbcc', 'dbbcc') : 5(index) - 4(max)
-    for (let i = index-max; i <= max; i++) {
+    for (let i = index - max; i <= max; i++) {
       str += word1[i];
     }
     return str;
   }
 }
 
-console.log(Isc('abbcc', 'dbbcc'))
+console.log(Isc("abbcc", "dbbcc"));
 //              a, b, b, c, c
 // 0: (6)   [0, 0, 0, 0, 0, 0]
 // 1: (6) d [0, 0, 0, 0, 0, 0]
@@ -140,8 +139,8 @@ console.log(Isc('abbcc', 'dbbcc'))
 여기 예제에서는 금고에 다섯 개의 물건이 있다고 합니다. 각 물건의 크기는 3,4,7,8,9 이고 각각의 값어치는 4,5,10,11,13 이라고 합니다. 배낭에는 16 크기의 물건을 담을 수 있다고 합니다. 이때, 배낭에 넣을 수 있는 가장 값어치 있는 물건을 구해보자.
 
 ```javascript
-function max(a,b) {
-  return (a > b)? a : b
+function max(a, b) {
+  return a > b ? a : b;
 }
 
 // capacity : 가방용량
@@ -149,23 +148,28 @@ function max(a,b) {
 // value: 값어치든 배열
 // n : 총 보물 남아 있는 갯수
 function knapsack(capacity, size, value, n) {
-  if(n === 0 | capacity === 0) { // 보물 갯수나 가방 용량이 없으면 0 리턴
-    return 0
+  if ((n === 0) | (capacity === 0)) {
+    // 보물 갯수나 가방 용량이 없으면 0 리턴
+    return 0;
   }
 
-  if(size[n-1] > capacity) { // 가방의 남은 무게보다 보물의 무게가 크다면 다음 보물로 넘어간다.
-    return knapsack(capacity, size, value, n-1)
-  } else { // 해당 보물을 가방에 담고 값어치가 높은지 이 보물을 안담고 그 다음 보물들을 담는게 값어치가 높은치 비교한다.
-    return max(value[n-1] + knapsack(capacity-size[n-1], size, value, n-1),
-    knapsack(capacity, size, value, n-1))
+  if (size[n - 1] > capacity) {
+    // 가방의 남은 무게보다 보물의 무게가 크다면 다음 보물로 넘어간다.
+    return knapsack(capacity, size, value, n - 1);
+  } else {
+    // 해당 보물을 가방에 담고 값어치가 높은지, 이 보물을 안담고 그 다음 보물들을 담는게 값어치가 높은치 비교한다.
+    return max(
+      value[n - 1] + knapsack(capacity - size[n - 1], size, value, n - 1),
+      knapsack(capacity, size, value, n - 1)
+    );
   }
 }
 
-const value = [4,5,10,11,13];
-const size = [3,4,7,8,9];
+const value = [4, 5, 10, 11, 13];
+const size = [3, 4, 7, 8, 9];
 const capacity = 16;
 const n = 5;
-console.log(kanpsack(capacity, size, value, n))
+console.log(kanpsack(capacity, size, value, n));
 ```
 
 재귀는 맨 아래에서부터 걷어 올리는 느낌이다. 즉, 일단 다 풀어놨다가 오르면서 정리를 하는 느낌이다.
@@ -173,10 +177,13 @@ console.log(kanpsack(capacity, size, value, n))
 위 코드는 다음과 움직인다.
 
 ```javascript
-knapsack(16, size, value, 5)
-max(13 + knapsack(7, size, value, 4), knapsack(16, size, value, 4))
-max(13 + knapsack(7, size, value, 3), knapsack(16, size, value, 4))
-max(13 + max(10 + knapsack(0, size, value, 2), knapsack(7, size, value, 2)), knapsack(16, size, value, 4))
+knapsack(16, size, value, 5);
+max(13 + knapsack(7, size, value, 4), knapsack(16, size, value, 4));
+max(13 + knapsack(7, size, value, 3), knapsack(16, size, value, 4));
+max(
+  13 + max(10 + knapsack(0, size, value, 2), knapsack(7, size, value, 2)),
+  knapsack(16, size, value, 4)
+);
 // (....)
 ```
 
@@ -187,8 +194,8 @@ max(13 + max(10 + knapsack(0, size, value, 2), knapsack(7, size, value, 2)), kna
 동적 프로그래밍 기법에서는 최정 해법에 도달할 때까지 중간 결과를 저장할 임시 배열 저장소가 필요합니다.
 
 ```javascript
-function max(a,b) {
-  return (a > b)? a : b;
+function max(a, b) {
+  return a > b ? a : b;
 }
 
 // capacity : 가방용량
@@ -200,49 +207,50 @@ function dKnapsack(capacity, size, value, n) {
   // 1차 배열 주얼리 갯수
   // 2차 배열 가방 용량
   const K = [];
-  
-  for(let i = 0; i <= n; i++) {
-    K[i] = [] // 초기화
+
+  for (let i = 0; i <= n; i++) {
+    K[i] = []; // 초기화
   }
 
-  // jewelry: 주얼리 갯수
+  // jewelry: 주얼리 인덱스 (0번째 보석, 1번째 보석, ....)
   // bagCapacity: 가방 용량
-  for(let jewelry = 0; jewelry <= n; jewelry++) {
-    for(let bagCapacity = 0; bagCapacity <= capacity; bagCapacity++) {
-      if(jewelry === 0 || bagCapacity === 0) {
-        K[jewelry][bagCapacity] = 0
+  for (let jewelry = 0; jewelry <= n; jewelry++) {
+    for (let bagCapacity = 0; bagCapacity <= capacity; bagCapacity++) {
+      if (jewelry === 0 || bagCapacity === 0) {
+        K[jewelry][bagCapacity] = 0;
       } else if (size[jewelry - 1] <= bagCapacity) {
         // 해당 보석의 사이즈가 가방 무게보다 작거나 같으면 보석을 가방에 담아보자.
         // 해당 보석을 가방에 담는다고 했을때 값어치 리스트에서 값어치를 가져오고 ( value[jewelry - 1] )
-        // 해당 보석을 담기 전 가방의 값어치 K[이전 주얼리 갯수][가방무게 - 현재 주얼리 무게]를 ( K[jewelry - 1][bagCapacity - size[jewelry - 1]] )
-        // 더한 값어치를 이전 보석까지 담은 최선의 값어치( K[jewelry - 1][bagCapacity] )와 비교한다.
+        // 해당 보석을 담기 전 가방의 값어치 K[이전 주얼리 인덱스][가방용량 - 현재 주얼리 무게]를 ( K[jewelry - 1][bagCapacity - size[jewelry - 1]] )
+        // 앞의 두가지를 더한 값어치를 이전 보석까지 담은 최선의 값어치( K[jewelry - 1][bagCapacity] )와 비교한다.
         // 해당 결과 저장
         K[jewelry][bagCapacity] = max(
           value[jewelry - 1] + K[jewelry - 1][bagCapacity - size[jewelry - 1]],
           K[jewelry - 1][bagCapacity]
-        )
+        );
       } else {
         // 해당 보석의 사이즈가 가방 무게보다 나간다면 담지 못하므로 같은 가방의 무게에 이전 보석까지 담은게 최선의 값어치가 된다.
-        K[jewelry][bagCapacity] = K[jewelry - 1][bagCapacity]
+        K[jewelry][bagCapacity] = K[jewelry - 1][bagCapacity];
       }
     }
   }
-  console.log(K)
-  return K[n][capacity]
+  console.log(K);
+  return K[n][capacity];
 }
 
-const value = [4,5,10,11,13]; // 보석 값어치
-const size = [3,4,7,8,9]; // 보석 사이즈
+const value = [4, 5, 10, 11, 13]; // 보석 값어치
+const size = [3, 4, 7, 8, 9]; // 보석 사이즈
 const capacity = 16;
 const n = 5; // 보석 갯수
-dKnapsack(capacity, size, value, n)
+dKnapsack(capacity, size, value, n);
 
-// 0: (17) [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-// 1: (17) [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
-// 2: (17) [0, 0, 0, 4, 5, 5, 5, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]
-// 3: (17) [0, 0, 0, 4, 5, 5, 5, 10, 10, 10, 14, 15, 15, 15, 19, 19, 19]
-// 4: (17) [0, 0, 0, 4, 5, 5, 5, 10, 11, 11, 14, 15, 16, 16, 19, 21, 21]
-// 5: (17) [0, 0, 0, 4, 5, 5, 5, 10, 11, 13, 14, 15, 17, 18, 19, 21, 23]
+// 가로는 bagCapacity:   0   1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16
+// 0            : (17) [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+// 1 (jewelry 0): (17) [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+// 2 (jewelry 1): (17) [0, 0, 0, 4, 5, 5, 5, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+// 3 (jewelry 2): (17) [0, 0, 0, 4, 5, 5, 5, 10, 10, 10, 14, 15, 15, 15, 19, 19, 19]
+// 4 (jewelry 3): (17) [0, 0, 0, 4, 5, 5, 5, 10, 11, 11, 14, 15, 16, 16, 19, 21, 21]
+// 5 (jewelry 4): (17) [0, 0, 0, 4, 5, 5, 5, 10, 11, 13, 14, 15, 17, 18, 19, 21, 23]
 ```
 
 최적의 정답이 이차원 배열의 마지막 셀에 저장되어 있습니다.
@@ -271,27 +279,27 @@ const NICKEL = 0.05;
 const PENNY = 0.01;
 function makeChange(originAmt, coins) {
   // 쿼터로 나눴을때 originAmt가 크다는것은 originAmt가 0.25 값보다 크다는 것을 의미한다.
-  if(originAmt % QUARTER < originAmt) {
+  if (originAmt % QUARTER < originAmt) {
     coins[3] = parseInt(originAmt / QUARTER); // 몫을 coins에 저장
     originAmt = originAmt % QUARTER;
   }
 
-  if(originAmt % DIME < originAmt) {
+  if (originAmt % DIME < originAmt) {
     coins[2] = parseInt(originAmt / DIME); // 몫을 coins에 저장
     originAmt = originAmt % DIME;
   }
 
-  if(originAmt % NICKEL < originAmt) {
+  if (originAmt % NICKEL < originAmt) {
     coins[1] = parseInt(originAmt / NICKEL); // 몫을 coins에 저장
     originAmt = originAmt % NICKEL;
   }
   coins[0] = parseInt(originAmt / PENNY);
-};
+}
 
 const originAmt = 0.63;
 const coins = [];
-makeChange(originAmt, coins)
-console.log(coins)
+makeChange(originAmt, coins);
+console.log(coins);
 
 // [3, empty, 1, 2]
 // 0.01 * 3 + 0.1 + 0.25 * 2 = 0.63
@@ -308,11 +316,11 @@ console.log(coins)
 3. 값어치가 높은 물건부터 고려합니다.
 4. 가능한 한 많은 물건을 추가 합니다.
 
-| 물건 | A  | B   | C  | D  |
-|------|----|-----|----|----|
-| 값   | 50 | 140 | 60 | 60 |
-| 무게 | 5  | 20  | 10 | 12 |
-| 비율 | 10 | 7   | 6  | 5  |
+| 물건 | A   | B   | C   | D   |
+| ---- | --- | --- | --- | --- |
+| 값   | 50  | 140 | 60  | 60  |
+| 무게 | 5   | 20  | 10  | 12  |
+| 비율 | 10  | 7   | 6   | 5   |
 
 가방 무게는 30 입니다.
 
@@ -323,14 +331,16 @@ function ksack(values, weights, capacity) {
   let index = 0;
   let loadedValue = 0; // 가방에 쌓인 값어치
 
-  while((loadedWeight < capacity) && (index < values.length)) { // 가방에 용량이 남았거나 물건 순회를 다했을 경우 탈출
-    if(weights[index] <= (capacity - loadedWeight)) { // 물건의 무게가 남아있는 가방 무게보다 적게 나간다면 담자!!
+  while (loadedWeight < capacity && index < values.length) {
+    // 가방에 용량이 남았거나 물건 순회를 다했을 경우 탈출
+    if (weights[index] <= capacity - loadedWeight) {
+      // 물건의 무게가 남아있는 가방 무게보다 적게 나간다면 담자!!
       loadedValue = loadedValue + values[index];
       loadedWeight = loadedWeight + weights[index];
     } else {
       // 물건의 무게가 남아있는 가방 무게보다 더 무겁다면 그 물건을 쪼개서 꽉 채워보자.
       const ratio = (capacity - loadedWeight) / weights[index];
-      loadedValue = loadedValue + (ratio * values[index]);
+      loadedValue = loadedValue + ratio * values[index];
       loadedWeight = loadedWeight + weights[index];
     }
     index = index + 1;
@@ -339,7 +349,7 @@ function ksack(values, weights, capacity) {
   return loadedValue;
 }
 
-const itmes = ['A', 'B', 'C', 'D'];
+const itmes = ["A", "B", "C", "D"];
 const values = [50, 140, 60, 60];
 const weight = [5, 20, 10, 12];
 const capacity = 30;
