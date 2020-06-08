@@ -14,7 +14,7 @@ date: "2020-03-15T10:00:03.284Z"
 
 - 크롬 브라우저 (v80) : 모든 쿠키가 다 삭제된 상태
 - web API 서버 : `merlin.com:10001` (cors 설정)
-- 각각 다른 도메인 서버
+- 각각 다른 WEB 도메인 서버
   - `merlin.com:20001` (first-class 도메인)
   - `sub.merlin.com:20001` (서브 도메인)
   - `third.com:20001` (third-party 도메인)
@@ -33,7 +33,7 @@ const app = express();
 const whiteList = [
   "http://merlin.com:20001",
   "http://sub.merlin.com:20001",
-  "http://third.com:20001"
+  "http://third.com:20001",
 ];
 
 const corsOptions = {
@@ -41,7 +41,7 @@ const corsOptions = {
     callback(null, whiteList.indexOf(origin) > -1);
   },
   methods: "POST",
-  credentials: true
+  credentials: true,
 };
 app.use(cors(corsOptions));
 app.use(cookieParser());
@@ -53,18 +53,17 @@ app.post("/timestamp", function(req, res) {
   res.cookie("timestamp", new Date() * 1, {
     // domain: "merlin.com",
     httpOnly: true,
-    path: "/"
+    path: "/",
   });
   res.send({
     result: "true",
-    message: "success request"
+    message: "success request",
   });
 });
 
 app.listen(10001);
 
 console.log("Running API SERVER...");
-
 ```
 
 #### WEB SERVER
@@ -94,17 +93,18 @@ console.log("Running WEB SERVER...");
 #### API 호출 로직
 
 ```javascript
-const apiUri = 'http://merlin.com:10001/timestamp'
+const apiUri = "http://merlin.com:10001/timestamp";
 
 function getTimestamp() {
   fetch(apiUri, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json;charset=UTF-8"
+      "Content-Type": "application/json;charset=UTF-8",
     },
-    credentials: 'include',
-  }).then(res => res)
-    .then(console.log)
+    credentials: "include",
+  })
+    .then((res) => res)
+    .then(console.log);
 
   //  axios(
   //   {
@@ -123,8 +123,8 @@ function getTimestamp() {
 2. 버튼을 눌렀을때 `merlin.com:10001`로 post method 호출을 보냅니다. ( axois, fetch )
 
 3. `merlin.com:10001` 에는 응답으로 쿠키를 보내봅니다. ( 쿠키에 도메인 설정 함 vs 쿠키에 도메인 설정을 안함 )
-  
-4. 크롬에서 쿠키가 잘 쌓이는지 확인합니다.  
+
+4. 크롬에서 쿠키가 잘 쌓이는지 확인합니다.
 
 5. 한번 더 요청 시 저장된 쿠키가 서버로 잘 날라가는지도 확인합니다.
 
