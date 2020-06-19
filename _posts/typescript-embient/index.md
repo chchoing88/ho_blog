@@ -1,6 +1,11 @@
 ---
 title: typescript embient
 date: "2020-06-18T10:00:03.284Z"
+tags:
+  - javascript
+  - ES6
+  - typescript
+  - ambient
 ---
 
 ## 동기
