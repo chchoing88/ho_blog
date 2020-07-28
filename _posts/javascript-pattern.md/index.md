@@ -14,6 +14,13 @@ date: "2018-08-05T10:00:03.284Z"
 - 콜백은 나중에 실행할 부차 함수에 인자로 넣는 함수다. 즉, 함수를 넘겨주면 나중에 실행시켜줘 라고 하는 것과 같다.
 - 여기서 콜백이 실행될 '나중' 시점이 부차 함수의 실행 완료 이전이면 동기, 반대로 실행 완료 이후면 비동기라고 본다.
 
+#### 단위 테스트
+
+- 콜백 실행 횟수가 정확한가?
+- 콜백이 실행될 떄마다 알맞은 인자가 전달 되는가?
+- 스파이 함수를 이용하면 이런일에 제격이다.
+- 콜백함수를 곧장 콜백으로 넘기기 보다는 별도의 기능 모듈로 분리할 수 있다면 추출해서 따로 테스트를 진행하자.
+
 #### 시나리오
 
 - 컨퍼런스에 attend(참가자) 등록을 하는 시스템이 있다.
@@ -78,11 +85,31 @@ function addAttendeesToCollection(attendeeArray) {
       });
 }
 
-var attendees = Conference.attendeeCollection();
-addAttendeesToCollection([attendee1, attendee2])
+var attendees = C.attendeeCollection();
+addAttendeesToCollection([attendee1, attendee2]);
 attendees.iterate(function doCheckIn(attend) { // 익명의 콜백함수 -> 디버깅 용이함을 위해 이름을 지정한다.
   attend.checkIn();
-})
+  // 외부 서비스를 통해 체크인 등록한다.
+});
+
+// 참가자 체크인은 중요한 기능이므로 checkInService 자체 모듈에 캡슐화 하자.
+// 외부 시스템의 체크인 등록 기능을 별도의 책임으로 보고 등록용 객체를 cehckInSevice에 주입하자.
+C.checkInService = function(checkInRecorder) {
+  const recorder = checkInRecorder;
+
+  return {
+    checkIn: function(attendee) {
+      attendee.checkIn();
+      recorder.recordCheckIn(attendee);
+    }
+  }
+}
+
+// 다음과 같이 사용
+const checkInService = C.checkInService(C.checkInRecorder())
+const attendees = C.attendeeCollection()
+
+attendees.iterate(checkInService.checkIn);
 
 ```
 
@@ -114,12 +141,11 @@ Promise 기반 코드를 테스트할 때 조심할 함정에 대해서는 다�
 - XMLHttpRequest를 사용한 코드를 테스트할 때 서버를 직접 호출하지 않고 비동기적인 HTTP 특성을 흉내 내고 싶을 때가 있다. jasmine이 제공하는 AJAX 모의 라이브러리를 사용하면 된다.
 - Promise는 구조상 체이닝을 할 수 있다. 경우의 수를 모두 따져보고 의도했던 then 콜백으로 실행 흐름이 이루어지는지 확인하라.
 
-
 ### partial pattern
 
 - 커링 요소에 뭔가 더 보태서 기능을 할 수있게 끔 만드는 패턴이다.
 - 인자가 여럿 있고 그중 일부는 값이 불변인 함수를 쓸 경우가 있다. 이때 같은 값을 계속 반복하기보다 원본함수를 새로운 함수로 감싼 다음, 상수 인자는 건네주고 값이 달라지는 나머지 인자만 표출하는 것이 좋다.
-- 값이 불면인 상수 인자를 지난 함수 호출부는 상수성을 캡슐화하여 함수를 새로 만드는 것이 좋다.
+- 값이 불면인 상수 인자를 지난 함수 호출부는 `상수성(constancy)을 캡슐화`하여 함수를 새로 만드는 것이 좋다.
 - 커링은 여러 인자를 거느린 함수를 인자 하나만으로 취하는 여러 단계의 함수들로 쪼갠다.
 
 #### 시나리오
@@ -128,6 +154,11 @@ Promise 기반 코드를 테스트할 때 조심할 함정에 대해서는 다�
 - `getRestaurantsWithinRadius(address, radiusMiles, cuisine)` 요건상 address와 cuisine부분은 변경의 필요성이 없어 보인다.
 - `restaurantApi` 에서 반환하는 api 객체에 새로운 메서드를 집어넣기로 하자.
 - address 와 raius 파라미터를 고정한 채 `getRestaurnatsNearConference(cuisine)` 가 `getRestaurantsWithinRadius` 반환값을 무조건 반환하게 하자.
+
+#### 단위 테스트
+
+- 올바른 인자로 기존 api를 잘 호출하고 있는가?
+- 기존 api에서 반환되는 값을 잘 반환하고 있는가?
 
 #### code
 
@@ -154,6 +185,34 @@ function addGetRestaurantsNearConference(targetInfo) {
     return api;
 
   },
+```
+
+#### 커링
+
+- 커링은 인자를 여럿 취하는 함수를 인자 하나만 받는 함수 여러 개로 해체 하는 기법이다.
+- 구체적인 형태를 아주 간단히 표현하면 다음과 같다.
+
+```javascript
+function getRestaurantsCurried(address) {
+  const self = this;
+  return function(radius) {
+    return function(cuisine) {
+      return self.getRestaurantsWithinRadius(address, radius, cuisine);
+    };
+  };
+}
+```
+
+#### 부분 적용 함수
+
+- 부분 적용 함수는 언뜻 인자를 여럿 받는 함수를 더 적은 인자를 받는 함수로 바꾸는 커링과 비슷해 보인다.
+- 그러나 위 `addGetRestaurantsNearConference` 구현부를 보면 알 수 있듯이 오히려 정반대에 가깝다.
+- 즉, 부분 적용 함수는 이전 단계에서 생성된 커링 요소에 뭔가 더 보태서 부분 적용 함수 버전과 기능이 같은 함수로 만든 것이다.
+
+```javascript
+function getRestaurantsNearConference(cuisine) {
+  return getRestaurantsCurried("울산")(2.0)(cuisine);
+}
 ```
 
 ### memoization pattern
