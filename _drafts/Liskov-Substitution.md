@@ -133,11 +133,10 @@ void g(Rectangle& r) {
 - 이 서드파티 클래스 인터페이스가 불편해서 추상 인터페이스로 이 서드파티 컨테이너를 포장했다.
 
 ```uml
-Set <|-- Unbounded Set
-Set <|-- Bounded Set
-
-Unbounded Set -> Third Party Unbounded Set
-Bouned Set -> Third Party Bounded Set
+Set <|-- UnboundedSet
+Set <|-- BoundedSet
+UnboundedSet -> ThirdPartyUnboundedSet
+BoundedSet -> ThirdPartyBoundedSet
 ```
 
 Container 클래스의 어댑터 레이어
@@ -152,8 +151,8 @@ Container 클래스의 어댑터 레이어
 ```uml
 Set <|-- PersistentSet
 
-PersistentSet *- Third Party Persistent Set : <<delegates>>
-PersistentObject <.. Third Party Persistent Set
+PersistentSet *- ThirdPartyPersistentSet : <<delegates>>
+PersistentObject <.. ThirdPartyPersistentSet
 ```
 
 - 서드파티 영속 집합에 추가되는 원소는 PersistentObject에서 파생되어야 한다.
@@ -185,11 +184,11 @@ void PersistentSet :: Add(const T& t) {
 - 이것은 PersistentSet 객체들을 순환 검색할 수 있고, 멤버 여부 테스트할 수 있게 만들어줄 것입니다. 하지만 PersistentObject에서 파생되지 않은 객체를 PersistentSet에 추가할 수 있게 만들 수는 없습니다.
 
 ```uml
-MemberContainer <| -- Set
-MemberContainer <| -- PersistentSet
+MemberContainer <|-- Set
+MemberContainer <|-- PersistentSet
 
-PersistentSet *- Third Party Persistent Set : <<delegates>>
-PersistentObject <.. Third Party Persistent Set
+PersistentSet *- ThirdPartyPersistentSet : <<delegates>>
+PersistentObject <.. ThirdPartyPersistentSet
 ```
 
 ## 파생 대신 공통 인자 추출하기
