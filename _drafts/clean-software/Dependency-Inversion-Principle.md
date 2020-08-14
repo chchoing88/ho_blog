@@ -107,7 +107,82 @@ ButtonServiceInterface <|-- Lamp
 
 ## 용광로 사례
 
+- 이 소프트웨어는 IO 채널에서 현재 온도를 읽고 다른 IO 채널에 명령어를 전송하여 용광로를 켜거나 끈다.
+
+```c++
+void Regulate(double minTemp, double maxTemp) {
+  for(;;) {
+    while (in(THERMOMETER) > minTemp) {
+      wait(1);
+      out(FURNACE, ENGAGE);
+    }
+
+    while(in(THERMOMETER) < maxTemp) {
+      wati(1);
+      out(FURNACE, DISENGAGE);
+    }
+  }
+}
+```
+
+- 위 알고리즘은 상위 수준 목적은 분명하지만, 많은 하위 수준의 구체적인 내용으로 어지럽혀져 있다.
+- 또한 이 코드는 다른 제어 하드웨어에서는 절대 재사용할 수 없을 것이다.
+
+```uml
+Regulate <-- ThemometerInterface : parameter
+Regulate <-- HeaterInterface : parameter
+ThemometerInterface <|-- IOChannelThermometer
+HeaterInterface <|-- IOChannelHeater
+```
+
+- 위 uml에서는 조절 함수가 2개의 인자를 받는데 둘 다 인터페이스다.
+
+```c++
+void Regulate(Themometer& t, Heater& h, double minTemp, double maxTemp) {
+  for(;;) {
+    while (t.Read() > minTemp) {
+      wait(1);
+      h.Engage()
+    }
+
+    while(t.Read() < maxTemp) {
+      wati(1);
+      h.Disengage();
+    }
+  }
+}
+```
+
+- 위 코드는 상위 수준의 조절 정책이 자동 온도 조절기나 용광로의 구체적인 사항에 의존하지 않도록 의존성 역전을 시켰다.
+
 ### 동적 다형성과 정적 다형성
+
+- 지금까진 동적 다형성(즉, 추상 클래스나 인터페이스)를 이용해서 의존성의 역전을 해결했고 Rgulate를 일반적인 것으로 만들었다.
+- c++에서는 템플릿이 제공하는 다형성의 정적 형태를 사용할수도 있었다.
+
+```c++
+template <typename THERMOMETER, typename HEATER>
+class Regulate(THERMOMETER& t, HEATER& h, double minTemp, double maxTemp) {
+  for(;;) {
+    while (t.Read() > minTemp) {
+      wait(1);
+      h.Engage()
+    }
+
+    while(t.Read() < maxTemp) {
+      wati(1);
+      h.Disengage();
+    }
+  }
+}
+```
+
+- 이렇게 하면 동적 다형성의 부하(또는 유연성) 없이도 의존성 역전을 이룰 수 있다.
+- 강제되는 것은 오직 HEATER 를 대체하는 클래스가 Engage 와 Disengage 메소드를 가져야 하고, THERMOMETER를 대체하는 클래스는 Read 함수를 가져야 한다는 것뿐이다.
+- 정적 다형성은 소스 코드의 의존성을 깔끔하게 끊어주지만, 동적 다형성만큼 많은 문제를 해결해주지 않는다.
+- 템플릿을 통한 단점은 다음과 같다.
+  - HEATER와 THERMOMETER의 형이 런타임 시에 바뀔 수 없다.
+  - 새로운 종류의 HEATER 와 THERMOMETER를 사용이 재컴파일과 재배포를 필요로 한다는 점이다.
 
 ## 결론
 
