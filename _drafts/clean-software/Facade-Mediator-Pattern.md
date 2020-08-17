@@ -53,6 +53,7 @@ QuickEntryMediator qem = new QuickEntryMediator(t, l); // 이게 전부다.
 public class QuickEntryMediator {
   public QuickEntryMediator(JTextField t, JList l) {
     itsTextField = t;
+    itsList = l;
 
     itsTextField.getDocument().addDocumentListener(new DocumentListener() {
       public void changedUpdate() {
@@ -70,6 +71,11 @@ public class QuickEntryMediator {
   }
 
   private void textFieldChanged() {
+    // 요약
+    itsList.clearSelection();
+    itsList.getModel();
+    itsList.setSelectedValue(o, true);
+
 
   }
 }
@@ -93,6 +99,7 @@ QuickEntryMediator +--> DocumentListener
 - 이 QuickEntryMediator 는 익명 DocumentListener 를 JTextField 에 등록한다.
 - 이 리스터는 텍스트에 변화가 있을 때마다 textFieldChanged를 호출한다. 그러면 이 메소드는 이 텍스트를 접두어로 같는 JList의 원소를 찾아 그것을 선택한다.
 - JList 와 JTextField의 사용자는 이 미디에이터가 존재하는지 알지 못한다. 이것은 조용히 앉아 자신의 정책을 이들객체의 허락이나 인식 없이 적용한다.
+- 결국 QuickEntryMediator 는 JList 와 JTextField 를 DocumentListener를 이용해서 조용히 중재하고 있는 역할만 하는거 같다.
 
 ## 결론
 
