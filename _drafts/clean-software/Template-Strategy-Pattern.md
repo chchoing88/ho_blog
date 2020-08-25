@@ -156,8 +156,8 @@ public abstract class BubbleSorter {
   - DobuleBubbleSorter는 double 형의 배열을 정렬한다.
 
 ```uml
-BubbleSorter <| -- IntBubbleSorter
-BubbleSorter <| -- DobuleBubbleSorter
+BubbleSorter <|-- IntBubbleSorter
+BubbleSorter <|-- DobuleBubbleSorter
 ```
 
 ```java
@@ -192,7 +192,7 @@ public class DoubleBubbleSorter extends BubbleSorter {
   - 그러면 ApplicationRunner는 이 인터페이스에 위임한다.
 
 ```uml
-Application <| -- ftocStrategy
+Application <|-- ftocStrategy
 ApplicationRunner --> Application
 ```
 
