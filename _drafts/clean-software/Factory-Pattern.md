@@ -138,9 +138,35 @@ public class ShapeFactoryImplementation implements ShapeFactory {
 
 ## 테스트 픽스처를 위해 팩토리 사용하기
 
+- 단위 테스트를 작성할 때, 어떤 모듈의 행위를 그 모듈이 사용하는 다른 모듈들과 분리된 상태에서 테스트하고 싶은 경우가 종종 있다.
+- 예를 들어, 데이터베이스를 사용하는 Payroll 애플리케이션이 있다고 생각해보자. 여기서 데이터베이스를 전혀 사용하지 않고 Payroll 모듈의 기능을 테스트해보고 싶을 수 있다.
+
 ```uml
 Payroll --> Database
 ```
+
+- 이것은 데이터베이스의 추상 인터페이스를 사용해서 이룰 수 있다.
+- 추상 인터페이스의 구현 하나는 실제 데이터베이스를 사용하고, 다른 하나는 데이터베이스 행위를 흉내 낸다.
+- 그리고 데이터베이스로 들어오는 호출이 올바른지 검사하기 위해 테스트 코드를 작성하면 된다.
+
+```uml
+interface Database
+
+Payroll --> Database
+Payroll <-- PayrollTest
+Database <|-- PayrollTest
+
+Database <|-- DatabaseImplementation
+```
+
+PayrollTest 가 Database를 스푸핑 한다.
+
+- PayrollTest 모듈은 PayrolModule dprp 호출을 보냄으로써 이 모듈을 테스트한다. 
+- PayrollTest 는 Payroll이 데이터베이스에 보내는 호출을 잡기 위해 Database 인터페이스도 구현하는데, 이러면 Payroll이 올바로 동작하는지 PayrollTest 가 보장할 수 있게 된다.
+- 이렇게 하면 여러 종류의 데이터베이스 에러나 문제도 PayrollTest 가 흉내 내볼 수 있다. 
+- 이것을 `스푸핑(spoofing, 위장)` 이라는 이름으로 알려져 있는 기법이다.
+
+
 
 ## 팩토리 사용이 얼마나 중요한가?
 
