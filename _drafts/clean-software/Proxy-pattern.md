@@ -25,7 +25,7 @@ Item --> Product
 ```
 
 - 위 구조는 단순하지만, 목표한 기능은 감당할 수 있을 것이다.
-
+- Order(주문 목록) 클래스의 addItem 메소드는 적절한 Product(상품)와 그 quantity(수량)를 갖고 있는 새 Item(항목) 객체를 생성하고, 그 Item을 Item 객체 여러개의 나열로 이루어진 내부 Vector(벡터)에 추가하는 역할을 한다.
 - 주문 목록(Order)에 새 항목(Item)을 더하는 기능을 구현하려면 다음과 같은 코드를 사용할 수 있다.
 
 ```java
@@ -169,7 +169,7 @@ public class DBTest extends TestCase {
 ```
 
 - 프록시 구현의 다음 단계는 이것이 동작하는 방식을 보여주는 테스트 프로그램을 작성하는 것이다.
-- 이 테스트는 1개를 데이터베이스에 추가한다. 그런 후, 저장된 상품의 sku로 ProductProxy를 생성하고, 프록시에서 데이터를 얻기 위해 Product의 접근 메소드를 사용하려고 시도한다.
+- 이 테스트는 1개의 ProductData를 데이터베이스에 추가한다. 그런 후, 저장된 상품의 sku로 ProductProxy를 생성하고, 프록시에서 데이터를 얻기 위해 Product의 접근 메소드를 사용하려고 시도한다.
 
 ```java
 public class ProxyTest extends TestCase {
@@ -286,7 +286,7 @@ public class ProductProxy implements Product {
 }
 ```
 
-- 위 코드는 원래 우리가 의도 했던 프록시 패턴과는 일치하지 않는다. 
+- 위 코드는 원래 우리가 의도 했던 프록시 패턴과는 일치하지 않는다.
 - 이것은 위 사진 처럼 패턴의 정규형과 일치 하지 않는다. 원래 의도는 프록시 패턴을 구현하려는 것이었으나, 정작 그것이 실체화되고 난 뒤에는 정규형 패턴은 잘못돼버렸다.
 
 - 정규형 패턴에서는 ProductProxy 로 하여금 모든 메소드에서 ProductImp를 생성하게 했을 것이다.
@@ -307,12 +307,12 @@ public int getPrice() throws Exception {
 
 #### 관계에 프록시 패턴 적용하기
 
-- 다믕 단계는 Order에 대한 프록시를 만드는 것이다. 각 Order 인스턴스는 많은 Item 인스턴스를 포함하고 있다.
-- 관계형 스키마에서 이 관계는 Item 테이블 안에 기록되어 있다. Item 의 각 행은 그것을 포함하고 있는 Order의 키를 저장한다.
-- 그러나 객체 모델에서 관계는 Order 안에 있는 Vector에 의해 구현된다. 어떻게든 프록시는 2개의 형식을 변환해야만 한다.
+- 다믕 단계는 Order에 대한 프록시를 만드는 것이다. 각 `Order 인스턴스는 많은 Item 인스턴스를 포함`하고 있다.
+- `관계형 스키마에서 이 관계는 Item 테이블 안에 기록`되어 있다. Item 의 각 행은 그것을 포함하고 있는 Order의 키를 저장한다.
+- 그러나 `객체 모델에서 관계는 Order 안에 있는 Vector에 의해 구현`된다. 어떻게든 `프록시는 2개의 형식을 변환`해야만 한다.
 - 테스트는 데이터베이스에 몇개의 더미 상품을 추가한다. 그리고 프록시가 이 상품을 갖게 하고, 그것을 사용해 OrderProxy에 있는 addItem을 호출한다.
 - 마지막으로 OrderProxy에 전체 가격을 요청한다.
-- 이 테스트 케이스의 목적은 OrderProxy가 마치 Order처럼 동작하기는 하지만, 메모리에 있는 객체가 아니라 데이터베이스에서 그 데이터를 얻는 다는 것을 보여주는데 있다.
+- 이 테스트 케이스의 목적은 `OrderProxy가 마치 Order처럼 동작하기는 하지만, 메모리에 있는 객체가 아니라 데이터베이스에서 그 데이터를 얻는 다는 것`을 보여주는데 있다.
 
 ```java
 // ProxyTest.java
@@ -348,7 +348,8 @@ public class OrderData {
 ```
 
 - OrderData 는 단지 데이터를 담는 컨테이너일 뿐이다.
-- newOrder 시에는 고객의 ID는 인자로 제공하지만 orderId는 별도로 인자로 제공하지 않는다. newOrder 시에 고유한 orderId를 제공해주어야 한다.
+- newOrder 시에는 고객의 ID는 인자로 제공하지만 orderId는 별도로 인자로 제공하지 않는다는 점을 주목하자.
+- newOrder 시에 고유한 orderId를 제공해주어야 한다. 아래 테스트는 새로운 Order가 생성될 때마다 orderId가 자동적으로 증가한다고 가정하고 있음을 보여준다.
 
 ```java
 public void testOrderKeyGeneration() throws Exception {
@@ -380,3 +381,231 @@ private static int getMaxOrderId() throws SQLException {
   return maxOrderId;
 }
 ```
+
+- Product에서 한 것과 마찬가지로, Order를 인터페이스와 구현 부분으로 나눠야만 한다. 따라서 Order가 인터페이스가 되고, OrderImp는 구현 부분이 된다.
+
+```java
+public interface Order {
+  public String getCustomerId();
+  public void addItem(Product p, int quantity);
+  public int total();
+}
+```
+
+```java
+public class OrderImp implements Order {
+  private Vector itsItems = new Vector();
+  private String itsCustomerId;
+
+  public String getCustomerId() {
+    return itsCustomerId;
+  }
+
+  public OrderImp(String cusid) {
+    itsCustomerId = cusid;
+  }
+
+  public void addItem(Product p, int qty) {
+    Item item = new Item(p,qty);
+    itsItems.add(item);
+  }
+
+  public int total() {
+    try {
+      int total = 0;
+      for (int i = 0; i < itsItems.size(); i++) {
+        Item item = (Item) itsItems.elementAt(i);
+        Product p = item.getProduct();
+        int qty = item.getQuantity();
+        total += p.getPrice() * qty;
+      }
+      return total;
+    }
+    catch (Exception e) {
+      throw new Error(e.toString());
+    }
+  }
+}
+```
+
+- OrderImp에 예외 처리 루틴을 추가했는데 이것은 Product 인터페이스가 예외를 발생시키기 때문이다.
+- 여기서는 모든 예외(Exception)을 에러로 바꿔서, 인터페이스를 throws 문으로 더럽히거나 이 인터페이스의 사용자를 try/catch 블록으로 고생시키지 않기로 결심한다.
+
+- OrderProxy에서는 addItem 은 프록시가 데이터베이스에 Item 행을 추가할 것이다.
+- OrderProxy.total 은 OrderImp.total에 위임하고 싶다.
+- 프록시 구축의 제일 중요한 부분은 데이터 베이스 구현부를 업무 규칙에서 분리하는 것이다.
+- total 함수를 위임하기 위해서는, 프록시가 완전한 Order 와 그것이 포함하고 있는 모든 Item을 구축해야만 한다.
+  - OrderProxy.total 내부에서 데이터베이스의 모든 Item을 찾고, 찾은 모든 Item에 대한 빈 OrderImp에서 addItem을 호출해야 한다.
+  - OrderImp 에서 total을 호출한다.
+
+```java
+public class OrderProxy implements Order {
+  private int orderId;
+
+  public OrderProxy(int orderId) {
+    this.orderId = orderId;
+  }
+
+  public int total() {
+    try {
+      OrderImp imp = new OrderImp(getCustomerId());
+      // DB에서 해당 orderId의 아이템을 찾고
+      ItemData[] itemDataArray = DB.getItemsForOrder(orderId);
+
+      // 찾은 item을 추가하고 나서 total을 구함
+      for (int i = 0; i < itemDataArray.length; i++) {
+        ItemData item = itemDataArray[i];
+        imp.addItem(new ProductProxy(item.sku), item.qty);
+      }
+      return imp.total();
+    }
+    catch (Exception e) {
+      throw new Error(e.toString());
+    }
+  }
+
+  public String getCustomerId() {
+    try {
+      OrderData od = DB.getOrderData(orderId);
+      return od.customerId;
+    }
+    catch (SQLException e) {
+      throw new Error(e.toString());
+    }
+  }
+
+  public void addItem(Product p, int quantity) {
+    try {
+      ItemData id = new ItemData(orderId, quantity, p.getSku());
+      DB.store(id);
+    }
+    catch (Exception e){
+      throw new Error(e.toString());
+    }
+  }
+
+  public int getOrderId() {
+    return orderId;
+  }
+}
+```
+
+```java
+// value object?
+// ItemData.java
+public class ItemData {
+  public int orderId;
+  public int qty;
+  public String sku = "junk";
+
+  public ItemData() {}
+
+  public ItemData(int orderId, int qty, String sku) {
+    this.orderId = orderId;
+    this.qty = qty;
+    this.sku = sku;
+  }
+
+  public boolean equals(Object o) {
+    ItemData id = (ItemData)o;
+    return orderId == id.orderId &&
+           qty == id.qty &&
+           sku.equals(id.sku);
+  }
+}
+```
+
+```java
+// DBTest.java
+public void testStoreItem() throws Exception {
+  ItemData storedItem = new ItemData(1, 3, "sku");
+  DB.store(storedItem);
+  ItemData[] retrievedItems = DB.getItemsForOrder(1);
+  assertEquals(1, retrievedItems.length);
+  assertEquals(storedItem, retrievedItems[0]);
+}
+
+public void testNoItems() throws Exception {
+  ItemData[] id = DB.getItemsForOrder(42);
+  assertEquals(0, id.length);
+}
+```
+
+```java
+public static void store(ItemData id) throws Exception {
+  PreparedStatement s = buildItemInsersionStatement(id);
+  executeStatement(s);
+}
+private static PreparedStatement buildProductInsertionStatement(ProductData pd) throws SQLException {
+  PreparedStatement s = con.prepareStatement("INSERT into Products VALUES (?, ?, ?)");
+  s.setString(1, pd.sku);
+  s.setString(2, pd.name);
+  s.setInt(3, pd.price);
+
+  return s;
+}
+
+public static ItemData[] getItemsForOrder(int orderId) throws Exception {
+  PreparedStatement s = buildItemsForOrderQueryStatement(orderId);
+  ResultSet rs = s.executeQuery();
+  ItemData[] id = extractItemDataFromResultSet(rs);
+  rs.close();
+  s.close();
+
+  return id;
+}
+
+private static PreparedStatement buildItemsForOrderQueryStatement(int orderId) throws SQLException {
+  PreparedStatement s = con.prepareStatement("SELECT * FROM Items WHERE orderid = ?;");
+  s.setInt(1, orderId);
+
+  return s;
+}
+
+private static ItemData[] extractItemDataFromResultSet(ResultSet rs) throws SQLException {
+  LinkedList l = new LinkedList();
+  for (int row = 0; rs.next(); row++) {
+    ItemData id = new ItemData();
+    id.orderId = rs.getInt("orderid");
+    id.qty = rs.getInt("quantity");
+    id.sku = rs.getString("sku");
+    l.add(id);
+  }
+
+  return (ItemData[]) l.toArray(new ItemData[l.size()]);
+}
+
+public static OrderData getOrderData(int orderId) throws SQLException {
+  PreparedStatement s = con.prepareStatement("Select cusid from orders where orderid = ?;");
+  s.setInt(1, orderId);
+  ResultSet rs = s.executeQuery();
+  OrderData od = null;
+  if (rs.next())
+    od =  new OrderData(orderId, rs.getString("cusid"));
+  rs.close();
+  s.close();
+
+  return od;
+}
+```
+
+### 프록시 요약
+
+- 정규형 패턴이 함축하는 단순 위임 모델은 좀처럼 깔끔하게 실체화되지 않는다.
+- 종종 하찮은 접근 메소드와 변경 메소드의 위임을 생략하고 있는 자신을 발견하게 되는 것이다.
+- 1:N 관게를 다루는 메소드에 대해서라면, 위임을 지연(delaying) 하고 그 것을 다른 메소드에 미루고 있는 자신을 발견하게 된다.
+  - addItem 위임이 total로 옮겨지는 것처럼 말이다.
+- 이 예에서는 어떤 캐싱도 사용하지 않았지만, 성능이 지나치게 나빠질 것을 우려해 기계적으로 캐싱 전략을 구현할 것을 권하지 않는다.
+  - 오히려 너무 일찍 캐싱을 도입하는 것이 성능을 악화시키는 쉬운 방법이라는 사실을 깨달았다.
+  - 성능이 문제될 것이라고 걱정한다면, 그것이 문제가 될 것임을 증명하기 위한 실험을 해보기를 권한다. 단 한번만이라도 증명된다면, 실행 속도를 높이기 위한 방법을 생각해봐야 한다.
+
+#### 프록시 이점
+
+- 가장 강력한 이점은 **관심사의 분리** 이다.
+- 위 예에서 업무 규칙과 데이터베이스는 완전히 분리되어 있다.
+  - OrderImp는 데이터베이스에 있는 그 어떤 것에도 의존성이 없다.
+- 업무 규칙과 데이터베이스 구현부의 분리가 아주 중요한 인스턴스에서는, 프록시가 적용하기 좋은 패턴이 될 수 있다.
+- 프로젝트에서 업무 규칙 자체의 장점을 지금 유행하는 구현 메커니즘에서 분리하는 한 방법이 된다.
+
+
+### 데이터베이스, 미들웨어, 서드파티 인터페이스 다루기
