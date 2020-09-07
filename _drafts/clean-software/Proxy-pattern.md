@@ -42,6 +42,8 @@ public class Order {
 
 CUstomer(cusid) --> Order(orderId) --> Item(sku) --> Product
 
+> sku 란? 'stock keeping unit' 의 의미로 '상품 관리·재고 관리를 위한 최소 분류 단위' 이다.
+
 - 위 관계도에서 어떤 특별한 Order에 Item의 행을 한줄 추가하고 싶을 때는 다음과 같은 코드를 사용할 수 있다. 이 코드는 JDBC 호출을 통해 관계형 데이터 모델을 직접 조작하고 있다.
 
 ```java
@@ -236,7 +238,8 @@ public interface Product {
 ```
 
 - Product 인터페이스에 예외를 추가한 것은 Product, ProductImp, ProxyTest를 작성함과 동시에 ProductProxy를 작성했기 때문이다.
-- ProductProxy 클래스는 데이터베이스를 호출하고, 그 데이터베이스는 예외를 발생시킨다. 이런 예외들이 프록시에 의해 처리되고 감춰지는 것을 바라지 않았기 때문에, 인터페이스에서 빠져나가도록 하는 방법을 택했다.
+  - 이 모두가 한번에 하나씩의 접근 메소드를 갖도록 구현되어 있다.
+  - ProductProxy 클래스는 데이터베이스를 호출하고, 그 데이터베이스는 예외를 발생시킨다. 이런 예외들이 프록시에 의해 처리되고 감춰지는 것을 바라지 않았기 때문에, 인터페이스에서 빠져나가도록 하는 방법을 택했다.
 
 ```java
 public class ProductImp implements Product {
@@ -433,7 +436,8 @@ public class OrderImp implements Order {
 
 - OrderProxy에서는 addItem 은 프록시가 데이터베이스에 Item 행을 추가할 것이다.
 - OrderProxy.total 은 OrderImp.total에 위임하고 싶다.
-- 프록시 구축의 제일 중요한 부분은 데이터 베이스 구현부를 업무 규칙에서 분리하는 것이다.
+  - 업무 규칙(즉, 합계를 내는 정책)이 OrderImp에 캡슐화되기를 원하기 때문이다.
+- 프록시 구축의 제일 중요한 부분은 `데이터 베이스 구현부를 업무 규칙에서 분리`하는 것이다.
 - total 함수를 위임하기 위해서는, 프록시가 완전한 Order 와 그것이 포함하고 있는 모든 Item을 구축해야만 한다.
   - OrderProxy.total 내부에서 데이터베이스의 모든 Item을 찾고, 찾은 모든 Item에 대한 빈 OrderImp에서 addItem을 호출해야 한다.
   - OrderImp 에서 total을 호출한다.
