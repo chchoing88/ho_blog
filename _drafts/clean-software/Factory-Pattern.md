@@ -56,6 +56,7 @@ ShapeFactoryImplementation <.. Circle : <<creates>>
 
 ```java
 // ShapeFactory.java
+// 파생형 마다 메소드가 존재함.
 public interface ShapeFactory {
   public Shape makeCircle();
   public Shape makeSquare();
@@ -85,7 +86,7 @@ public class ShapeFactoryImplementation implements ShapeFactory {
 ## 의존 관계 순환
 
 - 위 형태의 팩토리 패턴에는 문제가 있다.
-- ShapeFactory 클래스는 Shap 의 파생형마다 메소드가 하나씩 있다. 이렇게 할 경우 Shape에 새로운 파생형을 추가하는 일이 매우 어렵게 만들지도 모르는 의존 관계 순환이 생길 수 있다.
+- ShapeFactory 인스턴스는 Shap 의 파생형마다 메소드가 하나씩 있다. 이렇게 할 경우 Shape에 새로운 파생형을 추가하는 일이 매우 어렵게 만들지도 모르는 의존 관계 순환이 생길 수 있다.
 - Shape의 파생형이 추가 된다는 것은 ShapeFactory 에 새로운 메소드를 추가를 하게 되고 이는 클래스를 재컴파일하고 재배포해야 한다는 의미가 된다.
 
 <br />
@@ -161,12 +162,10 @@ Database <|-- DatabaseImplementation
 
 PayrollTest 가 Database를 스푸핑 한다.
 
-- PayrollTest 모듈은 PayrolModule dprp 호출을 보냄으로써 이 모듈을 테스트한다. 
+- PayrollTest 모듈은 PayrolModule dprp 호출을 보냄으로써 이 모듈을 테스트한다.
 - PayrollTest 는 Payroll이 데이터베이스에 보내는 호출을 잡기 위해 Database 인터페이스도 구현하는데, 이러면 Payroll이 올바로 동작하는지 PayrollTest 가 보장할 수 있게 된다.
-- 이렇게 하면 여러 종류의 데이터베이스 에러나 문제도 PayrollTest 가 흉내 내볼 수 있다. 
+- 이렇게 하면 여러 종류의 데이터베이스 에러나 문제도 PayrollTest 가 흉내 내볼 수 있다.
 - 이것을 `스푸핑(spoofing, 위장)` 이라는 이름으로 알려져 있는 기법이다.
-
-
 
 ## 팩토리 사용이 얼마나 중요한가?
 
@@ -181,5 +180,5 @@ PayrollTest 가 Database를 스푸핑 한다.
 
 - DIP를 지키려고 할 때 큰 도움이 되기도 한다.
 - 높은 차원의 정책 모듈이 클래스들의 구체적인 구현에 의존하지 않고도 그 클래스들의 인스턴스를 생성하게 해주기도 한다.
-- 그리고 어떤 클래스 무리를 오나전히 다른 클래스 무리로 교체하는 일도 가능하게 만든다.
+- 그리고 어떤 클래스 무리를 완전히 다른 클래스 무리로 교체하는 일도 가능하게 만든다.
 - 팩토리는 피하려면 피할 수도 있는 복잡함이다. 기본으로 팩토리를 사용하는 것이 최선의 방법인 경우는 드물다.
