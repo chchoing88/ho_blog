@@ -103,6 +103,7 @@ public abstract calss Application {
 
 ```java
 public class BubbleSorter {
+  static int operations = 0;
 
   public static int sort(int[] array) {
     // 2개 씩 비교해서 제일 작은 수를 가장 왼쪽에 옮겨두고 다시 한바퀴 돈다.
@@ -111,14 +112,29 @@ public class BubbleSorter {
 
     // 이중 for 문
     // compareAndSwap() 진행
+    operations = 0;
+    if (array.length <= 1)
+      return operations;
+
+    for (int nextToLast = array.length-2; nextToLast >= 0; nextToLast--)
+      for (int index = 0; index <= nextToLast; index++)
+        compareAndSwap(array, index);
+
+    return operations;
   }
 
   private static void swap(int[] array, int index) {
     // swap 진행
+     int temp = array[index];
+    array[index] = array[index+1];
+    array[index+1] = temp;
   }
 
   private static void compareAndSwap(int[] array, int index) {
     // 왼쪽에 있는 수가 더 크다면 swap() 진행
+    if (array[index] > array[index+1])
+      swap(array, index);
+    operations++;
   }
 }
 ```
@@ -128,8 +144,7 @@ public class BubbleSorter {
   - sort 메소드는 버블 정렬을 수행하는 알고리즘을 포함한다.
   - swap, compareAndSwap 이라는 2개의 보조적인 메소드는 정수와 배열의 구체적인 부분을 다룬다.
 
-- 템플릿 메소드 패턴을 사용하면 버블 정렬 알고리즘을 따로 떼어 BubbleSorter라는 이름의 추상 기반 클래스에 집어 넣을 수 있다.
-
+- 템플릿 메소드 패턴을 사용하면 `버블 정렬 알고리즘을 따로 떼어 BubbleSorter라는 이름의 추상 기반 클래스에 집어 넣을` 수 있다.
   - BubbleSorter는 outOfOrder와 swap이라는 추상 메소드를 호출하는 sort 함수의 구현을 포함한다.
   - outOfOrder 메소드는 배열에서 인접한 2개의 원소를 비교하여 그 원소의 순서가 잘못되어 있으면 true를 반환하는 메소드다.
   - swap 메소드는 배열에서 2개의 인접 원소를 교환하는 메소드다.
@@ -139,11 +154,23 @@ public class BubbleSorter {
 
 ```java
 public abstract class BubbleSorter {
-  protected int doSort() {
-    // 이중 for 문
-    // outOfOrder 판별한뒤
-    // swap 수행
+  private int operations = 0;
+  protected int length = 0;
 
+  protected int doSort() {
+    operations = 0;
+    if (length <= 1)
+      return operations;
+
+    for (int nextToLast = length-2; nextToLast >= 0; nextToLast--)
+      for (int index = 0; index <= nextToLast; index++)
+      {
+        if (outOfOrder(index))
+          swap(index);
+        operations++;
+      }
+
+    return operations;
   }
 
   protected abstract void swap(int index);
@@ -177,10 +204,9 @@ public class DoubleBubbleSorter extends BubbleSorter {
 - 템플릿 메소드 패턴은 객체 지향 프로그래밍에서 고전적인 재사용 형태 중의 하나를 보여준다.
 - 일반적인 알고리즘은 기반 클래스에 있고, 다른 구체적인 내용에서 상속된다.
 
-- 이 기법은 비용을 수반한다. 상속은 아주 강한 관계여서, 파생 클래스는 필연적으로 기반 클래스에 묶이게 된다.
-
+- 이 기법은 비용을 수반한다. `상속은 아주 강한 관계여서, 파생 클래스는 필연적으로 기반 클래스에 묶이게 된다.`
   - 예를 들어, IntBubbleSorter 의 outOfOrder 와 swap 함수는 다른 종류의 정렬 알고리즘에서도 필요로 하는 것이다.
-  - 그럼에도 불구하고 이 다른 정렬 알고리즘에서 outOfOrder 와 swap 을 재사용할 방법이 없다.
+  - 그럼에도 불구하고 이 `다른 정렬 알고리즘에서 outOfOrder 와 swap 을 재사용할 방법이 없다.`
   - BubbleSorter 를 상속함으로써, IntBubbleSorter 의 운명이 영원히 BubbleSorter 와 묶이게끔 결정해버린 것이다.
 
 ## 스트래터지 패턴
