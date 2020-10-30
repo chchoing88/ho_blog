@@ -15,7 +15,7 @@ module.exports = {
   /** Home > Bio information*/
   comment: "A starter blog FT tech.",
   name: "CHOI HO CHEOL",
-  company: "DK TECHIN",
+  company: "NHN",
   location: "Korea",
   email: "chchoing@naver.com",
   website: "https://chchoing88.github.io/ho_blog", // ex.'https://junhobaik.github.io'
