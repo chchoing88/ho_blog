@@ -445,3 +445,62 @@ API 옵션을 사용할 때 쓰지 않아도 되는 코드 입니다. 그러나 
 
 동일한 기능성을 감안할 때 옵션을 통해 정의되는 구성 요소와 구성 기능을 통해 정의되는 구성 요소는 동일한 기본 논리를 표현하는 두 가지 다른 방법을 나타낸다.
 옵션 기반 API는 옵션 유형에 따라 코드를 구성하도록 강요하고, 컴포지션 API는 논리적인 우려에 따라 코드를 구성할 수 있게 해준다.
+
+### Logic Extraction and Reuse
+
+컴포넌트 API는 여러 구성 요소에 걸쳐 로직을 추출하고 재사용할 때 매우 유연하다. composition 함수는 마법의 `this` 컨텍스트에 의존하는 대신 자신의 인자와 전역적으로 가져온 Vue API에만 의존한다. 
+당신은 단순히 그것을 함수로 내보냄으로써 당신의 구성 요소 로직의 어떤 부분도 재사용할 수 있다. 구성 요소의 전체 `setup` 기능을 내보내면 `extends` 에 해당하는 기능도 얻을 수 있다.
+
+마우스 포지션을 추적하는 예제를 보자.
+
+```javascript
+import { ref, onMounted, onUnmounted } from 'vue'
+
+export function useMousePosition() {
+  const x = ref(0)
+  const y = ref(0)
+
+  function update(e) {
+    x.value = e.pageX
+    y.value = e.pageY
+  }
+
+  onMounted(() => {
+    window.addEventListener('mousemove', update)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('mousemove', update)
+  })
+
+  return { x, y }
+}
+```
+
+다음은 컴포넌트가 함수를 사용하는 방법이다.
+
+```javascript
+import { useMousePosition } from './mouse'
+
+export default {
+  setup() {
+    const { x, y } = useMousePosition()
+    // other logic...
+    return { x, y }
+  }
+}
+```
+
+파일 탐색의 Composition API 버젼에서 우리는 몇몇 유틸리티 코드를(`uesPathUtils` 와 `useCwdUtils`) 다른 컴포넌트에서 사용하기 유용한 것을 발견했기 때문에 외부 파일로 추출했다.
+mixins, higher-order components or renderless components (scoped slots을 통해)와 같은 기존 패턴을 사용하여 유사한 논리 재사용을 달성할 수도 있다.
+인터넷에는 이러한 패턴을 설명하는 많은 정보가 있으므로, 우리는 여기서 자세히 반복하지 않을 것이다. 높은 수준의 아이디어는 이러한 패턴 각각이 구성 함수와 비교했을 때 각각의 단점을 가지고 있다는 것이다.
+
+- 렌더 컨텍스트에 노출된 속성의 출처가 분명하지 않음. 예를 들어, 다중 mixins을 사용하여 구성 요소의 템플릿을 읽을 때 특정 성질이 어떤 혼합물로부터 주입되었는지 구별하기가 어려울 수 있다.
+- 네임스페이스 충돌. Mixins는 잠재적으로 속성 및 메서드 이름에서 충돌할 수 있으며, HOCs는 예상된 prop 이름에서 충돌할 수 있다.
+- 퍼포먼스. HOC 및 렌더리스 구성요소는 성능 비용으로 제공되는 추가적인 상태 저장 구성요소 인스턴스가 필요하다.
+
+Composition API를 사용하여 비교:
+
+- 템플릿에 노출되는 특성은 구성 함수에서 반환되는 값이기 때문에 출처가 명확하다.
+- 합성함수에서 반환된 값은 네임스페이스 충돌이 없도록 임의로 이름을 지정할 수 있다.
+- 로직 재사용만을 위해 만들어진 불필요한 구성요소 인스턴스는 없다.
