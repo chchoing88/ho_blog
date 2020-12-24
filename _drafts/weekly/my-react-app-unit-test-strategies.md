@@ -531,7 +531,7 @@ describe('Countries Selectors', () => {
 
 ### 에픽들
 
-나는 비동기 액션을 다루기 위해 `[redux-observable](https://redux-observable.js.org/)` 를 사용한다. 다른 방식으로는 `[Thunk](https://redux.js.org/recipes/writing-tests#async-action-creators)` 또는 `[redux-saga](https://redux-saga.js.org/docs/advanced/Testing.html)` 이 있다.
+필자는 비동기 액션을 다루기 위해 `[redux-observable](https://redux-observable.js.org/)` 를 사용한다. 다른 방식으로는 `[Thunk](https://redux.js.org/recipes/writing-tests#async-action-creators)` 또는 `[redux-saga](https://redux-saga.js.org/docs/advanced/Testing.html)` 이 있다.
 
 다음과 같은 패턴으로 단위 테스트를 진행하는 예제 이다.
 
@@ -628,7 +628,7 @@ yarn add @testing-library/react-hooks --dev
 yarn add react-test-renderer --dev
 ```
 
-나는 나의 커스텀 훅 안에 또 다른 라이브러리 훅을 사용한다.
+필자는 나의 커스텀 훅 안에 또 다른 라이브러리 훅을 사용한다.
 
 ```typescript
 import { useFormikContext, getIn } from 'formik';
@@ -746,4 +746,4 @@ app 에 대한 내 의견은 너무 높은 적용 범위의 수치를 적용할 
 
 끝까지 읽어주셔서 감사하다. 여기 글은 React 응용 프로그램 중 하나에 사용한 테스트 전략이다. 모든 프로젝트의 요구에 맞지 않을 수도 있다.
 
-경우에 따라 단위 테스트가 많아질수록 코드가 개선되는 것이 아니다. 나는 부서지기 쉽고 끊임없이 깨지는 몇 가지 유닛 테스트를 본 적이 있다. 단위 테스트는 파일 하나만 테스트할 수 있을 정도로 작아야 하며 통합 테스트가 되어서는 안 된다. 양호한 단위 테스트는 유지 관리 및 읽기가 쉬우며 코드를 잘 문서화하는 역할을 한다.
+경우에 따라 단위 테스트가 많아질수록 코드가 개선되는 것이 아니다. 필자는 부서지기 쉽고 끊임없이 깨지는 몇 가지 유닛 테스트를 본 적이 있다. 단위 테스트는 파일 하나만 테스트할 수 있을 정도로 작아야 하며 통합 테스트가 되어서는 안 된다. 양호한 단위 테스트는 유지 관리 및 읽기가 쉬우며 코드를 잘 문서화하는 역할을 한다.
