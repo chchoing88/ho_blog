@@ -1,11 +1,138 @@
 ---
 title: javascript pattern (...ing)
-date: "2018-08-05T10:00:03.284Z"
+date: "2021-01-01T10:00:03.284Z"
 ---
 
 ## Goal
 
 - 다양한 자바스크립트 패턴을 익히고 어느 상황에서 사용되는지 파악한다.
+
+## Good Javascript
+
+- 일급 객체인 함수를 인자로 주고 반환값으로 돌려받는 형태에 길들어야 한다.
+- 자바스크립트 함수는 일급 시민으로서 자신만의 프로퍼티와 메서드를 가질 수 있다.
+- 클로저는 꼭 함수 같은 객체지만, 함수 생성 당시 환경을 내부에 고스란히 간직한다.
+- this는 함수를 호출한 객체를 참조한다.
+
+## SOLID 원칙
+
+### 단일 책임 원칙
+
+- 모든 클래스, 함수는 반드시 한 가지 변경 사유가 있어야 한다. 특정 함수의 유일한 관심사를 만들자. 어떻게 이행할지는 철저하게 외부에서 제공한 함수에 달려있게 하자.
+
+### 개방/폐쇄 원칙
+
+- 모든 소프트웨어 개체는 확장 가능성은 열어 두되 수정 가능성은 닫아야 한다.
+- 어떤 경우라도 실행 코드를 변경하지 말고, 어떻게든 (상속 등의 방법으로) 재사용하고 확장 가능하라는 뜻이다.
+- 변경 사항이 생길 만한 것을 추상화하여 함수 밖으로 빼내자.
+
+### 리스코프 치환 원칙
+
+- 어떤 타입에서 파생된 타입의 객체가 있다면 이 타입을 사용하는 코드는 변경하지 말아야 한다.
+- 한 객체를 다른 객체에서 파생하더라도 그 기본 로직이 변경되어서는 안 된다는 뜻이다.
+- 작성중인 함수가 기반 클래스로 하는 일과 서브 클래스로 하는 일이 다르다면 이 원칙을 어긴 셈이다.
+
+### 인터페이스의 분리 법칙
+
+- 인터페이스란 어떤 기능을 '구현'하지 않고 (명칭, 파라미터, 반환타입을) '서술'만 한 코드 조각이다.
+- 함수가 기대하는 인자가 무엇인지 명확히 하고 그 기대치를 최소화해야 한다.
+- 특정 타입의 인자를 바라기보다는 이 타입에서 실제로 필요한 프로퍼티가 더러 있을 거라 기대하는 것이다.
+
+### 의존성 역전 원칙
+
+- 상위 수준 모듈은 하위 수준 모듈에 의존해서는 안 되며 이 둘은 추상화에 의존해야 한다.
+
+### DRY 원칙
+
+- 반복하지 마라
+- DRY한 코드로 만드는 과정에 의존성 주입과 단일 책임 문제가 개입된다.
+- '지식 조각'을 반복시키지 말자.
+
+## 테스트
+
+### 테스트 더블
+
+- 더미(dummy): 보통 인자 리스트를 채우기 위해 사용되며, 전달은 하지만 실제로 사용되지는 않는다.
+- 틀(stub): 더미를 조금 더 구현하여 아직 개발되지 않은 클래스나 메서드가 실제 작동하는 것처럼 보이게 만든 객체로 보통 리턴값은 하드 코딩한다.
+- 스파이(spy): 틀과 비슷하지만 내부적으로 기록을 남긴다는 점이 다르다. 특정 객체가 사용되었는지, 예상되는 메서드가 특정 인자로 호출되었는지 등의 상황을 감시하고 이러한 정보를 제공하기도 한다.
+- 모의체(fake): 틀에서 조금 더 발전하여 실제로 간단히 구현된 코드를 갖고는 있지만, 운영 환경에서 사용할 수는 없는 객체다.
+- 모형(mock): 더미, 틀, 스파이를 혼합한 형태와 비슷하나 행위를 검증하는 용도로 주로 사용된다.
+
+## 경량 의존성 주입 프레임 워크
+
+- DI 프레임워크를 사용하지 않고 의존성 주입(DI)하는 것을 두고 '빈자의 의존성 주입(poor man's dependency injection)'이라 한다.
+- 의존성 주입 프레임워크는 다음과 같이 동작한다.
+  1. 애플리케이션이 시작되자마자 인젝터블을 확인하고 해당 인젝터블이 지닌 지칭하며 순서대로 DI 컨테이너에 등록한다.
+  2. 객체가 필요하면 컨테이너에 요청한다.
+  3. 컨테이너는 일단 요청받은 객체와 그 의존성을 모두 재귀적으로 인스턴스화한다. 그런 다음, 요건에 따라 필요한 객체에 각각 주입한다.
+
+```javascript
+DiContainer = function() {
+  // ...
+  this.registrations = [];
+}
+
+DiContainer.prototype.register = function (name, dependencies, func) {
+  var ix;
+
+  if(typeof name !== 'string' ||
+    !Array.isArray(dependencies) ||
+    typeof func !== 'function') {
+      throw new Error(this.messages.registerRequiresArgs);
+    }
+
+  for(ix = 0; ix < dependencies.length; ++ix) {
+    if(typeof dependencies[ix] !== 'string') {
+      throw new Error(this.messages.registerRequiresArgs);
+    }
+  }
+
+  this.registrations[name] = { dependencies, func };
+}
+
+diContainer.prototype.get = function (name) {
+  var self = this;
+  var registration = this.registrations[name];
+  var dependencies = [];
+
+  if(registration === undefined) {
+    return undefined;
+  }
+
+  registration.dependencies.forEach(function(dependencyName) {
+    var dependency = self.get(dependencyName);
+    dependencies.push( dependency === undefined ? undefined : dependency);
+  })
+
+  return registration.func.apply(undefined, dependencies);
+}
+
+```
+
+## 애스팩트 지향 프로그래밍(AOP)
+
+- 단일한 책임 범위 내에 있지 않은 하나 이상의 객체에 유용한 코드를 한데 묶어 눈에 띄지 않게 객체에 배포하는 기법.
+- 배포할 코드 조각을 어드바이스(advice), 어드바이스가 처리할 문제를 애스팩트(aspect) 또는 황단 관심사라고 한다.
+- AOP의 핵심은 함수 실행(타깃)을 가로채어 다른 함수(어드바이스)를 실행하기 직전이나 직후, 또는 전후에 실행시키는 것이다.
+- around 함수의 핵심 (fnName, advice, fnObj)
+  - 원본 함수를 어드바이스로 대체한다.
+  - 타깃 정보를 어드바이스에 전달한다. 내부에 원본 타깃 함수를 저장한 객체를 만들어 어드바이스에 넘긴다.
+  - 타깃에 넘기는 인자도 함께 전달한다.
+
+```javascript
+Aop = {
+  around: function (fnName, advice, fnObj) {
+    var origianlFn = fnObj[fnName];
+    fnObj[fnName] = function () {
+      return advice.call(this, {fn: origianlFn, args: arguments})
+    }
+  },
+  // 어드바이스 작성시에 원본 함수를 호출할 수 있도록 해주는 도우미 함수
+  next: function (targetInfo) {
+    return targetInfo.fn.apply(this, targetInfo.args)
+  }
+}
+```
 
 ## Pattern
 
