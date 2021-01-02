@@ -42,6 +42,28 @@ date: "2021-01-01T10:00:03.284Z"
 
 - 상위 수준 모듈은 하위 수준 모듈에 의존해서는 안 되며 이 둘은 추상화에 의존해야 한다.
 
+```javascript
+// projection 추상화
+function d3_svg_line(projection) {
+  // ...
+  function line(data) {
+    // ... 
+
+    function segment() {
+      segments.push('M', interolate(projection(points), tension))
+    }
+  }
+}
+
+d3.svg.line = function () {
+  return d3_svg_line(d3_identity);
+}
+
+d3.svg.line.radial = function () {
+  const line = d3_svg_line(d3_svg_lineRadial);
+}
+```
+
 ### DRY 원칙
 
 - 반복하지 마라
