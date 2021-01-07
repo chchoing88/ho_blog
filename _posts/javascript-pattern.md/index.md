@@ -156,6 +156,108 @@ Aop = {
 }
 ```
 
+## 인터페이스
+
+- 인터페이스는 `기능이 정의된 모듈`과 그것을 `사용할 모듈 사이`에 일종의 규약(contract)처럼 쓰인다.
+
+### 규약 정의
+
+- 규약 정의는 규약명과 객체가 규약을 지키는지를 true/false로 반환하는 평가 함수로 이루어진다.
+
+```javascript
+// define 시그니처
+function define(contractName, evaluator)
+```
+
+### 규약을 지키는지 판단
+
+```javascript
+// fullfills 메서드 틀
+function fullfills(contractName, obj)
+```
+
+### 규약을 지킨다고 단언
+
+규약을 지켰는지 여부는 fulfills 메서드를 다시 쓰면 된다.
+
+```javascript
+function assert(contractName, obj)
+```
+
+### 규약 레지스트리 코드
+
+```javascript
+// fullfills 함수
+// obj가 규약을 지키면 true, 어기면 false를 반환한다.
+var ReliableJavaScript = ReliableJavaScript || {};
+ReliableJavascript.contractRegistry = function() {
+  'use strict';
+
+  // 등록된 규약
+  var registry = {};
+
+  return {
+    define: function define(contractName, evaluator) {
+      // ...에러 조건문
+      registry[contractName] = evaluator
+    },
+    fullfills: function fullfills(contractName, obj) {
+      // ...에러 조건문
+      return registry[contractName](obj);
+    },
+    assert: function assert(contractName, obj) { 
+      if(!this.fulfills(contractName, obj)) {
+        throw new Error(this.getMessageForFiledContract(contractName, obj))
+      }
+    },
+    attachReturnValidator: function attachReturnValidator(funcName, funcObj, contractName) {
+      var self = this;
+      if(typeof funcName !== 'string') {
+        throw new Error(self.messages.funcNameMustBeString);
+      }
+      if(typeof funcObj !== 'object') {
+        throw new Error(self.messages.funcObjMustBeObject);
+      }
+      if(typeof contractName !== 'string') {
+        throw new Error(self.messages.nameMustBeString);
+      }
+
+      Aop.around(funcName,
+        function(targetInfo) {
+          var ret = Aop.next(targetInfo);
+          self.assert(contractName, ret)
+        }, funcObj)
+    },
+    messages: {
+      // ...
+    },
+    getMessageForNameNotRegistered: function getMessageForNameNotRegistered(contractName) {
+      return this.messages.nameMustBeRegistered.replace('_', contractName)
+    },
+    getMessageForFiledContract: function getMessageForFiledContract() {
+      // ...
+    }
+  }
+}
+```
+
+실제 사용 예
+
+```javascript
+// attendeeContracts.js
+// 이 함수를 호출하여 Conference.attendee() 가 올바르게 attendee를 생성했는지 확인하는 애스팩트를 설치한다.
+Conference.attendeeContracts = function attendeeContracts(registry) {
+  'use strict';
+  
+}
+
+var registry = ReliableJavaScript.contractRegistry();
+Conference.attendeeContracts(registry);
+
+// 올바르게 생성된 객체인지 애스팩트가 보장한다.
+var a = Conference.attendee('Rock', 'Star'); // 예외를 던지지 않음.
+```
+
 ## Pattern
 
 ### Callback pattern
@@ -879,7 +981,7 @@ attendeeWebApiDecorator = function(baseWebApi) {
 - 실제로 HTTP 의 PUT과 DELETE는 물론이고 연관된 POST GET 까지 캡슐화한 객체를 여럿 두고 구현한 애플리케이션도 있다. ( 예를 들어, 이미지 등록, 사용자 수정..등등의 여러 REST API) `모든 경우`에 적용할 수 있게 장식자를 일반화 하려면 어떻게 해야하는가??? ( 현재는 baseWebApi가 post와 getAll이 있는 녀석들을 받아야 한다. )
 - 공통의 기능을 상위 클래스 및 인터페이스로 일반화를 해보자.
 
-### strategy pattern
+### Strategy pattern
 
 - 전략 패턴은 특정 작업을 수행하는 다중 알고리즘, 즉 전략을 런타임 시 넣었다 뺐다 할 수 있는 모듈 단위로 나누기 위해 사용한다.
 - 특정 작업을 수행하는 서로 다른 알고리즘(운수회사 교통편 예약)을 분리하고, 런타임 시점에 알고리즘, 즉 전략을 동적으로 지정할 수 있게 해주는 패턴
@@ -964,7 +1066,7 @@ redicabTransportCompany = function(httpService) {
 };
 ```
 
-### proxy pattern
+### Proxy pattern
 
 - 프록시는 대리인이라는 뜻이다. 즉, 사용자가 원하는 행동을 하기 전에 한번 거쳐가는 단계라고 생각하면 된다.
 - 좋은 프록시는 사용자의 요청을 캐싱하여 성능을 높일 수도 있고, 에러를 잡아낼 수도 있지만 나쁘게 사용한다면 사용자의 요청을 왜곡하여 다른 동작을 하도록 만들 수 있다.
@@ -976,7 +1078,7 @@ redicabTransportCompany = function(httpService) {
 - 클라이언트가 접근하면 안 되는 자원을 통제한다.
 - HTTP 요청 n 개를 하나로 묶어 n-1개 요청에 따른 고정 비용을 줄인다.
 
-#### 시나리오
+#### 프록시 패턴 시나리오
 
 - 콘퍼런스 참가자 명단에서 클릭하면 프로필 전체를 볼수있게 한다.
 - 프로필 화면에는 사진이 적어도 하나 이상 등록되어 있어서 전체 프로필을 처음부터 죄다 끌어오고 싶지는 않다.
@@ -1033,18 +1135,241 @@ Conference.attendeeProfileProxy = function(
 };
 ```
 
-### chaning pattern
+### chainable pattern
 
 ### iterator pattern
 
-### mediator pattern
+### mediator pattern (중재자 패턴)
 
-### observer pattern
+- 중재자는 소통을 주도하고 이해 당사자를 이끌며, 각자의 이야기에 응답하고 다음단게로 나아간다.
+
+#### 중재자 패턴이란?
+
+- 소프트웨어 설게에서 중재자 패턴은 문제를 회피하는 방법이다.
+- 소프트웨어 시스템은 소통하는 코드를 줄일수록 오류 가능성이 적어진다.
+- 서로 다른, 또는 유사한 일을 하는 협력자(colleague)들과 이들을 조직하여 전체 성과를 끌어내는 단일 중재자로 이루어진다.
+- 가장 순수한 형태의 중재자는 별다른 비즈니스 로직 없이 협력자 사이의 움직임만 관장한다.
+
+#### 중재자 패턴 시나리오
+
+- 노드망이 있고 여기에 봇(bot) 서너 개가 돌아다닌다.
+- 플레이어(player) 2명은 이 봇을 빠른 속도로 모두 잡아 보드를 접수하면 게임은 끝난다.
+- 협력자 각자의 역할은 다음과 같다.
+  - player: 연결된 다른 노드로 이동하면서 mediator에게 자신의 움직임을 알린다.
+  - bot: player와 같다.
+  - gameLogic: 게임 종료 시점을 결정하는 로직 등이 있다. '정규 공간'을 그리고 player와 bot을 배치한다. 이들을 브라우저에 표시하는 일은 svgDisplay의 몫이다.
+  - svgDisplay: svg 요소에 게임판을 그린다. 처음에 mediator에게 지령을 받고 게임판을 그리지만, 그 이후에 mediator와 다시 이야기를 주고받지는 않는다.
+- mediator의 역할
+  - gameLogic(player와 bot)과 svgDisplay를 인스턴스화하고 게임을 초기화한다.
+  - 방향키에 이벤트 리스너를 건다.
+  - player/bot이 자신의 움직임을 알리면, gameLogic/svgDisplay에게도 소식을 알리고 gameLogic이 종료를 선언하면 자신이 걸어둔 이벤트 리스너를 푼다.
+  - player가 bot을 잡게되면 직접 bot을 내쫒는게 아니라 mediator에게 귀띔만 한다. 그러면 mediator는 다시 gameLogic에 통보하고, gameLogic은 충돌 여부를 살펴보고 bot을 지운다.
+  - gameLogic이 화면을 직접 고치는 건 아니고 mediator에게 한 번 더 메시지로 알리면 svgDisplay가 bot을 삭제한다.
+
+#### 협력자 개발
+
+player 객체는 게임판의 지리는 조금 알고 있지만, 게임이 언제 끝나는지, 다른 player는 몇 명인지, bot은 몇 개가 살아 돌아다니고 있는지 전혀 모른다.
+svg에 표시되고 있는 줄도 모른다.
+
+```javascript
+var Game = Game || {};
+
+Game.player = function player(mediator) {
+  'use strict';
+
+  var me;
+  var node;
+  var id = (Game.player.nextId === undefined? Game.player.nextId = 0 : ++Game.player.nextId); // 정적 변수 nextId
+  var listenEvent = 'keydown';
+  var elementWithKeydownAttached;
+  // 첫 번째 플레이어는 1-4키를 쓴다(keycode: 49 - 52)
+  // 두 번째 플레이어는 6-9키를 쓴다(keycode: 54 - 58)
+  var keycodeForPath0 = id % 2 ? 54 : 49;
+
+  function handleKeydown(e) {
+    var pathIx = e.keycode - keycodeForPath0;
+    if(keyIx >= 0 && pathIx < Game.pathIndex.count) {
+      me.move(pathIx);
+    }
+  }
+
+  var me = {
+    getId: function() {
+      return id;
+    },
+    setNode: function setNode(gameNode) {
+      node = gameNode;
+    },
+    getNode: function getNode() {
+      return node;
+    },
+    activate: function activate(elementForKeydown) {
+      // 키가 눌렸을때의 해당 엘리먼트
+      elementWithKeydownAttached = elementForKeydown;
+      elementWithKeydownAttached.addEventListener(listenEvent, handleKeydown)
+    },
+    deactivate: function deactivate() {
+      if(elementWithKeydownAttached) {
+        elementWithKeydownAttached.removeEventListener(listenEvent, handleKeydown);
+      }
+    },
+    move: function move(pathIndex) {
+      // pathIndex로 주어진 경로를 따라 플레이어를 이동시켜본다.
+      // 이동의 성공 여부를 true/false로 반환한다.
+      if(node.getConnectedNode(pathIndex)) {
+        me.setNode(node.getConnectedNode(pathIndex));
+        mediator.onPlayerMoved(me);
+
+        return true;
+      }
+
+      return false;
+    }
+  }
+
+  return me;
+}
+```
+
+#### 중재자 인터페이스 분리
+
+
+
+### observer pattern (관찰자 패턴)
 
 - 한 객체의 상태 변화에 따라 다른 객체의 상태도 연동되도록 일대다 객체 의존 관계를 구성 하는 패턴
 - 데이터의 변경이 발생했을 경우 상대 클래스나 객체에 의존하지 않으면서 데이터 변경을 통보하고자 할 때 유용
 - 통보 해야할 대상 객체의 관리를 Subject 클래스와 그 대상들이 꼭 구현을 해야할 observer 인터페이스로 일반화 한다.
 - 쉽게 여기서 통보 해야할 대상 객체는 구독자 라고 하고 그 구독자들은 update 함수를 구현해야할 약속을 이행하기 위한 observer 인터페이스를 갖는다. 또한 대상 객체의 관리를 하는 Subject는 신문사라고 생각 할 수 있다.
+
+#### 관찰차 패턴이란?
+
+- 관찰할 객체 (대상자)
+- 대상자를 지켜보는 객체 (관찰자)
+
+대상자는 관찰자에게 다음 세 기능을 반드시 제공한다.
+
+- 관찰자가 알림을 받을 수 있게 자신을 등록하는 기능
+- 관찰자가 알림을 그만 받도록 자신을 등록 해지하는 기능
+- 대상자가 관찰자에게 업데이트를 알리는 기능
+- 관찰자는 대상자가 변경 사실을 자신에게 알려줄 때 호출할 메서드를 건내준다.
+
+#### 관찰자 패턴 시나리오
+
+컨퍼런스 주최자는 참가자 등록 현황을 브라우저 새로 고침 없이 다음과 같이 두 가지 형태로 조회하고 싶다.
+
+- 총 등록자 인원수
+- 최근 등록을 마친 10인 명단
+
+여기서는 신규 등록자를 폴링하는 전용 모듈을 따로 두고 사용자에게 정보를 보여주는 모듈 2개를 업데이트하는 식으로 개발한다.
+폴링 모듈이 대상자고 화면 표시 모듈 2개가 관찰자가 된다.
+
+#### 관찰자 패턴 대상자 코드
+
+```javascript
+// 대상자 코드
+var Conference = Conference || {};
+
+Conference.recentRegisterationsService = function (registrationsService) {
+  'use strict';
+
+  var registrationsObservers = [];
+  var service = {
+    // 관찰자 추가
+    addObserver: function addObserver(observer) {
+      // ...
+      // observer 는 객체
+    },
+    // 관찰자 목록에서 관찰자를 삭제한다.
+    removeObserver: function removeObserver() {
+      var index = registrationsObservers.indexOf(observer);
+      if(index >= 0) {
+        registrationsObservers.splice(index,1)
+      }
+    },
+    // 관찰자 모두 삭제
+    clearObservers: function clearObservers() {
+      registrationsObservers = [];
+    },
+    // 주어진 관찰자가 등록되어 있으면 true, 그렇지 않으면 false 반환
+    hasObserver: function hasObserver(observer) {
+      return registrationsObservers.indexOf(observer) >= 0;
+    },
+    // 등록된 관찰자들이 각자 제공한 update 메서드 실행
+    updateObserver: function updateObserver(newAttendee) {
+      registrationsObservers.forEach(function executeObserver(observer) {
+        observer.update(newAttendee);
+      })
+    },
+    // 폴링을 멈춘다. 한번 멈춘 다음에는 다시 시작하지 않는다.
+    stopPolling: function stopPolling() {
+      if(pollingProcess) {
+        clearInterval(pollingProcess);
+        pollingProcess = false;
+      }
+    }, 
+  }
+
+  // 서버를 호출, 최종 조회 시점 이후로 등록한 참가자를 조회하여
+  // 참가자 배열의 프라미스를 반환한다.
+  var getNewAttendees = function getNewAttendees() {
+    return new Promise(function (resolve, reject) {
+      // ...
+      resolve([])
+    })
+  }
+
+  // 바로 polling 시작
+  var pollingProcess = setInterval(function pollForNewAttendees() {
+    getNewAttendees().then(function processNewAttendees(newAttendees) {
+      newAttendees.forEach(function updateWithNewAttendee(newAttendee) {
+        // recentRegisterationsService는 자신을 지켜보는 관찰자 모두 attendee 객체를 인자로 받는 update 함수를 표출한다고 전제한다.
+        service.updateObservers(newAttendee);
+      })
+    })
+  }, 15000)
+
+  return service;
+}
+```
+
+#### 관찰자 패턴의 관찰자 테스트
+
+- totalAttendeeCount 인스턴스가 자신을 recentRegistrationsService 인스턴스의 관찰자로 등록한다.
+- getCount 메서드는 모듈 함수에 준, 초기 인원수를 반환한다.
+- update 메서드를 실행하면 getCount가 반환한 값을 하나 늘린다.
+
+#### 관찰자 패턴의 관찰자 코드
+
+```javascript
+var Conference = Conference || {};
+
+// recentRegistrationsService 대상자
+Conference.totalAttendeeCount = function(initialCount, recentRegistrationsService) { 
+  'use strict';
+
+  var currentCount = initialCount;
+  var registrations = recentRegistrationsService;
+  var render = function render() {
+    // 현재 인원수를 DOM에 렌더링한다.
+  }
+
+  var module = {
+    // UI에 표시된 총 참가자 인원수를 반환한다.
+    getCount: function getCount() {},
+    // 총 참가자 인원수를 늘린다.
+    update: function update(newAttendee) {
+      currentCount++;
+      render();
+    }
+  }
+
+  // 모듈을 recentRegistrationsService의 관찰자로 추가한다.
+  registrations.addObserver(module);
+
+  return module;
+}
+```
 
 ### pubSub pattern
 
