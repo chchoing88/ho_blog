@@ -158,17 +158,18 @@ Aop = {
 
 ## Pattern
 
-### callback pattern
+### Callback pattern
 
-- 콜백은 나중에 실행할 부차 함수에 인자로 넣는 함수다. 즉, 함수를 넘겨주면 나중에 실행시켜줘 라고 하는 것과 같다.
-- 여기서 콜백이 실행될 '나중' 시점이 부차 함수의 실행 완료 이전이면 동기, 반대로 실행 완료 이후면 비동기라고 본다.
+- 콜백은 나중에 실행할 부차 함수(second function)에 인자로 넣는 함수다. 즉, 함수를 넘겨주면 나중에 실행시켜줘 라고 하는 것과 같다.
+- 여기서 콜백이 실행될 '나중' 시점이 부차 함수의 실행 완료 이전이면 `동기`(synchronous), 반대로 실행 완료 이후면 `비동기`(asynchronous)라고 본다.
 
 #### 단위 테스트
 
 - 콜백 실행 횟수가 정확한가?
 - 콜백이 실행될 떄마다 알맞은 인자가 전달 되는가?
 - 스파이 함수를 이용하면 이런일에 제격이다.
-- 콜백함수를 곧장 콜백으로 넘기기 보다는 별도의 기능 모듈로 분리할 수 있다면 추출해서 따로 테스트를 진행하자.
+- 익명 콜백함수를 곧장 콜백으로 넘기기 보다는 별도의 기능 모듈로 분리할 수 있다면 추출해서 따로 테스트를 진행하자.
+- 익명 함수는 디버깅을 매우 어렵게 만든다.
 
 #### 시나리오
 
@@ -181,13 +182,25 @@ Aop = {
 
 ```javascript
 var C = {};
+
+// 참가자 체크인 여부를 비롯한 각종 정보를 attendee 함수가 생성한 객체에 담아둔다.
+C.attendee = function(firstName, lastName) { 
+  //...
+
+  return { 
+    getFullName: function() {},
+    isCheckedIn: function() {},
+    checkIn: function() {}
+  }
+}
+
 // singleton
 var C.attend = function(name){
   var fullName = name;
   return {
-    registry: function(){},
-    isRegistry: function(){},
-    getFullName: function(){}
+    registry: function() {},
+    isRegistry: function() {},
+    getFullName: function() {}
   }
 }
 
@@ -217,7 +230,9 @@ var C.attendeeCollection = function(){
       if (index > -1) {
         attendees.splice(index, 1);
       }
-
+    },
+    getCount: function() {
+      return attendees.length;
     },
     iterate: function (callback) {   // 반복..
       // attendees의 각 attendee에 대해 콜백을 실행한다..
@@ -228,13 +243,12 @@ var C.attendeeCollection = function(){
   }
 }
 
+var attendees = C.attendeeCollection();
 function addAttendeesToCollection(attendeeArray) {
       attendeeArray.forEach(function(attendee) {
         collection.add(attendee);
       });
 }
-
-var attendees = C.attendeeCollection();
 addAttendeesToCollection([attendee1, attendee2]);
 attendees.iterate(function doCheckIn(attend) { // 익명의 콜백함수 -> 디버깅 용이함을 위해 이름을 지정한다.
   attend.checkIn();
@@ -242,12 +256,15 @@ attendees.iterate(function doCheckIn(attend) { // 익명의 콜백함수 -> 디�
 });
 
 // 참가자 체크인은 중요한 기능이므로 checkInService 자체 모듈에 캡슐화 하자.
+// 체크인 로직을 attendeeCollection에서 분리하여 코드를 재사용할 수도 있다.
 // 외부 시스템의 체크인 등록 기능을 별도의 책임으로 보고 등록용 객체를 cehckInSevice에 주입하자.
+// checkInRecorder 주입
 C.checkInService = function(checkInRecorder) {
   const recorder = checkInRecorder;
 
   return {
-    checkIn: function(attendee) {
+    checkIn: function(attendee) { // attendee 주입
+      // attendeeCollection 에서의 attendee 한명
       attendee.checkIn();
       recorder.recordCheckIn(attendee);
     }
@@ -259,21 +276,60 @@ const checkInService = C.checkInService(C.checkInRecorder())
 const attendees = C.attendeeCollection()
 
 attendees.iterate(checkInService.checkIn);
-
 ```
 
 #### 주의사항
 
 - 콜백을 사용할때는 디버깅에 용이하기 위해 이름을 붙여주자.
 - 콜백 헬이 발생할때는 편 코딩으로 해결할수 있다.
-- 콜백 함수 안의 this를 주의하자.
+- 콜백 함수 안의 this를 주의하자. this 값은 함수를 호출한 (대게 함수 앞에 점으로 연결한) 객체를 가리키지만, 콜백 함수를 만들어 넣을 때 어떤 객체를 참조하라고 직접 지정할 수는 없다. 이런 이유로 콜백 함수는 대부분 this를 명시적으로 가리킨다.
+
+```javascript
+var Conference = Conference || {};
+
+// 체크인을 마친 attendeeCollection의 attendee 객체 수를 세는 모듈
+Conference.checkedInAttendeeCounter = function() {
+  var checkedInAttendees = 0;
+  
+  return {
+    increment: function() {},
+    getCount: function() {},
+    countIfCheckedIn: function(attendee) {
+      if(attendee.isCheckedIn()) {
+        // this.increment(); // 이부분의 this 가 문제..
+      }
+    }
+  }
+}
+
+// test시에
+var count = Conference.checkedInAttendeeCounter();
+count.countIfCheckedIn.call({}, attendee) // this가 checkedInAttendeeCounter를 꼭 가리키는건 아니라는걸 판별하자.
+
+// 해결 
+Conference.checkedInAttendeeCounter = function() {
+  var checkedInAttendees = 0;
+  var self = {
+    increment: function() {},
+    getCount: function() {},
+    countIfCheckedIn: function(attendee) {
+      if(attendee.isCheckedIn()) {
+        // this.increment(); // 이부분의 this 가 문제..
+        self.increment();
+      }
+    }
+  }
+
+  return self;
+}
+```
 
 #### 정리
 
 - 한가지 일을 여러번 수행해야 할때 함수하나를 인자로 보내(콜백 패턴) 여러번 호출을 진행할수 있다.
 - A작업이 끝난뒤에 B작업이 수행되어지길 바랄때 콜백 패턴을 이용할 수 있다.
 
-### promise pattern
+### Promise pattern
 
 - 비동기 액션을 초기화하고 성공과 실패 케이스를 각각 처리할 콜백을 준다.
 - 이벤트 기반의 비동기 프로그래밍보다 훨씬 더 이해하기 쉽고 우아하며 탄탄한 코드를 작성할 수 있다.
