@@ -1252,7 +1252,88 @@ Game.player = function player(mediator) {
 
 #### 중재자 인터페이스 분리
 
+- 각 협력자들은 중재자의 특정 메서드를 호출한다. 이에 그에 맞는 중재자 인터페이스를 갖춰야 한다.
+- 중재자 코드를 사용하는 커스터머들은 협력자들이고 협력자들에 맞춰서 중재자 구현을 짜는 것이 의존성 역전 원칙(Dependency Inversion Principle)이라 할 수 있다.
+- 여기서는 중재자에게 규약을 정해서 협력자(커스터머)들이 사용하게 만들 수 있고 반대로, 협력자(커스터머)가 중재자 규약을 지니고 있고 중재자가 구현을 하도록 만들 수 있다.
+- 전자의 경우에는 중재자가 변경된다면 규약까진 변경 될 순 있지만 그것을 사용하고 있는 협력자를 찾아서 전부 고쳐야 하는 문제가 있다.
+- 후자의 경우에는 인터페이스를 사용하는 모듈마다(즉, 커스터머(협력자)) 규약을 적용해야 하므로 코드가 반복될 수 있는 문제가 있다.(DRY 원칙에 어긋)
 
+#### 중재자 개발
+
+```javascript
+var Game = Game || {};
+
+Game.mediator = function mediator() {
+  'use strict';
+
+  var logic;
+  var display;
+  var startTime;
+  var svgElement = document.getElementById('gameSvg');
+
+  function moveBotStartInLogicAndOnDisplay(bot) {
+    logic.onMotMoveStart(bot);
+    display.onBotMoveStart(bot);
+  }
+
+  var med = {
+    startGame: function startGame() {
+      logic.getPlayers().forEach(function (player) {
+        player.activate(document.getElementById('gameInput'));
+      });
+      startTime = new Date();
+    },
+    // 플레이어가 이동하면 이 함수를 호출한다.
+    onPlayerMoved: function onPlayerMoved(player) {
+      logic.onPlayerMoved(player);
+      display.onPlayerMoved(player);
+    },
+    // 봇이 이동하기 시작하면 이 함수를 호출한다.
+    onBotMoveStart: function onBotMoveStart(bot) {
+      moveBotStartInLogicAndOnDisplay(bot);
+    },
+    // 봇이 이동을 마치면 이 함수를 호출한다.
+    onBotMoveEnd: function onBotMoveEnd(bot) {
+      logic.onBotMoveEnd(bot);
+    },
+    // 봇이 잡히면 게임 로직이 이 함수를 호출한다.
+    onBotHit: function onBotHit(bot) {
+      bot.setNode(undefined);
+      moveBotStartInLogicAndOnDisplay(bot);
+    },
+    // 게임 로직이 이 함수를 호출하여 게임을 끝낸다.
+    endGame: function endGame() {
+      var millisecondsToWin = new Date() - startTime;
+
+      logic.getPlayers().forEach(function (player) {
+        player.deactivate();
+      });
+
+      // 누가 이겼는지 디스플레이가 표시하기 전에
+      // setTimeOut을 써서 마지막 봇을 삭제할 시간을 준다.
+      setTimeout(function() {
+        display.endGame(millisecondsToWin);
+      }, 500)
+    }
+  }
+
+  // mediator가 인스턴스화되면 두 협력자 gameLogic과 svgDisplay를 생성한다.
+  // 그런 다음 gameLogic이 player와 bot을 만든다.
+  var logic = Game.gameLogic(med, 6, 7);
+  var display = Game.svgDisplay(med, svgElement, logic);
+
+  return med;
+}
+```
+
+player 협력자 코드는 다음과 같이 실행된다.
+
+1. activate 메서드는 주어진 방향키를 누르면 알맞은 player의 move 메서드를 호출할 이벤트 리스너를 추가한다.
+2. 새 노드로 정상 이동하면 player.move가 mediator.onPlayerMoved 메서드를 호출한다.
+3. 이 메서드는 player의 이동 사실을 gameLogic과 svgDisplay에게 알린다.
+4. 마지막으로 gameLogic이 게임 종료를 선포한 후 mediator.endGame이 이벤트 리스너를 풀리기 전까지 2,3번 단계를 반복한다.
+
+mediator의 주된 관심사는 자신이 몰라도 될 객체들 사이의 움직임을 조정하는 일이다.
 
 ### observer pattern (관찰자 패턴)
 
