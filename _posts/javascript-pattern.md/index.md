@@ -159,6 +159,7 @@ Aop = {
 ## 인터페이스
 
 - 인터페이스는 `기능이 정의된 모듈`과 그것을 `사용할 모듈 사이`에 일종의 규약(contract)처럼 쓰인다.
+- 인터페이스 분리 원칙은 객체 사용부가 할 일을 단순화하고 변경에 따른 영향도를 개발자가 잘 파악할 수 있게 해준다.
 
 ### 규약 정의
 
@@ -224,8 +225,8 @@ ReliableJavascript.contractRegistry = function() {
 
       Aop.around(funcName,
         function(targetInfo) {
-          var ret = Aop.next(targetInfo);
-          self.assert(contractName, ret)
+          var ret = Aop.next(targetInfo); // 실제 모듈을 호출해서 객체를 얻는다.
+          self.assert(contractName, ret): // 실제 모듈이 contractName을 지켰는지 확인한다.
         }, funcObj)
     },
     messages: {
@@ -248,6 +249,24 @@ ReliableJavascript.contractRegistry = function() {
 // 이 함수를 호출하여 Conference.attendee() 가 올바르게 attendee를 생성했는지 확인하는 애스팩트를 설치한다.
 Conference.attendeeContracts = function attendeeContracts(registry) {
   'use strict';
+
+  var attendeePersonalInfo = 'Conference.attendee.personalInfo';
+  var attendeeCheckInManagement = 'Conference.attendee.checkInManagement';
+
+  function fulfillsPersonalInfo(att) {
+    //...
+  }
+
+  function fullfillsCheckInManagement(att) {
+    // ...
+  }
+
+  registry.define(attendeePersonalInfo, fulfillsPersonalInfo);
+  registry.define(attendeeCheckInManagement, fullfillsCheckInManagement);
+
+  // 실제 Conference의 attendee를 호출해서 attendeePersonalInfo 가 맞는 지 확인한다.
+  registry.attachReturnValidator('attendee', Conference, attendeePersonalInfo);
+  registry.attachReturnValidator('attendee', Conference, attendeeCheckInManagement);
   
 }
 
