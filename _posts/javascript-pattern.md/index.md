@@ -535,6 +535,7 @@ function getRestaurantsCurried(address) {
 - 그러나 위 `addGetRestaurantsNearConference` 구현부를 보면 알 수 있듯이 오히려 정반대에 가깝다.
 - 즉, 부분 적용 함수는 이전 단계에서 생성된 커링 요소에 뭔가 더 보태서 부분 적용 함수 버전과 기능이 같은 함수로 만든 것이다.
 
+
 ```javascript
 function getRestaurantsNearConference(cuisine) {
   return getRestaurantsCurried("울산")(2.0)(cuisine);
@@ -551,6 +552,11 @@ function getRestaurantsNearConference(cuisine) {
 - 그러니 검색 결과를 어디다가 저장해놓았다가 다른 참가자가 같은걸 요구하게 되면 그 데이터를 그대로 반환하면 좋을꺼 같다.
 - 현재 제공되고 있는 api에 퍼사드(facade)나 래퍼(wrpper)를 끼워넣고 이전 검색 결과를 저장/반환하는 기능을 붙이면 된다.
 - 여기서 퍼스드의 경우에는 프로그래밍을 잘 모르는 사용자에게 최소한의 api만 공개하는, 이렇게 일부만 노출하는 패턴을 퍼사드 패턴이라고 한다.
+
+#### 단위 테스트
+
+- 여러 번 호출해도 서드파티 API는 딱 한 번만 질의한다.
+- 다시 호출하면 이전에 서드파티 API가 반환했던 음식점 정보를 그대로 반환한다.
 
 #### code
 
@@ -573,6 +579,36 @@ memoizedRestaurantApi = function (thirdPartyApi) {
       return returnPromise;
     }
   }
+```
+
+메모이제이션 애스팩트
+
+```javascript
+var Aspects = Aspects || {};
+
+Aspects.returnValueCache = function() {
+  'use strict';
+
+  var cache = {};
+
+  return {
+    advice: function(targetInfo) {
+      var cacheKey = JSON.stringify(targetInfo.args);
+
+      if(cache.hasOwnProperty(cacheKey)) {
+        return cache[cacheKey];
+      }
+
+      var returnValue = Aop.next(targetInfo); // 원본 함수
+      cache[cacheKey] = returnValue;
+
+      return returnValue;
+    }
+  }
+}
+
+// 사용법
+Aop.around('getRestaurantsWithinRadius', Aspects.returnValueCache().advice, api);
 ```
 
 ### singleton pattern
