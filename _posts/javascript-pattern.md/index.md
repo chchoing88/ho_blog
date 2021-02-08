@@ -840,10 +840,10 @@ Conference.WidgetSandbox = function() {
   // var widgetFunction = arguments[arguments.length -1],
   //   toolsToLoad = [];
 
-  //arguments에서 *진짜* 배열을 추출한다.
+  // arguments에서 *진짜* 배열을 추출한다.
   argsArray = Array.prototype.slice.call(arguments);
 
-  //배열 마지막 원소는 widgetFunction일 것이다..
+  // 배열 마지막 원소는 widgetFunction일 것이다..
   widgetFunction = argsArray.pop();
 
   if (typeof widgetFunction !== "function") {
@@ -959,7 +959,7 @@ WidgetTools.toolA = function(sandbox) {
 };
 ```
 
-- 여기서 샌드박스의 역활은 샌드박스를 new로 선언하면서 해당 this안에 도구와 위젯을 가둬두는 것이다.
+- 여기서 샌드박스의 역활은 샌드박스를 new로 선언하면서 해당 this안에 도구와 위젯을 가둬두는 것이다. 즉, 새로운 객체 안에 위젯과 도구를 함께 등록해서 사용할 수 있게 만든다. 이때 만들어진 객체는 모래밭의 경계가 되어 다른 어떤 것에도 영향을 미치지 않게 도와준다.
 - 도구1(this), 도구2(this), ... 도구n(this), 위젯(this) 이렇게 순차대로 호출하면 위젯에서는 원하는 도구를 this.도구1 , this.도구2 이런식으로 활용할 수 있다.
 
 ### decoration pattern
@@ -1105,7 +1105,7 @@ attendeeWebApiDecorator = function(baseWebApi) {
 };
 ```
 
-#### 정리
+#### 데코레이션 정리
 
 - 기존의 api 호출을 하는 객체를 사용한다면, post 호출후 어떤식으로든 완료가 되고 getAll로 그 리스트를 가져와야 하는 일련의 시간을 사용자가 기다리게 마련이다.
 - 이런 경험을 높히기 위해서 기존 api 호출 하는 객체에 추가 기능을 래퍼 객체로 만들어 주었다.
@@ -1121,14 +1121,14 @@ attendeeWebApiDecorator = function(baseWebApi) {
 - 특정 작업을 수행하는 서로 다른 알고리즘(운수회사 교통편 예약)을 분리하고, 런타임 시점에 알고리즘, 즉 전략을 동적으로 지정할 수 있게 해주는 패턴
 - 여기서 팩토리 패턴을 사용함으로써 테스트가 덜 복잡해지고 전략을 추가/삭제할 때도 실행 콘텍스트는(transportScheduler) 전혀 고칠 필요가 없다.
 
-#### 시나리오
+#### 전략 시나리오
 
 - 웹사이트에서 참가자는 자신이 선택한 택시 회사에 요청을 보내고 그 회사가 발급한 에약 확인번호를 돌려받는 식으로 콘퍼런스 행사장 교통편을 예약할 수 있다.
 - 택시 회사에서는 웹사이트 대시보드를 보면서 예약 상황을 모니터링하고, 주최자 역시 회사별 이용 실적이 얼마나 되는지 확인할 수 있어야 한다.
 - 운수회사 모듈 생성을 통틀어 관장하는 팩토리 함수를 하나 만드는게 좋을거 같다.
 - 여기서 운수회사별 모듈이 바로 전략이다.
 
-#### code
+#### 전략 code
 
 ```javascript
 transportScheduler = function(
