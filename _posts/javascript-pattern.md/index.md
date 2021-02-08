@@ -474,19 +474,19 @@ Promise 기반 코드를 테스트할 때 조심할 함정에 대해서는 다�
 - 값이 불면인 상수 인자를 지난 함수 호출부는 `상수성(constancy)을 캡슐화`하여 함수를 새로 만드는 것이 좋다.
 - 커링은 여러 인자를 거느린 함수를 인자 하나만으로 취하는 여러 단계의 함수들로 쪼갠다.
 
-#### 시나리오
+#### 부분 패턴 시나리오
 
 - 행사장 근처에 있는 음식점 위치를 알려주는 서드파티 웹 서비스가 있다고 하자.
 - `getRestaurantsWithinRadius(address, radiusMiles, cuisine)` 요건상 address와 cuisine부분은 변경의 필요성이 없어 보인다.
 - `restaurantApi` 에서 반환하는 api 객체에 새로운 메서드를 집어넣기로 하자.
 - address 와 raius 파라미터를 고정한 채 `getRestaurnatsNearConference(cuisine)` 가 `getRestaurantsWithinRadius` 반환값을 무조건 반환하게 하자.
 
-#### 단위 테스트
+#### 부분 패턴 단위 테스트
 
 - 올바른 인자로 기존 api를 잘 호출하고 있는가?
 - 기존 api에서 반환되는 값을 잘 반환하고 있는가?
 
-#### code
+#### 부분 패턴 code
 
 ```javascript
 function addGetRestaurantsNearConference(targetInfo) {
@@ -535,7 +535,6 @@ function getRestaurantsCurried(address) {
 - 그러나 위 `addGetRestaurantsNearConference` 구현부를 보면 알 수 있듯이 오히려 정반대에 가깝다.
 - 즉, 부분 적용 함수는 이전 단계에서 생성된 커링 요소에 뭔가 더 보태서 부분 적용 함수 버전과 기능이 같은 함수로 만든 것이다.
 
-
 ```javascript
 function getRestaurantsNearConference(cuisine) {
   return getRestaurantsCurried("울산")(2.0)(cuisine);
@@ -546,19 +545,19 @@ function getRestaurantsNearConference(cuisine) {
 
 - 일명 기억패턴 , 보통 함수 호출시 전달받은 인자를 키로 그 반환 결과를 어떤 구조체에 저장하고, 같은 키를 인자로 다시 함수를 호출하면 저장해둔 값을 꺼내어 바로 바환한다. 물론, 이때 함수 본체는 그냥 건너 뛴다.
 
-#### 시나리오
+#### 메모이제이션 시나리오
 
 - 서드파티 api가 요청 건당 과금을 하는 통해 카드 청구서가 수북하다.
 - 그러니 검색 결과를 어디다가 저장해놓았다가 다른 참가자가 같은걸 요구하게 되면 그 데이터를 그대로 반환하면 좋을꺼 같다.
 - 현재 제공되고 있는 api에 퍼사드(facade)나 래퍼(wrpper)를 끼워넣고 이전 검색 결과를 저장/반환하는 기능을 붙이면 된다.
 - 여기서 퍼스드의 경우에는 프로그래밍을 잘 모르는 사용자에게 최소한의 api만 공개하는, 이렇게 일부만 노출하는 패턴을 퍼사드 패턴이라고 한다.
 
-#### 단위 테스트
+#### 메모이제이션 단위 테스트
 
 - 여러 번 호출해도 서드파티 API는 딱 한 번만 질의한다.
 - 다시 호출하면 이전에 서드파티 API가 반환했던 음식점 정보를 그대로 반환한다.
 
-#### code
+#### 메모이제이션 code
 
 ```javascript
 memoizedRestaurantApi = function (thirdPartyApi) {
@@ -581,7 +580,9 @@ memoizedRestaurantApi = function (thirdPartyApi) {
   }
 ```
 
-메모이제이션 애스팩트
+#### 메모이제이션 애스팩트 생성하기
+
+- 목표 : 다른 코드에서도 메모이제이션 덕을 보게끔 메모이제이션 코드를 위 `memoizedRestaurantApi`에서 추출하여 애스팩트로 옮기는 것이다.
 
 ```javascript
 var Aspects = Aspects || {};
@@ -593,6 +594,7 @@ Aspects.returnValueCache = function() {
 
   return {
     advice: function(targetInfo) {
+      // 함수에 넘긴 인자를 캐시 키로 사용한다.
       var cacheKey = JSON.stringify(targetInfo.args);
 
       if(cache.hasOwnProperty(cacheKey)) {
@@ -611,18 +613,61 @@ Aspects.returnValueCache = function() {
 Aop.around('getRestaurantsWithinRadius', Aspects.returnValueCache().advice, api);
 ```
 
+#### returnValueCache 애스팩트를 restaurantApi에 적용하기
+
+```javascript
+// getRestaurantsWithinRadius에 메모이제이션 패턴 적용
+Aop.arount(
+  // 반환값을 수정해야 할 함수
+  'restarantApi',
+
+  // 반환값을 수정하는 함수
+  function addMemoizationToGetRestatantsWithinRadius(targetInfo) {
+    var api = Aop.next.call(this, targetInfo);
+
+    Aop.around('getRestaurantsWithinRadius', Aspects.returnValueCache().advice, api);
+
+    return api;
+  }, 
+  ThirdParty
+)
+
+// ThirdParty.restaurantApi()에 getRestaurantsNearConference 멤버 추가
+Aop.around(
+  'restarantApi',
+
+  // 반환값을 수정하는 함수
+  function addGetRestaurantsNearConference(targetInfo) {
+    'use strict';
+
+    var api = Aop.next.call(this, targetInfo);
+
+    // API에 추가할 함수
+    function getRestaurantsNearConference(cuisine) {
+      return api.getRestaurantsWithinRadius('포항', 2.0, cuisine)
+    }
+
+    // 없으면 이 함수를 추가한다.
+    api.getRestaurantsNearConference = api.getRestaurantsNearConference || getRestaurantsNearConference;
+
+    return api;
+  },
+  ThirdParty
+)
+```
+
 ### singleton pattern
 
 - 다중 객체 인스턴스를 만들 필요가 없거나, 오히려 만들면 안 될 때도 있다. 이렇게 하나의 객체 인스턴스만 존재해야 할 때는 싱글톤 패턴을 사용한다.
 
-#### 시나리오
+#### 싱글톤 패턴 시나리오
 
-- 위에서 생각해봤던 메모이제이션을 적용했던 `restaurantApi` 의 인스턴스(api)가 2개 만들어져서 각각 똑같은 인자로 `getRestaurantsWithinRadius` 함수를 2번 객체를 호출하면 1번 객체의 함수 호출 후 캐시된 결과를 다시 사용할까???
-- 여기서 "1번 객체 함수 호출로 캐시된 결과를 다시 사용해" 라고 대답할 수 있어야 한다.
-- 이런 인스턴스들이 전부 따로 캐시를 두지 않고 단일 캐시를 공유할 수 있으면 이상적이다.
+- 위에서 생각해봤던 메모이제이션을 적용했던 `restaurantApi` 인스턴스(api)가 2개 만들어져 각각 똑같은 인자로 `getRestaurantsWithinRadius` 함수를 2번 객체를 호출하면 1번 객체의 함수 호출 후 캐시된 결과를 다시 사용할까???
+- 위 질문에서 "1번 객체 함수 호출로 캐시된 결과를 다시 사용해" 라고 대답할 수 있어야 한다.
+- `restaurantApi` 인스턴스들이 전부 따로 캐시를 두지 않고 단일 캐시를 공유할 수 있으면 이상적이다.
 - 의존성 주입으로 인스턴스간에 캐시 객체를 공유할수 있게 해주면 좋을듯 싶다.
 
-#### code
+#### 싱글톤 패턴 code
 
 ```javascript
 // 공유할 캐시 객체를 주입받는다.
@@ -660,11 +705,18 @@ simpleCache = function() {
 };
 ```
 
-- 위 캐시는 함수라서 이 함수를 실행하게 되면 각자 객체 인스턴스를 생성하기 때문에 다시 같은 문제를 야기하게 된다.
-  그래서 다들 단일 인스턴스를 바라보게 하려면 즉시 실행을 응용하여 싱글톤 패턴을 구현하는 것이 좋다.
+- 객체 리터럴을 공유 캐시로 쓸 때는 객체 리터럴이 이미 싱글톤이니 캐시 인스턴스가 하나만 있다는 사실이 명백했다.
+- 위 `simpleCache` 캐시는 함수라서 이 함수를 실행하게 되면 각자 객체 인스턴스를 생성하기 때문에 다시 같은 문제를 야기하게 된다.
+- `restaurantApi` 인스턴스가 다들 단일 인스턴스를 바라보게 하려면 즉시 실행을 응용하여 싱글톤 패턴을 구현하는 것이 좋다.
+- 다음 코드 `RestaurantsWithinRadiusCache` 모듈은 호출할 때마다 똑같은 `simpleCache` 인스턴스를 반환하는 단일 함수인 `getInstance`를 표출한다.
 
 ```javascript
-const getRestaurantsWithinRadius = (function() {
+const Conference = Conference || {};
+Conference.caches = Conference.cache || {};
+
+// restaurantApi.getRestaurantsWithinRadius 함수에서
+// 캐시로 사용할 simpleCache(싱글톤) 생성
+Conference.caches.RestaurantsWithinRadiusCache = (function() {
   "use strict";
 
   var instance = null;
@@ -685,17 +737,24 @@ const cache = RestaurantsWithinRadiusCache.getInstance();
 - 팩토리 패턴은 객체를 단순히 찍어내는 함수이다.
 - Object.create 메서드 역시 언어 자체에 포함된 팩토리이다.
 - 모듈은 데이터 감춤이라는 부가 기능이 있지만, 객체 생성/반환이 주 임무라는 점에서 엄밀히 말하면 팩토리 이다.
-- 일반 new 나 일반 함수를 호출해서 객체를 만들어 쓰면 되는데, 굳이 팩토리를 이용하는 이유는 '제어와 추상화'를 강화하기 위해서이다.
+- 일반 new 나 일반 함수를 호출해서 객체를 만들어 쓰면 되는데, 굳이 팩토리를 이용하는 이유는 `제어와 추상화`를 강화하기 위해서이다.
 - 용도에 특화된 유형별 create 메서드가 여럿 있는 팩토리도 있다.
 - 팩토리엔 대부분 create 같은 이름의, 하나 또는 그 이상의 파라미터를 받는 메서드가 하나 있다. 이 메서드는 전달 받은 파라미터를 살펴보고 알맞은 객체를 내어준다.
+- 팩토리는 객체 생성을 강력하게 다스리고 한 겹 더 추상화한다.
 
-#### 시나리오
+#### 팩토리 패턴 시나리오
 
-- 유형이 다른 두가지의 프레젠테이션 모델링을 해보자.
+- 유형이 다른 두가지의 프레젠테이션 모델링을 고민 해보자.
 - 일반은 제목과 발표자 정보가 있고, 벤더 프레젠테이션은 여기에 벤더명, 제품정보가 추가된다.
 - 프로퍼티 뭉치로 되어있는 객체를 하나 받았을때 프레젠테이션 유형은 알아서 판단하고 싶다.
 
-#### code
+#### 팩토리 단위 테스트
+
+1. create 함수는 잘못된 파라미터를 받지 않는다.
+2. 파라미터가 정상적으로 전달되면 그에 따른, 원객체의 생성함수를 정확히 호출한다.
+3. 이렇게 하여 반환된 객체가 바로 create가 반환한 객체다.
+
+#### 팩토리 패턴 code
 
 ```javascript
 // 팩토리에서 하는일
@@ -704,12 +763,10 @@ const cache = RestaurantsWithinRadiusCache.getInstance();
 // 3. 나중에 유형이 다른 프레젠테이션도 얼마든지 추가할 수 있다.
 // 4. new 키워드로 객체를 생성해야 한다는 사실을 팩토리가 대신 기억해준다. 팩토리 안에서 new...
 
-// 팩토리 단위 테스트에서는 다음을 확인하자
-// 1. create 함수는 잘못된 파라미터를 받지 않는다.
-// 2. 파라미터가 정상적으로 전달되면 그에 따른, 원객체의 생성함수를 정확히 호출한다.
-// 3. 이렇게 하여 반환된 객체가 바로 create가 반환한 객체다.
+const Conference = Conference || {};
 
-presentationFactory = function() {
+
+Conference.presentationFactory = function presentationFactory() {
   "use strict";
 
   return {
@@ -754,18 +811,21 @@ presentationFactory = function() {
 - 단일 전역 변수에 지나치게 의존하지 않고 점으로 길게 연결된 이름을 가진 타입이 범람하지 않게 한다.
 - 다른 모듈 및 샌드박스에 전혀 영향을 주지 않고 어떤 모듈을 '실행할 수 있는' 독자적 환경을 구축한다는 점
 
-#### 시나리오
+#### 샌드박스 시나리오
 
 - 대시보드 특성 측면상 대시보드는 보통 담당자 별로 보고 싶어하는 타입으로 커스터마이징을 할수 있어야 한다. 예를 들면 어떤 사람은 a,b 만을 어떤 사람은 a,c 만을 보고 싶어할 수도 있다.
 - 각 위젯마다의 의존성은 없어야 겠다.
 - 우선 이런 위젯들을 서로 떼어놓을수 있다면 테스트와 구성 요소간 결합도가 낮아진다. 이에 해결책은 각각 위젯을 자신의 샌드박스에 가둬두자.
 
-#### code
+#### 샌드박스 code
 
 - 샌드박스 편
+- WidgetSandbox의 목표는 대시보드 위젯 간 결합도를 낮추고 떼어놓는 일이다.
 
 ```javascript
-WidgetSandbox = function() {
+const Conference = Conference || {};
+
+Conference.WidgetSandbox = function() {
   "use strict";
 
   // new로 실행했는지 보장한다..
@@ -811,7 +871,10 @@ WidgetSandbox = function() {
 - 위젯 편
 
 ```javascript
-attendeeNamesWidget = function(sandbox) {
+const Conference = Conference || {};
+Conference.Widgets = Conference.Widgets || {};
+
+Conference.Widgets.attendeeNamesWidget = function(sandbox) {
   "use strict";
 
   // 해당 도구를 사용할 수 없으면 즉시 실패처리를 한다.
@@ -835,9 +898,13 @@ attendeeNamesWidget = function(sandbox) {
 ```
 
 - 도구 편
+- 도구를 모듈로 정의하면 도구마다 모듈 함수가 WidgetSandbox 인스턴스를 받고, 다음 코드 처럼 도구가 스스로 WidgetSandbox 프로퍼티에 추가한다.
 
 ```javascript
-WidgetTools.attendeeNames = function(sandbox, injectedAttendeeWebApi) {
+const Conference = Conference || {};
+Conference.WidgetTools = Conference.WidgetTools || {};
+
+Conference.WidgetTools.attendeeNames = function(sandbox, injectedAttendeeWebApi) {
   "use strict";
 
   // attendeeApi를 선택적으로 주입할 수 있게 코딩한다 단위 테스트 할때 유용하다.
@@ -859,11 +926,23 @@ WidgetTools.attendeeNames = function(sandbox, injectedAttendeeWebApi) {
 };
 ```
 
-#### 정리
+#### 샌드박스 정리
 
 - WidgetSandbox는 new로 호출되어야 한다. 여러 샌드박스를 만들기 위해서 위젯 하나당 하나의 widgetSandbox 인스턴스를 가진다고 생각하면 될듯 싶다.
 - 도구들은 모듈로 정의를 하고 도구마다 모듈 함수가 WidgetSandbox 인스턴스를 받고 도구가 스스로를 WidgetSandbox 인스턴스의 프로퍼티에 추가한다.
-- WidgetSandbox 생성자는 다음둘중 하나를 받는다. 첫 번째 인자는 위젯에서 쓸 도구명이 담긴 배열, 두번째 인자는 위젯함수 또는 도구명을 개별 인자로 죽 나열하고 위젯 함수를 제일 마지막 인자에 넣는다.
+- WidgetSandbox 생성자는 다음둘중 하나를 받는다.
+  - 첫 번째 인자는 위젯에서 쓸 도구명이 담긴 배열, 두번째 인자는 위젯함수 또는 도구명을 개별 인자로 죽 나열하고 위젯 함수를 제일 마지막 인자에 넣는다.
+
+  ```javascript
+  const weatherSandbox = new Conference.WidgetSandbox(['toolA', 'toolB'], Conference.widgets.weatherWidget);
+  ```
+
+  - 도구명을 개별 인자로 죽 나열하고 위젯 함수를 제일 마지막 인자에 넣는다.
+
+  ```javascript
+  const weatherSandbox = new Conference.WidgetSandbox('toolA', 'toolB', Conference.widgets.weatherWidget);
+  ```
+
 - 각 도구들은 싱글톤 객체이다.
 - 위젯샌드박스에서 각 도구를 실행시키면 this ( 여기서 this는 WidgetSandbox 의 인스턴스가 되겠다.) 에 도구 이름으로 된 프로퍼티로 도구 스스로가 등록하게 된다.
 
@@ -881,7 +960,7 @@ WidgetTools.toolA = function(sandbox) {
 ```
 
 - 여기서 샌드박스의 역활은 샌드박스를 new로 선언하면서 해당 this안에 도구와 위젯을 가둬두는 것이다.
-- 도구1(this), 도구2(this), ... 도구n(this), 위젯(this) 이렇게 순차대로 호출하면 위젯에서는 원하는 도구를 this.도구1 , this.도구2 이런식으로 활용할 수 있겟다.
+- 도구1(this), 도구2(this), ... 도구n(this), 위젯(this) 이렇게 순차대로 호출하면 위젯에서는 원하는 도구를 this.도구1 , this.도구2 이런식으로 활용할 수 있다.
 
 ### decoration pattern
 
@@ -891,7 +970,7 @@ WidgetTools.toolA = function(sandbox) {
 - 다양한 형태로 기능을 확장해야 하는 경우, 예를 들면 여러 종류의 단위 기능이 있고 이들을 조합해서 사용할 경우 장식자 패턴을 사용하면 장식자 개체에서 필요한 단위 기능을 하는 형식 개체를 포함을 시키는 것으로 이를 해결할 수있다.
 - 단일 책임 원칙을 준수하면서 믿음성이 강화된 코드를 효과적으로 작성할 수 있다.
 
-#### 시나리오
+#### 데코레이션 시나리오
 
 - 컨퍼런스에서 참가자가 등록버튼을 눌러 등록하면 post로 참가자가 등록하게 된다.
 - 하지만 이때, 신규 참가자 페이지에서 사용자를 계속 붙잡아 두면 안되겠고, post가 끝난 다음에 참가자 명단 페이지에 가서 확인하라고 하는것 또한 안된다.
@@ -905,7 +984,7 @@ WidgetTools.toolA = function(sandbox) {
   5. 드물긴 하지만, post가 실패하면 에러 메시지를 띄우고 등록 실패한 참가자를 명단 페이지에서 지운다.
      오류가 발생한 참가자가 명단에 잠시 머물렀다 해도 문제 될 일은 없다. 화면에서 id가 다시 넘어오기 전까지 수정/삭제를 할 수 없을 뿐이니까.
 
-#### code
+#### 데코레이션 code
 
 - 원 객체 ( baseWebApi )
 
