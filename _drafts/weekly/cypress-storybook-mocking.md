@@ -2,7 +2,7 @@
 
 모킹 데이터는 테스트를 실행하기 위해 실제 데이터가 아닌 개발자가 필요에 의해서 만든 데이터를 말한다. 그렇다면 모킹 데이터를 사용하는 목적은 무엇일까?
 
-- e2e 테스트 환경에서 실제 데이터가 유동적으로 변경해서 기댓값을 비교하기 어려운 경우
+- e2e 테스트 환경에서 실제 데이터가 유동적으로 변경되서 기댓값을 비교하기 어려운 경우
 - UI 테스트 환경에서 실제 데이터로 다양한 데이터 표현을 확인하기 어려운 경우
 
 이렇게 테스트 코드마다 모킹 데이터를 사용하다 보면 비슷한 모킹 코드들이 흩어져 있는 것을 쉽게 발견할 수 있다.
@@ -15,9 +15,9 @@
 
 ### storybook 모킹 방법
 
-storybook에서는 API를 모킹하기 위한 자체 내장 함수를 지원하지 않아 서드파티를 이용해야 한다. 필자의 프로젝트는 [axios](https://github.com/axios/axios)를 사용하며 이 경우 [axios-mock-adapter](https://github.com/ctimmerm/axios-mock-adapter)를 사용한다.
+storybook에서는 API를 모킹하기 위한 자체 내장 함수를 지원하지 않아 서드파티를 이용해야 한다. 필자가 개발하는 프로젝트는 [axios](https://github.com/axios/axios)를 사용하며 이 경우 [axios-mock-adapter](https://github.com/ctimmerm/axios-mock-adapter)를 사용한다.
 
-스토리마다 API 모킹해서 원하는 UI를 볼 수 있지만 필자는 데이터가 다 있는 스토리만 확인하기 위해 한 번에 모든 모킹을 진행하였다.
+스토리마다 API를 모킹해서 원하는 UI를 볼 수 있지만 필자는 데이터가 다 있는 스토리만 확인하기 위해 한 번에 모든 모킹을 진행하였다.
 
 **.storybook/preview.js 파일에서 모킹 진행**
 
@@ -42,7 +42,7 @@ mockAllApiData();
 
 ### cypress 모킹 방법
 
-cypress에서는 모킹을 위한 별도의 [intercept](https://docs.cypress.io/api/commands/intercept.html#Comparison-to-cy-route)메서드를 제공한다. storybook과는 다르게 각 테스트 케이스에 맞는 상황을 만들어야 한다. 그렇기 때문에 테스트 함수 안에서 필요한 API를 개별 모킹해서 API의 응답 데이터를 실제 데이터가 아닌 모킹 데이터를 기준으로 검증한다.
+cypress에서는 모킹을 위한 별도의 [intercept](https://docs.cypress.io/api/commands/intercept.html#Comparison-to-cy-route)메서드를 제공한다. 이 메서드를 이용해서 각 테스트 케이스에 맞는 상황을 만들어야 한다. 그렇기 때문에 테스트 함수 안에서 필요한 API를 모킹해서 응답 데이터를 실제 데이터가 아닌 모킹 데이터를 기준으로 검증한다.
 
 필요한 모킹 데이터는 `fixtures` 폴더 내에 json 파일로 만들어 둔다.
 
@@ -61,7 +61,7 @@ cy.intercept(
 
 ## 무엇이 문제인가
 
-필자는 앞에서 storybook과 cypress를 함께 프로젝트에서 쓴다고 언급했었다. 그로 인해서 storybook과 cypress 양쪽 모두 API 모킹이 필요하였고, 이로 인해 중복된 코드와 데이터가 작성되었다
+storybook과 cypress 양쪽 모두 API 모킹이 필요하였고, 이로 인해 중복된 코드와 데이터가 작성되었다.
 
 storybook에서 사용하는 모킹 모듈인 axios-mock-adapter과 cypress에서 모킹을 위해 사용하는 intercept는 서로 다른 인터페이스를 갖는다. 이는 API 형태나 응답이 바뀌면 storybook과 cypress에서 진행한 모킹 모두 수정이 필요하다는 것을 의미한다.
 
@@ -78,7 +78,7 @@ storybook에서 사용하는 모킹 모듈인 axios-mock-adapter과 cypress에�
 
 ### 모킹 데이터 통합
 
-먼저 함수를 이용해서 정적으로 구성되어 있는 모킹 데이터를 원하는 데이터와 개수를 받아 동적으로 모킹 데이터를 만든다. 함수의 리턴 형식은 각 프로젝트 API의 형식에 맞는 구조를 채택하면 된다.
+함수를 이용해서 정적으로 구성되어 있는 모킹 데이터를 원하는 데이터와 개수를 받아 동적으로 모킹 데이터를 만든다. 함수의 리턴 형식은 각 프로젝트 API의 형식에 맞는 구조를 채택하면 된다.
 
 여기서 필자의 프로젝트 API 응답 형식은 다음과 같다.
 
@@ -94,10 +94,10 @@ storybook에서 사용하는 모킹 모듈인 axios-mock-adapter과 cypress에�
 }
 ```
 
-`/api/foo` API 를 모킹하는 `createFooMock()`함수의 예제를 살펴보자.
+`/api/foo` API 를 모킹하는 `createFooMock`함수의 예제를 살펴보자.
 
-먼저 리스트 형식의 모킹 데이터를 만들기 위해 헬퍼함수 `createContentsMock()`를 만든다.
-`createContentsMock()`함수의 첫 번째 인자는 하나의 모킹 아이템을 리턴하는 `createMock`함수이고 두 번째 인자는 `count`만큼 모킹 아이템을 생성한다.
+리스트 형식의 모킹 데이터(`contents:[]`)를 만들기 위해 헬퍼함수 `createContentsMock`를 만든다.
+`createContentsMock`함수의 첫 번째 인자는 하나의 모킹 아이템을 리턴하는 `createMock`함수이고 두 번째 인자는 `count`만큼 모킹 아이템을 생성한다.
 
 ```javascript
 export const createContentsMock = (createMock, count) => {
@@ -118,7 +118,7 @@ export const createContentsMock = (createMock, count) => {
 };
 ```
 
-최종적으로 특정 API의 모킹 데이터를 외부에서 제어 할 수 있게끔 적절한 인자를 받아 모킹 데이터를 생성하는 함수를 만든다.
+그 다음 특정 API의 모킹 데이터를 외부에서 제어 할 수 있게끔 적절한 인자를 받아 모킹 데이터를 생성하는 함수를 만든다.
 
 ```javascript
 const defaultFooList = [
@@ -145,7 +145,7 @@ export const createFooMock = ({list = defaultFooList, count = list.length }) => 
 
 ### 모킹 모듈 통합
 
-서로 다른 모킹 모듈 인터페이스를 통합하는 새로운 통합 모듈을 만들어서 변경이 있더라도 한곳에서 작업이 가능하도록 만든다.
+서로 다른 모킹 모듈 인터페이스를 통합하는 새로운 통합 모듈을 만들어서 변경이 생기면 한곳에서 작업이 가능하도록 만든다.
 
 ```javascript
 function hasOnMethodProperty(adapter) {
@@ -243,8 +243,9 @@ export function mockSystem(mockAdapter) {
 }
 ```
 
-모킹 통합관리 객체의 `onGet`메서드에서 첫 번째 인자로는 API의 `path`를 포함한 정보를 넘긴다. 두 번째 인자로는 `mock`은 모킹 데이터를 넘기게 된다. 두 번째 인자로 넘기는 모킹 데이터는 정적 및 동적 모킹 데이터를 다 받을 수 있다.
-그 다음 각 모킹 모듈인 axios-mock-adapter와 cy.intercept 방식대로 코드를 작성해 준다.
+모킹 통합관리 객체의 `onGet`메서드에서 첫 번째 인자로는 API의 `path`를 포함한 정보를 넘긴다. 두 번째 인자로는 `mock`은 모킹 데이터를 넘기게 된다. 모킹 데이터는 정적 및 동적 모킹 데이터를 다 받아 `createMockFunction`함수를 통해 모두 함수로 변환된다.
+
+그 다음 각 조건문에서 모킹 모듈인 axios-mock-adapter와 cy.intercept 방식대로 코드를 작성해 준다.
 
 ```javascript
 function createMockFunction(mock) {
@@ -268,7 +269,7 @@ export function mockSystem(mockAdapter) {
 }
 ```
 
-전체 코드를 자세히 살펴보면 `onGet`메서드의 모킹에서는 reply 메서드의 인자로 `함수`를 넘기고 있다.
+전체 코드를 자세히 살펴보면 `onGet`메서드의 모킹에서는 `reply`메서드 인자로 `함수`를 넘기고 있다.
 
 ```javascript
 export function mockSystem(mockAdapter) {
@@ -294,7 +295,7 @@ export function mockSystem(mockAdapter) {
 }
 ```
 
-`reply`메서드의 인자로 함수를 넘기는 이유는 실제 API에서도 쿼리 스트링 값에 따른 다른 데이터를 주는 경우가 있기 때문에 모킹 데이터도 다르게 만들어야 하기 때문이다. 따라서 다음과 같이 사용할 수 있다
+`reply`메서드 인자로 함수를 넘기는 이유는 실제 API에서도 쿼리 스트링 값에 따른 다른 데이터를 주는 경우가 있기 때문에 모킹 데이터도 다르게 만들어야 하기 때문이다. 따라서 다음과 같이 사용할 수 있다.
 
 ```javascript
 mock.onGet({path : '/api/foo'}}, (mockParams) => {
@@ -305,11 +306,11 @@ mock.onGet({path : '/api/foo'}}, (mockParams) => {
 })
 ```
 
-이제 `mockSystem`함수를 이용하면 다른 모킹 모듈이 늘어나더라도 `mockSystem`한곳에서 추가하거나 수정 할 수 있다.
+이제 `mockSystem`함수를 이용하면 다른 모킹 모듈이 늘어나더라도 `mockSystem`모듈 한곳에서 추가하거나 수정 할 수 있다.
 
 ### API 모킹
 
-이제 통합된 `모킹 데이터`와 `모킹 모듈`을 가지고 API 모킹을 진행한다.
+통합된 `모킹 데이터`와 `모킹 모듈`을 가지고 API 모킹을 진행한다.
 먼저 API 이름은 상수로 만들고 다른 API 이름과 겹치지 않도록 앞부분에 네임스페이스를 같이 작성한다. 이렇게 하면 나중에 모든 API 모킹을 한 곳에 모았을때 API 이름이 중복되는 오류를 피할 수 있다.
 
 ```javascript
@@ -351,9 +352,9 @@ export function createFooMockApi(mock) {
 
 ### API 모킹 통합
 
-모킹하는 함수(`createFooMockApi`)를 만들었다면 storybook에서 한 번에 API를 모킹할 수 있는 함수(`addAllMockApi`)와 cypress에서 API 하나하나를 호출 할 수 있도록 모아둔 객체(`mockApi`)를 리턴하는 `createMockApi`를 만든다.
+특정 API를 모킹하는 함수(`createFooMockApi`)를 만들었다면 storybook에서 한 번에 API를 모킹할 수 있는 함수(`addAllMockApi`)와 cypress에서 API 하나하나를 호출 할 수 있도록 모아둔 객체(`mockApi`)를 리턴하는 `createMockApi`함수를 만든다.
 
-여기서 API 모킹들이 하나로 합쳐지기 때문에 API 이름에 네임스페이스를 적어서 겹치지 않게 하는 것이다.
+여기서 API 모킹들이 하나로 합쳐지기 때문에 API 이름에 네임스페이스를 적어서 겹치지 않게 한다.
 
 ```javascript
 export function createMockAPi(mock) {
@@ -408,9 +409,10 @@ addAllMockApi();
 
 ### cypress에서 활용
 
-cypress에서는 위에서 만들어둔 `createMockAPi`함수의 리턴인 `mockApi`를 테스트 함수에서 다음과 같이 사용할 수 있다.
+cypress에서 모킹을 위해 사용하는 `cy.intercept`함수를 `mockSystem`함수의 인자로 넘긴다. 그 이후 생성된 모킹 통합 모듈을
+`createMockApi`함수에 넘겨 모든 API를 모킹할 수 있게 준비된 `mockApi`객체를 리턴 받는다.
 
-cypress에서 모킹을 위해 사용하는 `cy.intercept`함수를 `mockSystem`함수의 인자로 넘기는 것을 볼 수 있다.
+`mockApi`는 다음과 같이 테스트 바디 안에서 사용한다.
 
 ```javascript
 import { FOO } from 'fooMockApi'
@@ -427,7 +429,7 @@ describe('테스트를', () => {
 })
 ```
 
-하지만 테스트마다 `createMockApi`함수를 호출하는 것보다 별도의 모듈로 분리해서 편리하게 사용해보자.
+하지만 테스트마다 `createMockApi`함수를 호출하는 것보다 별도의 모듈로 분리해서 편리하게 사용할 수 있다.
 
 ```javascript
 const { mockApi } = createMockApi(mockSystem(cy.intercept));
@@ -467,7 +469,7 @@ describe('실제 테스트시에는', () => {
 ## cypress의 모킹 on/off 기능
 
 필자가 의도한 e2e테스트의 궁극적인 목표는 백엔드까지 연동한 테스트용 서버를 구축하여 실제 상황에 가장 가까운 테스트를 진행하는 것이다. 이렇게 되면 단순히 프론트엔드 코드만을 테스트하는 e2e테스트가 아니라 시스템 전반에 걸친 e2e테스트가 이뤄져서 테스트 코드의 신뢰성이 높아진다.
-따라서 테스트용 서버를 구축하기 이전까진 프론트엔드에서 API를 모킹해서 테스트를 진행하는 것이다. 테스트용 서버가 구축되면 테스트 함수에 흩어져 있던 모킹을 손쉽게 off 하여 테스트용 서버로 e2e테스트를 진행할 수 있다.
+따라서 테스트용 서버를 구축하기 이전까진 프론트엔드에서 API를 모킹해서 테스트를 진행한다. 테스트용 서버가 구축되면 테스트 함수에 흩어져 있던 모킹을 손쉽게 off 하여 테스트용 서버로 e2e테스트를 진행할 수 있다.
 
 ### 해결방안
 
