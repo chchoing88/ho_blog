@@ -298,7 +298,7 @@ export function mockSystem(mockAdapter) {
 `reply`메서드 인자로 함수를 넘기는 이유는 실제 API에서도 쿼리 스트링 값에 따른 다른 데이터를 주는 경우가 있기 때문에 모킹 데이터도 다르게 만들어야 하기 때문이다. 따라서 다음과 같이 사용할 수 있다.
 
 ```javascript
-mock.onGet({path : '/api/foo'}}, (mockParams) => {
+mock.onGet({path : '/api/foo'}, (mockParams) => {
   if(mockParams?.params?.view) {
     return createFooViewMock(mockParams)
   }
