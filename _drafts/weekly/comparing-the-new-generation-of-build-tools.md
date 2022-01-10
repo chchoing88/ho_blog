@@ -370,7 +370,7 @@ Vite는 esbuild 및 Snowpack보다 더 독단적인 기본값을 가지고 있�
 
 Vite의 개발 서버는 꽤 파워풀하다. Vite는 프로젝트의 모든 의존성을 esbuild로 단일 기본 자바스크립 모듈로 미리 번들로 묶게된다. 그 후에 많이 캐시된 HTTP 헤더와 함께 제공된다. 즉, 첫 페이지 로드 후 가져온 종속성을 컴파일, 제공 또는 요청하는 데 시간이 낭비되지 않는다. 또한 Vite는 명확한 에러 메세지들을 제공하고 문제를 해결하기 위해 정환한 코드 블록과 줄 번호를 보여준다. 다시 Vite를 사용하면 노드 API 또는 레거시 형식을 사용하는 종속성을 가져오는 데 문제가 없었다. 그것들은 모두 브라우저에서 허용되는 esmodule에 끼워져 있는 것처럼 보였다.
 
-Vite의 React 및 Vue 템플릿은 모두 핫 모듈 교체를 가능하게 하는 플러그인을 가지고있다. Vue 템플릿은 [단일 파일 컴포넌트용 Vue 플러그인](https://github.com/vitejs/vite/tree/main/packages/plugin-vue)과 [JSX용 Vue 플러그인](https://github.com/vitejs/vite/blob/main/packages/plugin-vue-jsx/package.json)을 가지고있다. React 템플릿은 [react-refresh 플러그인](https://github.com/vitejs/vite/tree/main/packages/plugin-react-refresh)을 가지고있다. 어느 쪽이든 둘 다 핫 모듈 교체 및 클라이언트 측 상태 보존을 제공한다. 물론 Babel 패키지를 포함하여 몇 가지 종속성을 추가하지만 Vite에서 JSX를 사용할 때 Babel은 실제로 필요하지 않는다. 기본적으로 JSX는 esbuild 와 동일한 방식으로 작동한다. 즉, 	`React.createElement`로 변환된다. React를 자동으로 가져오지는 않지만 자동으로 가져올수 있도록 동작을 구성할 수 있습니다.
+Vite의 React 및 Vue 템플릿은 모두 hot module replacement를 가능하게 하는 플러그인을 가지고있다. Vue 템플릿은 [단일 파일 컴포넌트용 Vue 플러그인](https://github.com/vitejs/vite/tree/main/packages/plugin-vue)과 [JSX용 Vue 플러그인](https://github.com/vitejs/vite/blob/main/packages/plugin-vue-jsx/package.json)을 가지고있다. React 템플릿은 [react-refresh 플러그인](https://github.com/vitejs/vite/tree/main/packages/plugin-react-refresh)을 가지고있다. 어느 쪽이든 둘 다 hot module replacement 및 클라이언트 측 상태 보존을 제공한다. 물론 Babel 패키지를 포함하여 몇 가지 종속성을 추가하지만 Vite에서 JSX를 사용할 때 Babel은 실제로 필요하지 않는다. 기본적으로 JSX는 esbuild 와 동일한 방식으로 작동한다. 즉, 	`React.createElement`로 변환된다. React를 자동으로 가져오지는 않지만 자동으로 가져올수 있도록 동작을 구성할 수 있습니다.
 
 Vite는 Snowpack 및 wmr과 같은 스트리밍 가져오기를 지원하지 않습니다. 이는 평소와 같이 npm 설치 종속성을 의미한다.
 
@@ -415,4 +415,22 @@ Snap Shot 앱으로 Vite의 기본 빌드를 실행하면 하나의 5KB JavaScri
 
 Vite와 마찬가지로 wmr은 개발 서버와 빌드 단계를 모두 제공하는 또 다른 독창적인 빌드 도구이다. [Preact](https://preactjs.com/)의 창시자인 [Jason Miller](https://twitter.com/_developit)가 만들었기 때문에 Preact 개발자에게는 분명히 행복한 길이다. Jason Miller는 wmr이 [JS Party 팟캐스트에 게스트로 출연했을 때 생각을 설명](https://changelog.com/jsparty/158)했다.
 
-> Preact는 작고 가벼운 프로젝트를 수행하려는 경우에 정말 좋다. 이를 위한 도구는 어디에 있을까? 우리는 많은 유명 사이트에서 프로덕션에 사용되는 웹팩 기반 도구를 가지고 있지만 그것은 무거운 도구다. 프로토타이핑 도구는 어디에 있을까? 웹팩이 한 부분을 차지한다. 반면 다른 한 부분은 저와 우연히 Preact 팀에 있었던 많은 사람들입니다. 우리는 번들러 생태계를 잠시동안 방관하고 있었다. 우리는 현대화 코드를 작성하고 제공하는 이런 아이어를 더 발전시키기 위해 의견을 모으자고 사람들에게 촉구한다.
+> Preact는 작고 가벼운 프로젝트를 수행하려는 경우에 정말 좋다. 이를 위한 도구는 어디에 있을까? 우리는 많은 유명 사이트에서 프로덕션에 사용되는 웹팩 기반 도구를 가지고 있지만 그것은 무거운 도구다. 프로토타이핑 도구는 어디에 있을까? 웹팩이 한 부분을 차지한다. 반면 다른 한 부분은 저와 우연히 Preact 팀에 있었던 많은 사람들입니다. 우리는 번들러 생태계를 잠시동안 방관하고 있었지만 최신 코드를 작성하고 제공하는 이런 아이어를 더 발전시키기 위해 의견을 모으자고 사람들에게 촉구하고 있다.
+
+이 말은 wmr이 최신 코드로 작성되고 제공되고 있다는 점을 말하고 있고 프로젝트에서 더 가벼운 도구를 사용할 수 있다는걸 말하고 있다.
+
+당신은 wmr이 무엇의 약자인지 궁금해 하겠지만 따로 있지 않다! "Web Modules Runtime" 및 "Wet Module Replacement"라는 이름이 떠 있었지만 npm과 유사한 가짜 약어이다.
+
+wmr은 Preact처럼 큰 번들 크기 제거로 빌드되어 용량이 2.6MB에 불과하고 npm 종속성도 정확히 없다. 그럼에도 불구하고 hot-module-replacing 개발 서버와 최적화된 프로덕션 빌드를 포함하여 정말 멋진 기능을 많이 포함하고 있다.
+
+### 사용 사례
+
+### 설치
+
+### 사용법
+
+### 지원 파일
+
+### 프로덕션 빌드
+
+### 종합
