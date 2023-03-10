@@ -31,9 +31,6 @@ Context는 **일정한 범위에 속한 컴포넌트 트리 간 데이터 공유
 
 > `Context.Provider` 의 value 가 바뀌면 `useContext` 로 구독하고 있는 컴포넌트는 한번씩 호출을 하게 된다. (Reconciliation - component가 호출되서 리턴된 Element가 이전 Element와 같은지 비교) ( 호출 자체가 비용이 많지는 않지만 Virtual Dom인 React Element를 새롭게 만들어내는 불필요한 작업을 하게 될 수도 있습니다. 사실 중요한건 React Element가 이전과 바뀌지 않게 유지하는 것입니다. )
 
-> 잘못 알고 있었던 사실 : `Context.Provider`의 `value` 값이 바뀌면 그 밑에 `children` 컴포넌트들이 전부 호출이 되는 줄 알았으나 사실은 해당 `Context` 를 구독하고 있는 컴포넌트를 상위로 하위 자식 컴포넌트들만 호출이 된다.
-
-
 
 ## 언제 Hooks 와 Context를 쓸까?
 

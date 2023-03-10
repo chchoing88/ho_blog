@@ -1,8 +1,8 @@
-# (번역) 인터페이스 vs 구현 프로그래밍
+# 인터페이스 vs 구현 프로그래밍
 
 > 원문 : [https://dmitripavlutin.com/interface-vs-implementation/#comments](https://dmitripavlutin.com/interface-vs-implementation/#comments)
-    
-    
+
+![https://dmitripavlutin.com/static/13770193ca00205a5ce03ca218e79057/aaf91/cover.webp](https://dmitripavlutin.com/static/13770193ca00205a5ce03ca218e79057/aaf91/cover.webp) 
 
 당신은 코드를 작성하고 테스트를 하고 상품을 출시한다. 이후에 코드를 다시 수정할 일이 없다면 얼마나 훌륭하겠는가?
 
@@ -28,7 +28,7 @@
 
 먼저, 변화에 적합하지 않은 구현으로 하는 프로그래밍을 보여줄 것이다. 그 후에 *인터페이스로 하는 프로그래밍*을 적용해서 컴포넌트를 재 디자인하고 새롭게 디자인된 컴포넌트가 어떤 이점이 있는지 보여줄 것이다.
 
-예를 들어, 당신은 `ListRenderer`클래스 구현 업무를 맡고 있다. 이 클래스는 단 하나의 메서드인 `listRender.render(names)`를 가지고 있다. 이 메서드는 이름이 담긴 배열을 정렬 없는 HTML list로 렌더링 한다.
+예를 들어, 당신은 `ListRenderer`클래스 구현 업무를 맡고 있다. 이 클래스는 단 하나의 메서드인 `listRender.render(names)`를 가지고 있다. 이 메서드는 이름이 담긴 배열을 정렬 없는 HTML list로 렌더링한다.
 
 ![https://dmitripavlutin.com/5e62f2552ee637e1499815675ede46b1/diagram-01.svg](https://dmitripavlutin.com/5e62f2552ee637e1499815675ede46b1/diagram-01.svg)
 
@@ -63,7 +63,7 @@ renderer.render(['Joker', 'Catwoman', 'Batman']);
 
 [데모를 실행해보자.](https://codesandbox.io/s/simple-renderer-qld0c?file=/src/index.ts)
 
-위 구현은 간단하게 이름 리스트를 렌더링 하길 원한다면 매우 좋은 해결법이다. 하지만 당신이 앞으로 이 코드를 수정하게 된다면 어떻게 될까? 예를 들어 정렬하는 기능을 추가해야 한다면 말이다.
+위 구현은 간단하게 이름 리스트를 렌더링하길 원한다면 매우 좋은 해결법이다. 하지만 당신이 앞으로 이 코드를 수정하게 된다면 어떻게 될까? 예를 들어 정렬하는 기능을 추가해야 한다면 말이다.
 
 ## 2. 구현으로 하는 프로그래밍
 
@@ -81,7 +81,7 @@ class SortAlphabetically {
 }
 ```
 
-위 예제에서`s1.localCompare(s2)`메서드는 `s1`이 알파벳 순으로 `s2` 이전 또는 이후에 오는지를 비교하는 [문자열 메서드](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare)이다.
+위 예제에서 `s1.localCompare(s2)`메서드는 `s1`이 알파벳 순으로 `s2` 이전 또는 이후에 오는지를 비교하는 [문자열 메서드](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare)이다.
 
 그 이후에 `ListRender`클래스에 `SortAlphabetically`를 통합하고 렌더링 이전에 이름순으로 정렬을 하게 된다.
 
@@ -170,7 +170,7 @@ class ListRenderer {
 
 이러한 설계 방법은 두 가지 중요한 소프트웨어 디자인 원칙을 위배하게 된다.
 
-첫 번째, [단일 책임 원칙](https://en.wikipedia.org/wiki/Single-responsibility_principle)을 위반하게 된다. `ListRenderer`는 이름을 렌더링 하는 한 가지 책임을 지닌다. 하지만 지금은 *추가적*으로 정렬을 담당하는 객체를 인스턴스화 하고 올바른 정렬 구현을 선택해야 한다.
+첫 번째, [단일 책임 원칙](https://en.wikipedia.org/wiki/Single-responsibility_principle)을 위반하게 된다. `ListRenderer`는 이름을 렌더링하는 한 가지 책임을 지닌다. 하지만 지금은 *추가적*으로 정렬을 담당하는 객체를 인스턴스화 하고 올바른 정렬 구현을 선택해야 한다.
 
 두 번째, 정렬 방법의 추가로 `ListRenderer` 수정이 발생함으로 [개방/폐쇄 원칙](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle)을 위배하게 된다.
 
@@ -205,7 +205,7 @@ interface Sorter {
 
 `Sorter`인터페이스는 단지 문자열 배열을 정렬하는 하나의 `sort()`메서드를 포함하고 있다. 이 인터페이스는 `sort()`메서드가 구체적으로 어떻게 동작하는지 알지 못한다. 단지 문자열 배열을 받아 정렬된 문자열 배열을 반환한다는 것만 안다.
 
-2. `Sorter`인터페이스를 사용하는 `ListRender`를 만드는 것은 쉽다. 단지 구체적인 구현의 참조를 제거하고 `Sorter`인터페이스를 사용하면 된다.
+2. `Sorter`인터페이스를 사용하는 `ListRender`를 만들기는 쉽다. 단지 구체적인 구현의 참조를 제거하고 `Sorter`인터페이스를 사용하면 된다.
 
 ```jsx
 class ListRenderer {
@@ -318,8 +318,8 @@ const renderer = new ListRenderer(
 
 기본 클래스(예: `ListRenderer`)의 클라이언트는 기본 클래스(예: `ListRenderer`)의 소스 코드를 수정하지 않고도 필요한 모든 종속성 구현을 즉시 제공할 수 있다.
 
-인터페이스로 하는 프로그래밍에는 복잡성이 증가한다는 대가가 따른다. 이 프로그래밍을 사용하는 것은 현명하고 신중한 선택이어야 한다.
+인터페이스로 하는 프로그래밍에는 복잡성이 증가한다는 대가가 따른다. 이 프로그래밍을 사용하는 것은 현명하고 신중하게 선택되어야 한다.
 
-그러나 코드의 특정 부분이 변경되지 않을 것이라고 확신하는 경우 구현 위주의 프로그래밍이 더 저렴하고 저렴하고 좋은 선택이다!
+그러나 코드의 특정 부분이 변경되지 않을 것이라고 확신하는 경우 구현 위주의 프로그래밍이 더 저렴하고 좋은 선택이다!
 
 예를 들어 `ListRenderer`가 항상 이름을 알파벳 오름차순으로 정렬하는 경우 이 글의 섹션 2의 시작 부분에서 다뤘던 디자인에서 멈춰야 한다. 불필요한 복잡성을 추가하지 마라.
